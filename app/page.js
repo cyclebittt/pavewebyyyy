@@ -9,17 +9,13 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 export default function Home() {
-
-  const [animationLeft, setAnimationLeft] = useState('fade-left');
   const [animationRight, setAnimationRight] = useState('fade-right');
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        setAnimationLeft('fade-down');
         setAnimationRight('fade-down');
       } else {
-        setAnimationLeft('fade-left');
         setAnimationRight('fade-right');
       }
     };
@@ -114,7 +110,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full">
-            <div data-aos={animationLeft} data-aos-duration="500" data-aos-offset="500" className="relative bg-neutral-100 px-6 pt-6 rounded-lg w-full rounded-2xl flex flex-col gap-10">
+            <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="500" className="relative bg-neutral-100 px-6 pt-6 rounded-lg w-full rounded-2xl flex flex-col gap-10">
               <div className="flex flex-col gap-5">
                 <div className="h-12 w-12 aspect-square rounded-full text-violet-500 bg-neutral-200 flex items-center justify-center">
                   <Flame size={24} />
