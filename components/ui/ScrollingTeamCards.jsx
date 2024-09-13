@@ -79,7 +79,7 @@ export const ScrollingTeamCards = ({
                             </div>
                             <div className="flex flex-col gap-2">
                                 <h2 className="font-bold text-2xl">{item.name}</h2>
-                                <p className="text-neutral-600 text-xl">{item.role}</p>
+                                <p className="text-neutral-600 text-base md:text-xl">{item.role}</p>
                             </div>
                         </div>
                     </li>
