@@ -33,15 +33,15 @@ const Navbar = () => {
             <div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-neutral-500 transition-all duration-500 group-hover:w-full"></div>
           </div>
           <div className='relative group'>
-            <Link href={'/about'}>Pages</Link>
+            <Link href={'/pages'}>Pages</Link>
             <div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-neutral-500 transition-all duration-500 group-hover:w-full"></div>
           </div>
           <div className='relative group'>
-            <Link href={'/about'}>Blogs</Link>
+            <Link href={'/blogs'}>Blogs</Link>
             <div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-neutral-500 transition-all duration-500 group-hover:w-full"></div>
           </div>
           <div className='relative group'>
-            <Link href={'/about'}>Templates</Link>
+            <Link href={'/templates'}>Templates</Link>
             <div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-neutral-500 transition-all duration-500 group-hover:w-full"></div>
           </div>
         </div>
