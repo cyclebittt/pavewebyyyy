@@ -4,15 +4,39 @@ import { Testimonials } from "@/components/home/Testimonials";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import { ArrowRight, ArrowUpRight, ChartPie, CodeXml, Flame, LayoutDashboard, Pencil, Plus, Sun } from "lucide-react";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 export default function Home() {
 
+  const [animationLeft, setAnimationLeft] = useState('fade-left');
+  const [animationRight, setAnimationRight] = useState('fade-right');
+
   useEffect(() => {
-    AOS.init();
-  }, [])
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setAnimationLeft('fade-down');
+        setAnimationRight('fade-down');
+      } else {
+        setAnimationLeft('fade-left');
+        setAnimationRight('fade-right');
+      }
+    };
+
+    // Initialize AOS
+    AOS.init({ duration: 500 });
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   AOS.init();
+  // }, [])
 
   return (
     <div className="font-proxima">
@@ -43,7 +67,7 @@ export default function Home() {
 
       <div className="px-5 md:px-20 py-6 md:py-14 flex flex-col gap-14">
         <div data-aos="fade-up" data-aos-duration="500" className="flex gap-4">
-          <Sun className="min-w-[16px]"/>
+          <Sun className="min-w-[16px]" />
           <div className="flex flex-col gap-8">
             <h2 className="font-medium text-xl md:text-2xl">About Us</h2>
             <p className="font-medium text-3xl md:text-5xl">Flatter is property website that has been helping of pluto people to find their dream homes</p>
@@ -52,15 +76,15 @@ export default function Home() {
 
         <div data-aos="fade-up" data-aos-duration="500" className="bg-gray-900 rounded-3xl p-5 flex md:flex-row flex-col gap-8 items-center justify-between">
           <div className="flex flex-wrap md:flex-nowrap items-center justify-center gap-14">
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col items-center md:items-start gap-3">
               <h3 className="font-medium text-4xl md:text-6xl text-violet-400 flex items-center">90k<Plus size={30} /></h3>
               <p className="text-2xl font-medium text-white">Customers</p>
             </div>
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col items-center md:items-start gap-5">
               <h3 className="font-medium text-4xl md:text-6xl text-violet-400 flex items-center">50k<Plus size={30} /></h3>
               <p className="text-2xl font-medium text-white">Units Ready</p>
             </div>
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col items-center md:items-start gap-5">
               <h3 className="font-medium text-4xl md:text-6xl text-violet-400 flex items-center">5k<Plus size={30} /></h3>
               <p className="text-2xl font-medium text-white">Units Sold</p>
             </div>
@@ -90,7 +114,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full">
-            <div data-aos="fade-right" data-aos-duration="500" data-aos-offset="500" className="relative bg-neutral-100 px-6 pt-6 rounded-lg w-full rounded-2xl flex flex-col gap-10">
+            <div data-aos={animationLeft} data-aos-duration="500" data-aos-offset="500" className="relative bg-neutral-100 px-6 pt-6 rounded-lg w-full rounded-2xl flex flex-col gap-10">
               <div className="flex flex-col gap-5">
                 <div className="h-12 w-12 aspect-square rounded-full text-violet-500 bg-neutral-200 flex items-center justify-center">
                   <Flame size={24} />
@@ -105,7 +129,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div data-aos="fade-right" data-aos-duration="500" className="flex flex-col gap-8 w-full">
+            <div data-aos={animationRight} data-aos-duration="500" className="flex flex-col gap-8 w-full">
               <div className="flex flex-col gap-5 p-6 bg-violet-300 rounded-2xl">
                 <div className="h-12 w-12 aspect-square rounded-full text-violet-500 bg-white flex items-center justify-center">
                   <ChartPie size={24} />
@@ -130,7 +154,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div data-aos="fade-right" data-aos-duration="500" data-aos-offset="500" className="flex flex-col gap-8 w-full">
+            <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="500" className="flex flex-col gap-8 w-full">
               <div className="h-full flex flex-col gap-5 p-6 bg-neutral-100 rounded-2xl">
                 <div className="h-12 w-12 aspect-square rounded-full text-neutral-600 bg-white flex items-center justify-center">
                   <CodeXml size={24} />
@@ -173,7 +197,7 @@ export default function Home() {
       <div className="px-5 py-10">
         <div className="bg-neutral-800 rounded-3xl px-5 py-8 md:p-14 flex flex-col gap-14">
           <div data-aos="fade-up" data-aos-duration="500" className="text-white flex gap-4 max-w-6xl">
-            <Sun className="min-w-[16px]"/>
+            <Sun className="min-w-[16px]" />
             <div className="flex flex-col gap-8">
               <h2 className="font-medium text-xl md:text-2xl">Why Us</h2>
               <p className="font-medium text-3xl md:text-5xl">Understand why we are the top choice for exceptional service</p>
@@ -181,10 +205,10 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 w-full">
-            <div data-aos="fade-right" data-aos-duration="500" className="w-full h-full rounded-2xl overflow-hidden">
+            <div data-aos={animationRight} data-aos-duration="500" className="w-full h-full rounded-2xl overflow-hidden">
               <img src="https://images.unsplash.com/photo-1568992687947-868a62a9f521?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="w-full h-full object-cover" />
             </div>
-            <div data-aos="fade-right" data-aos-duration="500" data-aos-offset="500" className="w-full flex flex-col gap-8 w-full">
+            <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="500" className="w-full flex flex-col gap-8 w-full">
               <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="w-full bg-neutral-100 rounded-2xl flex flex-col p-8 gap-5 items-center justify-center">
                   <span className="text-red-500 bg-red-100 px-4 py-2 rounded-full">Retention Rate</span>
@@ -233,7 +257,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div data-aos="fade-right" data-aos-duration="500" data-aos-offset="500" className="flex flex-col md:flex-row items-center md:items-end gap-5 w-full md:w-3/5">
+        <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="500" className="flex flex-col md:flex-row items-center md:items-end gap-5 w-full md:w-3/5">
           <div className="w-full md:w-72 aspect-square rounded-2xl overflow-hidden relative">
             <div className="absolute bottom-2 left-2 flex items-center group">
               <button className="px-4 py-1 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10">
@@ -246,7 +270,7 @@ export default function Home() {
             <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="w-full h-full object-cover" />
           </div>
           <div className="relative w-full h-full rounded-2xl overflow-hidden">
-          <div className="absolute top-4 right-4 flex items-center group">
+            <div className="absolute top-4 right-4 flex items-center group">
               <button className="px-4 py-2 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10">
                 Meet our Team
               </button>
