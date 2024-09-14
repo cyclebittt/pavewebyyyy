@@ -35,7 +35,7 @@ const About = () => {
         <div className="font-proxima">
             <Navbar />
 
-            <div className="px-5 py-10">
+            <div className="px-5">
                 <div className="bg-neutral-800 rounded-3xl px-5 py-8 md:p-14 flex flex-col gap-16">
                     <div data-aos="fade-up" data-aos-duration="500" className="text-white flex flex-col gap-6 md:gap-12 max-w-4xl">
                         <h2 className="font-medium text-3xl md:text-5xl">Who We Are?</h2>

@@ -6,6 +6,7 @@ import React from 'react'
 import { useEffect } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import Link from 'next/link';
 
 const Footer = () => {
 
@@ -36,10 +37,10 @@ const Footer = () => {
 
                 <div data-aos="fade-up" data-aos-duration="500" className='flex flex-col md:flex-row gap-14 md:gap-6 items-center justify-between'>
                     <div className='flex flex-wrap items-center justify-center gap-6 text-white'>
-                        <button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>About</button>
-                        <button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>Services</button>
-                        <button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>Testimonials</button>
-                        <button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>Contact Us</button>
+                        <Link href={'/about'}><button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>About</button></Link>
+                        <Link href={'/'}><button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>Services</button></Link>
+                        <Link href={'/'}><button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>Testimonials</button></Link>
+                        <Link href={'/contact'}><button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>Contact Us</button></Link>
                     </div>
 
                     <div className='flex items-center md:items-start justify-center flex-col gap-5'>
