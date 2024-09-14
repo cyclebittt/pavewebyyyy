@@ -73,11 +73,11 @@ const Contact = () => {
 
                     <div className='w-full md:w-[720px] flex flex-col gap-6'>
                         <div className='grid grid-cols-1 md:grid-cols-2 gap-6 w-full'>
-                            <input type="text" placeholder='Name' className='w-full bg-white border-none outline-none p-4 rounded-2xl' />
-                            <input type="email" placeholder='Email' className='w-full bg-white border-none outline-none p-4 rounded-2xl' />
+                            <input type="text" placeholder='Name' className='w-full bg-white border-none outline-none p-4 rounded-xl' />
+                            <input type="email" placeholder='Email' className='w-full bg-white border-none outline-none p-4 rounded-xl' />
                         </div>
                         <div className='grid grid-cols-1'>
-                            <textarea placeholder='Message' className='w-full bg-white border-none outline-none p-4 rounded-2xl' />
+                            <textarea placeholder='Message' className='w-full bg-white border-none outline-none p-4 rounded-xl' />
                         </div>
                         <button className="w-full px-4 py-2 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-all duration-500 ease-out group">
                             <span className="relative z-10 transition-colors duration-500 group-hover:text-violet-700">
@@ -89,7 +89,7 @@ const Contact = () => {
                 </div>
             </div>
 
-            <div className="p-5 md:px-16 md:py-10 flex flex-col items-center justify-center gap-3 md:gap-10">
+            <div className="p-5 md:px-20 md:py-10 flex flex-col items-center justify-center gap-3 md:gap-10">
                 <div data-aos="fade-up" data-aos-duration="500" className="flex flex-col items-center justify-center gap-3 max-w-2xl">
                     <div className="flex flex-col items-center justify-center gap-3">
                         <Sun />

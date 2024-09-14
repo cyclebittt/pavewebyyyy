@@ -39,7 +39,7 @@ const Footer = () => {
                     <div className='flex flex-wrap items-center justify-center gap-6 text-white'>
                         <Link href={'/about'}><button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>About</button></Link>
                         <Link href={'/'}><button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>Services</button></Link>
-                        <Link href={'/'}><button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>Testimonials</button></Link>
+                        <Link href={'/blogs'}><button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>Blogs</button></Link>
                         <Link href={'/contact'}><button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>Contact Us</button></Link>
                     </div>
 

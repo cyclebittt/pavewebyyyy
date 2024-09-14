@@ -39,7 +39,7 @@ export default function Home() {
       <Navbar />
 
       <div className="px-5 pb-5">
-        <div className="relative h-screen flex flex-col items-center pt-40 px-4 gap-12 rounded-3xl overflow-hidden">
+        <div className="relative flex flex-col items-center pt-40 pb-52 px-4 gap-12 rounded-3xl overflow-hidden">
           <video autoPlay muted loop
             className="absolute inset-0 w-full h-full object-cover -z-10"
             src="https://videos.pexels.com/video-files/1957727/1957727-hd_1920_1080_30fps.mp4"

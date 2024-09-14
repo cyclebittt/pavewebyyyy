@@ -23,9 +23,11 @@ const Navbar = () => {
   return (
     <div className='relative'>
       <nav className='z-50 bg-white font-proxima flex items-center justify-between gap-10 px-5 md:px-20 py-5'>
-        <div className='w-28'>
-          <Image src='/img/logo.png' width={500} height={500} alt='logo' className='w-full h-full' />
-        </div>
+        <Link href={'/'}>
+          <div className='w-28'>
+            <Image src='/img/logo.png' width={500} height={500} alt='logo' className='w-full h-full' />
+          </div>
+        </Link>
 
         <div className='font-medium text-neutral-600 hidden md:flex items-center gap-10'>
           <div className='relative group'>
@@ -33,7 +35,7 @@ const Navbar = () => {
             <div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-neutral-500 transition-all duration-500 group-hover:w-full"></div>
           </div>
           <div className='relative group'>
-            <Link href={'/pages'}>Pages</Link>
+            <Link href={'/services'}>Services</Link>
             <div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-neutral-500 transition-all duration-500 group-hover:w-full"></div>
           </div>
           <div className='relative group'>
@@ -41,7 +43,7 @@ const Navbar = () => {
             <div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-neutral-500 transition-all duration-500 group-hover:w-full"></div>
           </div>
           <div className='relative group'>
-            <Link href={'/templates'}>Templates</Link>
+            <Link href={'/contact'}>Contact Us</Link>
             <div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-neutral-500 transition-all duration-500 group-hover:w-full"></div>
           </div>
         </div>
@@ -67,7 +69,7 @@ const Navbar = () => {
           <div className="absolute bottom-1 left-5 w-0 h-[2px] bg-neutral-500 transition-all duration-500 group-hover:w-full"></div>
         </div>
         <div className='w-fit relative group px-5 py-2'>
-          <Link href='/pages'>Pages</Link>
+          <Link href='/services'>Services</Link>
           <div className="absolute bottom-1 left-5 w-0 h-[2px] bg-neutral-500 transition-all duration-500 group-hover:w-full"></div>
         </div>
         <div className='w-fit relative group px-5 py-2'>
@@ -75,7 +77,7 @@ const Navbar = () => {
           <div className="absolute bottom-1 left-5 w-0 h-[2px] bg-neutral-500 transition-all duration-500 group-hover:w-full"></div>
         </div>
         <div className='w-fit relative group px-5 py-2'>
-          <Link href='/templates'>Templates</Link>
+          <Link href='/contact'>Contact Us</Link>
           <div className="absolute bottom-1 left-5 w-0 h-[2px] bg-neutral-500 transition-all duration-500 group-hover:w-full"></div>
         </div>
       </div>
