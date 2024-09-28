@@ -22,7 +22,7 @@ const Blogs = () => {
         };
 
         // Initialize AOS
-        AOS.init({ duration: 500 });
+        AOS.init({ duration: 500, once: true });
 
         handleResize();
         window.addEventListener('resize', handleResize);
@@ -37,7 +37,7 @@ const Blogs = () => {
 
             <div className="px-5">
                 <div className="bg-neutral-800 rounded-3xl px-5 py-8 md:py-20 md:px-36 flex flex-col gap-10">
-                    <div data-aos="fade-up" data-aos-duration="500" className="text-white flex flex-col items-center justify-center gap-4 md:gap-8 mx-auto max-w-4xl">
+                    <div className="text-white flex flex-col items-center justify-center gap-4 md:gap-8 mx-auto max-w-3xl">
                         <h2 className="font-medium text-3xl md:text-5xl">Blogs</h2>
                         <p className="font-regular text-center text-base md:text-xl">How Pave’s Innovative IT Solutions Can Boost Efficiency, Reduce Costs, and Drive Sustainable Growth for Your Business.</p>
                     </div>
@@ -54,7 +54,7 @@ const Blogs = () => {
 
             <div className="px-5 py-10">
                 <div className="bg-neutral-100 rounded-3xl px-5 py-8 md:p-14 flex flex-col gap-10">
-                    <div data-aos="fade-up" data-aos-duration="500" className="flex items-center justify-between">
+                    <div className="flex items-center justify-between">
                         <p className="font-medium text-3xl md:text-5xl text-center">Latest Post</p>
                         <button className="w-fit px-4 py-2 text-violet-700 rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden">
                             14 Articles
@@ -95,7 +95,7 @@ const Blogs = () => {
 
             <div className="px-5">
                 <div className="rounded-3xl px-0 py-8 md:p-14 flex flex-col gap-10">
-                    <div data-aos="fade-up" data-aos-duration="500" className="hidden md:flex items-center justify-between">
+                    <div className="hidden md:flex items-center justify-between">
                         <p className="font-medium text-3xl md:text-5xl text-center">Popular Post</p>
                         <button className="w-fit px-4 py-2 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-all duration-500 ease-out group">
                             <span className="relative z-10 transition-colors duration-500 group-hover:text-violet-700">
@@ -105,7 +105,7 @@ const Blogs = () => {
                         </button>
                     </div>
 
-                    <div data-aos="fade-up" data-aos-duration="500" className="md:hidden flex flex-col items-center justify-center gap-3 mx-auto max-w-3xl">
+                    <div className="md:hidden flex flex-col items-center justify-center gap-3 mx-auto max-w-3xl">
                         <div className="flex flex-col items-center justify-center gap-3">
                             <Sun />
                             <h2 className="font-medium text-xl md:text-2xl text-center">More Blogs</h2>
@@ -114,7 +114,7 @@ const Blogs = () => {
                     </div>
 
                     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
-                        <div data-aos={animationRight} data-aos-duration="500" className='w-full shadow-lg bg-white rounded-xl p-3 flex flex-col gap-4'>
+                        <div className='w-full shadow-lg bg-white rounded-xl p-3 flex flex-col gap-4'>
                             <div className='w-full h-56 rounded-xl overflow-hidden'>
                                 <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
                             </div>
@@ -142,7 +142,7 @@ const Blogs = () => {
                             </div>
                         </div>
 
-                        <div data-aos={animationRight} data-aos-duration="500" className='w-full shadow-lg bg-white rounded-xl p-3 flex flex-col gap-4'>
+                        <div className='w-full shadow-lg bg-white rounded-xl p-3 flex flex-col gap-4'>
                             <div className='w-full h-56 rounded-xl overflow-hidden'>
                                 <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
                             </div>
@@ -170,7 +170,7 @@ const Blogs = () => {
                             </div>
                         </div>
 
-                        <div data-aos={animationRight} data-aos-duration="500" className='w-full shadow-lg bg-white rounded-xl p-3 flex flex-col gap-4'>
+                        <div className='w-full shadow-lg bg-white rounded-xl p-3 flex flex-col gap-4'>
                             <div className='w-full h-56 rounded-xl overflow-hidden'>
                                 <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
                             </div>
@@ -198,7 +198,7 @@ const Blogs = () => {
                             </div>
                         </div>
 
-                        <div data-aos={animationRight} data-aos-duration="500" className='w-full shadow-lg bg-white rounded-xl p-3 flex flex-col gap-4'>
+                        <div className='w-full shadow-lg bg-white rounded-xl p-3 flex flex-col gap-4'>
                             <div className='w-full h-56 rounded-xl overflow-hidden'>
                                 <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
                             </div>
@@ -226,7 +226,7 @@ const Blogs = () => {
                             </div>
                         </div>
 
-                        <div data-aos={animationRight} data-aos-duration="500" className='w-full shadow-lg bg-white rounded-xl p-3 flex flex-col gap-4'>
+                        <div className='w-full shadow-lg bg-white rounded-xl p-3 flex flex-col gap-4'>
                             <div className='w-full h-56 rounded-xl overflow-hidden'>
                                 <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
                             </div>

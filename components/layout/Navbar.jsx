@@ -3,10 +3,13 @@
 import { AlignRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
 
 const Navbar = () => {
   const [openMobileMenu, setOpenMobileMenu] = useState(false)
+  const path = usePathname()
+  const pathname = path.split('/')[1];
 
   const menuRef = useRef(null);
   useEffect(() => {
@@ -24,27 +27,28 @@ const Navbar = () => {
     <div className='relative'>
       <nav className='z-50 bg-white font-proxima flex items-center justify-between gap-10 px-5 md:px-20 py-5'>
         <Link href={'/'}>
-          <div className='w-28'>
-            <Image src='/img/logo.png' width={500} height={500} alt='logo' className='w-full h-full' />
+          <div className='flex items-center gap-3'>
+            <Image src='/img/logoc.png' width={500} height={500} alt='logo' className='w-7' />
+            <span className='font-bold text-xl'>PAVE</span>
           </div>
         </Link>
 
         <div className='font-medium text-neutral-600 hidden md:flex items-center gap-10'>
           <div className='relative group'>
             <Link href={'/about'}>About</Link>
-            <div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-neutral-500 transition-all duration-500 group-hover:w-full"></div>
+            <div className={`absolute -bottom-1 left-0 ${pathname === 'about' ? 'w-full ' : 'w-0'} h-[3px] bg-neutral-500 transition-all duration-500 group-hover:w-full`}></div>
           </div>
           <div className='relative group'>
             <Link href={'/services'}>Services</Link>
-            <div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-neutral-500 transition-all duration-500 group-hover:w-full"></div>
+            <div className={`absolute -bottom-1 left-0 ${pathname === 'services' ? 'w-full ' : 'w-0'} h-[3px] bg-neutral-500 transition-all duration-500 group-hover:w-full`}></div>
           </div>
           <div className='relative group'>
             <Link href={'/blogs'}>Blogs</Link>
-            <div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-neutral-500 transition-all duration-500 group-hover:w-full"></div>
+            <div className={`absolute -bottom-1 left-0 ${pathname === 'blogs' ? 'w-full ' : 'w-0'} h-[3px] bg-neutral-500 transition-all duration-500 group-hover:w-full`}></div>
           </div>
           <div className='relative group'>
             <Link href={'/contact'}>Contact Us</Link>
-            <div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-neutral-500 transition-all duration-500 group-hover:w-full"></div>
+            <div className={`absolute -bottom-1 left-0 ${pathname === 'contact' ? 'w-full ' : 'w-0'} h-[3px] bg-neutral-500 transition-all duration-500 group-hover:w-full`}></div>
           </div>
         </div>
 

@@ -22,7 +22,7 @@ const Contact = () => {
         };
 
         // Initialize AOS
-        AOS.init({ duration: 500 });
+        AOS.init({ duration: 500, once: true });
 
         handleResize();
         window.addEventListener('resize', handleResize);
@@ -37,25 +37,28 @@ const Contact = () => {
 
             <div className="px-5">
                 <div className="bg-neutral-800 rounded-3xl px-5 py-8 md:py-20 md:px-36 flex flex-col gap-16">
-                    <div data-aos="fade-up" data-aos-duration="500" className="text-white flex flex-col items-center justify-center gap-4 md:gap-8 mx-auto max-w-4xl">
+                    <div className="text-white flex flex-col items-center justify-center gap-4 md:gap-8 mx-auto max-w-4xl">
                         <h2 className="font-medium text-3xl md:text-5xl">Contact Us</h2>
                         <p className="font-regular text-center text-base md:text-xl">Get in touch with us at Pave to explore how our innovative IT solutions can elevate your business. We&apos;re here to assist with any inquiries or support you need.</p>
                     </div>
 
                     <div className="flex flex-col justify-center items-center md:flex-row flex-wrap gap-5 md:items-start md:justify-between">
-                        <div data-aos={animationRight} data-aos-duration="500" className='flex flex-col md:items-start items-center justify-center gap-3 max-w-52 text-white'>
+                        <div className='flex flex-col md:items-start items-center justify-center gap-3 max-w-52 text-white'>
                             <h4 className='uppercase'>Get In Touch</h4>
-                            <p className='text-xl md:text-left text-center'>+33 (0)1 59 06 37 10 Contact@pave.agency</p>
+                            <p className='text-xl md:text-left text-center'>+49 160 95757167
+                            info@paveconsultings.com</p>
                         </div>
 
-                        <div data-aos={animationRight} data-aos-duration="500" className='flex flex-col md:items-start items-center justify-center gap-3 max-w-52 text-white'>
+                        <div className='flex flex-col md:items-start items-center justify-center gap-3 max-w-52 text-white'>
                             <h4 className='uppercase'>Our Address</h4>
-                            <p className='text-xl md:text-left text-center'>8301 Preston Rd. Ingle, Maine 93831, Germany</p>
+                            <p className='text-xl md:text-left text-center'>63906 Erlenbach am Main
+                            Am Streitberg 28, Germany</p>
                         </div>
 
-                        <div data-aos={animationRight} data-aos-duration="500" className='flex flex-col md:items-start items-center justify-center gap-3 max-w-52 text-white'>
+                        <div className='flex flex-col md:items-start items-center justify-center gap-3 max-w-52 text-white'>
                             <h4 className='uppercase'>Time</h4>
-                            <p className='text-xl md:text-left text-center'>Monday-Friday 8:00 am to 5:00 pm</p>
+                            <p className='text-xl md:text-left text-center'>Monday-Friday <br/>
+                            14:00 - 20:00</p>
                         </div>
                     </div>
                 </div>
@@ -63,7 +66,7 @@ const Contact = () => {
 
             <div className="px-5 py-10">
                 <div className="bg-neutral-100 rounded-3xl px-5 py-8 md:p-14 flex flex-col items-center justify-center gap-10">
-                    <div data-aos="fade-up" data-aos-duration="500" className="flex flex-col items-center justify-center gap-3 max-w-3xl">
+                    <div className="flex flex-col items-center justify-center gap-3 max-w-3xl">
                         <div className="flex flex-col items-center justify-center gap-3">
                             <Sun />
                             <h2 className="font-medium text-xl md:text-2xl text-center">Services</h2>
@@ -90,7 +93,7 @@ const Contact = () => {
             </div>
 
             <div className="p-5 md:px-20 md:py-10 flex flex-col items-center justify-center gap-3 md:gap-10">
-                <div data-aos="fade-up" data-aos-duration="500" className="flex flex-col items-center justify-center gap-3 max-w-2xl">
+                <div className="flex flex-col items-center justify-center gap-3 max-w-2xl">
                     <div className="flex flex-col items-center justify-center gap-3">
                         <Sun />
                         <h2 className="font-medium text-xl md:text-2xl text-center">FAQs</h2>

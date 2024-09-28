@@ -24,18 +24,18 @@ const Footer = () => {
             </button>
 
             <div className="bg-neutral-800 rounded-t-3xl py-14 md:py-16 px-5 md:px-20 flex flex-col gap-14">
-                <div data-aos="fade-up" data-aos-duration="500" className='flex flex-col md:flex-row gap-6 items-center justify-between md:justify-between'>
+                <div className='flex flex-col md:flex-row gap-6 items-center justify-between md:justify-between'>
                     <h2 className="font-medium text-white text-center md:text-left text-3xl md:text-4xl max-w-xs">Have something to talk about ?</h2>
 
                     <button className="px-4 py-2 bg-white rounded-full font-semibold border-2 border-white relative overflow-hidden transition-all duration-500 ease-out group">
                         <span className="relative z-10 transition-colors duration-500 group-hover:text-white">
-                            Book an Appointment
+                            Request cooperation
                         </span>
                         <div className="absolute inset-0 bg-neutral-800 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
                     </button>
                 </div>
 
-                <div data-aos="fade-up" data-aos-duration="500" className='flex flex-col md:flex-row gap-14 md:gap-6 items-center justify-between'>
+                <div className='flex flex-col md:flex-row gap-14 md:gap-6 items-center justify-between'>
                     <div className='flex flex-wrap items-center justify-center gap-6 text-white'>
                         <Link href={'/about'}><button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>About</button></Link>
                         <Link href={'/'}><button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>Services</button></Link>
@@ -44,8 +44,9 @@ const Footer = () => {
                     </div>
 
                     <div className='flex items-center md:items-start justify-center flex-col gap-5'>
-                        <div className='w-28'>
-                            <Image src='/img/logo.png' width={500} height={500} alt='logo' className='w-full h-full invert' />
+                        <div className='flex items-center gap-3'>
+                            <Image src='/img/logow.png' width={500} height={500} alt='logo' className='w-7' />
+                            <span className='font-bold text-xl text-white'>PAVE</span>
                         </div>
                         <p className='text-white'>© Copyright 2024, All Rights Reserved</p>
                     </div>

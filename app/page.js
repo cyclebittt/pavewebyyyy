@@ -3,7 +3,7 @@
 import { Testimonials } from "@/components/home/Testimonials";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
-import { ArrowRight, ArrowUpRight, ChartPie, CodeXml, Flame, LayoutDashboard, Pencil, Plus, Sun } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ChartPie, CodeXml, Flame, LayoutDashboard, Pencil, PenTool, Plus, Sun, Users } from "lucide-react";
 import { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -21,7 +21,7 @@ export default function Home() {
     };
 
     // Initialize AOS
-    AOS.init({ duration: 500 });
+    AOS.init({ duration: 500, once: true });
 
     handleResize();
     window.addEventListener('resize', handleResize);
@@ -45,14 +45,14 @@ export default function Home() {
             src="https://videos.pexels.com/video-files/1957727/1957727-hd_1920_1080_30fps.mp4"
           />
 
-          <div data-aos="fade-up" data-aos-duration="500" className="flex text-white flex-col items-center justify-center gap-4 max-w-3xl">
+          <div className="flex text-white flex-col items-center justify-center gap-4 max-w-3xl">
             <h1 className="text-5xl md:text-7xl font-medium text-center">Paving Your Path to the Digital Future</h1>
-            <p className="text-lg text-center">Our comprehensive tool offers small business owners a one-stop-shop solution to manage their accounting, sales, marketing, outreach efforts, CRM, financial models, email campaigns.</p>
+            <p className="text-lg text-center">Achieve significant progress by combining branding, marketing, and technology with our innovative digital transformation management company.</p>
           </div>
 
           <div className="flex items-center relative group">
             <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10">
-              Request Operation
+              Schedule a meeting
             </button>
             <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
               <ArrowUpRight />
@@ -61,7 +61,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="px-5 md:px-20 py-6 md:py-14 flex flex-col gap-14">
+      {/* <div className="px-5 md:px-20 py-6 md:py-14 flex flex-col gap-14">
         <div data-aos="fade-up" data-aos-duration="500" className="flex gap-4">
           <Sun className="min-w-[16px]" />
           <div className="flex flex-col gap-8">
@@ -97,85 +97,93 @@ export default function Home() {
             <img src="https://images.pexels.com/photos/5990042/pexels-photo-5990042.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" className="w-full h-full object-cover" alt="" />
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="px-5 py-10">
-        <div className="bg-neutral-800 rounded-3xl px-5 py-8 md:p-14 flex flex-col items-center justify-center gap-14">
-          <div data-aos="fade-up" data-aos-duration="500" className="text-white flex flex-col items-center justify-center gap-3 max-w-2xl">
-            <div className="flex flex-col items-center justify-center gap-3">
-              <Sun />
-              <h2 className="font-medium text-xl md:text-2xl text-center">Services</h2>
+        <div className="bg-neutral-800 rounded-3xl px-5 py-8 md:p-14 flex flex-col items-center justify-center gap-12">
+          <div className="flex flex-col items-center justify-center gap-14">
+            <div className="text-white flex flex-col items-center justify-center gap-3 max-w-2xl">
+              <div className="flex flex-col items-center justify-center gap-3">
+                <Sun />
+                <h2 className="font-medium text-xl md:text-2xl text-center">Services</h2>
+              </div>
+              <p className="font-medium text-3xl md:text-5xl text-center">Your Path Out of Paperwork</p>
             </div>
-            <p className="font-medium text-3xl md:text-5xl text-center">The most popular neighborhoods in Dubai</p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full">
+              <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="500" className="relative bg-[#353088] px-6 pt-6 rounded-lg w-full min-h-[540px] rounded-2xl flex flex-col gap-10">
+                <div className="flex flex-col gap-5">
+                  <div className="h-12 w-12 aspect-square rounded-full text-[#353088] bg-neutral-200 flex items-center justify-center">
+                    <Users size={24} />
+                  </div>
+                  <div className="flex flex-col gap-2 text-white">
+                    <h2 className="font-bold text-2xl">Internal Collaboration Solutions</h2>
+                    <p className="text-xl">Enhancing team collaboration with tailored communication tools.</p>
+                  </div>
+                </div>
+                <div className="w-full relative md:absolute left-1/2 -translate-x-1/2 bottom-0">
+                  <img src="/img/branding.png" alt="" className="w-full" />
+                </div>
+              </div>
+
+              <div data-aos={animationRight} data-aos-duration="500" className="flex flex-col gap-8 w-full h-full">
+                <div className="h-1/2 flex flex-col gap-5 p-6 bg-[#7569AD] rounded-2xl">
+                  <div className="h-12 w-12 aspect-square rounded-full text-[#4B3A98] bg-white flex items-center justify-center">
+                    <ChartPie size={24} />
+                  </div>
+                  <div className="flex flex-col gap-2 text-white">
+                    <h2 className="font-bold text-2xl">Branding & Identity</h2>
+                    <p className="">Creating standout brand identities through logo design, guidelines, and storytelling.</p>
+                  </div>
+                </div>
+
+                <div className="h-1/2 flex flex-col gap-5 p-6 bg-[#B6B0D6] rounded-2xl">
+                  <div className="h-12 w-12 aspect-square rounded-full text-[#222] bg-white flex items-center justify-center">
+                    <PenTool size={24} />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <h2 className="font-bold text-2xl">UX/UI Design</h2>
+                    <p className="text-neutral-600">Crafting intuitive and engaging user interfaces and experiences for web and mobile applications.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="500" className="flex flex-col gap-8 w-full h-full">
+                <div className="h-1/2 flex flex-col gap-5 p-6 bg-white rounded-2xl">
+                  <div className="h-12 w-12 aspect-square rounded-full text-[#222] bg-neutral-200 flex items-center justify-center">
+                    <CodeXml size={24} />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <h2 className="font-bold text-2xl">Web Development</h2>
+                    <p className="text-neutral-600">Building and maintaining websites, from front-end design to back-end functionality and e-commerce solutions.</p>
+                  </div>
+                </div>
+
+                <div className="h-1/2 flex flex-col gap-5 p-6 bg-[#F5F4FC] rounded-2xl">
+                  <div className="h-12 w-12 aspect-square rounded-full text-[#222] bg-neutral-200 flex items-center justify-center">
+                    <LayoutDashboard size={24} />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <h2 className="font-bold text-2xl">Content Creation</h2>
+                    <p className="text-neutral-600">Developing engaging content like blogs and videos to boost your marketing efforts.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full">
-            <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="500" className="relative bg-neutral-100 px-6 pt-6 rounded-lg w-full rounded-2xl flex flex-col gap-10">
-              <div className="flex flex-col gap-5">
-                <div className="h-12 w-12 aspect-square rounded-full text-violet-500 bg-neutral-200 flex items-center justify-center">
-                  <Flame size={24} />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <h2 className="font-bold text-2xl">Branding</h2>
-                  <p className="text-neutral-600 text-2xl">Developing and refining brand identities, including logo design, brand guidelines, and visual storytelling.</p>
-                </div>
-              </div>
-              <div className="w-full relative md:absolute left-1/2 -translate-x-1/2 bottom-0">
-                <img src="/img/iphone.png" alt="" className="w-full" />
-              </div>
-            </div>
-
-            <div data-aos={animationRight} data-aos-duration="500" className="flex flex-col gap-8 w-full">
-              <div className="flex flex-col gap-5 p-6 bg-violet-300 rounded-2xl">
-                <div className="h-12 w-12 aspect-square rounded-full text-violet-500 bg-white flex items-center justify-center">
-                  <ChartPie size={24} />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <h2 className="font-bold text-2xl">Digital Marketing</h2>
-                  <p className="text-neutral-600">Creating and managing digital marketing strategies, including SEO, PPC, social media management, and email marketing.</p>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-5 p-6 bg-rose-200 rounded-2xl">
-                <div className="h-12 w-12 aspect-square rounded-full text-rose-500 bg-white flex items-center justify-center">
-                  <Pencil size={24} />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <h2 className="font-bold text-2xl">UX/UI Design</h2>
-                  <p className="text-neutral-600">Crafting intuitive and engaging user interfaces and experiences for web and mobile applications.</p>
-                </div>
-                <div className="w-32">
-                  <img src="/img/clients.png" alt="" className="w-full" />
-                </div>
-              </div>
-            </div>
-
-            <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="500" className="flex flex-col gap-8 w-full">
-              <div className="h-full flex flex-col gap-5 p-6 bg-neutral-100 rounded-2xl">
-                <div className="h-12 w-12 aspect-square rounded-full text-neutral-600 bg-white flex items-center justify-center">
-                  <CodeXml size={24} />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <h2 className="font-bold text-2xl">Web Development</h2>
-                  <p className="text-neutral-600">Building and maintaining websites, from front-end design to back-end functionality and e-commerce solutions.</p>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-5 p-6 bg-yellow-200 rounded-2xl">
-                <div className="h-12 w-12 aspect-square rounded-full text-yellow-500 bg-white flex items-center justify-center">
-                  <LayoutDashboard size={24} />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <h2 className="font-bold text-2xl">Content Creation</h2>
-                  <p className="text-neutral-600">Producing high-quality content such as blog posts, videos, and graphics to support marketing efforts and engage audiences.</p>
-                </div>
-              </div>
-            </div>
+          <div className="flex items-center relative group">
+            <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10 flex items-center gap-1">
+              Boost your efficiency <span className="hidden md:flex items-center">– discover our digital solutions now!</span>
+            </button>
+            <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
+              <ArrowUpRight />
+            </button>
           </div>
         </div>
       </div>
 
-      <div className="py-14 flex flex-col items-center justify-center gap-14">
+      {/* <div className="py-14 flex flex-col items-center justify-center gap-14">
         <div data-aos="fade-up" data-aos-duration="500" className="flex flex-col items-center justify-center gap-3 max-w-2xl">
           <div className="flex flex-col items-center justify-center gap-3">
             <Sun />
@@ -188,15 +196,23 @@ export default function Home() {
           <Testimonials direction={"right"} />
           <Testimonials direction={"left"} />
         </div>
-      </div>
+      </div> */}
 
       <div className="px-5 py-10">
-        <div className="bg-neutral-800 rounded-3xl px-5 py-8 md:p-14 flex flex-col gap-14">
-          <div data-aos="fade-up" data-aos-duration="500" className="text-white flex gap-4 max-w-6xl">
+        <div className="bg-white rounded-3xl px-5 py-8 md:p-14 flex flex-col gap-14">
+          <div className="flex gap-4 max-w-6xl">
             <Sun className="min-w-[16px]" />
             <div className="flex flex-col gap-8">
               <h2 className="font-medium text-xl md:text-2xl">Why Us</h2>
-              <p className="font-medium text-3xl md:text-5xl">Understand why we are the top choice for exceptional service</p>
+              <p className="font-medium text-3xl md:text-5xl">Experience the difference with tailored digital solutions that deliver real impact.</p>
+              <div className="flex items-center relative group">
+                <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10">
+                  Find Out More
+                </button>
+                <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
+                  <ArrowUpRight />
+                </button>
+              </div>
             </div>
           </div>
 
@@ -206,28 +222,28 @@ export default function Home() {
             </div>
             <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="500" className="w-full flex flex-col gap-8 w-full">
               <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="w-full bg-neutral-100 rounded-2xl flex flex-col p-8 gap-5 items-center justify-center">
-                  <span className="text-red-500 bg-red-100 px-4 py-2 rounded-full">Retention Rate</span>
+                <div className="w-full bg-[#353088] rounded-2xl flex flex-col p-8 gap-5 items-center justify-center">
+                  <span className="text-white bg-[#FFFFFF1F] px-4 py-2 rounded-full">Retention Rate</span>
                   <div className="w-full flex flex-col gap-3 items-center justify-center">
-                    <h3 className="font-bold text-6xl">96%</h3>
-                    <p className="text-center text-neutral-600">With over 90% client retention, our work has consistently delivered outstanding results.</p>
+                    <h3 className="font-bold text-6xl text-[#FFDD67]">96%</h3>
+                    <p className="text-center text-[#E9E9E9]">We have achieved a 96% client retention rate, based on annual feedback and a customer loyalty analysis conducted over the past 3 years.</p>
                   </div>
                 </div>
 
-                <div className="w-full bg-neutral-100 rounded-2xl flex flex-col p-8 gap-5 items-center justify-center">
-                  <span className="text-violet-500 bg-violet-100 px-4 py-2 rounded-full">Experience</span>
+                <div className="w-full bg-[#7569AD] rounded-2xl flex flex-col p-8 gap-5 items-center justify-center">
+                  <span className="text-white bg-[#FFFFFF1F] px-4 py-2 rounded-full">Experience</span>
                   <div className="w-full flex flex-col gap-3 items-center justify-center">
-                    <h3 className="font-bold text-6xl">3+</h3>
-                    <p className="text-center text-neutral-600">Year of expertise in integrating AI with user interfaces has a 40% increase in user engagement.</p>
+                    <h3 className="font-bold text-6xl text-white">3+</h3>
+                    <p className="text-center text-[#E9E9E9]">With over 3 years of experience managing social media accounts, we’ve successfully driven brand growth for over 50 clients across various industries.</p>
                   </div>
                 </div>
               </div>
 
-              <div className="w-full bg-neutral-100 rounded-2xl flex flex-col p-8 gap-5 items-center justify-center">
-                <span className="text-yellow-500 bg-yellow-100 px-4 py-2 rounded-full">Global Clientele</span>
+              <div className="w-full bg-[#EAEAEA] rounded-2xl flex flex-col p-8 gap-5 items-center justify-center">
+                <span className="text-[#353088] bg-[#7569AD1F] px-4 py-2 rounded-full">Global Clientele</span>
                 <div className="w-full flex flex-col gap-3 items-center justify-center">
-                  <h3 className="font-bold text-6xl">500+</h3>
-                  <p className="text-center text-neutral-600">Having collaborated with leading companies like DP World and innovative startups such as Uniflow, our portfolio is a testament to our ability to deliver top-tier solutions, earning us recognition in the industry.</p>
+                  <h3 className="font-bold text-6xl text-[500+]">500+</h3>
+                  <p className="text-center text-[#000]">We manage social media and content creation for over 500 international clients, ranging from gaming and tech to lifestyle brands. Our tailored digital strategies focus on delivering measurable results aligned with each brand’s unique goals.</p>
                 </div>
               </div>
             </div>

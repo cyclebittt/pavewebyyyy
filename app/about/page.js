@@ -22,7 +22,7 @@ const About = () => {
         };
 
         // Initialize AOS
-        AOS.init({ duration: 500 });
+        AOS.init({ duration: 500, once: true });
 
         handleResize();
         window.addEventListener('resize', handleResize);
@@ -37,20 +37,36 @@ const About = () => {
 
             <div className="px-5">
                 <div className="bg-neutral-800 rounded-3xl px-5 py-8 md:p-14 flex flex-col gap-16">
-                    <div data-aos="fade-up" data-aos-duration="500" className="text-white flex flex-col gap-6 md:gap-12 max-w-4xl">
+                    <div className="text-white flex flex-col gap-6 md:gap-12 max-w-4xl">
                         <h2 className="font-medium text-3xl md:text-5xl">Who We Are?</h2>
-                        <p className="font-regular text-base md:text-xl">Our comprehensive tool offers small business owners a one-stop-shop solution to manage their accounting, sales, marketing, outreach efforts, CRM, financial models, email campaigns, </p>
+                        <p className="font-regular text-base md:text-xl">Our all-in-one platform helps small business owners manage (re)branding, strategy, and web creation with ease. From high-performance web design and eye-catching motion graphics to communication tools like Slack and SharePoint, we bring your business to the next level.</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 w-full">
                         <div data-aos={animationRight} data-aos-duration="500" className="w-full h-full rounded-2xl overflow-hidden">
                             <img src="https://images.unsplash.com/photo-1568992687947-868a62a9f521?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="w-full h-full object-cover" />
                         </div>
-                        <div data-aos={animationRight} data-aos-duration="500" className="bg-white/20 text-white w-full flex flex-col gap-6 p-4 md:p-10 rounded-2xl">
-                            <h2 className="font-bold text-3xl md:text-5xl">Our Story</h2>
-                            <div className='flex flex-col gap-4'>
-                                <p className="font-medium text-base md:text-xl">Lorem ipsum dolor sit amet consectetur. Varius a adipiscing aliquam parturient leo ullamcorper arcu. Sagittis interdum euismod imperdiet porta est. Commodo enim tellus vulputate mauris ipsum. Tincidunt nulla interdum tempus bibendum lobortis sed facilisi viverra. Mauris risus eget imperdiet sit sit in dui. </p>
-                                <p className="font-medium text-base md:text-xl">Id phasellus diam id faucibus mollis odio tempor ipsum amet. In vitae placerat turpis malesuada bibendum non velit velit. Enim eget semper dui dui. Eget faucibus amet bibendum ullamcorper at ultricies nunc. Turpis tincidunt facilisi sollicitudin ac facilisi.</p>
+                        <div className='flex flex-col gap-4'>
+                            <div data-aos={animationRight} data-aos-duration="500" className="bg-white/20 text-white w-full flex flex-col gap-6 p-4 md:p-10 rounded-2xl">
+                                <h2 className="font-bold text-3xl md:text-5xl">Our Story</h2>
+                                <div className='flex flex-col gap-4'>
+                                    <p className="font-medium text-base md:text-xl">At the heart of everything we do is transformation. We began with a mission: to help businesses connect meaningfully with their audiences through tailored branding strategies and innovative design solutions.
+                                        As we grew, so did our vision. We recognized the need for smarter communication tools, creating platforms that make collaboration seamless. Today, we empower small businesses by navigating the digital world and providing solutions that help them thrive.</p>
+                                </div>
+                            </div>
+                            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                                <div data-aos='fade-down' data-aos-duration="500" className="bg-white/20 text-white w-full flex flex-col gap-6 p-4 md:p-10 rounded-2xl">
+                                    <h2 className="font-bold text-3xl md:text-4xl">Our Mission</h2>
+                                    <div className='flex flex-col gap-4'>
+                                        <p className="font-medium text-base md:text-xl">We’re dedicated to helping businesses tell their unique stories and achieve success through innovative design and thoughtful strategy.</p>
+                                    </div>
+                                </div>
+                                <div data-aos='fade-down' data-aos-duration="500" className="bg-white/20 text-white w-full flex flex-col gap-6 p-4 md:p-10 rounded-2xl">
+                                    <h2 className="font-bold text-3xl md:text-4xl">Our Vision</h2>
+                                    <div className='flex flex-col gap-4'>
+                                        <p className="font-medium text-base md:text-xl">Creating digital-first solutions that drive growth, boost innovation, and enhance collaboration across industries worldwide.</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -58,7 +74,7 @@ const About = () => {
             </div>
 
             <div className="px-5 md:px-20 py-6 md:py-24 flex flex-col md:flex-row gap-8">
-                <div data-aos="fade-up" data-aos-duration="500" className="w-full md:w-3/5">
+                <div className="w-full md:w-3/5">
                     <div className="flex gap-4">
                         <Sun className="min-w-[16px]" />
                         <div className='flex flex-col gap-6 md:max-w-xl'>
@@ -98,8 +114,8 @@ const About = () => {
             </div>
 
             <div className="px-5 py-10">
-                <div className="bg-orange-600 rounded-3xl py-12 md:py-20 flex flex-col items-center justify-center gap-16">
-                    <div data-aos="fade-up" data-aos-duration="500" className="text-white flex flex-col items-center justify-center gap-3 max-w-xl">
+                <div className="bg-[#F2545B] rounded-3xl py-12 md:py-20 flex flex-col items-center justify-center gap-16">
+                    <div className="text-white flex flex-col items-center justify-center gap-3 max-w-xl">
                         <div className="flex flex-col items-center justify-center gap-3">
                             <Sun />
                             <h2 className="font-medium text-xl md:text-2xl text-center">Teams</h2>
@@ -113,7 +129,7 @@ const About = () => {
                 </div>
             </div>
 
-            <div className="px-5 py-10">
+            {/* <div className="px-5 py-10">
                 <div className="bg-neutral-100 rounded-3xl px-5 py-12 md:py-20 flex flex-col items-center justify-center gap-16">
                     <div data-aos="fade-up" data-aos-duration="500" className="flex flex-col gap-6 md:gap-12 max-w-3xl">
                         <h2 className="font-medium text-center text-3xl md:text-5xl">Backed By The Best</h2>
@@ -144,7 +160,7 @@ const About = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             <div className="px-5 md:px-20 py-6 md:py-24 flex flex-col md:flex-row gap-20">
                 <div data-aos="fade-up" data-aos-duration="500" className="w-full md:w-2/5 flex flex-col gap-12">
