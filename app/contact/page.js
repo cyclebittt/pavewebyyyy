@@ -8,6 +8,7 @@ import React from 'react'
 import { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import Link from 'next/link'
 
 const Contact = () => {
     const [animationRight, setAnimationRight] = useState('fade-right');
@@ -43,22 +44,22 @@ const Contact = () => {
                     </div>
 
                     <div className="flex flex-col justify-center items-center md:flex-row flex-wrap gap-5 md:items-start md:justify-between">
-                        <div className='flex flex-col md:items-start items-center justify-center gap-3 max-w-52 text-white'>
+                        <div className='flex flex-col md:items-start items-center justify-center gap-3 text-white'>
                             <h4 className='uppercase'>Get In Touch</h4>
-                            <p className='text-xl md:text-left text-center'>+49 160 95757167
-                            info@paveconsultings.com</p>
+                            <p className='text-xl md:text-left text-center'>+49 160 95757167 <br />
+                                info@paveconsultings.com</p>
                         </div>
 
-                        <div className='flex flex-col md:items-start items-center justify-center gap-3 max-w-52 text-white'>
+                        <div className='flex flex-col md:items-start items-center justify-center gap-3 text-white'>
                             <h4 className='uppercase'>Our Address</h4>
-                            <p className='text-xl md:text-left text-center'>63906 Erlenbach am Main
-                            Am Streitberg 28, Germany</p>
+                            <p className='text-xl md:text-left text-center'>Am Streitberg 28 <br />
+                                63906 Erlenbach am Main, Germany</p>
                         </div>
 
-                        <div className='flex flex-col md:items-start items-center justify-center gap-3 max-w-52 text-white'>
+                        <div className='flex flex-col md:items-start items-center justify-center gap-3 text-white'>
                             <h4 className='uppercase'>Time</h4>
-                            <p className='text-xl md:text-left text-center'>Monday-Friday <br/>
-                            14:00 - 20:00</p>
+                            <p className='text-xl md:text-left text-center'>Monday-Friday <br />
+                                14:00 - 20:00</p>
                         </div>
                     </div>
                 </div>
@@ -74,13 +75,13 @@ const Contact = () => {
                         <p className="font-medium text-3xl md:text-5xl text-center">Send us a message</p>
                     </div>
 
-                    <div className='w-full md:w-[720px] flex flex-col gap-6'>
+                    <div className='w-full md:w-[714px] flex flex-col gap-6'>
                         <div className='grid grid-cols-1 md:grid-cols-2 gap-6 w-full'>
-                            <input type="text" placeholder='Name' className='w-full bg-white border-none outline-none p-4 rounded-xl' />
-                            <input type="email" placeholder='Email' className='w-full bg-white border-none outline-none p-4 rounded-xl' />
+                            <input type="text" placeholder='Name' className='w-full bg-white border-none outline-none p-3 rounded-xl' />
+                            <input type="email" placeholder='Email' className='w-full bg-white border-none outline-none p-3 rounded-xl' />
                         </div>
                         <div className='grid grid-cols-1'>
-                            <textarea placeholder='Message' className='w-full bg-white border-none outline-none p-4 rounded-xl' />
+                            <textarea placeholder='Message' className='w-full bg-white border-none outline-none p-3 rounded-xl' />
                         </div>
                         <button className="w-full px-4 py-2 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-all duration-500 ease-out group">
                             <span className="relative z-10 transition-colors duration-500 group-hover:text-violet-700">
@@ -111,12 +112,14 @@ const Contact = () => {
                     <div className="flex flex-col gap-8">
                         <h2 className="font-medium text-3xl md:text-5xl">Get in touch with us for more information or support.</h2>
                         <p className="text-neutral-600">We’re here to help you every step of the way. Whether you have questions, need support, or just want to chat, our team is ready to assist you. Reach out to us through our contact form, email, or phone, and we&apos;ll get back to you as soon as possible.</p>
-                        <button className="w-fit px-4 py-2 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-all duration-500 ease-out group">
-                            <span className="relative z-10 transition-colors duration-500 group-hover:text-violet-700">
-                                Book an Appointment
-                            </span>
-                            <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
-                        </button>
+                        <Link href='/request'>
+                            <button className="w-fit px-4 py-2 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-all duration-500 ease-out group">
+                                <span className="relative z-10 transition-colors duration-500 group-hover:text-violet-700">
+                                    Book an Appointment
+                                </span>
+                                <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+                            </button>
+                        </Link>
                     </div>
                     <div className="flex items-center gap-2">
                         <p className="text-xl font-medium">We look forward to connecting with you</p>
@@ -124,7 +127,7 @@ const Contact = () => {
                     </div>
                 </div>
 
-                <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="500" className="flex flex-col md:flex-row items-center md:items-end gap-5 w-full md:w-3/5">
+                <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="300" className="flex flex-col md:flex-row items-center md:items-end gap-5 w-full md:w-3/5">
                     <div className="w-full md:w-72 aspect-square rounded-2xl overflow-hidden relative">
                         <div className="absolute bottom-2 left-2 flex items-center group">
                             <button className="px-4 py-1 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10">
@@ -137,14 +140,14 @@ const Contact = () => {
                         <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="w-full h-full object-cover" />
                     </div>
                     <div className="relative w-full h-full rounded-2xl overflow-hidden">
-                        <div className="absolute top-4 right-4 flex items-center group">
+                        <Link href='/about' className="absolute top-4 right-4 flex items-center group">
                             <button className="px-4 py-2 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10">
                                 Meet our Team
                             </button>
                             <button className="w-10 h-10 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-4">
                                 <ArrowUpRight />
                             </button>
-                        </div>
+                        </Link>
                         <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1484&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="w-full h-full object-cover" />
                     </div>
                 </div>

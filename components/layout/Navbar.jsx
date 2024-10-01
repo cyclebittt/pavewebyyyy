@@ -29,18 +29,17 @@ const Navbar = () => {
         <Link href={'/'}>
           <div className='flex items-center gap-3'>
             <Image src='/img/logoc.png' width={500} height={500} alt='logo' className='w-7' />
-            <span className='font-bold text-xl'>PAVE</span>
           </div>
         </Link>
 
         <div className='font-medium text-neutral-600 hidden md:flex items-center gap-10'>
           <div className='relative group'>
-            <Link href={'/about'}>About</Link>
-            <div className={`absolute -bottom-1 left-0 ${pathname === 'about' ? 'w-full ' : 'w-0'} h-[3px] bg-neutral-500 transition-all duration-500 group-hover:w-full`}></div>
+            <Link href={'/'}>Home</Link>
+            <div className={`absolute -bottom-1 left-0 ${pathname === '' ? 'w-full ' : 'w-0'} h-[3px] bg-neutral-500 transition-all duration-500 group-hover:w-full`}></div>
           </div>
           <div className='relative group'>
-            <Link href={'/services'}>Services</Link>
-            <div className={`absolute -bottom-1 left-0 ${pathname === 'services' ? 'w-full ' : 'w-0'} h-[3px] bg-neutral-500 transition-all duration-500 group-hover:w-full`}></div>
+            <Link href={'/about'}>About</Link>
+            <div className={`absolute -bottom-1 left-0 ${pathname === 'about' ? 'w-full ' : 'w-0'} h-[3px] bg-neutral-500 transition-all duration-500 group-hover:w-full`}></div>
           </div>
           <div className='relative group'>
             <Link href={'/blogs'}>Blogs</Link>
@@ -52,12 +51,14 @@ const Navbar = () => {
           </div>
         </div>
 
-        <button className="hidden md:block px-4 py-2 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-all duration-500 ease-out group">
-          <span className="relative z-10 transition-colors duration-500 group-hover:text-violet-700">
-            Request Operation
-          </span>
-          <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
-        </button>
+        <Link href='/request'>
+          <button className="hidden md:block px-4 py-2 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-all duration-500 ease-out group">
+            <span className="relative z-10 transition-colors duration-500 group-hover:text-violet-700">
+              Request cooperation
+            </span>
+            <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+          </button>
+        </Link>
 
         <button className='flex md:hidden oultine-none border-none' onClick={() => setOpenMobileMenu(!openMobileMenu)}>
           <AlignRight size={28} />
@@ -69,11 +70,11 @@ const Navbar = () => {
         className={`absolute top-0 left-0 w-full bg-white font-medium text-neutral-600 md:hidden flex flex-col gap-4 transition-transform duration-500 ease-in-out ${openMobileMenu ? 'translate-y-16' : '-translate-y-full'} z-20`}
       >
         <div className='w-fit relative group px-5 py-2'>
-          <Link href='/about'>About</Link>
+          <Link href='/'>Home</Link>
           <div className="absolute bottom-1 left-5 w-0 h-[2px] bg-neutral-500 transition-all duration-500 group-hover:w-full"></div>
         </div>
         <div className='w-fit relative group px-5 py-2'>
-          <Link href='/services'>Services</Link>
+          <Link href='/about'>About</Link>
           <div className="absolute bottom-1 left-5 w-0 h-[2px] bg-neutral-500 transition-all duration-500 group-hover:w-full"></div>
         </div>
         <div className='w-fit relative group px-5 py-2'>

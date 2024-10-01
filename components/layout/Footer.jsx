@@ -16,7 +16,8 @@ const Footer = () => {
 
     return (
         <div className='pt-14 relative'>
-            <button className='absolute group left-1/2 -translate-x-1/2 top-0 w-24 h-24 aspect-square flex items-center justify-center border-white border-[12px] bg-violet-600 text-white rounded-full'>
+            <button className='absolute group left-1/2 -translate-x-1/2 top-0 w-24 h-24 aspect-square flex items-center justify-center border-white border-[12px] bg-violet-600 text-white rounded-full'
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                 <ArrowUp size={40} className='transition-all duration-300 ease-out group-hover:mb-4' />
 
                 <div className='absolute top-[44px] -left-[38px] w-[40px] h-[40px] rounded-tr-[40px] aspect-square bg-neutral-800  shadow-[0px_-20px_0px_0px_white]'></div>
@@ -27,18 +28,19 @@ const Footer = () => {
                 <div className='flex flex-col md:flex-row gap-6 items-center justify-between md:justify-between'>
                     <h2 className="font-medium text-white text-center md:text-left text-3xl md:text-4xl max-w-xs">Have something to talk about ?</h2>
 
-                    <button className="px-4 py-2 bg-white rounded-full font-semibold border-2 border-white relative overflow-hidden transition-all duration-500 ease-out group">
-                        <span className="relative z-10 transition-colors duration-500 group-hover:text-white">
-                            Request cooperation
-                        </span>
-                        <div className="absolute inset-0 bg-neutral-800 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
-                    </button>
+                    <Link href='/request' className='w-fit'>
+                        <button className="px-4 py-2 bg-white rounded-full font-semibold border-2 border-white relative overflow-hidden transition-all duration-500 ease-out group">
+                            <span className="relative z-10 transition-colors duration-500 group-hover:text-white">
+                                Request cooperation
+                            </span>
+                            <div className="absolute inset-0 bg-neutral-800 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+                        </button>
+                    </Link>
                 </div>
 
                 <div className='flex flex-col md:flex-row gap-14 md:gap-6 items-center justify-between'>
                     <div className='flex flex-wrap items-center justify-center gap-6 text-white'>
                         <Link href={'/about'}><button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>About</button></Link>
-                        <Link href={'/'}><button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>Services</button></Link>
                         <Link href={'/blogs'}><button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>Blogs</button></Link>
                         <Link href={'/contact'}><button className='w-fit px-5 py-3 border border-white bg-none rounded-full transition-all duration-300 ease-out hover:bg-white hover:text-neutral-800'>Contact Us</button></Link>
                     </div>

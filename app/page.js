@@ -7,6 +7,7 @@ import { ArrowRight, ArrowUpRight, ChartPie, CodeXml, Flame, LayoutDashboard, Pe
 import { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import Link from "next/link";
 
 export default function Home() {
   const [animationRight, setAnimationRight] = useState('fade-right');
@@ -50,14 +51,14 @@ export default function Home() {
             <p className="text-lg text-center">Achieve significant progress by combining branding, marketing, and technology with our innovative digital transformation management company.</p>
           </div>
 
-          <div className="flex items-center relative group">
+          <Link href='/request' className="flex items-center relative group">
             <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10">
               Schedule a meeting
             </button>
             <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
               <ArrowUpRight />
             </button>
-          </div>
+          </Link>
         </div>
       </div>
 
@@ -111,7 +112,7 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full">
-              <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="500" className="relative bg-[#353088] px-6 pt-6 rounded-lg w-full min-h-[540px] rounded-2xl flex flex-col gap-10">
+              <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="300" className="relative bg-[#353088] px-6 pt-6 rounded-lg w-full min-h-[540px] rounded-2xl flex flex-col gap-10">
                 <div className="flex flex-col gap-5">
                   <div className="h-12 w-12 aspect-square rounded-full text-[#353088] bg-neutral-200 flex items-center justify-center">
                     <Users size={24} />
@@ -148,7 +149,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="500" className="flex flex-col gap-8 w-full h-full">
+              <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="300" className="flex flex-col gap-8 w-full h-full">
                 <div className="h-1/2 flex flex-col gap-5 p-6 bg-white rounded-2xl">
                   <div className="h-12 w-12 aspect-square rounded-full text-[#222] bg-neutral-200 flex items-center justify-center">
                     <CodeXml size={24} />
@@ -172,14 +173,14 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex items-center relative group">
+          <Link href='/request' className="flex items-center relative group">
             <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10 flex items-center gap-1">
               Boost your efficiency <span className="hidden md:flex items-center">– discover our digital solutions now!</span>
             </button>
             <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
               <ArrowUpRight />
             </button>
-          </div>
+          </Link>
         </div>
       </div>
 
@@ -205,14 +206,14 @@ export default function Home() {
             <div className="flex flex-col gap-8">
               <h2 className="font-medium text-xl md:text-2xl">Why Us</h2>
               <p className="font-medium text-3xl md:text-5xl">Experience the difference with tailored digital solutions that deliver real impact.</p>
-              <div className="flex items-center relative group">
+              <Link href='/about' className="flex items-center relative group">
                 <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10">
                   Find Out More
                 </button>
                 <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
                   <ArrowUpRight />
                 </button>
-              </div>
+              </Link>
             </div>
           </div>
 
@@ -220,7 +221,7 @@ export default function Home() {
             <div data-aos={animationRight} data-aos-duration="500" className="w-full h-full rounded-2xl overflow-hidden">
               <img src="https://images.unsplash.com/photo-1568992687947-868a62a9f521?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="w-full h-full object-cover" />
             </div>
-            <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="500" className="w-full flex flex-col gap-8 w-full">
+            <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="300" className="w-full flex flex-col gap-8 w-full">
               <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="w-full bg-[#353088] rounded-2xl flex flex-col p-8 gap-5 items-center justify-center">
                   <span className="text-white bg-[#FFFFFF1F] px-4 py-2 rounded-full">Retention Rate</span>
@@ -256,12 +257,14 @@ export default function Home() {
           <div className="flex flex-col gap-8">
             <h2 className="font-medium text-3xl md:text-5xl">Get in touch with us for more information or support.</h2>
             <p className="text-neutral-600">We’re here to help you every step of the way. Whether you have questions, need support, or just want to chat, our team is ready to assist you. Reach out to us through our contact form, email, or phone, and we&apos;ll get back to you as soon as possible.</p>
-            <button className="w-fit px-4 py-2 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-all duration-500 ease-out group">
-              <span className="relative z-10 transition-colors duration-500 group-hover:text-violet-700">
-                Book an Appointment
-              </span>
-              <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
-            </button>
+            <Link href='/request'>
+              <button className="w-fit px-4 py-2 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-all duration-500 ease-out group">
+                <span className="relative z-10 transition-colors duration-500 group-hover:text-violet-700">
+                  Book an Appointment
+                </span>
+                <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+              </button>
+            </Link>
           </div>
           <div className="flex items-center gap-2">
             <p className="text-xl font-medium">We look forward to connecting with you</p>
@@ -269,7 +272,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="500" className="flex flex-col md:flex-row items-center md:items-end gap-5 w-full md:w-3/5">
+        <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="300" className="flex flex-col md:flex-row items-center md:items-end gap-5 w-full md:w-3/5">
           <div className="w-full md:w-72 aspect-square rounded-2xl overflow-hidden relative">
             <div className="absolute bottom-2 left-2 flex items-center group">
               <button className="px-4 py-1 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10">
@@ -282,14 +285,14 @@ export default function Home() {
             <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="w-full h-full object-cover" />
           </div>
           <div className="relative w-full h-full rounded-2xl overflow-hidden">
-            <div className="absolute top-4 right-4 flex items-center group">
+            <Link href='/about' className="absolute top-4 right-4 flex items-center group">
               <button className="px-4 py-2 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10">
                 Meet our Team
               </button>
               <button className="w-10 h-10 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-4">
                 <ArrowUpRight />
               </button>
-            </div>
+            </Link>
             <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1484&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="w-full h-full object-cover" />
           </div>
         </div>
