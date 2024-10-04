@@ -25,14 +25,14 @@ const Navbar = () => {
 
   return (
     <div className='relative'>
-      <nav className='z-50 bg-white font-proxima flex items-center justify-between gap-10 px-5 md:px-20 py-5'>
+      <nav className='relative z-50 bg-white font-proxima flex items-center justify-between gap-10 px-5 md:px-20 py-5'>
         <Link href={'/'}>
           <div className='flex items-center gap-3'>
             <Image src='/img/logoc.png' width={500} height={500} alt='logo' className='w-7' />
           </div>
         </Link>
 
-        <div className='font-medium text-neutral-600 hidden md:flex items-center gap-10'>
+        <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-medium text-neutral-600 hidden md:flex items-center gap-10'>
           <div className='relative group'>
             <Link href={'/'}>Home</Link>
             <div className={`absolute -bottom-1 left-0 ${pathname === '' ? 'w-full ' : 'w-0'} h-[3px] bg-neutral-500 transition-all duration-500 group-hover:w-full`}></div>

@@ -42,12 +42,12 @@ const Blogs = () => {
                         <p className="font-regular text-center text-base md:text-xl">How Pave’s Innovative IT Solutions Can Boost Efficiency, Reduce Costs, and Drive Sustainable Growth for Your Business.</p>
                     </div>
                     <div className="flex items-center justify-center relative group">
-                        <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10">
+                        <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
                             Create New Blogs
                         </button>
-                        <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
+                        {/* <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
                             <ArrowUpRight />
-                        </button>
+                        </button> */}
                     </div>
                 </div>
             </div>
@@ -289,23 +289,23 @@ const Blogs = () => {
                 <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="300" className="flex flex-col md:flex-row items-center md:items-end gap-5 w-full md:w-3/5">
                     <div className="w-full md:w-72 aspect-square rounded-2xl overflow-hidden relative">
                         <div className="absolute bottom-2 left-2 flex items-center group">
-                            <button className="px-4 py-1 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10">
+                            <button className="px-4 py-1 bg-violet-600 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
                                 Founder
                             </button>
-                            <button className="w-8 h-8 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-4">
+                            {/* <button className="w-8 h-8 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-4">
                                 <ArrowUpRight />
-                            </button>
+                            </button> */}
                         </div>
                         <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="w-full h-full object-cover" />
                     </div>
                     <div className="relative w-full h-full rounded-2xl overflow-hidden">
                         <Link href='/about' className="absolute top-4 right-4 flex items-center group">
-                            <button className="px-4 py-2 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10">
+                            <button className="px-4 py-2 bg-violet-600 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
                                 Meet our Team
                             </button>
-                            <button className="w-10 h-10 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-4">
+                            {/* <button className="w-10 h-10 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-4">
                                 <ArrowUpRight />
-                            </button>
+                            </button> */}
                         </Link>
                         <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1484&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="w-full h-full object-cover" />
                     </div>

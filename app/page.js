@@ -11,6 +11,11 @@ import Link from "next/link";
 
 export default function Home() {
   const [animationRight, setAnimationRight] = useState('fade-right');
+  const [activeCard, setActiveCard] = useState(null);
+
+  const toggleCard = (index) => {
+    setActiveCard(activeCard === index ? null : index);
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -52,12 +57,12 @@ export default function Home() {
           </div>
 
           <Link href='/request' className="flex items-center relative group">
-            <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10">
+            <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
               Schedule a meeting
             </button>
-            <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
+            {/* <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
               <ArrowUpRight />
-            </button>
+            </button> */}
           </Link>
         </div>
       </div>
@@ -100,7 +105,7 @@ export default function Home() {
         </div>
       </div> */}
 
-      <div className="px-5 py-10">
+      <div className="px-0 md:px-5 py-10">
         <div className="bg-neutral-800 rounded-3xl px-5 py-8 md:p-14 flex flex-col items-center justify-center gap-12">
           <div className="flex flex-col items-center justify-center gap-14">
             <div className="text-white flex flex-col items-center justify-center gap-3 max-w-2xl">
@@ -112,14 +117,14 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full">
-              <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="300" className="relative bg-[#353088] px-6 pt-6 rounded-lg w-full min-h-[540px] rounded-2xl flex flex-col gap-10">
+              <div data-aos={animationRight} data-aos-duration="500" onClick={() => toggleCard(0)} className="relative bg-[#353088] px-6 pt-6 rounded-lg w-full min-h-[420px] md:min-h-[540px] rounded-2xl flex flex-col gap-10">
                 <div className="flex flex-col gap-5">
                   <div className="h-12 w-12 aspect-square rounded-full text-[#353088] bg-neutral-200 flex items-center justify-center">
                     <Users size={24} />
                   </div>
                   <div className="flex flex-col gap-2 text-white">
                     <h2 className="font-bold text-2xl">Internal Collaboration Solutions</h2>
-                    <p className="text-xl">Enhancing team collaboration with tailored communication tools.</p>
+                    <p className={`text-xl transition-all duration-300 ease-in-out overflow-hidden ${activeCard === 0 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Enhancing team collaboration with tailored communication tools.</p>
                   </div>
                 </div>
                 <div className="w-full relative md:absolute left-1/2 -translate-x-1/2 bottom-0">
@@ -128,45 +133,45 @@ export default function Home() {
               </div>
 
               <div data-aos={animationRight} data-aos-duration="500" className="flex flex-col gap-8 w-full h-full">
-                <div className="h-1/2 flex flex-col gap-5 p-6 bg-[#7569AD] rounded-2xl">
+                <div onClick={() => toggleCard(1)} className="md:h-1/2 flex flex-col gap-5 p-6 bg-[#7569AD] rounded-2xl">
                   <div className="h-12 w-12 aspect-square rounded-full text-[#4B3A98] bg-white flex items-center justify-center">
                     <ChartPie size={24} />
                   </div>
                   <div className="flex flex-col gap-2 text-white">
                     <h2 className="font-bold text-2xl">Branding & Identity</h2>
-                    <p className="">Creating standout brand identities through logo design, guidelines, and storytelling.</p>
+                    <p className={`transition-all duration-300 ease-in-out overflow-hidden ${activeCard === 1 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Creating standout brand identities through logo design, guidelines, and storytelling.</p>
                   </div>
                 </div>
 
-                <div className="h-1/2 flex flex-col gap-5 p-6 bg-[#B6B0D6] rounded-2xl">
+                <div onClick={() => toggleCard(2)} className="md:h-1/2 flex flex-col gap-5 p-6 bg-[#B6B0D6] rounded-2xl">
                   <div className="h-12 w-12 aspect-square rounded-full text-[#222] bg-white flex items-center justify-center">
                     <PenTool size={24} />
                   </div>
                   <div className="flex flex-col gap-2">
                     <h2 className="font-bold text-2xl">UX/UI Design</h2>
-                    <p className="text-neutral-600">Crafting intuitive and engaging user interfaces and experiences for web and mobile applications.</p>
+                    <p className={`text-neutral-600 transition-all duration-300 ease-in-out overflow-hidden ${activeCard === 2 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Crafting intuitive and engaging user interfaces and experiences for web and mobile applications.</p>
                   </div>
                 </div>
               </div>
 
-              <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="300" className="flex flex-col gap-8 w-full h-full">
-                <div className="h-1/2 flex flex-col gap-5 p-6 bg-white rounded-2xl">
+              <div data-aos={animationRight} data-aos-duration="500" className="flex flex-col gap-8 w-full h-full">
+                <div onClick={() => toggleCard(3)} className="md:h-1/2 flex flex-col gap-5 p-6 bg-white rounded-2xl">
                   <div className="h-12 w-12 aspect-square rounded-full text-[#222] bg-neutral-200 flex items-center justify-center">
                     <CodeXml size={24} />
                   </div>
                   <div className="flex flex-col gap-2">
                     <h2 className="font-bold text-2xl">Web Development</h2>
-                    <p className="text-neutral-600">Building and maintaining websites, from front-end design to back-end functionality and e-commerce solutions.</p>
+                    <p className={`text-neutral-600 transition-all duration-300 ease-in-out overflow-hidden ${activeCard === 3 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Building and maintaining websites, from front-end design to back-end functionality and e-commerce solutions.</p>
                   </div>
                 </div>
 
-                <div className="h-1/2 flex flex-col gap-5 p-6 bg-[#F5F4FC] rounded-2xl">
+                <div onClick={() => toggleCard(4)} className="md:h-1/2 flex flex-col gap-5 p-6 bg-[#F5F4FC] rounded-2xl">
                   <div className="h-12 w-12 aspect-square rounded-full text-[#222] bg-neutral-200 flex items-center justify-center">
                     <LayoutDashboard size={24} />
                   </div>
                   <div className="flex flex-col gap-2">
                     <h2 className="font-bold text-2xl">Content Creation</h2>
-                    <p className="text-neutral-600">Developing engaging content like blogs and videos to boost your marketing efforts.</p>
+                    <p className={`text-neutral-600 transition-all duration-300 ease-in-out overflow-hidden ${activeCard === 4 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Developing engaging content like blogs and videos to boost your marketing efforts.</p>
                   </div>
                 </div>
               </div>
@@ -174,12 +179,12 @@ export default function Home() {
           </div>
 
           <Link href='/request' className="flex items-center relative group">
-            <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10 flex items-center gap-1">
+            <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium flex items-center gap-1 transition-all duration-500 group-hover:scale-105">
               Boost your efficiency <span className="hidden md:flex items-center">– discover our digital solutions now!</span>
             </button>
-            <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
+            {/* <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
               <ArrowUpRight />
-            </button>
+            </button> */}
           </Link>
         </div>
       </div>
@@ -207,12 +212,12 @@ export default function Home() {
               <h2 className="font-medium text-xl md:text-2xl">Why Us</h2>
               <p className="font-medium text-3xl md:text-5xl">Experience the difference with tailored digital solutions that deliver real impact.</p>
               <Link href='/about' className="flex items-center relative group">
-                <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10">
+                <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
                   Find Out More
                 </button>
-                <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
+                {/* <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
                   <ArrowUpRight />
-                </button>
+                </button> */}
               </Link>
             </div>
           </div>
@@ -275,23 +280,23 @@ export default function Home() {
         <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="300" className="flex flex-col md:flex-row items-center md:items-end gap-5 w-full md:w-3/5">
           <div className="w-full md:w-72 aspect-square rounded-2xl overflow-hidden relative">
             <div className="absolute bottom-2 left-2 flex items-center group">
-              <button className="px-4 py-1 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10">
+              <button className="px-4 py-1 bg-violet-600 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
                 Founder
               </button>
-              <button className="w-8 h-8 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-4">
+              {/* <button className="w-8 h-8 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-4">
                 <ArrowUpRight />
-              </button>
+              </button> */}
             </div>
             <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="w-full h-full object-cover" />
           </div>
           <div className="relative w-full h-full rounded-2xl overflow-hidden">
             <Link href='/about' className="absolute top-4 right-4 flex items-center group">
-              <button className="px-4 py-2 bg-violet-600 text-white rounded-full font-medium transition-all group-hover:rounded-r-none z-10">
+              <button className="px-4 py-2 bg-violet-600 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
                 Meet our Team
               </button>
-              <button className="w-10 h-10 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-4">
+              {/* <button className="w-10 h-10 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-4">
                 <ArrowUpRight />
-              </button>
+              </button> */}
             </Link>
             <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1484&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="w-full h-full object-cover" />
           </div>
