@@ -38,8 +38,8 @@ const About = () => {
 
             <div className="px-5">
                 <div className="bg-neutral-800 rounded-3xl px-5 py-8 md:p-14 flex flex-col gap-16">
-                    <div className="text-white flex flex-col gap-6 md:gap-12 max-w-4xl">
-                        <h2 className="font-medium text-3xl md:text-5xl">Who We Are?</h2>
+                    <div className="text-white flex flex-col gap-6 md:gap-12 max-w-6xl">
+                        <h2 className="font-medium text-3xl md:text-5xl">Who We Are</h2>
                         <p className="font-regular text-base md:text-xl">Our all-in-one platform helps small business owners manage (re)branding, strategy, and web creation with ease. From high-performance web design and eye-catching motion graphics to communication tools like Slack and SharePoint, we bring your business to the next level.</p>
                     </div>
 
@@ -74,7 +74,7 @@ const About = () => {
                 </div>
             </div>
 
-            <div className="px-5 md:px-20 py-6 md:py-24 flex flex-col md:flex-row gap-8">
+            {/* <div className="px-5 md:px-20 py-6 md:py-24 flex flex-col md:flex-row gap-8">
                 <div className="w-full md:w-3/5">
                     <div className="flex gap-4">
                         <Sun className="min-w-[16px]" />
@@ -112,11 +112,11 @@ const About = () => {
                 <div data-aos={animationRight} data-aos-duration="500" className="w-full md:w-2/5 min-h-full rounded-2xl overflow-hidden">
                     <img src="https://images.unsplash.com/photo-1568992687947-868a62a9f521?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="w-full h-full object-cover" />
                 </div>
-            </div>
+            </div> */}
 
             <div className="px-5 py-10">
                 <div className="bg-[#F2545B] rounded-3xl py-12 md:py-20 flex flex-col items-center justify-center gap-16">
-                    <div className="text-white flex flex-col items-center justify-center gap-3 max-w-xl">
+                    <div className="text-white flex flex-col items-center justify-center gap-3 max-w-md">
                         <div className="flex flex-col items-center justify-center gap-3">
                             <Sun />
                             <h2 className="font-medium text-xl md:text-2xl text-center">Teams</h2>

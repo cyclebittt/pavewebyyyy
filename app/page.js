@@ -3,7 +3,7 @@
 import { Testimonials } from "@/components/home/Testimonials";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
-import { ArrowRight, ArrowUpRight, ChartPie, CodeXml, Flame, LayoutDashboard, Pencil, PenTool, Plus, Sun, Users } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ChartPie, ChevronDown, CodeXml, Flame, LayoutDashboard, Pencil, PenTool, Plus, Sun, Users } from "lucide-react";
 import { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -113,18 +113,24 @@ export default function Home() {
                 <Sun />
                 <h2 className="font-medium text-xl md:text-2xl text-center">Services</h2>
               </div>
-              <p className="font-medium text-3xl md:text-5xl text-center">Your Path Out of Paperwork</p>
+              <p className="font-medium text-3xl md:text-5xl text-center relative pb-5 md:pb-10">
+                Your Path Out of Paperwork
+                <img src="/img/line.png" alt="" className='absolute w-3/4 bottom-0 left-1/2 -translate-x-1/2' />
+              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full">
               <div data-aos={animationRight} data-aos-duration="500" onClick={() => toggleCard(0)} className="relative bg-[#353088] px-6 pt-6 rounded-lg w-full min-h-[420px] md:min-h-[540px] rounded-2xl flex flex-col gap-10">
                 <div className="flex flex-col gap-5">
-                  <div className="h-12 w-12 aspect-square rounded-full text-[#353088] bg-neutral-200 flex items-center justify-center">
-                    <Users size={24} />
+                  <div className='flex justify-between items-center'>
+                    <div className="h-12 w-12 aspect-square rounded-full text-[#353088] bg-neutral-200 flex items-center justify-center">
+                      <Users size={24} />
+                    </div>
+                    <ChevronDown className='text-white md:hidden' />
                   </div>
                   <div className="flex flex-col gap-2 text-white">
                     <h2 className="font-bold text-2xl">Internal Collaboration Solutions</h2>
-                    <p className={`text-xl transition-all duration-300 ease-in-out overflow-hidden ${activeCard === 0 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Enhancing team collaboration with tailored communication tools.</p>
+                    <p className={`text-xl transition-all duration-700 linear overflow-hidden ${activeCard === 0 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Enhancing team collaboration with tailored communication tools.</p>
                   </div>
                 </div>
                 <div className="w-full relative md:absolute left-1/2 -translate-x-1/2 bottom-0">
@@ -134,44 +140,56 @@ export default function Home() {
 
               <div data-aos={animationRight} data-aos-duration="500" className="flex flex-col gap-8 w-full h-full">
                 <div onClick={() => toggleCard(1)} className="md:h-1/2 flex flex-col gap-5 p-6 bg-[#7569AD] rounded-2xl">
-                  <div className="h-12 w-12 aspect-square rounded-full text-[#4B3A98] bg-white flex items-center justify-center">
-                    <ChartPie size={24} />
+                  <div className='flex justify-between items-center'>
+                    <div className="h-12 w-12 aspect-square rounded-full text-[#4B3A98] bg-white flex items-center justify-center">
+                      <ChartPie size={24} />
+                    </div>
+                    <ChevronDown className='text-white md:hidden' />
                   </div>
                   <div className="flex flex-col gap-2 text-white">
                     <h2 className="font-bold text-2xl">Branding & Identity</h2>
-                    <p className={`transition-all duration-300 ease-in-out overflow-hidden ${activeCard === 1 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Creating standout brand identities through logo design, guidelines, and storytelling.</p>
+                    <p className={`transition-all duration-500 linear overflow-hidden ${activeCard === 1 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Creating standout brand identities through logo design, guidelines, and storytelling.</p>
                   </div>
                 </div>
 
                 <div onClick={() => toggleCard(2)} className="md:h-1/2 flex flex-col gap-5 p-6 bg-[#B6B0D6] rounded-2xl">
-                  <div className="h-12 w-12 aspect-square rounded-full text-[#222] bg-white flex items-center justify-center">
-                    <PenTool size={24} />
+                  <div className='flex justify-between items-center'>
+                    <div className="h-12 w-12 aspect-square rounded-full text-[#222] bg-white flex items-center justify-center">
+                      <PenTool size={24} />
+                    </div>
+                    <ChevronDown className='text-neutral-900 md:hidden' />
                   </div>
                   <div className="flex flex-col gap-2">
                     <h2 className="font-bold text-2xl">UX/UI Design</h2>
-                    <p className={`text-neutral-600 transition-all duration-300 ease-in-out overflow-hidden ${activeCard === 2 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Crafting intuitive and engaging user interfaces and experiences for web and mobile applications.</p>
+                    <p className={`text-neutral-600 transition-all duration-500 linear overflow-hidden ${activeCard === 2 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Crafting intuitive and engaging user interfaces and experiences for web and mobile applications.</p>
                   </div>
                 </div>
               </div>
 
               <div data-aos={animationRight} data-aos-duration="500" className="flex flex-col gap-8 w-full h-full">
                 <div onClick={() => toggleCard(3)} className="md:h-1/2 flex flex-col gap-5 p-6 bg-white rounded-2xl">
-                  <div className="h-12 w-12 aspect-square rounded-full text-[#222] bg-neutral-200 flex items-center justify-center">
-                    <CodeXml size={24} />
+                  <div className='flex justify-between items-center'>
+                    <div className="h-12 w-12 aspect-square rounded-full text-[#222] bg-neutral-200 flex items-center justify-center">
+                      <CodeXml size={24} />
+                    </div>
+                    <ChevronDown className='text-neutral-900 md:hidden' />
                   </div>
                   <div className="flex flex-col gap-2">
                     <h2 className="font-bold text-2xl">Web Development</h2>
-                    <p className={`text-neutral-600 transition-all duration-300 ease-in-out overflow-hidden ${activeCard === 3 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Building and maintaining websites, from front-end design to back-end functionality and e-commerce solutions.</p>
+                    <p className={`text-neutral-600 transition-all duration-500 linear overflow-hidden ${activeCard === 3 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Building and maintaining websites, from front-end design to back-end functionality and e-commerce solutions.</p>
                   </div>
                 </div>
 
                 <div onClick={() => toggleCard(4)} className="md:h-1/2 flex flex-col gap-5 p-6 bg-[#F5F4FC] rounded-2xl">
-                  <div className="h-12 w-12 aspect-square rounded-full text-[#222] bg-neutral-200 flex items-center justify-center">
-                    <LayoutDashboard size={24} />
+                  <div className='flex justify-between items-center'>
+                    <div className="h-12 w-12 aspect-square rounded-full text-[#222] bg-neutral-200 flex items-center justify-center">
+                      <LayoutDashboard size={24} />
+                    </div>
+                    <ChevronDown className='text-neutral-900 md:hidden' />
                   </div>
                   <div className="flex flex-col gap-2">
                     <h2 className="font-bold text-2xl">Content Creation</h2>
-                    <p className={`text-neutral-600 transition-all duration-300 ease-in-out overflow-hidden ${activeCard === 4 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Developing engaging content like blogs and videos to boost your marketing efforts.</p>
+                    <p className={`text-neutral-600 transition-all duration-500 linear overflow-hidden ${activeCard === 4 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Developing engaging content like blogs and videos to boost your marketing efforts.</p>
                   </div>
                 </div>
               </div>

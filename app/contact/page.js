@@ -45,7 +45,7 @@ const Contact = () => {
 
                     <div className="flex flex-col justify-center items-center md:flex-row flex-wrap gap-5 md:items-start md:justify-between">
                         <div className='flex flex-col md:items-start items-center justify-center gap-3 text-white'>
-                            <h4 className='uppercase'>Get In Touch</h4>
+                            <h4 className='uppercase'>contact</h4>
                             <p className='text-xl md:text-left text-center'>+49 160 95757167 <br />
                                 info@paveconsultings.com</p>
                         </div>
