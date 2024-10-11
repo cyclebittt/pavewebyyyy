@@ -78,7 +78,7 @@ const Request = () => {
                         <div className='w-full flex flex-col gap-9'>
                             <div className='flex flex-col gap-7'>
                                 <div className='flex flex-col gap-2'>
-                                    <p className='text-xl font-bold text-[#4d4d4d]'>How long do you need?</p>
+                                    <p className='text-xl font-bold text-[#4d4d4d] text-center md:text-left'>How long do you need?</p>
                                     <div className='grid grid-cols-3 w-fit divide-x border rounded-full overflow-hidden'>
                                         <p
                                             className={`cursor-pointer py-2 w-28 text-center font-medium flex items-center justify-center gap-2 ${slot.duration === '15 mins' ? 'bg-gray-300' : ''}`}
@@ -101,7 +101,7 @@ const Request = () => {
                                     </div>
                                 </div>
 
-                                <div className='flex flex-col gap-2'>
+                                <div className='flex flex-col items-center md:items-start gap-2'>
                                     <p className='text-xl font-bold text-[#4d4d4d]'>What time works best?</p>
                                     <div className='flex items-center gap-2 text-xl'>
                                         <p>Selected Date</p>
@@ -167,7 +167,7 @@ const Request = () => {
 
                         <div className='w-full flex flex-col gap-9'>
                             <div className='flex flex-col gap-5'>
-                                <p className='text-xl font-semibold'>Your Information</p>
+                                <p className='text-xl font-semibold text-center md:text-left'>Your Information</p>
                                 <div className='flex flex-col gap-5'>
                                     <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                                         <div className='flex flex-col gap-1'>

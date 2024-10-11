@@ -26,7 +26,7 @@ const Footer = () => {
 
             <div className="bg-neutral-800 rounded-t-3xl py-14 md:py-16 px-5 md:px-20 flex flex-col gap-14">
                 <div className='flex flex-col md:flex-row gap-6 items-center justify-between md:justify-between'>
-                    <h2 className="font-medium text-white text-center md:text-left text-3xl md:text-4xl max-w-xs">Have something to talk about ?</h2>
+                    <h2 className="font-medium text-white text-center md:text-left text-3xl md:text-4xl max-w-3xl">Let’s bring your vision to life. Contact us today.</h2>
 
                     <Link href='/request' className='w-fit'>
                         <button className="px-4 py-2 bg-white rounded-full font-semibold border-2 border-white relative overflow-hidden transition-all duration-500 ease-out group">

@@ -53,12 +53,12 @@ export default function Home() {
 
           <div className="flex text-white flex-col items-center justify-center gap-4 max-w-3xl">
             <h1 className="text-5xl md:text-7xl font-medium text-center">Paving Your Path to the Digital Future</h1>
-            <p className="text-lg text-center">Achieve significant progress by combining branding, marketing, and technology with our innovative digital transformation management company.</p>
+            {/* <p className="text-lg text-center">Achieve significant progress by combining branding, marketing, and technology with our innovative digital transformation management company.</p> */}
           </div>
 
           <Link href='/request' className="flex items-center relative group">
             <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
-              Schedule a meeting
+              Discover Your Future
             </button>
             {/* <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
               <ArrowUpRight />
@@ -113,9 +113,9 @@ export default function Home() {
                 <Sun />
                 <h2 className="font-medium text-xl md:text-2xl text-center">Services</h2>
               </div>
-              <p className="font-medium text-3xl md:text-5xl text-center relative pb-5 md:pb-10">
+              <p className="font-medium text-3xl md:text-5xl text-center relative pb-6">
                 Your Path Out of Paperwork
-                <img src="/img/line.png" alt="" className='absolute w-3/4 bottom-0 left-1/2 -translate-x-1/2' />
+                <img src="/img/line.png" alt="" className='absolute w-1/2 md:w-2/5 bottom-0 left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0' />
               </p>
             </div>
 
@@ -223,15 +223,15 @@ export default function Home() {
       </div> */}
 
       <div className="px-5 py-10">
-        <div className="bg-white rounded-3xl px-5 py-8 md:p-14 flex flex-col gap-14">
+        <div className="bg-white rounded-3xl px-0 md:px-5 py-8 md:p-14 flex flex-col gap-14">
           <div className="flex gap-4 max-w-6xl">
             <Sun className="min-w-[16px]" />
             <div className="flex flex-col gap-8">
               <h2 className="font-medium text-xl md:text-2xl">Why Us</h2>
-              <p className="font-medium text-3xl md:text-5xl">Experience the difference with tailored digital solutions that deliver real impact.</p>
+              <p className="font-medium text-3xl md:text-5xl">Tailored digital solutions that deliver measurable, long-lasting results.</p>
               <Link href='/about' className="flex items-center relative group">
                 <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
-                  Find Out More
+                  See Our Solutions
                 </button>
                 {/* <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
                   <ArrowUpRight />
@@ -250,7 +250,7 @@ export default function Home() {
                   <span className="text-white bg-[#FFFFFF1F] px-4 py-2 rounded-full">Retention Rate</span>
                   <div className="w-full flex flex-col gap-3 items-center justify-center">
                     <h3 className="font-bold text-6xl text-[#FFDD67]">96%</h3>
-                    <p className="text-center text-[#E9E9E9]">We have achieved a 96% client retention rate, based on annual feedback and a customer loyalty analysis conducted over the past 3 years.</p>
+                    <p className="text-center text-[#E9E9E9]">You benefit from our 96% client retention rate, backed by annual feedback and customer loyalty analysis over the past 3 years.</p>
                   </div>
                 </div>
 
@@ -258,7 +258,7 @@ export default function Home() {
                   <span className="text-white bg-[#FFFFFF1F] px-4 py-2 rounded-full">Experience</span>
                   <div className="w-full flex flex-col gap-3 items-center justify-center">
                     <h3 className="font-bold text-6xl text-white">3+</h3>
-                    <p className="text-center text-[#E9E9E9]">With over 3 years of experience managing social media accounts, we’ve successfully driven brand growth for over 50 clients across various industries.</p>
+                    <p className="text-center text-[#E9E9E9]">Benefit from 3+ years of social media expertise that’s driven growth for 50+ clients across industries.</p>
                   </div>
                 </div>
               </div>
@@ -267,7 +267,7 @@ export default function Home() {
                 <span className="text-[#353088] bg-[#7569AD1F] px-4 py-2 rounded-full">Global Clientele</span>
                 <div className="w-full flex flex-col gap-3 items-center justify-center">
                   <h3 className="font-bold text-6xl text-[500+]">500+</h3>
-                  <p className="text-center text-[#000]">We manage social media and content creation for over 500 international clients, ranging from gaming and tech to lifestyle brands. Our tailored digital strategies focus on delivering measurable results aligned with each brand’s unique goals.</p>
+                  <p className="text-center text-[#000]">Manage your social media and content creation with our tailored strategies, trusted by 500+ international clients across gaming, tech, and lifestyle brands. We focus on delivering measurable results aligned with your unique goals.</p>
                 </div>
               </div>
             </div>
@@ -278,8 +278,8 @@ export default function Home() {
       <div className="px-5 md:px-20 py-6 md:py-24 flex flex-col md:flex-row gap-20">
         <div data-aos="fade-up" data-aos-duration="500" className="w-full md:w-2/5 flex flex-col gap-12">
           <div className="flex flex-col gap-8">
-            <h2 className="font-medium text-3xl md:text-5xl">Get in touch with us for more information or support.</h2>
-            <p className="text-neutral-600">We’re here to help you every step of the way. Whether you have questions, need support, or just want to chat, our team is ready to assist you. Reach out to us through our contact form, email, or phone, and we&apos;ll get back to you as soon as possible.</p>
+            <h2 className="font-medium text-3xl md:text-5xl">Pave the way and get in touch with us.</h2>
+            <p className="text-neutral-600">We&apos;re here to pave the way for you. Whether you need answers, support, or just a quick chat, our team is ready to assist. Reach out via contact form, email, or phone, and we’ll get back to you promptly.</p>
             <Link href='/request'>
               <button className="w-fit px-4 py-2 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-all duration-500 ease-out group">
                 <span className="relative z-10 transition-colors duration-500 group-hover:text-violet-700">
@@ -290,7 +290,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="flex items-center gap-2">
-            <p className="text-xl font-medium">We look forward to connecting with you</p>
+            <p className="text-xl font-medium">We look forward to paving the way together!</p>
             <ArrowRight />
           </div>
         </div>

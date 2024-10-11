@@ -269,8 +269,8 @@ const Blogs = () => {
             <div className="px-5 md:px-20 py-6 md:py-24 flex flex-col md:flex-row gap-20">
                 <div data-aos="fade-up" data-aos-duration="500" className="w-full md:w-2/5 flex flex-col gap-12">
                     <div className="flex flex-col gap-8">
-                        <h2 className="font-medium text-3xl md:text-5xl">Get in touch with us for more information or support.</h2>
-                        <p className="text-neutral-600">We’re here to help you every step of the way. Whether you have questions, need support, or just want to chat, our team is ready to assist you. Reach out to us through our contact form, email, or phone, and we&apos;ll get back to you as soon as possible.</p>
+                        <h2 className="font-medium text-3xl md:text-5xl">Pave the way and get in touch with us.</h2>
+                        <p className="text-neutral-600">We&apos;re here to pave the way for you. Whether you need answers, support, or just a quick chat, our team is ready to assist. Reach out via contact form, email, or phone, and we’ll get back to you promptly.</p>
                         <Link href='/request'>
                             <button className="w-fit px-4 py-2 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-all duration-500 ease-out group">
                                 <span className="relative z-10 transition-colors duration-500 group-hover:text-violet-700">
