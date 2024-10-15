@@ -12,9 +12,14 @@ const Navbar = () => {
   const pathname = path.split('/')[1];
 
   const menuRef = useRef(null);
+  const buttonRef = useRef(null);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+      if (
+        menuRef.current && !menuRef.current.contains(event.target) &&
+        buttonRef.current && !buttonRef.current.contains(event.target)
+      ) {
         setOpenMobileMenu(false);
       }
     };
@@ -60,7 +65,14 @@ const Navbar = () => {
           </button>
         </Link>
 
-        <button className='flex md:hidden oultine-none border-none' onClick={() => setOpenMobileMenu(!openMobileMenu)}>
+        <button
+          ref={buttonRef}
+          className='flex md:hidden oultine-none border-none'
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpenMobileMenu(!openMobileMenu);
+          }}
+        >
           <AlignRight size={28} />
         </button>
       </nav>
