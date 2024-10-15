@@ -1,6 +1,6 @@
 'use client'
 
-import { AlignRight } from 'lucide-react'
+import { AlignRight, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -73,13 +73,13 @@ const Navbar = () => {
             setOpenMobileMenu(!openMobileMenu);
           }}
         >
-          <AlignRight size={28} />
+          {openMobileMenu ? <X size={28} /> : <AlignRight size={28} />}
         </button>
       </nav>
 
       <div
         ref={menuRef}
-        className={`absolute top-0 left-0 w-full bg-white font-medium text-neutral-600 md:hidden flex flex-col gap-4 transition-transform duration-500 ease-in-out ${openMobileMenu ? 'translate-y-16' : '-translate-y-full'} z-20`}
+        className={`absolute top-0 left-0 w-full pb-3 bg-white font-medium text-neutral-600 md:hidden flex flex-col gap-4 transition-transform duration-500 ease-in-out ${openMobileMenu ? 'translate-y-16' : '-translate-y-full'} z-20`}
       >
         <div className='w-fit relative group px-5 py-2'>
           <Link href='/'>Home</Link>

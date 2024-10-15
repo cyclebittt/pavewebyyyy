@@ -106,7 +106,7 @@ export default function Home() {
       </div> */}
 
       <div className="px-0 md:px-5 py-10">
-        <div className="bg-neutral-800 rounded-3xl px-5 py-8 md:p-14 flex flex-col items-center justify-center gap-12">
+        <div className="bg-neutral-800 rounded-none md:rounded-3xl px-5 py-8 md:p-14 flex flex-col items-center justify-center gap-12">
           <div className="flex flex-col items-center justify-center gap-14">
             <div className="text-white flex flex-col items-center justify-center gap-3 max-w-2xl">
               <div className="flex flex-col items-center justify-center gap-3">
