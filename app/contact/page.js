@@ -37,26 +37,26 @@ const Contact = () => {
             <Navbar />
 
             <div className="px-5">
-                <div className="bg-neutral-800 rounded-3xl px-5 py-8 md:py-20 md:px-36 flex flex-col gap-16">
+                <div className="bg-neutral-800 rounded-3xl px-5 py-8 md:py-20 md:px-20 lg:px-32 flex flex-col gap-16">
                     <div className="text-white flex flex-col items-center justify-center gap-4 md:gap-8 mx-auto max-w-4xl">
-                        <h2 className="font-medium text-3xl md:text-5xl">Contact Us</h2>
+                        <h2 className="font-medium text-3xl md:text-5xl">Get In Touch</h2>
                         <p className="font-regular text-center text-base md:text-xl">Get in touch with us at Pave to explore how our innovative IT solutions can elevate your business. We&apos;re here to assist with any inquiries or support you need.</p>
                     </div>
 
-                    <div className="flex flex-col justify-center items-center md:flex-row flex-wrap gap-8 md:items-start md:justify-between">
-                        <div className='flex flex-col md:items-start items-center justify-center gap-3 text-white'>
+                    <div className="flex flex-col justify-center items-center md:flex-row gap-8 md:items-start md:justify-between">
+                        <div className='flex flex-col md:items-start items-center justify-center gap-3 text-white w-[300px]'>
                             <h4 className='uppercase'>contact</h4>
                             <p className='text-xl md:text-left text-center'>+49 160 95757167 <br />
                                 info@paveconsultings.com</p>
                         </div>
 
-                        <div className='flex flex-col items-center justify-center gap-3 text-white'>
+                        <div className='flex flex-col items-center justify-center gap-3 text-white w-[300px]'>
                             <h4 className='uppercase'>Our Address</h4>
                             <p className='text-xl text-center'>63906 Erlenbach am Main <br />
                             Am Streitberg 28, Germany</p>
                         </div>
 
-                        <div className='flex flex-col md:items-end items-center justify-center gap-3 text-white'>
+                        <div className='flex flex-col md:items-end items-center justify-center gap-3 text-white w-[300px]'>
                             <h4 className='uppercase'>Time</h4>
                             <p className='text-xl md:text-right text-center'>Monday-Friday <br />
                                 14:00 - 20:00</p>

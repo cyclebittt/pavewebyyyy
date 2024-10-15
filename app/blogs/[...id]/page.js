@@ -37,7 +37,7 @@ const BlogId = () => {
             <div className="px-5">
                 <div className="bg-neutral-800 rounded-3xl px-5 py-8 md:p-14 flex flex-col gap-6">
                     <div className='w-full flex items-center gap-5'>
-                        <span className='px-4 py-1 bg-emerald-100 text-emerald-600 rounded-full'>UI Designer</span>
+                        <span className='px-4 py-1 bg-[#4ED83C1F] text-[#08E5D8] rounded-full'>UI Designer</span>
                         <span className='text-white'>19 Jan, 2024</span>
                     </div>
                     <div className="text-white flex flex-col gap-6 md:gap-12 max-w-4xl">
@@ -83,14 +83,27 @@ const BlogId = () => {
 
             <div className="px-5">
                 <div className="rounded-3xl px-0 py-8 md:p-14 flex flex-col gap-10">
-                    <div className="hidden md:flex items-center justify-between">
-                        <p className="font-medium text-3xl md:text-5xl text-center">Related Post</p>
+                    <div className="hidden md:flex items-end justify-between">
+                        <div className="flex gap-4">
+                            <Sun className="min-w-[16px] pt-1"/>
+                            <div className="flex flex-col gap-8">
+                                <h2 className="font-medium text-xl md:text-2xl">More Blogs</h2>
+                                <p className="font-medium text-3xl md:text-5xl">Related Post</p>
+                            </div>
+                        </div>
                         <button className="w-fit px-4 py-2 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-all duration-500 ease-out group">
                             <span className="relative z-10 transition-colors duration-500 group-hover:text-violet-700">
                                 See More Articles
                             </span>
                             <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
                         </button>
+                        {/* <p className="font-medium text-3xl md:text-5xl text-center">Related Post</p>
+                        <button className="w-fit px-4 py-2 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-all duration-500 ease-out group">
+                            <span className="relative z-10 transition-colors duration-500 group-hover:text-violet-700">
+                                See More Articles
+                            </span>
+                            <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+                        </button> */}
                     </div>
 
                     <div className="md:hidden flex flex-col items-center justify-center gap-3 mx-auto max-w-3xl">

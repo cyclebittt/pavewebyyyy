@@ -37,14 +37,14 @@ const About = () => {
             <Navbar />
 
             <div className="px-5">
-                <div className="bg-neutral-800 rounded-3xl px-5 py-8 md:p-14 flex flex-col gap-16">
+                <div className="bg-neutral-800 rounded-3xl px-5 py-8 md:p-14 flex flex-col gap-16 h-screen md:h-auto">
                     <div className="text-white flex flex-col gap-6 md:gap-12 max-w-6xl">
                         <h2 className="font-medium text-3xl md:text-5xl text-center md:text-left">Who We Are</h2>
                         <p className="font-regular text-base md:text-xl text-center md:text-left">We are three young students with a passion for simplifying everything from web creation to digital strategy. Working remotely from our cozy home offices, we deliver creative, tailored solutions that help your business grow – all while keeping things professional and fun.</p>
                     </div>
 
-                    <div className="grid grid-cols-1 w-full">
-                        <div data-aos={animationRight} data-aos-duration="500" className="w-full max-h-[332px] rounded-2xl overflow-hidden">
+                    <div className="flex-grow grid grid-cols-1 w-full">
+                        <div data-aos={animationRight} data-aos-duration="500" className="w-full h-full md:max-h-[332px] rounded-2xl overflow-hidden flex-grow">
                             <img src="https://images.unsplash.com/photo-1568992687947-868a62a9f521?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="w-full h-full object-cover" />
                         </div>
                         {/* <div className='flex flex-col gap-4'>
