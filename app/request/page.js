@@ -1,9 +1,11 @@
 'use client'
 
+import CalendlyEmbed from '@/components/contact/CalendlyEmbed';
 import Footer from '@/components/layout/Footer'
 import Navbar from '@/components/layout/Navbar'
 import { Calendar, Check, Clock, Edit, Hourglass } from 'lucide-react';
 import React, { useState } from 'react'
+import { InlineWidget } from 'react-calendly';
 import { DayPicker, getDefaultClassNames } from 'react-day-picker';
 import "react-day-picker/style.css";
 
@@ -30,7 +32,7 @@ const Request = () => {
         <div className="font-proxima">
             <Navbar />
 
-            <div className="p-5 md:px-20 md:py-10 flex flex-col items-center justify-center gap-10">
+            {/* <div className="p-5 md:px-20 md:py-10 flex flex-col items-center justify-center gap-10">
                 <div className='flex flex-col items-center'>
                     <div className='flex items-center gap-0 md:gap-8'>
                         <div className='flex flex-col items-center gap-2'>
@@ -271,6 +273,12 @@ const Request = () => {
                     </div>
                 )}
 
+            </div> */}
+
+            <div className="p-5 md:px-20 flex flex-col items-center justify-center gap-10">
+                {/* <h1>Schedule an Appointment</h1> */}
+                <CalendlyEmbed url="https://calendly.com/leonseitz-paveconsultings/30min" />
+                {/* <InlineWidget url="https://calendly.com/hellodeepakkumar12/30min" /> */}
             </div>
 
             <Footer />

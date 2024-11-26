@@ -9,9 +9,51 @@ import { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Link from 'next/link'
+import emailjs from '@emailjs/browser'
 
 const Contact = () => {
     const [animationRight, setAnimationRight] = useState('fade-right');
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        message: "",
+    });
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [error, setError] = useState("");
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setError("");
+        setSuccess(false);
+
+        try {
+            const response = await emailjs.send(
+                "service_shzfs6c",
+                "template_12u0i0n",
+                formData,
+                "BTON8QXiLwUaNT5D4"
+            );
+
+            if (response.status === 200) {
+                setSuccess(true);
+                setFormData({ name: "", email: "", message: "" });
+            } else {
+                throw new Error("Failed to send message. Please try again.");
+            }
+        } catch (err) {
+            setError(err.message || "Something went wrong. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     useEffect(() => {
         const handleResize = () => {
@@ -53,7 +95,7 @@ const Contact = () => {
                         <div className='flex flex-col items-center justify-center gap-3 text-white w-[300px]'>
                             <h4 className='uppercase'>Our Address</h4>
                             <p className='text-xl text-center'>63906 Erlenbach am Main <br />
-                            Am Streitberg 28, Germany</p>
+                                Am Streitberg 28, Germany</p>
                         </div>
 
                         <div className='flex flex-col md:items-end items-center justify-center gap-3 text-white w-[300px]'>
@@ -75,7 +117,7 @@ const Contact = () => {
                         <p className="font-medium text-3xl md:text-5xl text-center">Send us a message</p>
                     </div>
 
-                    <div className='w-full md:w-[714px] flex flex-col gap-6'>
+                    {/* <div className='w-full md:w-[714px] flex flex-col gap-6'>
                         <div className='grid grid-cols-1 md:grid-cols-2 gap-6 w-full'>
                             <input type="text" placeholder='Name' className='w-full bg-white border-none outline-none p-3 rounded-xl' />
                             <input type="email" placeholder='Email' className='w-full bg-white border-none outline-none p-3 rounded-xl' />
@@ -89,7 +131,56 @@ const Contact = () => {
                             </span>
                             <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
                         </button>
-                    </div>
+                    </div> */}
+
+                    <form
+                        onSubmit={handleSubmit}
+                        className="w-full md:w-[714px] flex flex-col gap-6"
+                    >
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Name"
+                                className="w-full bg-white border-none outline-none p-3 rounded-xl"
+                                value={formData.name}
+                                onChange={handleChange}
+                                required
+                            />
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                className="w-full bg-white border-none outline-none p-3 rounded-xl"
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="grid grid-cols-1">
+                            <textarea
+                                rows="8"
+                                name="message"
+                                placeholder="Message"
+                                className="w-full bg-white border-none outline-none p-3 rounded-xl"
+                                value={formData.message}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className="w-full px-4 py-2 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-all duration-500 ease-out group"
+                            disabled={isSubmitting}
+                        >
+                            <span className="relative z-10 transition-colors duration-500 group-hover:text-violet-700">
+                                {isSubmitting ? "Sending..." : "Send"}
+                            </span>
+                            <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+                        </button>
+                        {success && <p className="text-green-600">Message sent successfully!</p>}
+                        {error && <p className="text-red-600">{error}</p>}
+                    </form>
                 </div>
             </div>
 
