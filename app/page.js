@@ -44,21 +44,21 @@ export default function Home() {
     <div className="font-proxima">
       <Navbar />
 
-      <div className="px-5 pb-5">
-        <div className="relative flex flex-col items-center pt-40 pb-52 px-4 gap-12 rounded-3xl overflow-hidden">
+      <div className="px-5">
+        <div className="relative flex flex-col items-center py-8 md:pt-40 md:pb-52 px-4 gap-4 md:gap-12 rounded-3xl overflow-hidden">
           {/* <video autoPlay muted loop
             className="absolute inset-0 w-full h-full object-cover -z-10"
             src="https://videos.pexels.com/video-files/1957727/1957727-hd_1920_1080_30fps.mp4"
           /> */}
           <img src="/img/bg.png" alt="" className="absolute inset-0 w-full h-full object-cover -z-10" />
 
-          <div className="flex text-white flex-col items-center justify-center gap-4 max-w-3xl">
-            <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold text-center uppercase">Paving <span className="text-violet-950">Your</span> Path <br />to the Digital Future.</h1>
-            <p className="text-lg text-center">From strategy to implementation - empowering your digital transformation journey.</p>
+          <div className="flex text-white flex-col items-center justify-center gap-2 md:gap-4 max-w-3xl">
+            <h1 className="text-2xl sm:text-5xl md:text-7xl font-extrabold text-center uppercase">Paving <span className="text-violet-950">Your</span> Path <br />to the Digital Future.</h1>
+            <p className="text-xs md:text-lg text-center">From strategy to implementation - empowering your digital transformation journey.</p>
           </div>
 
           <Link href='/request' className="flex items-center relative group">
-            <button className="px-8 py-3 bg-white text-neutral-900 rounded-full font-medium transition-all duration-500 group-hover:scale-105">
+            <button className="px-4 py-2 md:px-8 md:py-3 text-sm md:text-base bg-violet-950 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
               Let&apos;s get started
             </button>
             {/* <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
