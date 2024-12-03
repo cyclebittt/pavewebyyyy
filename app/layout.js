@@ -5,6 +5,22 @@ export const metadata = {
   title: "Pave Consultings",
   description: "Paving your path to the digital future",
   keywords: "Pave Consultings, pave consulting, paveconsulting, pave consultings digital, pave consultings services, paveconsultings",
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://www.paveconsultings.com/',
+    title: 'Pave Consultings',
+    description: 'Paving your path to the digital future',
+    site_name: 'pave consultings',
+    images: [
+      {
+        url: 'http://res.cloudinary.com/di4m8pzsa/image/upload/v1733249294/hwmusb78lsbiz6shrzy6.jpg',
+        width: 910,
+        height: 500,
+        alt: 'Pave Consultings Preview',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -20,7 +36,7 @@ export default function RootLayout({ children }) {
         <meta property="og:title" content={metadata.title} />
         <meta property="og:description" content={metadata.description} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.paveconsultings.com" />
+        <meta property="og:url" content="https://www.paveconsultings.com/" />
         <meta
           property="og:image"
           content="http://res.cloudinary.com/di4m8pzsa/image/upload/v1733249294/hwmusb78lsbiz6shrzy6.jpg"
@@ -34,7 +50,7 @@ export default function RootLayout({ children }) {
           content="http://res.cloudinary.com/di4m8pzsa/image/upload/v1733249294/hwmusb78lsbiz6shrzy6.jpg"
         />
         <meta name="twitter:site" content="@PaveConsultings" />
-        <link rel="canonical" href="https://www.paveconsultings.com" />
+        <link rel="canonical" href="https://www.paveconsultings.com/" />
       </Head>
       <body>
         {children}
