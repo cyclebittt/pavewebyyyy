@@ -53,7 +53,7 @@ export default function Home() {
           <img src="/img/bg.png" alt="" className="absolute inset-0 w-full h-full object-cover -z-10" />
 
           <div className="flex text-white flex-col items-center justify-center gap-4 max-w-3xl">
-            <h1 className="text-5xl md:text-7xl font-extrabold text-center uppercase">Paving <span className="text-violet-950">Your</span> Path <br />to the Digital Future.</h1>
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold text-center uppercase">Paving <span className="text-violet-950">Your</span> Path <br />to the Digital Future.</h1>
             <p className="text-lg text-center">From strategy to implementation - empowering your digital transformation journey.</p>
           </div>
 
