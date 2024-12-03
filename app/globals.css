@@ -38,6 +38,13 @@
 
 @font-face {
   font-family: 'Proxima Nova';
+  src: url('./fonts/ProximaNovaExtrabold.otf');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Proxima Nova';
   src: url('./fonts/ProximaNovaBlack.otf');
   font-weight: 900;
   font-style: normal;
