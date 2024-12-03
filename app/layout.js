@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
         <meta property="og:url" content="https://www.paveconsultings.com" />
         <meta
           property="og:image"
-          content="https://www.paveconsultings.com/img/preview.jpg"
+          content="http://res.cloudinary.com/di4m8pzsa/image/upload/v1733249294/hwmusb78lsbiz6shrzy6.jpg"
         />
         <meta property="og:locale" content="en_US" />
         <meta name="twitter:card" content="summary_large_image" />
@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
         <meta name="twitter:description" content={metadata.description} />
         <meta
           name="twitter:image"
-          content="https://www.paveconsultings.com/img/preview.jpg"
+          content="http://res.cloudinary.com/di4m8pzsa/image/upload/v1733249294/hwmusb78lsbiz6shrzy6.jpg"
         />
         <meta name="twitter:site" content="@PaveConsultings" />
         <link rel="canonical" href="https://www.paveconsultings.com" />
