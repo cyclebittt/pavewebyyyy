@@ -13,9 +13,10 @@ const CalendlyEmbed = ({ url }) => {
 
     return (
         <div
-            className="calendly-inline-widget h-[720px] w-full md:w-[600px]"
+            className="calendly-inline-widget w-full"
             data-url={url}
-            // style={{ minWidth: '800px', height: '900px' }}
+            data-resize={true}
+        // style={{ minWidth: '800px', height: '900px' }}
         ></div>
     );
 };
