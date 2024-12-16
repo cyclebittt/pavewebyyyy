@@ -44,7 +44,7 @@ export default function Home() {
     <div className="font-proxima">
       <Navbar />
 
-      <div className="md:px-5">
+      <div className="md:px-5 md:pb-12">
         <div className="relative flex flex-col items-center py-8 md:pt-40 md:pb-52 px-4 gap-4 md:gap-12 md:rounded-3xl overflow-hidden">
           {/* <video autoPlay muted loop
             className="absolute inset-0 w-full h-full object-cover -z-10"
