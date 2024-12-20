@@ -57,25 +57,25 @@ const Blogs = () => {
                     <div className="flex items-center justify-between">
                         <p className="font-medium text-3xl md:text-5xl text-center">Latest Post</p>
                         <button className="w-fit px-4 py-2 text-violet-700 rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden">
-                            14 Articles
+                            4 Articles
                         </button>
                     </div>
 
-                    <Link href={'/blogs/1234567890'}>
+                    <Link href='/blogs/1'>
                         <div data-aos={animationRight} data-aos-duration="500" className='w-full bg-white rounded-xl p-6 flex flex-col md:flex-row gap-6'>
                             <div className='w-full md:w-[440px] md:min-h-full rounded-xl overflow-hidden'>
-                                <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=1420&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
+                                <img src="/img/blogs/1.jpg" alt="" className='w-full h-full object-cover' />
                             </div>
 
                             <div className='w-full flex flex-col gap-7'>
                                 <div className='w-full flex flex-col gap-5'>
                                     <div className='w-full flex items-center justify-between'>
-                                        <span className='px-4 py-1 bg-violet-100 text-violet-600 rounded-full'>UI Designer</span>
-                                        <span>19 Jan, 2024</span>
+                                        <span className='px-4 py-1 bg-violet-100 text-violet-600 rounded-full'>Content Marketing</span>
+                                        <span>25 Sep, 2024</span>
                                     </div>
                                     <div className='flex flex-col gap-2 md:gap-3'>
-                                        <h3 className='text-2xl md:text-3xl font-bold'>Top 10 Cloud Computing Trends Revolutionizing IT Infrastructure and Why Businesses Should 2024</h3>
-                                        <p className='text-base md:text-lg text-neutral-700'>At Pave, we are committed to delivering dependable services with consistency and precision, ensuring minimal disruption to your operations.</p>
+                                        <h3 className='text-2xl md:text-3xl font-bold'>Content That Converts: How to Tell Stories Your Audience Can’t Ignore</h3>
+                                        <p className='text-base md:text-lg text-neutral-700'>Ever wonder why some content sticks with you while others feel like white noise? Here’s the secret: it’s not just about what you say—it’s how you say it. In today’s digital age, content isn’t just king—it’s the entire kingdom. It connects, captivates, and convinces.</p>
                                     </div>
                                 </div>
                                 <div className='flex items-center gap-2 md:gap-4'>
@@ -83,8 +83,8 @@ const Blogs = () => {
                                         <img src="https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?q=80&w=1366&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
                                     </div>
                                     <div className='flex items-center gap-2'>
-                                        <h4 className='font-bold'>Benjamin Roche</h4>
-                                        <p className='text-xs'>CEO et Fondateur</p>
+                                        <h4 className='font-bold'>Leon Seitz</h4>
+                                        <p className='text-xs'>CEO Pave</p>
                                     </div>
                                 </div>
                             </div>
@@ -114,145 +114,95 @@ const Blogs = () => {
                     </div>
 
                     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
-                        <div className='w-full shadow-lg bg-white rounded-xl p-3 flex flex-col gap-4'>
-                            <div className='w-full h-56 rounded-xl overflow-hidden'>
-                                <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
-                            </div>
-
-                            <div className='w-full flex flex-col gap-5'>
-                                <div className='w-full flex flex-col gap-4'>
-                                    <div className='w-full flex items-center justify-between'>
-                                        <span className='px-4 py-1 bg-violet-100 text-violet-600 rounded-full'>UI Designer</span>
-                                        <span>19 Jan, 2024</span>
-                                    </div>
-                                    <div className='flex flex-col gap-2'>
-                                        <h3 className='text-2xl font-bold'>The Future of Tech: Trends Shaping Tomorrow</h3>
-                                        <p className='text-base text-neutral-700'>Technology is constantly evolving, transforming industries and reshaping the way we live, work...</p>
-                                    </div>
+                        <Link href='/blogs/2' className='flex'>
+                            <div className='w-full shadow-lg bg-white rounded-xl p-3 flex flex-col gap-4'>
+                                <div className='w-full h-56 rounded-xl overflow-hidden'>
+                                    <img src="/img/blogs/2.jpg" alt="" className='w-full h-full object-cover' />
                                 </div>
-                                <div className='flex items-center gap-2'>
-                                    <div className='w-11 h-11 aspect-square rounded-full overflow-hidden'>
-                                        <img src="https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?q=80&w=1366&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
+
+                                <div className='w-full flex flex-col gap-5'>
+                                    <div className='w-full flex flex-col gap-4'>
+                                        <div className='w-full flex items-center justify-between'>
+                                            <span className='px-4 py-1 bg-violet-100 text-violet-600 rounded-full'>Web Developement</span>
+                                            <span>12 Oct, 2024</span>
+                                        </div>
+                                        <div className='flex flex-col gap-2'>
+                                            <h3 className='text-2xl font-bold'>First Impressions Matter: How to Create Stunning Websites That Actually Work</h3>
+                                            <p className='text-base text-neutral-700'>You never get a second chance to make a first impression—especially online. Imagine a potential customer landing on your website. Within seconds, they’ve decided if your business feels professional, trustworthy, and worth their time. No pressure, right?</p>
+                                        </div>
                                     </div>
                                     <div className='flex items-center gap-2'>
-                                        <h4 className='font-bold'>Benjamin Roche</h4>
-                                        <p className='text-xs'>CEO et Fondateur</p>
+                                        <div className='w-11 h-11 aspect-square rounded-full overflow-hidden'>
+                                            <img src="https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?q=80&w=1366&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
+                                        </div>
+                                        <div className='flex items-center gap-2'>
+                                            <h4 className='font-bold'>Leon Seitz</h4>
+                                            <p className='text-xs'>CEO Pave</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
 
-                        <div className='w-full shadow-lg bg-white rounded-xl p-3 flex flex-col gap-4'>
-                            <div className='w-full h-56 rounded-xl overflow-hidden'>
-                                <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
-                            </div>
-
-                            <div className='w-full flex flex-col gap-5'>
-                                <div className='w-full flex flex-col gap-4'>
-                                    <div className='w-full flex items-center justify-between'>
-                                        <span className='px-4 py-1 bg-violet-100 text-violet-600 rounded-full'>UI Designer</span>
-                                        <span>19 Jan, 2024</span>
-                                    </div>
-                                    <div className='flex flex-col gap-2'>
-                                        <h3 className='text-2xl font-bold'>The Future of Tech: Trends Shaping Tomorrow</h3>
-                                        <p className='text-base text-neutral-700'>Technology is constantly evolving, transforming industries and reshaping the way we live, work...</p>
-                                    </div>
+                        <Link href='/blogs/3' className='flex'>
+                            <div className='w-full shadow-lg bg-white rounded-xl p-3 flex flex-col gap-4'>
+                                <div className='w-full h-56 rounded-xl overflow-hidden'>
+                                    <img src="/img/blogs/3.jpg" alt="" className='w-full h-full object-cover' />
                                 </div>
-                                <div className='flex items-center gap-2'>
-                                    <div className='w-11 h-11 aspect-square rounded-full overflow-hidden'>
-                                        <img src="https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?q=80&w=1366&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
+
+                                <div className='w-full flex flex-col gap-5'>
+                                    <div className='w-full flex flex-col gap-4'>
+                                        <div className='w-full flex items-center justify-between'>
+                                            <span className='px-4 py-1 bg-violet-100 text-violet-600 rounded-full'>Smart Tools</span>
+                                            <span>17 Nov, 2024</span>
+                                        </div>
+                                        <div className='flex flex-col gap-2'>
+                                            <h3 className='text-2xl font-bold'>Stop Email Overload! How Smarter Collaboration Tools Can Save Your Sanity (and Your Team’s)</h3>
+                                            <p className='text-base text-neutral-700'>Be honest: how many unread emails are sitting in your inbox right now? If your answer is “too many to count,” you’re not alone. We’ve all been there—lost in a sea of CCs, searching for that one update buried under an avalanche of “quick check-ins.”</p>
+                                        </div>
                                     </div>
                                     <div className='flex items-center gap-2'>
-                                        <h4 className='font-bold'>Benjamin Roche</h4>
-                                        <p className='text-xs'>CEO et Fondateur</p>
+                                        <div className='w-11 h-11 aspect-square rounded-full overflow-hidden'>
+                                            <img src="https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?q=80&w=1366&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
+                                        </div>
+                                        <div className='flex items-center gap-2'>
+                                            <h4 className='font-bold'>Leon Seitz</h4>
+                                            <p className='text-xs'>CEO Pave</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
 
-                        <div className='w-full shadow-lg bg-white rounded-xl p-3 flex flex-col gap-4'>
-                            <div className='w-full h-56 rounded-xl overflow-hidden'>
-                                <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
-                            </div>
-
-                            <div className='w-full flex flex-col gap-5'>
-                                <div className='w-full flex flex-col gap-4'>
-                                    <div className='w-full flex items-center justify-between'>
-                                        <span className='px-4 py-1 bg-violet-100 text-violet-600 rounded-full'>UI Designer</span>
-                                        <span>19 Jan, 2024</span>
-                                    </div>
-                                    <div className='flex flex-col gap-2'>
-                                        <h3 className='text-2xl font-bold'>The Future of Tech: Trends Shaping Tomorrow</h3>
-                                        <p className='text-base text-neutral-700'>Technology is constantly evolving, transforming industries and reshaping the way we live, work...</p>
-                                    </div>
+                        <Link href='/blogs/4' className='flex'>
+                            <div className='w-full shadow-lg bg-white rounded-xl p-3 flex flex-col gap-4'>
+                                <div className='w-full h-56 rounded-xl overflow-hidden'>
+                                    <img src="/img/blogs/4.jpg" alt="" className='w-full h-full object-cover' />
                                 </div>
-                                <div className='flex items-center gap-2'>
-                                    <div className='w-11 h-11 aspect-square rounded-full overflow-hidden'>
-                                        <img src="https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?q=80&w=1366&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
+
+                                <div className='w-full flex flex-col gap-5'>
+                                    <div className='w-full flex flex-col gap-4'>
+                                        <div className='w-full flex items-center justify-between'>
+                                            <span className='px-4 py-1 bg-violet-100 text-violet-600 rounded-full'>Market Strategy</span>
+                                            <span>18 Dec, 2024</span>
+                                        </div>
+                                        <div className='flex flex-col gap-2'>
+                                            <h3 className='text-2xl font-bold'>Your Brand, Your Story: How to Stand Out in a Crowded Market</h3>
+                                            <p className='text-base text-neutral-700'>Imagine walking into a crowded room filled with competitors—and all eyes are on you. Why? Because your brand doesn’t just exist—it owns the space. It speaks volumes about who you are, what you stand for, and why you’re unforgettable.</p>
+                                        </div>
                                     </div>
                                     <div className='flex items-center gap-2'>
-                                        <h4 className='font-bold'>Benjamin Roche</h4>
-                                        <p className='text-xs'>CEO et Fondateur</p>
+                                        <div className='w-11 h-11 aspect-square rounded-full overflow-hidden'>
+                                            <img src="https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?q=80&w=1366&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
+                                        </div>
+                                        <div className='flex items-center gap-2'>
+                                            <h4 className='font-bold'>Leon Seitz</h4>
+                                            <p className='text-xs'>CEO Pave</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div className='w-full shadow-lg bg-white rounded-xl p-3 flex flex-col gap-4'>
-                            <div className='w-full h-56 rounded-xl overflow-hidden'>
-                                <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
-                            </div>
-
-                            <div className='w-full flex flex-col gap-5'>
-                                <div className='w-full flex flex-col gap-4'>
-                                    <div className='w-full flex items-center justify-between'>
-                                        <span className='px-4 py-1 bg-violet-100 text-violet-600 rounded-full'>UI Designer</span>
-                                        <span>19 Jan, 2024</span>
-                                    </div>
-                                    <div className='flex flex-col gap-2'>
-                                        <h3 className='text-2xl font-bold'>The Future of Tech: Trends Shaping Tomorrow</h3>
-                                        <p className='text-base text-neutral-700'>Technology is constantly evolving, transforming industries and reshaping the way we live, work...</p>
-                                    </div>
-                                </div>
-                                <div className='flex items-center gap-2'>
-                                    <div className='w-11 h-11 aspect-square rounded-full overflow-hidden'>
-                                        <img src="https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?q=80&w=1366&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
-                                    </div>
-                                    <div className='flex items-center gap-2'>
-                                        <h4 className='font-bold'>Benjamin Roche</h4>
-                                        <p className='text-xs'>CEO et Fondateur</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className='w-full shadow-lg bg-white rounded-xl p-3 flex flex-col gap-4'>
-                            <div className='w-full h-56 rounded-xl overflow-hidden'>
-                                <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
-                            </div>
-
-                            <div className='w-full flex flex-col gap-5'>
-                                <div className='w-full flex flex-col gap-4'>
-                                    <div className='w-full flex items-center justify-between'>
-                                        <span className='px-4 py-1 bg-violet-100 text-violet-600 rounded-full'>UI Designer</span>
-                                        <span>19 Jan, 2024</span>
-                                    </div>
-                                    <div className='flex flex-col gap-2'>
-                                        <h3 className='text-2xl font-bold'>The Future of Tech: Trends Shaping Tomorrow</h3>
-                                        <p className='text-base text-neutral-700'>Technology is constantly evolving, transforming industries and reshaping the way we live, work...</p>
-                                    </div>
-                                </div>
-                                <div className='flex items-center gap-2'>
-                                    <div className='w-11 h-11 aspect-square rounded-full overflow-hidden'>
-                                        <img src="https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?q=80&w=1366&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='w-full h-full object-cover' />
-                                    </div>
-                                    <div className='flex items-center gap-2'>
-                                        <h4 className='font-bold'>Benjamin Roche</h4>
-                                        <p className='text-xs'>CEO et Fondateur</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        </Link>
                     </div>
 
                     <div className='md:hidden flex items-center justify-center'>

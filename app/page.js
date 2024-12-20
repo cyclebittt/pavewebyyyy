@@ -53,7 +53,7 @@ export default function Home() {
           <img src="/img/bg.png" alt="" className="absolute inset-0 w-full h-full object-cover -z-10" />
 
           <div className="flex text-white flex-col items-center justify-center gap-2 md:gap-4 max-w-3xl">
-            <h1 className="text-3xl sm:text-5xl md:text-7xl font-extrabold text-center uppercase">Paving <span className="text-violet-950">Your</span> Path <br />to the Digital Future.</h1>
+            <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold text-center">Paving <span className="text-violet-950">Your</span> Path <br />to the Digital Future.</h1>
             <p className="text-xs md:text-lg text-center">From strategy to implementation - empowering your digital transformation journey.</p>
           </div>
 
@@ -130,7 +130,7 @@ export default function Home() {
                   </div>
                   <div className="flex flex-col gap-2 text-white">
                     <h2 className="font-bold text-2xl">Internal Collaboration Solutions</h2>
-                    <p className={`text-xl transition-all duration-700 linear overflow-hidden ${activeCard === 0 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Enhancing team collaboration with tailored communication tools.</p>
+                    <p className={`text-xl transition-all duration-700 linear overflow-hidden ${activeCard === 0 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Empower your team to work smarter, not harder. With tailored communication tools designed to streamline workflows and enhance teamwork, we help you eliminate bottlenecks and create a culture of collaboration.</p>
                   </div>
                 </div>
                 <div className="w-full">
@@ -148,7 +148,7 @@ export default function Home() {
                   </div>
                   <div className="flex flex-col gap-2 text-white">
                     <h2 className="font-bold text-2xl">Branding & Identity</h2>
-                    <p className={`transition-all duration-500 linear overflow-hidden ${activeCard === 1 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Creating standout brand identities through logo design, guidelines, and storytelling.</p>
+                    <p className={`transition-all duration-500 linear overflow-hidden ${activeCard === 1 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Your brand is more than a logo—it’s the heartbeat of your business. We help you craft a brand identity that not only stands out but connects deeply with your audience.</p>
                   </div>
                 </div>
 
@@ -161,7 +161,7 @@ export default function Home() {
                   </div>
                   <div className="flex flex-col gap-2">
                     <h2 className="font-bold text-2xl">UX/UI Design</h2>
-                    <p className={`text-neutral-600 transition-all duration-500 linear overflow-hidden ${activeCard === 2 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Crafting intuitive and engaging user interfaces and experiences for web and mobile applications.</p>
+                    <p className={`text-neutral-600 transition-all duration-500 linear overflow-hidden ${activeCard === 2 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>We help your customers fall in love with your brand through intuitive and beautiful interfaces. By combining functionality and creativity, we create designs that turn first-time visitors into loyal fans of your business.</p>
                   </div>
                 </div>
               </div>
@@ -176,7 +176,7 @@ export default function Home() {
                   </div>
                   <div className="flex flex-col gap-2">
                     <h2 className="font-bold text-2xl">Web Development</h2>
-                    <p className={`text-neutral-600 transition-all duration-500 linear overflow-hidden ${activeCard === 3 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Building and maintaining websites, from front-end design to back-end functionality and e-commerce solutions.</p>
+                    <p className={`text-neutral-600 transition-all duration-500 linear overflow-hidden ${activeCard === 3 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Your website is often the first impression of your business—let’s make it unforgettable. From elegant designs to cutting-edge functionality, we build websites that attract, engage, and convert.</p>
                   </div>
                 </div>
 
@@ -189,7 +189,7 @@ export default function Home() {
                   </div>
                   <div className="flex flex-col gap-2">
                     <h2 className="font-bold text-2xl">Content Creation</h2>
-                    <p className={`text-neutral-600 transition-all duration-500 linear overflow-hidden ${activeCard === 4 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Developing engaging content like blogs and videos to boost your marketing efforts.</p>
+                    <p className={`text-neutral-600 transition-all duration-500 linear overflow-hidden ${activeCard === 4 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Great content doesn’t just inform—it inspires action. From engaging blogs to attention-grabbing videos, we create storytelling that resonates with your audience and drives results.</p>
                   </div>
                 </div>
               </div>

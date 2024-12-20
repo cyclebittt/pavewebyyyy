@@ -30,6 +30,10 @@ const Navbar = () => {
 
   return (
     <div className='relative'>
+      <div className='h-12 w-full flex items-center justify-center bg-neutral-800 text-white'>
+        🎊 Celebrating the launch of our new website!
+      </div>
+
       <nav className='relative z-50 bg-white font-proxima flex items-center justify-between gap-10 px-5 md:px-20 py-5'>
         <Link href={'/'}>
           <div className='flex items-center gap-3'>
