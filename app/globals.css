@@ -68,3 +68,39 @@ body {
     text-wrap: balance;
   }
 }
+
+.scroll-text {
+  /* animation properties */
+  -moz-transform: translateX(150%);
+  -webkit-transform: translateX(150%);
+  transform: translateX(150%);
+  
+  -moz-animation: scroll-text-animation 15s linear infinite;
+  -webkit-animation: scroll-text-animation 15s linear infinite;
+  animation: scroll-text-animation 15s linear infinite;
+}
+
+/* for Firefox */
+@-moz-keyframes scroll-text-animation {
+  from { -moz-transform: translateX(150%); }
+  to { -moz-transform: translateX(-150%); }
+}
+
+/* for Chrome */
+@-webkit-keyframes scroll-text-animation {
+  from { -webkit-transform: translateX(150%); }
+  to { -webkit-transform: translateX(-150%); }
+}
+
+@keyframes scroll-text-animation {
+  from {
+    -moz-transform: translateX(150%);
+    -webkit-transform: translateX(150%);
+    transform: translateX(150%);
+  }
+  to {
+    -moz-transform: translateX(-150%);
+    -webkit-transform: translateX(-150%);
+    transform: translateX(-150%);
+  }
+}

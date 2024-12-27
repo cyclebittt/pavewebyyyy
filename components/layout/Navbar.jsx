@@ -30,8 +30,11 @@ const Navbar = () => {
 
   return (
     <div className='relative'>
-      <div className='h-12 w-full flex items-center justify-center bg-neutral-800 text-white'>
-        🎊 Celebrating the launch of our new website!
+      <div className='py-4 w-full px-5 overflow-x-hidden text-center text-sm md:text-base font-medium flex items-center justify-center bg-[#FFDC67] text-neutral-900'>
+        <div className='scroll-text'>
+          🎊 Celebrate with Pave: Enjoy 20% Off Every Service!
+          {/* Your Path to the Digital Future Starts Here - */}
+        </div>
       </div>
 
       <nav className='relative z-50 bg-white font-proxima flex items-center justify-between gap-10 px-5 md:px-20 py-5'>
