@@ -207,7 +207,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* <div className="py-14 flex flex-col items-center justify-center gap-14">
+      { <div className="py-14 flex flex-col items-center justify-center gap-14">
         <div data-aos="fade-up" data-aos-duration="500" className="flex flex-col items-center justify-center gap-3 max-w-2xl">
           <div className="flex flex-col items-center justify-center gap-3">
             <Sun />
@@ -220,7 +220,7 @@ export default function Home() {
           <Testimonials direction={"right"} />
           <Testimonials direction={"left"} />
         </div>
-      </div> */}
+      </div> }
 
       <div className="px-5 py-10">
         <div className="bg-white rounded-3xl px-0 md:px-5 py-8 md:p-14 flex flex-col gap-14">
