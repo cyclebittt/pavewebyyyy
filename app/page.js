@@ -68,7 +68,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* <div className="px-5 md:px-20 py-6 md:py-14 flex flex-col gap-14">
+      { <div className="px-5 md:px-20 py-6 md:py-14 flex flex-col gap-14">
         <div data-aos="fade-up" data-aos-duration="500" className="flex gap-4">
           <Sun className="min-w-[16px]" />
           <div className="flex flex-col gap-8">
@@ -104,7 +104,7 @@ export default function Home() {
             <img src="https://images.pexels.com/photos/5990042/pexels-photo-5990042.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" className="w-full h-full object-cover" alt="" />
           </div>
         </div>
-      </div> */}
+      </div> }
 
       <div className="px-0 md:px-5 pb-10">
         <div className="bg-neutral-800 rounded-none md:rounded-3xl px-5 py-8 md:p-14 flex flex-col items-center justify-center gap-12">
