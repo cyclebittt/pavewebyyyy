@@ -115,7 +115,7 @@ export default function Home() {
                 <h2 className="font-medium text-xl md:text-2xl text-center">Services</h2>
               </div>
               <p className="font-medium text-3xl md:text-5xl text-center">
-                Your Path Out of Paperwork
+                Ihr Weg in die Zukunft
               </p>
             </div>
 
