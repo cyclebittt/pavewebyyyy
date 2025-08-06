@@ -59,7 +59,7 @@ export default function Home() {
 
           <Link href='/request' className="flex items-center relative group">
             <button className="px-4 py-2 md:px-8 md:py-3 text-sm md:text-base bg-violet-950 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
-              Let&apos;s get started
+              Let&apos;s get sarted
             </button>
             {/* <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
               <ArrowUpRight />
