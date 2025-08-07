@@ -53,8 +53,8 @@ export default function Home() {
           <img src="/img/bg.png" alt="" className="absolute inset-0 w-full h-full object-cover -z-10" />
 
           <div className="flex text-white flex-col items-center justify-center gap-2 md:gap-4 max-w-3xl">
-            <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold text-center">Paving <span className="text-violet-950">Your</span> Path <br />to the Digital Future.</h1>
-            <p className="text-xs md:text-lg text-center">From strategy to implementation - empowering your digital transformation journey.</p>
+            <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold text-center">Paving <span className="text-violet-950">Paveo</span> Path <br />to the Digital Future.</h1>
+            <p className="text-xs md:text-lg text-center">Design, Content und Strategie, die deine Marke voranbringen..</p>
           </div>
 
           <Link href='/request' className="flex items-center relative group">
@@ -68,7 +68,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* <div className="px-5 md:px-20 py-6 md:py-14 flex flex-col gap-14">
+      {/ <div className="px-5 md:px-20 py-6 md:py-14 flex flex-col gap-14">
         <div data-aos="fade-up" data-aos-duration="500" className="flex gap-4">
           <Sun className="min-w-[16px]" />
           <div className="flex flex-col gap-8">
@@ -112,10 +112,10 @@ export default function Home() {
             <div className="text-white flex flex-col items-center justify-center gap-3 max-w-2xl">
               <div className="flex flex-col items-center justify-center gap-3">
                 <Sun />
-                <h2 className="font-medium text-xl md:text-2xl text-center">Services</h2>
+                <h2 className="font-medium text-xl md:text-2xl text-center">Unsere Dienstleistungen</h2>
               </div>
               <p className="font-medium text-3xl md:text-5xl text-center">
-                Your Path Out of Paperwork
+                Dein Weg in die digitale Zukunft
               </p>
             </div>
 
@@ -129,8 +129,8 @@ export default function Home() {
                     <ChevronDown className='text-white md:hidden' />
                   </div>
                   <div className="flex flex-col gap-2 text-white">
-                    <h2 className="font-bold text-2xl">Internal Collaboration Solutions</h2>
-                    <p className={`text-xl transition-all duration-700 linear overflow-hidden ${activeCard === 0 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Empower your team to work smarter, not harder. With tailored communication tools designed to streamline workflows and enhance teamwork, we help you eliminate bottlenecks and create a culture of collaboration.</p>
+                    <h2 className="font-bold text-2xl">Social Media Management</h2>
+                    <p className={`text-xl transition-all duration-700 linear overflow-hidden ${activeCard === 0 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Mehr Zeit für dein Business: Wir kümmern uns um deine Social Media Strategie, Inhalte und Posts.</p>
                   </div>
                 </div>
                 <div className="w-full">
@@ -147,7 +147,7 @@ export default function Home() {
                     <ChevronDown className='text-white md:hidden' />
                   </div>
                   <div className="flex flex-col gap-2 text-white">
-                    <h2 className="font-bold text-2xl">Branding & Identity</h2>
+                    <h2 className="font-bold text-2xl">Content Creation</h2>
                     <p className={`transition-all duration-500 linear overflow-hidden ${activeCard === 1 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Your brand is more than a logo—it’s the heartbeat of your business. We help you craft a brand identity that not only stands out but connects deeply with your audience.</p>
                   </div>
                 </div>
@@ -160,7 +160,7 @@ export default function Home() {
                     <ChevronDown className='text-neutral-900 md:hidden' />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <h2 className="font-bold text-2xl">UX/UI Design</h2>
+                    <h2 className="font-bold text-2xl">Webdesign & Webentwicklung</h2>
                     <p className={`text-neutral-600 transition-all duration-500 linear overflow-hidden ${activeCard === 2 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>We help your customers fall in love with your brand through intuitive and beautiful interfaces. By combining functionality and creativity, we create designs that turn first-time visitors into loyal fans of your business.</p>
                   </div>
                 </div>
@@ -175,7 +175,7 @@ export default function Home() {
                     <ChevronDown className='text-neutral-900 md:hidden' />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <h2 className="font-bold text-2xl">Web Development</h2>
+                    <h2 className="font-bold text-2xl">Branding</h2>
                     <p className={`text-neutral-600 transition-all duration-500 linear overflow-hidden ${activeCard === 3 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Your website is often the first impression of your business—let’s make it unforgettable. From elegant designs to cutting-edge functionality, we build websites that attract, engage, and convert.</p>
                   </div>
                 </div>
@@ -188,7 +188,7 @@ export default function Home() {
                     <ChevronDown className='text-neutral-900 md:hidden' />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <h2 className="font-bold text-2xl">Content Creation</h2>
+                    <h2 className="font-bold text-2xl">Automatisierung & Funnels</h2>
                     <p className={`text-neutral-600 transition-all duration-500 linear overflow-hidden ${activeCard === 4 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>Great content doesn’t just inform—it inspires action. From engaging blogs to attention-grabbing videos, we create storytelling that resonates with your audience and drives results.</p>
                   </div>
                 </div>
