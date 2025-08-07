@@ -44,7 +44,29 @@ export default function Home() {
     <div className="font-proxima">
       <Navbar />
 
-    
+      <div className="md:px-5 md:pb-12">
+        <div className="relative flex flex-col items-center py-8 md:pt-40 md:pb-52 px-4 gap-4 md:gap-12 md:rounded-3xl overflow-hidden">
+          {/* <video autoPlay muted loop
+            className="absolute inset-0 w-full h-full object-cover -z-10"
+            src="https://videos.pexels.com/video-files/1957727/1957727-hd_1920_1080_30fps.mp4"
+          /> */}
+          <img src="/img/bg.png" alt="" className="absolute inset-0 w-full h-full object-cover -z-10" />
+
+          <div className="flex text-white flex-col items-center justify-center gap-2 md:gap-4 max-w-3xl">
+            <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold text-center">Paving <span className="text-violet-950">Your</span> Path <br />to the Digital Future.</h1>
+            <p className="text-xs md:text-lg text-center">From strategy to implementation - mpowering your digital transformation journey.</p>
+          </div>
+
+          <Link href='/request' className="flex items-center relative group">
+            <button className="px-4 py-2 md:px-8 md:py-3 text-sm md:text-base bg-violet-950 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
+              Let&apos;s get sarted
+            </button>
+            {/* <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
+              <ArrowUpRight />
+            </button> */}
+          </Link>
+        </div>
+      </div>
 
       { <div className="px-5 md:px-20 py-6 md:py-14 flex flex-col gap-14">
         <div data-aos="fade-up" data-aos-duration="500" className="flex gap-4">
@@ -58,16 +80,16 @@ export default function Home() {
         <div data-aos="fade-up" data-aos-duration="500" className="bg-gray-900 rounded-3xl p-5 flex md:flex-row flex-col gap-8 items-center justify-between">
           <div className="flex flex-wrap md:flex-nowrap items-center justify-center gap-14">
             <div className="flex flex-col items-center md:items-start gap-3">
-              <h3 className="font-medium text-4xl md:text-6xl text-violet-400 flex items-center">4<Plus size={30} /></h3>
-              <p className="text-2xl font-medium text-white">Jahre Erfahrung</p>
+              <h3 className="font-medium text-4xl md:text-6xl text-violet-400 flex items-center">90k<Plus size={30} /></h3>
+              <p className="text-2xl font-medium text-white">Customers</p>
             </div>
             <div className="flex flex-col items-center md:items-start gap-5">
-              <h3 className="font-medium text-4xl md:text-6xl text-violet-400 flex items-center">100M<Plus size={30} /></h3>
-              <p className="text-2xl font-medium text-white">Klicks generiert</p>
+              <h3 className="font-medium text-4xl md:text-6xl text-violet-400 flex items-center">50k<Plus size={30} /></h3>
+              <p className="text-2xl font-medium text-white">Units Ready</p>
             </div>
             <div className="flex flex-col items-center md:items-start gap-5">
-              <h3 className="font-medium text-4xl md:text-6xl text-violet-400 flex items-center">100<Plus size={30} /></h3>
-              <p className="text-2xl font-medium text-white">Erfolgreiche Projekte</p>
+              <h3 className="font-medium text-4xl md:text-6xl text-violet-400 flex items-center">5k<Plus size={30} /></h3>
+              <p className="text-2xl font-medium text-white">Units Sold</p>
             </div>
           </div>
 
@@ -205,8 +227,8 @@ export default function Home() {
           <div className="flex gap-4 max-w-6xl">
             <Sun className="min-w-[16px]" />
             <div className="flex flex-col gap-8">
-              <h2 className="font-medium text-xl md:text-2xl">Warum wir?</h2>
-              <p className="font-medium text-3xl md:text-5xl">Maßgeschneiderte digitale Lösungen, die messbare und nachhaltige Ergebnisse liefern</p>
+              <h2 className="font-medium text-xl md:text-2xl">Why Us</h2>
+              <p className="font-medium text-3xl md:text-5xl">Tailored digital solutions that deliver measurable, long-lasting results.</p>
               <Link href='/request' className="flex items-center relative group">
                 <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
                   See Our Solutions
