@@ -44,29 +44,7 @@ export default function Home() {
     <div className="font-proxima">
       <Navbar />
 
-      <div className="md:px-5 md:pb-12">
-        <div className="relative flex flex-col items-center py-8 md:pt-40 md:pb-52 px-4 gap-4 md:gap-12 md:rounded-3xl overflow-hidden">
-          {/* <video autoPlay muted loop
-            className="absolute inset-0 w-full h-full object-cover -z-10"
-            src="https://videos.pexels.com/video-files/1957727/1957727-hd_1920_1080_30fps.mp4"
-          /> /}
-          <img src="/img/bg.png" alt="" className="absolute inset-0 w-full h-full object-cover -z-10" />
-
-          <div className="flex text-white flex-col items-center justify-center gap-2 md:gap-4 max-w-3xl">
-            <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold text-center">Paving <span className="text-violet-950">Your</span> Path <br />to the Digital Future.</h1>
-            <p className="text-xs md:text-lg text-center">From strategy to implementation - empowering your digital transformation journey.</p>
-          </div>
-
-          <Link href='/request' className="flex items-center relative group">
-            <button className="px-4 py-2 md:px-8 md:py-3 text-sm md:text-base bg-violet-950 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
-              Let&apos;s get sarted
-            </button>
-            {/* <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
-              <ArrowUpRight />
-            </button> */}
-          </Link>
-        </div>
-      </div>
+    
 
       { <div className="px-5 md:px-20 py-6 md:py-14 flex flex-col gap-14">
         <div data-aos="fade-up" data-aos-duration="500" className="flex gap-4">
