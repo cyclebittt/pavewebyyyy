@@ -80,16 +80,16 @@ export default function Home() {
         <div data-aos="fade-up" data-aos-duration="500" className="bg-gray-900 rounded-3xl p-5 flex md:flex-row flex-col gap-8 items-center justify-between">
           <div className="flex flex-wrap md:flex-nowrap items-center justify-center gap-14">
             <div className="flex flex-col items-center md:items-start gap-3">
-              <h3 className="font-medium text-4xl md:text-6xl text-violet-400 flex items-center">90k<Plus size={30} /></h3>
-              <p className="text-2xl font-medium text-white">Customers</p>
+              <h3 className="font-medium text-4xl md:text-6xl text-violet-400 flex items-center">4<Plus size={30} /></h3>
+              <p className="text-2xl font-medium text-white">Jahre Erfahrung</p>
             </div>
             <div className="flex flex-col items-center md:items-start gap-5">
-              <h3 className="font-medium text-4xl md:text-6xl text-violet-400 flex items-center">50k<Plus size={30} /></h3>
-              <p className="text-2xl font-medium text-white">Units Ready</p>
+              <h3 className="font-medium text-4xl md:text-6xl text-violet-400 flex items-center">100M<Plus size={30} /></h3>
+              <p className="text-2xl font-medium text-white">Klicks generiert</p>
             </div>
             <div className="flex flex-col items-center md:items-start gap-5">
-              <h3 className="font-medium text-4xl md:text-6xl text-violet-400 flex items-center">5k<Plus size={30} /></h3>
-              <p className="text-2xl font-medium text-white">Units Sold</p>
+              <h3 className="font-medium text-4xl md:text-6xl text-violet-400 flex items-center">100<Plus size={30} /></h3>
+              <p className="text-2xl font-medium text-white">Erfolgreiche Projekte</p>
             </div>
           </div>
 
