@@ -47,7 +47,7 @@ const About = () => {
                         <div data-aos={animationRight} data-aos-duration="500" className="w-full h-full md:max-h-[332px] rounded-2xl overflow-hidden flex-grow">
                             <img src="https://images.unsplash.com/photo-1568992687947-868a62a9f521?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="w-full h-full object-cover" />
                         </div>
-                        {/* <div className='flex flex-col gap-4'>
+                        {/ <div className='flex flex-col gap-4'>
                             <div data-aos={animationRight} data-aos-duration="500" className="bg-white/20 text-white w-full flex flex-col gap-6 p-4 md:p-10 rounded-2xl">
                                 <h2 className="font-bold text-3xl md:text-5xl">Our Story</h2>
                                 <div className='flex flex-col gap-4'>
@@ -74,7 +74,7 @@ const About = () => {
                 </div>
             </div>
 
-            {/* <div className="px-5 md:px-20 py-6 md:py-24 flex flex-col md:flex-row gap-8">
+            {/ <div className="px-5 md:px-20 py-6 md:py-24 flex flex-col md:flex-row gap-8">
                 <div className="w-full md:w-3/5">
                     <div className="flex gap-4">
                         <Sun className="min-w-[16px]" />
@@ -130,7 +130,7 @@ const About = () => {
                 </div>
             </div>
 
-            {/* <div className="px-5 py-10">
+            {/ <div className="px-5 py-10">
                 <div className="bg-neutral-100 rounded-3xl px-5 py-12 md:py-20 flex flex-col items-center justify-center gap-16">
                     <div data-aos="fade-up" data-aos-duration="500" className="flex flex-col gap-6 md:gap-12 max-w-3xl">
                         <h2 className="font-medium text-center text-3xl md:text-5xl">Backed By The Best</h2>
