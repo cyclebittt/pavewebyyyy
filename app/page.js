@@ -49,7 +49,7 @@ export default function Home() {
           {/* <video autoPlay muted loop
             className="absolute inset-0 w-full h-full object-cover -z-10"
             src="https://videos.pexels.com/video-files/1957727/1957727-hd_1920_1080_30fps.mp4"
-          /> */}
+          /> /}
           <img src="/img/bg.png" alt="" className="absolute inset-0 w-full h-full object-cover -z-10" />
 
           <div className="flex text-white flex-col items-center justify-center gap-2 md:gap-4 max-w-3xl">
@@ -227,8 +227,8 @@ export default function Home() {
           <div className="flex gap-4 max-w-6xl">
             <Sun className="min-w-[16px]" />
             <div className="flex flex-col gap-8">
-              <h2 className="font-medium text-xl md:text-2xl">Why Us</h2>
-              <p className="font-medium text-3xl md:text-5xl">Tailored digital solutions that deliver measurable, long-lasting results.</p>
+              <h2 className="font-medium text-xl md:text-2xl">Warum wir?</h2>
+              <p className="font-medium text-3xl md:text-5xl">Maßgeschneiderte digitale Lösungen, die messbare und nachhaltige Ergebnisse liefern</p>
               <Link href='/request' className="flex items-center relative group">
                 <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
                   See Our Solutions
