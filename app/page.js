@@ -54,7 +54,7 @@ export default function Home() {
 
           <div className="flex text-white flex-col items-center justify-center gap-2 md:gap-4 max-w-3xl">
             <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold text-center">Paving <span className="text-violet-950">Your</span> Path <br />to the Digital Future.</h1>
-            <p className="text-xs md:text-lg text-center">From strategy to implementation - mpowering your digital transformation journey.</p>
+            <p className="text-xs md:text-lg text-center">From strategy to implementation - empowering your digital transformation journey.</p>
           </div>
 
           <Link href='/request' className="flex items-center relative group">
