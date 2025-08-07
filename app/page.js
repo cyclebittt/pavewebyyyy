@@ -54,12 +54,12 @@ export default function Home() {
 
           <div className="flex text-white flex-col items-center justify-center gap-2 md:gap-4 max-w-3xl">
             <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold text-center">Paving <span className="text-violet-950">Your</span> Path <br />to the Digital Future.</h1>
-            <p className="text-xs md:text-lg text-center">From strategy to implementation - mpowering your digital transformation journey.</p>
+            <p className="text-xs md:text-lg text-center">From strategy to implementation - empowering your digital transformation journey.</p>
           </div>
 
           <Link href='/request' className="flex items-center relative group">
             <button className="px-4 py-2 md:px-8 md:py-3 text-sm md:text-base bg-violet-950 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
-              Let&apos;s get sarted
+              Let&apos;s get started
             </button>
             {/* <button className="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-6">
               <ArrowUpRight />
@@ -68,7 +68,7 @@ export default function Home() {
         </div>
       </div>
 
-      { <div className="px-5 md:px-20 py-6 md:py-14 flex flex-col gap-14">
+      {/* <div className="px-5 md:px-20 py-6 md:py-14 flex flex-col gap-14">
         <div data-aos="fade-up" data-aos-duration="500" className="flex gap-4">
           <Sun className="min-w-[16px]" />
           <div className="flex flex-col gap-8">
@@ -104,7 +104,7 @@ export default function Home() {
             <img src="https://images.pexels.com/photos/5990042/pexels-photo-5990042.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" className="w-full h-full object-cover" alt="" />
           </div>
         </div>
-      </div> }
+      </div> */}
 
       <div className="px-0 md:px-5 pb-10">
         <div className="bg-neutral-800 rounded-none md:rounded-3xl px-5 py-8 md:p-14 flex flex-col items-center justify-center gap-12">
@@ -115,7 +115,7 @@ export default function Home() {
                 <h2 className="font-medium text-xl md:text-2xl text-center">Services</h2>
               </div>
               <p className="font-medium text-3xl md:text-5xl text-center">
-                Ihr Weg in die Zukunft
+                Your Path Out of Paperwork
               </p>
             </div>
 
@@ -207,7 +207,7 @@ export default function Home() {
         </div>
       </div>
 
-      { <div className="py-14 flex flex-col items-center justify-center gap-14">
+      {/* <div className="py-14 flex flex-col items-center justify-center gap-14">
         <div data-aos="fade-up" data-aos-duration="500" className="flex flex-col items-center justify-center gap-3 max-w-2xl">
           <div className="flex flex-col items-center justify-center gap-3">
             <Sun />
@@ -220,7 +220,7 @@ export default function Home() {
           <Testimonials direction={"right"} />
           <Testimonials direction={"left"} />
         </div>
-      </div> }
+      </div> */}
 
       <div className="px-5 py-10">
         <div className="bg-white rounded-3xl px-0 md:px-5 py-8 md:p-14 flex flex-col gap-14">
