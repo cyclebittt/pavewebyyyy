@@ -24,20 +24,9 @@ export default function Home() {
     >
       <Navbar />
 
-      {/* HERO (ein einziges Wave-Visual im Hintergrund) */}
+      {/* HERO — animierte Ribbons + weißer Sheen nur hier */}
       <section className="relative overflow-hidden">
-        {/* statisches Hintergrundbild – nur hier */}
-        <div
-          aria-hidden="true"
-          className="
-            pointer-events-none absolute inset-0
-            bg-[url('/img/hero-wave.jpg')] bg-no-repeat bg-cover bg-center
-            opacity-[0.35] mix-blend-screen
-            [mask-image:linear-gradient(180deg,rgba(0,0,0,0.95)_0%,rgba(0,0,0,0.9)_20%,rgba(0,0,0,0.6)_55%,rgba(0,0,0,0)_100%)]
-          "
-        />
-        {/* dunkler Overlay für Lesbarkeit */}
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,12,0.55)_0%,rgba(8,8,12,0.8)_60%,rgba(8,8,12,0.95)_100%)]" />
+        <HeroRibbons />
 
         <div className="relative z-10 px-5 md:px-20 pt-20 md:pt-36 pb-16 md:pb-28">
           <div className="max-w-4xl">
@@ -122,7 +111,7 @@ export default function Home() {
             />
           </div>
 
-          <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6">
             <ServiceCard
               icon={<LayoutDashboard size={22} />}
               title="Content Creation"
@@ -183,7 +172,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA – clean, ohne Wave-Animation; dezenter Gradient */}
+      {/* CTA */}
       <section
         className="
           relative overflow-hidden
@@ -222,7 +211,7 @@ export default function Home() {
   );
 }
 
-/* --- UI Baustein: Service-Card --- */
+/* ---------- UI: Service-Card ---------- */
 function ServiceCard({ icon, title, desc, bg = 'from-[#20243A] to-[#151A26]' }) {
   return (
     <div
@@ -240,6 +229,104 @@ function ServiceCard({ icon, title, desc, bg = 'from-[#20243A] to-[#151A26]' }) 
       </div>
       <h3 className="text-xl font-semibold">{title}</h3>
       <p className="mt-2 text-[#BFC6D8]">{desc}</p>
+    </div>
+  );
+}
+
+/* ---------- HERO RIBBONS (animiert, aber stabil) ---------- */
+function HeroRibbons() {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden [contain:layout_paint_size]">
+      {/* Weißer „Sheen“ (sanft, sorgt für den gewünschten Look) */}
+      <div
+        aria-hidden="true"
+        className="
+          absolute -top-10 left-1/2 -translate-x-1/2 w-[140%] h-[55%]
+          bg-[radial-gradient(60%_140%_at_50%_0%,rgba(255,255,255,0.4),rgba(255,255,255,0.05)_60%,transparent_80%)]
+          opacity-[0.45]
+          blur-[6px]
+        "
+      />
+
+      {/* obere Ribbon */}
+      <svg
+        className="absolute top-[-8%] left-1/2 -translate-x-1/2 w-[115%] h-[60%] opacity-[0.55]"
+        viewBox="0 0 800 400"
+        fill="none"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#2D8CFF" />
+            <stop offset="50%" stopColor="#6D61FF" />
+            <stop offset="100%" stopColor="#8AAEFF" />
+          </linearGradient>
+          <filter id="b1">
+            <feGaussianBlur stdDeviation="12" />
+          </filter>
+        </defs>
+        <path
+          d="M-50 150 C 150 90, 250 210, 450 150 S 750 70, 900 160"
+          stroke="url(#g1)"
+          strokeWidth="42"
+          filter="url(#b1)"
+          className="ribbon-a"
+        />
+      </svg>
+
+      {/* untere Ribbon */}
+      <svg
+        className="absolute bottom-[-14%] left-1/2 -translate-x-1/2 w-[105%] h-[50%] opacity-[0.42]"
+        viewBox="0 0 800 400"
+        fill="none"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#8AAEFF" />
+            <stop offset="60%" stopColor="#2D8CFF" />
+            <stop offset="100%" stopColor="#6D61FF" />
+          </linearGradient>
+          <filter id="b2">
+            <feGaussianBlur stdDeviation="14" />
+          </filter>
+        </defs>
+        <path
+          d="M-60 200 C 140 160, 280 260, 480 200 S 760 140, 920 220"
+          stroke="url(#g2)"
+          strokeWidth="34"
+          filter="url(#b2)"
+          className="ribbon-b"
+        />
+      </svg>
+
+      {/* dunkler Verlauf für perfekte Lesbarkeit */}
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,12,0.45)_0%,rgba(8,8,12,0.75)_60%,rgba(8,8,12,0.95)_100%)]" />
+
+      {/* Animationen */}
+      <style jsx>{`
+        .ribbon-a {
+          animation: floatA 12s ease-in-out infinite;
+          will-change: transform;
+        }
+        .ribbon-b {
+          animation: floatB 15s ease-in-out infinite;
+          will-change: transform;
+        }
+        @keyframes floatA {
+          0% { transform: translateY(0); }
+          50% { transform: translateY(14px); }
+          100% { transform: translateY(0); }
+        }
+        @keyframes floatB {
+          0% { transform: translateY(0) translateX(0); }
+          50% { transform: translateY(-16px) translateX(-6px); }
+          100% { transform: translateY(0) translateX(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .ribbon-a, .ribbon-b { animation: none !important; }
+        }
+      `}</style>
     </div>
   );
 }
