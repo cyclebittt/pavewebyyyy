@@ -183,7 +183,7 @@ export default function Home() {
 
             {/* Social Media Management */}
             <Link
-              href="/services/social-media"
+              href="/services/socialmedia"
               data-aos={aosDir}
               className="
                 group relative overflow-hidden rounded-2xl p-6
