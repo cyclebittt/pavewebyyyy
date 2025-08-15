@@ -1,368 +1,394 @@
-'use client'
+'use client';
 
-import Footer from "@/components/layout/Footer";
-import Navbar from "@/components/layout/Navbar";
-import { ChevronDown, PenTool, CodeXml, LayoutDashboard, Users, ChartPie, ArrowRight, Sun } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import {
+  PenTool,
+  CodeXml,
+  Users,
+  LayoutDashboard,
+  ChartPie,
+  ArrowRight,
+  Sparkles,
+  Sun,
+} from 'lucide-react';
 
 export default function Home() {
-  const [animationRight, setAnimationRight] = useState('fade-right');
-  const [activeCard, setActiveCard] = useState(null);
+  const [animSide, setAnimSide] = useState('fade-right');
 
-  const toggleCard = (index) => {
-    setActiveCard((prev) => (prev === index ? null : index));
-  };
-
-  // AOS nur clientseitig laden + Resize-Handling
+  // AOS nur clientseitig laden + simples Breakpoint-Handling
   useEffect(() => {
     let cleanup = () => {};
     (async () => {
       const AOS = (await import('aos')).default;
       await import('aos/dist/aos.css');
-      AOS.init({ duration: 500, once: true });
+      AOS.init({ duration: 600, once: true, easing: 'ease-out-cubic' });
       cleanup = () => {};
     })();
 
     const onResize = () => {
-      if (window.innerWidth < 768) setAnimationRight('fade-down');
-      else setAnimationRight('fade-right');
+      if (window.innerWidth < 768) setAnimSide('fade-up');
+      else setAnimSide('fade-right');
     };
     onResize();
     window.addEventListener('resize', onResize, { passive: true });
-
     return () => {
       window.removeEventListener('resize', onResize);
       cleanup();
     };
   }, []);
 
-  // Tastatur-Unterstützung (optional für eigene Handler)
-  const onKeyToggle = (e, index) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      toggleCard(index);
-    }
-  };
-
   return (
-    <div className="font-proxima">
+    <div className="font-proxima bg-[#0B0B0F] text-[#EDEDF2] antialiased">
       <Navbar />
 
-      {/* HERO */}
-      <section className="md:px-5 md:pb-12" aria-labelledby="hero-heading">
-        <div className="relative flex flex-col items-center py-10 md:pt-40 md:pb-52 px-4 gap-6 md:gap-12 md:rounded-3xl overflow-hidden bg-gradient-to-br from-violet-900 via-[#2D286A] to-neutral-900">
-          <div className="flex text-white flex-col items-center justify-center gap-3 md:gap-4 max-w-3xl">
-            <h1 id="hero-heading" className="text-3xl sm:text-5xl md:text-7xl font-bold text-center">
-              paveo — Dein Weg zu wirksamer Markenkommunikation.
-            </h1>
-            <p className="text-sm md:text-lg text-center">
-              Branding, Webdesign, Content & Systeme — modular, psychologisch fundiert und praxistauglich für Selbstständige & KMU.
-            </p>
-          </div>
+      {/* HERO: Deep dark + liquid ribbons */}
+      <section className="relative overflow-hidden">
+        {/* liquid ribbons background (SVG, performant) */}
+        <Ribbons />
 
+        <div
+          className="relative z-10 px-5 md:px-20 pt-20 md:pt-36 pb-16 md:pb-28"
+          data-aos="fade-up"
+        >
+          <div className="max-w-4xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-[#AAB1C2] backdrop-blur">
+              <Sparkles size={14} />
+              <span>Modulare Markenkommunikation für Selbstständige & KMU</span>
+            </div>
+
+            <h1 className="mt-5 text-4xl sm:text-6xl md:text-7xl font-bold leading-[1.05] tracking-tight">
+              Eine Marke, die <span className="text-[#7AA6FF]">wirklich</span> wirkt.
+            </h1>
+
+            <p className="mt-5 text-lg md:text-xl text-[#AAB1C2] max-w-2xl">
+              Branding, Webdesign, Content & Systeme – psychologisch fundiert,
+              modular aufgebaut und messbar auf Conversion ausgerichtet.
+            </p>
+
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Link
+                href="/request"
+                className="inline-flex items-center gap-2 rounded-full bg-violet-600 px-6 py-3 font-medium text-white border border-violet-500 transition-transform duration-300 hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-violet-400"
+              >
+                Jetzt starten <ArrowRight size={18} />
+              </Link>
+              <Link
+                href="/about"
+                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 font-medium text-[#EDEDF2] transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-violet-400"
+              >
+                Mehr erfahren
+              </Link>
+            </div>
+
+            {/* Key facts */}
+            <div className="mt-10 flex flex-wrap gap-3">
+              {[
+                { k: 'Seit', v: '2024' },
+                { k: 'Module', v: '5' },
+                { k: 'Netzwerk', v: '10+ Partner:innen' },
+              ].map((f) => (
+                <div
+                  key={f.k}
+                  className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-[#BFC6D8] backdrop-blur"
+                >
+                  <span className="text-[#7AA6FF] font-semibold mr-2">{f.k}:</span>
+                  {f.v}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* LEISTUNGEN */}
+      <section className="px-5 md:px-20 py-14 md:py-20">
+        <header className="max-w-3xl" data-aos="fade-up">
+          <h2 className="text-2xl md:text-4xl font-semibold">Leistungen</h2>
+          <p className="mt-3 text-[#AAB1C2]">
+            Wähle nur die Bausteine, die du brauchst – oder kombiniere zu einem stimmigen
+            Gesamtauftritt.
+          </p>
+        </header>
+
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Branding */}
+          <ServiceCard
+            icon={<PenTool size={22} />}
+            title="Branding & Positionierung"
+            desc="Logo, Farbwelt, Tonalität & Kernbotschaft – entwickelt, um bei deiner Zielgruppe im Kopf zu bleiben."
+            aos={animSide}
+          />
+          {/* Webdesign + Social */}
+          <div className="flex flex-col gap-6">
+            <ServiceCard
+              icon={<CodeXml size={22} />}
+              title="Webdesign"
+              desc="Klar, modern und conversion-stark – als Baukastensystem oder individuell entwickelt."
+              aos={animSide}
+              bg="from-[#26233F] to-[#1A1830]"
+            />
+            <ServiceCard
+              icon={<Users size={22} />}
+              title="Social Media Management"
+              desc="Strategie, Planung, Content-Produktion & Analyse – ready-to-post und skalierbar."
+              aos="fade-up"
+              bg="from-[#1C2030] to-[#161A26]"
+            />
+          </div>
+          {/* Content + Leadsystem */}
+          <div className="flex flex-col gap-6">
+            <ServiceCard
+              icon={<LayoutDashboard size={22} />}
+              title="Content Creation"
+              desc="Foto, Video, Texte & Motion Design – konsistent zur Markenwelt und auf Wirkung getrimmt."
+              aos="fade-up"
+              bg="from-[#191E2D] to-[#151826]"
+            />
+            <ServiceCard
+              icon={<ChartPie size={22} />}
+              title="Leadsystem & Angebotsstrukturierung"
+              desc="Digitale Vertriebsprozesse: Angebots-Generatoren, Anfrageformulare & CRM-Einbindung."
+              aos={animSide}
+              bg="from-[#1F1E2C] to-[#171624]"
+            />
+          </div>
+        </div>
+
+        <div className="mt-10" data-aos="fade-up">
           <Link
             href="/request"
-            className="px-4 py-2 md:px-8 md:py-3 text-sm md:text-base bg-violet-600 text-white rounded-full font-medium transition-transform duration-300 hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-violet-400"
-            role="button"
-            aria-label="Termin anfragen"
+            className="inline-flex items-center gap-2 rounded-full bg-violet-600 px-5 py-2.5 font-medium text-white border border-violet-500 transition-transform duration-300 hover:scale-[1.03]"
           >
-            Termin anfragen
+            Leistungen anfragen <ArrowRight size={18} />
           </Link>
         </div>
       </section>
 
-      {/* SERVICES */}
-      <section className="px-0 md:px-5 pb-10" aria-labelledby="services-heading">
-        <div className="bg-neutral-800 rounded-none md:rounded-3xl px-5 py-8 md:p-14 flex flex-col items-center justify-center gap-12">
-          <div className="flex flex-col items-center justify-center gap-6">
-            <div className="text-white flex flex-col items-center justify-center gap-3 max-w-2xl">
-              <div className="flex flex-col items-center justify-center gap-2">
-                <Sun aria-hidden="true" />
-                <h2 id="services-heading" className="font-medium text-xl md:text-2xl text-center">Leistungen</h2>
-              </div>
-              <p className="font-semibold text-2xl md:text-4xl text-center">
-                Modul für Modul zu mehr Wirkung.
-              </p>
-              <p className="text-neutral-300 text-center">
-                Buche nur, was du wirklich brauchst — kombiniert zu einem stimmigen, conversion‑orientierten Gesamtauftritt.
-              </p>
-            </div>
-
-            {/* Karten – mobil als Akkordeon, Desktop offen */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full">
-              {/* Branding & Positionierung */}
-              <div
-                data-aos={animationRight}
-                data-aos-duration="500"
-                className="relative bg-[#353088] px-6 pt-6 rounded-2xl w-full min-h-[420px] md:min-h-[520px] flex flex-col gap-8"
-              >
-                <div className="flex flex-col gap-5">
-                  <div className="flex justify-between items-center">
-                    <div className="h-12 w-12 rounded-full text-[#353088] bg-neutral-200 flex items-center justify-center">
-                      <PenTool size={24} aria-hidden="true" />
-                    </div>
-                    <button
-                      className="md:hidden text-white"
-                      aria-expanded={activeCard === 0}
-                      aria-controls="svc-0"
-                      onClick={() => toggleCard(0)}
-                      onKeyDown={(e) => onKeyToggle(e, 0)}
-                    >
-                      <ChevronDown />
-                    </button>
-                  </div>
-                  <div className="flex flex-col gap-2 text-white">
-                    <h3 className="font-bold text-2xl">Branding &amp; Positionierung</h3>
-                    <p
-                      id="svc-0"
-                      className={`text-base md:text-lg transition-all duration-300 overflow-hidden ${activeCard === 0 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}
-                    >
-                      Logo, Farbwelt, Tonalität und Kernbotschaft — passgenau auf deine Zielgruppe. Psychologisch geschärft statt nur „schön“.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Webdesign + Social */}
-              <div
-                data-aos={animationRight}
-                data-aos-duration="500"
-                className="flex flex-col gap-8 w-full h-full"
-              >
-                <div className="md:h-1/2 flex flex-col gap-5 p-6 bg-[#7569AD] rounded-2xl">
-                  <div className="flex justify-between items-center">
-                    <div className="h-12 w-12 rounded-full text-[#4B3A98] bg-white flex items-center justify-center">
-                      <CodeXml size={24} aria-hidden="true" />
-                    </div>
-                    <button
-                      className="md:hidden text-white"
-                      aria-expanded={activeCard === 1}
-                      aria-controls="svc-1"
-                      onClick={() => toggleCard(1)}
-                      onKeyDown={(e) => onKeyToggle(e, 1)}
-                    >
-                      <ChevronDown />
-                    </button>
-                  </div>
-                  <div className="flex flex-col gap-2 text-white">
-                    <h3 className="font-bold text-2xl">Webdesign</h3>
-                    <p
-                      id="svc-1"
-                      className={`transition-all duration-300 overflow-hidden ${activeCard === 1 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}
-                    >
-                      Klar strukturiert, modern und conversion‑orientiert — als Baukastensystem oder individuell entwickelt.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="md:h-1/2 flex flex-col gap-5 p-6 bg-[#B6B0D6] rounded-2xl">
-                  <div className="flex justify-between items-center">
-                    <div className="h-12 w-12 rounded-full text-[#222] bg-white flex items-center justify-center">
-                      <Users size={24} aria-hidden="true" />
-                    </div>
-                    <button
-                      className="md:hidden text-neutral-900"
-                      aria-expanded={activeCard === 2}
-                      aria-controls="svc-2"
-                      onClick={() => toggleCard(2)}
-                      onKeyDown={(e) => onKeyToggle(e, 2)}
-                    >
-                      <ChevronDown />
-                    </button>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">Social Media Management</h3>
-                    <p
-                      id="svc-2"
-                      className={`text-neutral-700 transition-all duration-300 overflow-hidden ${activeCard === 2 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}
-                    >
-                      Strategie, Planung, Content‑Produktion (Reels, Posts), Analyse & Management — ready‑to‑post.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Content + Leadsystem */}
-              <div
-                data-aos={animationRight}
-                data-aos-duration="500"
-                className="flex flex-col gap-8 w-full h-full"
-              >
-                <div className="md:h-1/2 flex flex-col gap-5 p-6 bg-white rounded-2xl">
-                  <div className="flex justify-between items-center">
-                    <div className="h-12 w-12 rounded-full text-[#222] bg-neutral-200 flex items-center justify-center">
-                      <LayoutDashboard size={24} aria-hidden="true" />
-                    </div>
-                    <button
-                      className="md:hidden text-neutral-900"
-                      aria-expanded={activeCard === 3}
-                      aria-controls="svc-3"
-                      onClick={() => toggleCard(3)}
-                      onKeyDown={(e) => onKeyToggle(e, 3)}
-                    >
-                      <ChevronDown />
-                    </button>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">Content Creation</h3>
-                    <p
-                      id="svc-3"
-                      className={`text-neutral-700 transition-all duration-300 overflow-hidden ${activeCard === 3 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}
-                    >
-                      Foto, Video, Copywriting & Motion Design — konsistent zur Markenwelt und auf Wirkung getrimmt.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="md:h-1/2 flex flex-col gap-5 p-6 bg-[#F5F4FC] rounded-2xl">
-                  <div className="flex justify-between items-center">
-                    <div className="h-12 w-12 rounded-full text-[#222] bg-neutral-200 flex items-center justify-center">
-                      <ChartPie size={24} aria-hidden="true" />
-                    </div>
-                    <button
-                      className="md:hidden text-neutral-900"
-                      aria-expanded={activeCard === 4}
-                      aria-controls="svc-4"
-                      onClick={() => toggleCard(4)}
-                      onKeyDown={(e) => onKeyToggle(e, 4)}
-                    >
-                      <ChevronDown />
-                    </button>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">Leadsystem &amp; Angebotsstrukturierung</h3>
-                    <p
-                      id="svc-4"
-                      className={`text-neutral-700 transition-all duration-300 overflow-hidden ${activeCard === 4 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}
-                    >
-                      Digitale Vertriebsprozesse: automatisierte Angebots‑Generatoren, Anfrageformulare, CRM‑Einbindung u. v. m.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <Link
-              href="/request"
-              className="px-6 py-3 bg-violet-600 text-white rounded-full font-medium flex items-center gap-2 transition-transform duration-300 hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-violet-400"
-              role="button"
-              aria-label="Leistungen anfragen"
-            >
-              Jetzt anfragen <ArrowRight className="hidden md:inline" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* WARUM PAVEO */}
-      <section className="px-5 py-10" aria-labelledby="why-heading">
-        <div className="bg-white rounded-3xl px-0 md:px-5 py-8 md:p-14 flex flex-col gap-12">
-          <div className="flex gap-4 max-w-6xl">
-            <Sun className="min-w-[16px]" aria-hidden="true" />
-            <div className="flex flex-col gap-6">
-              <h2 id="why-heading" className="font-medium text-xl md:text-2xl">Warum paveo</h2>
-              <p className="font-semibold text-2xl md:text-4xl">
-                Psychologisch fundiert. Modular &amp; flexibel. Kollaborativ. Für kleine Budgets — professionell umgesetzt.
-              </p>
-              <Link
-                href="/request"
-                className="w-fit px-6 py-3 bg-violet-600 text-white rounded-full font-medium transition-transform duration-300 hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-violet-400"
-                role="button"
-                aria-label="Projekt starten"
-              >
-                Projekt starten
-              </Link>
-            </div>
+      <section className="px-5 md:px-20 pb-14 md:pb-20">
+        <header className="max-w-3xl" data-aos="fade-up">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-[#AAB1C2]">
+            <Sun size={14} />
+            <span>Warum paveo</span>
           </div>
+          <h2 className="mt-4 text-2xl md:text-4xl font-semibold">
+            Weniger reden. Mehr Wirkung.
+          </h2>
+        </header>
 
-          {/* Trust/Erklärung ohne Bilder */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-            <div className="w-full bg-[#353088] rounded-2xl flex flex-col p-8 gap-4 items-center justify-center text-center">
-              <span className="text-white/90 bg-white/10 px-4 py-2 rounded-full">Psychologisch fundiert</span>
-              <p className="text-white">
-                Entscheidungen werden von Wahrnehmung, Heuristiken und Kontext geprägt. Unsere Konzepte zielen genau darauf — für mehr Relevanz und Conversion.
-              </p>
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            {
+              title: 'Psychologisch fundiert',
+              text:
+                'Wir gestalten nicht nur schön, sondern wirksam – basierend auf Wahrnehmung, Heuristiken & Kontext.',
+              bg: 'from-[#22233A] to-[#191A2D]',
+            },
+            {
+              title: 'Modular & flexibel',
+              text:
+                'Buche nur, was du brauchst. Starte klein und erweitere ohne Brüche in Design, Content oder Technik.',
+              bg: 'from-[#26213F] to-[#1B1830]',
+            },
+            {
+              title: 'Kollaboratives Netzwerk',
+              text:
+                'Statt starrem Agenturmodell arbeiten wir mit Spezialist:innen – effizient, fair & transparent.',
+              bg: 'from-[#1E2132] to-[#161A26]',
+            },
+          ].map((card, i) => (
+            <div
+              key={card.title}
+              data-aos="fade-up"
+              data-aos-delay={i * 120}
+              className={`rounded-2xl bg-gradient-to-br ${card.bg} p-6 md:p-7 border border-white/10 backdrop-blur transition-transform duration-300 hover:scale-[1.02] hover:shadow-[0_0_40px_-10px_rgba(122,166,255,0.35)]`}
+            >
+              <h3 className="text-xl md:text-2xl font-bold">{card.title}</h3>
+              <p className="mt-2 text-[#BFC6D8]">{card.text}</p>
             </div>
-
-            <div className="w-full bg-[#7569AD] rounded-2xl flex flex-col p-8 gap-4 items-center justify-center text-center text-white">
-              <span className="bg-white/10 px-4 py-2 rounded-full">Modular &amp; skalierbar</span>
-              <p>
-                Leistungen sind Bausteine. Du startest schlank und ergänzt später — ohne Brüche in Design, Content oder Technik.
-              </p>
-            </div>
-
-            <div className="w-full bg-[#EAEAEA] rounded-2xl flex flex-col p-8 gap-4 items-center justify-center text-center">
-              <span className="text-[#353088] bg-[#7569AD1F] px-4 py-2 rounded-full">Kollaboratives Netzwerk</span>
-              <p className="text-neutral-900">
-                Kein starres Agenturmodell: Wir arbeiten mit einem wachsenden Netzwerk und fairen Beteiligungen — effizient und nahbar.
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* KONTAKT */}
-      <section className="px-5 md:px-20 py-10 md:py-20" aria-labelledby="contact-heading">
-        <div className="flex flex-col md:flex-row gap-16">
-          <div data-aos="fade-up" data-aos-duration="500" className="w-full md:w-2/5 flex flex-col gap-10">
-            <div className="flex flex-col gap-6">
-              <h2 id="contact-heading" className="font-semibold text-3xl md:text-5xl">
-                Lass uns starten.
-              </h2>
-              <p className="text-neutral-700">
-                Ob konkrete Anfrage oder erstes Sparring: Schreib uns kurz, was du vorhast — wir melden uns zeitnah.
-              </p>
+      {/* CTA */}
+      <section className="relative overflow-hidden">
+        <Ribbons subtle />
+
+        <div className="relative z-10 px-5 md:px-20 py-16 md:py-24">
+          <div className="max-w-4xl">
+            <h2 className="text-3xl md:text-5xl font-semibold">
+              Bereit für den nächsten Schritt?
+            </h2>
+            <p className="mt-4 text-[#AAB1C2] max-w-2xl">
+              Lass uns deinen Auftritt schärfen – mit klarer Struktur, starken Inhalten und
+              Systemen, die verkaufen.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/request"
-                className="w-fit px-5 py-2.5 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-transform duration-300 hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-violet-400"
-                role="button"
-                aria-label="Termin buchen"
+                className="inline-flex items-center gap-2 rounded-full bg-violet-600 px-6 py-3 font-medium text-white border border-violet-500 transition-transform duration-300 hover:scale-[1.03]"
               >
-                Termin buchen
+                Termin buchen <ArrowRight size={18} />
               </Link>
-            </div>
-            <div className="flex items-center gap-2 text-neutral-900">
-              <p className="text-lg md:text-xl font-medium">Wir freuen uns auf das Projekt!</p>
-              <ArrowRight aria-hidden="true" />
-            </div>
-          </div>
-
-          {/* Rechte Spalte: Info-Karten statt Fotos */}
-          <div data-aos={animationRight} data-aos-duration="500" className="w-full md:w-3/5 grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="rounded-2xl p-6 bg-neutral-100">
-              <h3 className="font-semibold text-xl mb-2">Tools &amp; Arbeitsweise</h3>
-              <ul className="list-disc pl-5 text-neutral-700">
-                <li>Slack &amp; Asana für smoothe Zusammenarbeit</li>
-                <li>Transparente Prozesse &amp; klare Zuständigkeiten</li>
-                <li>Templates &amp; Standards für Outreach &amp; Self‑Branding</li>
-              </ul>
-            </div>
-            <div className="rounded-2xl p-6 bg-neutral-100">
-              <h3 className="font-semibold text-xl mb-2">Beteiligungsmodell</h3>
-              <p className="text-neutral-700">
-                Teammitglieder erhalten prozentuale Anteile je nach Beitrag (z. B. 40 % bei Kundenakquise durch Outreach).
-              </p>
-            </div>
-            <div className="rounded-2xl p-6 bg-neutral-100">
-              <h3 className="font-semibold text-xl mb-2">Interne Projekte</h3>
-              <ul className="list-disc pl-5 text-neutral-700">
-                <li>paveo Outreach (Leadgewinnung)</li>
-                <li>paveo General (Struktur &amp; Org)</li>
-                <li>paveo Social Media (eigener Auftritt)</li>
-              </ul>
-            </div>
-            <div className="rounded-2xl p-6 bg-neutral-100">
-              <h3 className="font-semibold text-xl mb-2">Zielbild</h3>
-              <p className="text-neutral-700">
-                Eine smarte, klare Marke für KMU — mit reduzierten Designs, scharfem Messaging und skalierbaren Systemen.
-              </p>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 font-medium text-[#EDEDF2] hover:bg-white/10"
+              >
+                Kontakt aufnehmen
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
       <Footer />
+    </div>
+  );
+}
+
+/* ---------- UI-Bausteine ---------- */
+
+function ServiceCard({ icon, title, desc, aos = 'fade-up', bg = 'from-[#24273B] to-[#181C2A]' }) {
+  return (
+    <div
+      data-aos={aos}
+      className={`group rounded-2xl p-6 bg-gradient-to-br ${bg} border border-white/10 backdrop-blur transition-transform duration-300 hover:scale-[1.02] hover:shadow-[0_0_35px_-10px_rgba(109,97,255,0.45)]`}
+    >
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-[#7AA6FF] border border-white/10">
+          {icon}
+        </div>
+        <ArrowRight
+          size={18}
+          className="opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1 text-[#BFC6D8]"
+          aria-hidden="true"
+        />
+      </div>
+      <h3 className="text-xl font-semibold">{title}</h3>
+      <p className="mt-2 text-[#BFC6D8]">{desc}</p>
+    </div>
+  );
+}
+
+/**
+ * Liquid-style ribbons background.
+ * SVG, weich geblurrt, extrem leichtgewichtig – keine Bild-Assets.
+ * set prop "subtle" für etwas zurückhaltendere Opazität.
+ */
+function Ribbons({ subtle = false }) {
+  return (
+    <div className="pointer-events-none absolute inset-0">
+      <svg
+        className="absolute -top-24 -left-24 w-[120vw] h-[120vh] opacity-[0.55]"
+        viewBox="0 0 800 600"
+        fill="none"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#2D8CFF" />
+            <stop offset="50%" stopColor="#6D61FF" />
+            <stop offset="100%" stopColor="#7AA6FF" />
+          </linearGradient>
+          <filter id="blur1">
+            <feGaussianBlur stdDeviation="12" />
+          </filter>
+        </defs>
+        <path
+          d="M-50 200 C 150 140, 250 260, 450 200 S 750 120, 900 210"
+          stroke="url(#g1)"
+          strokeWidth="42"
+          filter="url(#blur1)"
+          className="ribbon-a"
+        />
+        <path
+          d="M-80 360 C 120 420, 300 320, 520 360 S 760 420, 920 340"
+          stroke="url(#g1)"
+          strokeWidth="28"
+          filter="url(#blur1)"
+          className="ribbon-b"
+        />
+      </svg>
+
+      <svg
+        className="absolute bottom-[-10%] right-[-10%] w-[95vw] h-[70vh] opacity-[0.45]"
+        viewBox="0 0 800 600"
+        fill="none"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#7AA6FF" />
+            <stop offset="60%" stopColor="#2D8CFF" />
+            <stop offset="100%" stopColor="#6D61FF" />
+          </linearGradient>
+          <filter id="blur2">
+            <feGaussianBlur stdDeviation="14" />
+          </filter>
+        </defs>
+        <path
+          d="M-60 280 C 140 240, 280 340, 480 280 S 760 220, 920 300"
+          stroke="url(#g2)"
+          strokeWidth="36"
+          filter="url(#blur2)"
+          className="ribbon-c"
+        />
+      </svg>
+
+      <style jsx>{`
+        .ribbon-a {
+          animation: floatA 12s ease-in-out infinite;
+        }
+        .ribbon-b {
+          animation: floatB 16s ease-in-out infinite;
+        }
+        .ribbon-c {
+          animation: floatC 14s ease-in-out infinite;
+        }
+        @keyframes floatA {
+          0% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(18px);
+          }
+          100% {
+            transform: translateY(0px);
+          }
+        }
+        @keyframes floatB {
+          0% {
+            transform: translateY(0px) translateX(0px);
+          }
+          50% {
+            transform: translateY(-22px) translateX(-6px);
+          }
+          100% {
+            transform: translateY(0px) translateX(0px);
+          }
+        }
+        @keyframes floatC {
+          0% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(16px);
+          }
+          100% {
+            transform: translateY(0px);
+          }
+        }
+      `}</style>
+
+      {/* Dunkler Overlay, um Content lesbar zu halten */}
+      <div
+        className={`absolute inset-0 bg-[linear-gradient(180deg,rgba(6,7,10,0.6)_0%,rgba(6,7,10,0.7)_35%,rgba(6,7,10,0.8)_100%)] ${
+          subtle ? 'opacity-60' : 'opacity-80'
+        }`}
+      />
     </div>
   );
 }
