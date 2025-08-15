@@ -8,17 +8,17 @@ import { useEffect, useState } from 'react';
 import { Mail, Phone, MapPin, Send, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
 
 export default function ContactPage() {
-  // ---- UI State ----
+  // UI State
   const [animationRight, setAnimationRight] = useState('fade-right');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
 
-  // ---- Form State ----
+  // Form State
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const onChange = (e) => setFormData((p) => ({ ...p, [e.target.name]: e.target.value }));
 
-  // ---- AOS (nur Client) ----
+  // AOS (nur Client)
   useEffect(() => {
     (async () => {
       const AOS = (await import('aos')).default;
@@ -32,7 +32,7 @@ export default function ContactPage() {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  // ---- Submit mit EmailJS (Keys per ENV) ----
+  // Submit via EmailJS (IDs über ENV; fallen sonst auf deine bisherigen Defaults zurück)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -205,14 +205,13 @@ export default function ContactPage() {
           <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-[#C0C6D8]">
             <Sparkles size={14} /> FAQs
           </span>
-          <h3 className="mt-3 text-2xl md:text-4xl font-semibold">Häufige Fragen</h3>
         </div>
         <div className="mx-auto max-w-2xl mt-6">
           <AccordionExample />
         </div>
       </section>
 
-      {/* CTA unten (ohne Fotos) */}
+      {/* CTA unten */}
       <section className="px-5 md:px-20 py-10 md:py-16">
         <div
           className="rounded-3xl border border-white/10 bg-[linear-gradient(135deg,rgba(138,174,255,0.12),rgba(16,14,32,0.7))] p-6 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6"
