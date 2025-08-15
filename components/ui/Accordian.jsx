@@ -1,55 +1,61 @@
 'use client'
 
 import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 
-const Accordion = ({ title, content }) => {
-    const [isOpen, setIsOpen] = useState(false);
+const faqs = [
+  {
+    question: "Welche Services bietet Pave an?",
+    answer: "Wir bieten Branding, Webdesign, Social Media Management, Content Creation und IT-Consulting. Unser Ziel ist es, Unternehmen digital sichtbar und erfolgreich zu machen."
+  },
+  {
+    question: "Wie läuft die Zusammenarbeit ab?",
+    answer: "Nach einer ersten Beratung erstellen wir einen individuellen Projektplan. Du erhältst volle Transparenz über die Schritte, Deadlines und Ergebnisse."
+  },
+  {
+    question: "Was kostet die Zusammenarbeit?",
+    answer: "Unsere Preise richten sich nach dem Umfang. Für Social Media Management gibt es Paketpreise, andere Services kalkulieren wir individuell nach Aufwand."
+  },
+  {
+    question: "Wie schnell bekomme ich Ergebnisse?",
+    answer: "Erste sichtbare Ergebnisse können oft schon nach 2–4 Wochen entstehen. Langfristige Projekte wie Branding oder SEO brauchen etwas mehr Zeit."
+  },
+];
 
-    return (
-        <div className="rounded-xl overflow-hidden">
-            <button
-                className={`bg-violet-200 flex justify-between items-center w-full p-5 md:py-5 md:px-8 text-left`}
-                onClick={() => setIsOpen(!isOpen)}
-            >
-                <h3 className="text-xl font-medium">{title}</h3>
-                <span className={`transform transition-transform duration-700 text-violet-600 font-bold text-2xl w-4 text-right`}>
-                    {isOpen ? "-" : "+"}
-                </span>
-            </button>
-            <div
-                className={`bg-violet-200 overflow-hidden transition-max-height duration-700 ease-in-out ${isOpen ? "max-h-screen" : "max-h-0"}`}
-            >
-                <p className="px-5 md:px-8 pb-5 text-neutral-600">{content}</p>
-            </div>
+export default function AccordionExample() {
+  const [openIndex, setOpenIndex] = useState(null);
+
+  const toggleFAQ = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      {faqs.map((faq, index) => (
+        <div
+          key={index}
+          className="bg-white border border-neutral-300 rounded-xl overflow-hidden transition-all"
+        >
+          <button
+            onClick={() => toggleFAQ(index)}
+            className="w-full flex justify-between items-center p-4 text-left text-lg font-medium text-neutral-800"
+          >
+            {faq.question}
+            <ChevronDown
+              className={`transition-transform duration-300 ${
+                openIndex === index ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+          <div
+            className={`px-4 pb-4 text-neutral-600 transition-all duration-300 ${
+              openIndex === index ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+            }`}
+          >
+            {faq.answer}
+          </div>
         </div>
-    );
-};
-
-const AccordionExample = () => {
-    return (
-        <div className="w-full flex flex-col gap-6">
-            <Accordion
-                title="What services does Pave offer?"
-                content="Pave provides a range of services designed to boost your business's efficiency and visibility, including internal collaboration solutions like Slack and SharePoint implementation, as well as branding and identity development. With expertise in UX/UI design, web development, and content creation, Pave ensures your business not only operates smoothly but also stands out in the digital marketplace, helping you engage more effectively with your audience and drive growth."
-            />
-            <Accordion
-                title="How can Pave help my business grow?"
-                content="Over 70% of consumers research a business online before making a purchase decision. For your business, this means that having a strong online presence is no longer optional—it's essential for growth. In today’s fast-paced digital world, leveraging digital tools allows you to reach a wider audience, improve efficiency, and stay competitive. Without embracing these solutions, you risk falling behind competitors who are already capitalizing on technology to attract and retain customers. By adopting digital strategies, you not only open the door to new growth opportunities but also ensure your business remains relevant in an increasingly connected market."
-            />
-            <Accordion
-                title="What industries do you specialize in?"
-                content="In an era where technology drives nearly every aspect of life, Pave helps your business stay ahead by specializing in industries that are shaping the future, including technology, e-commerce, healthcare, education, and hospitality. By focusing on these forward-thinking sectors, Pave enables you to leverage cutting-edge digital solutions, powerful branding, and innovative design strategies that keep you competitive and push your business to the forefront of your industry. Our expertise in these dynamic industries ensures that we provide tailored services that meet the unique challenges and unlock growth opportunities specific to your market."
-            />
-            <Accordion
-                title="How can I contact Pave for a consultation?"
-                content="You can easily contact Pave for a consultation by scheduling a meeting through our website by clicking one of the CTAs, sending us a message directly above the FAQ section, or emailing us at info@paveconsultings.com."
-            />
-            <Accordion
-                title="What makes Pave different from other IT service providers?"
-                content="With a retention rate of 96% and years of experience in our specialized fields, Pave ensures that your business not only operates efficiently but also achieves sustainable growth. Our tailored solutions help you build strong customer relationships and create memorable experiences that keep your audience coming back. By combining cutting-edge technology, branding, and UX/UI design, we make sure your business not only stands out in the market but also gains long-term relevance and customer loyalty."
-            />
-        </div>
-    );
-};
-
-export default AccordionExample;
+      ))}
+    </div>
+  );
+}
