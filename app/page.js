@@ -5,13 +5,12 @@ import Navbar from "@/components/layout/Navbar";
 import { ChevronDown, PenTool, CodeXml, LayoutDashboard, Users, ChartPie, ArrowRight, Sun } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-// Hinweis: Wir verzichten bewusst auf Bilder/Stock-Assets. Hero nutzt Gradient-Background.
 
 export default function Home() {
-  const [animationRight, setAnimationRight] = useState<'fade-right' | 'fade-down'>('fade-right');
-  const [activeCard, setActiveCard] = useState<number | null>(null);
+  const [animationRight, setAnimationRight] = useState('fade-right');
+  const [activeCard, setActiveCard] = useState(null);
 
-  const toggleCard = (index: number) => {
+  const toggleCard = (index) => {
     setActiveCard((prev) => (prev === index ? null : index));
   };
 
@@ -22,14 +21,10 @@ export default function Home() {
       const AOS = (await import('aos')).default;
       await import('aos/dist/aos.css');
       AOS.init({ duration: 500, once: true });
-      cleanup = () => {
-        // AOS hat kein explizites destroy nötig,
-        // wir räumen nur unsere Listener auf.
-      };
+      cleanup = () => {};
     })();
 
     const onResize = () => {
-      // Mobile => kürzere Scrollrichtung
       if (window.innerWidth < 768) setAnimationRight('fade-down');
       else setAnimationRight('fade-right');
     };
@@ -42,8 +37,8 @@ export default function Home() {
     };
   }, []);
 
-  // Tastaturunterstützung für die Service-Karten
-  const onKeyToggle = (e: React.KeyboardEvent, index: number) => {
+  // Tastatur-Unterstützung (optional für eigene Handler)
+  const onKeyToggle = (e, index) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       toggleCard(index);
@@ -55,13 +50,8 @@ export default function Home() {
       <Navbar />
 
       {/* HERO */}
-      <section
-        className="md:px-5 md:pb-12"
-        aria-labelledby="hero-heading"
-      >
-        <div className="relative flex flex-col items-center py-10 md:pt-40 md:pb-52 px-4 gap-6 md:gap-12 md:rounded-3xl overflow-hidden
-                        bg-gradient-to-br from-violet-900 via-[#2D286A] to-neutral-900">
-          {/* Kein Bild/Video mehr, nur gradient für bessere LCP */}
+      <section className="md:px-5 md:pb-12" aria-labelledby="hero-heading">
+        <div className="relative flex flex-col items-center py-10 md:pt-40 md:pb-52 px-4 gap-6 md:gap-12 md:rounded-3xl overflow-hidden bg-gradient-to-br from-violet-900 via-[#2D286A] to-neutral-900">
           <div className="flex text-white flex-col items-center justify-center gap-3 md:gap-4 max-w-3xl">
             <h1 id="hero-heading" className="text-3xl sm:text-5xl md:text-7xl font-bold text-center">
               paveo — Dein Weg zu wirksamer Markenkommunikation.
@@ -99,7 +89,7 @@ export default function Home() {
               </p>
             </div>
 
-            {/* 5 Karten – mobil als Akkordeon, Desktop offen */}
+            {/* Karten – mobil als Akkordeon, Desktop offen */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full">
               {/* Branding & Positionierung */}
               <div
@@ -117,6 +107,7 @@ export default function Home() {
                       aria-expanded={activeCard === 0}
                       aria-controls="svc-0"
                       onClick={() => toggleCard(0)}
+                      onKeyDown={(e) => onKeyToggle(e, 0)}
                     >
                       <ChevronDown />
                     </button>
@@ -127,22 +118,19 @@ export default function Home() {
                       id="svc-0"
                       className={`text-base md:text-lg transition-all duration-300 overflow-hidden ${activeCard === 0 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}
                     >
-                      Logo, Farbwelt, Tonalität und Kernbotschaft — passgenau auf deine Zielgruppe. Psychologisch geschärft statt
-                      nur „schön“.
+                      Logo, Farbwelt, Tonalität und Kernbotschaft — passgenau auf deine Zielgruppe. Psychologisch geschärft statt nur „schön“.
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Webdesign */}
+              {/* Webdesign + Social */}
               <div
                 data-aos={animationRight}
                 data-aos-duration="500"
                 className="flex flex-col gap-8 w-full h-full"
               >
-                <div
-                  className="md:h-1/2 flex flex-col gap-5 p-6 bg-[#7569AD] rounded-2xl"
-                >
+                <div className="md:h-1/2 flex flex-col gap-5 p-6 bg-[#7569AD] rounded-2xl">
                   <div className="flex justify-between items-center">
                     <div className="h-12 w-12 rounded-full text-[#4B3A98] bg-white flex items-center justify-center">
                       <CodeXml size={24} aria-hidden="true" />
@@ -152,6 +140,7 @@ export default function Home() {
                       aria-expanded={activeCard === 1}
                       aria-controls="svc-1"
                       onClick={() => toggleCard(1)}
+                      onKeyDown={(e) => onKeyToggle(e, 1)}
                     >
                       <ChevronDown />
                     </button>
@@ -167,10 +156,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Social Media Management */}
-                <div
-                  className="md:h-1/2 flex flex-col gap-5 p-6 bg-[#B6B0D6] rounded-2xl"
-                >
+                <div className="md:h-1/2 flex flex-col gap-5 p-6 bg-[#B6B0D6] rounded-2xl">
                   <div className="flex justify-between items-center">
                     <div className="h-12 w-12 rounded-full text-[#222] bg-white flex items-center justify-center">
                       <Users size={24} aria-hidden="true" />
@@ -180,6 +166,7 @@ export default function Home() {
                       aria-expanded={activeCard === 2}
                       aria-controls="svc-2"
                       onClick={() => toggleCard(2)}
+                      onKeyDown={(e) => onKeyToggle(e, 2)}
                     >
                       <ChevronDown />
                     </button>
@@ -196,15 +183,13 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Content Creation + Leadsystem */}
+              {/* Content + Leadsystem */}
               <div
                 data-aos={animationRight}
                 data-aos-duration="500"
                 className="flex flex-col gap-8 w-full h-full"
               >
-                <div
-                  className="md:h-1/2 flex flex-col gap-5 p-6 bg-white rounded-2xl"
-                >
+                <div className="md:h-1/2 flex flex-col gap-5 p-6 bg-white rounded-2xl">
                   <div className="flex justify-between items-center">
                     <div className="h-12 w-12 rounded-full text-[#222] bg-neutral-200 flex items-center justify-center">
                       <LayoutDashboard size={24} aria-hidden="true" />
@@ -214,6 +199,7 @@ export default function Home() {
                       aria-expanded={activeCard === 3}
                       aria-controls="svc-3"
                       onClick={() => toggleCard(3)}
+                      onKeyDown={(e) => onKeyToggle(e, 3)}
                     >
                       <ChevronDown />
                     </button>
@@ -229,9 +215,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div
-                  className="md:h-1/2 flex flex-col gap-5 p-6 bg-[#F5F4FC] rounded-2xl"
-                >
+                <div className="md:h-1/2 flex flex-col gap-5 p-6 bg-[#F5F4FC] rounded-2xl">
                   <div className="flex justify-between items-center">
                     <div className="h-12 w-12 rounded-full text-[#222] bg-neutral-200 flex items-center justify-center">
                       <ChartPie size={24} aria-hidden="true" />
@@ -241,6 +225,7 @@ export default function Home() {
                       aria-expanded={activeCard === 4}
                       aria-controls="svc-4"
                       onClick={() => toggleCard(4)}
+                      onKeyDown={(e) => onKeyToggle(e, 4)}
                     >
                       <ChevronDown />
                     </button>
@@ -291,13 +276,12 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Metriken/Trust ohne Bilder */}
+          {/* Trust/Erklärung ohne Bilder */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
             <div className="w-full bg-[#353088] rounded-2xl flex flex-col p-8 gap-4 items-center justify-center text-center">
               <span className="text-white/90 bg-white/10 px-4 py-2 rounded-full">Psychologisch fundiert</span>
               <p className="text-white">
-                Entscheidungen werden von Wahrnehmung, Heuristiken und Kontext geprägt. Unsere Konzepte zielen genau darauf — für mehr
-                Relevanz und Conversion.
+                Entscheidungen werden von Wahrnehmung, Heuristiken und Kontext geprägt. Unsere Konzepte zielen genau darauf — für mehr Relevanz und Conversion.
               </p>
             </div>
 
@@ -331,8 +315,7 @@ export default function Home() {
               </p>
               <Link
                 href="/request"
-                className="w-fit px-5 py-2.5 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden
-                           transition-transform duration-300 hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-violet-400"
+                className="w-fit px-5 py-2.5 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-transform duration-300 hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-violet-400"
                 role="button"
                 aria-label="Termin buchen"
               >
@@ -345,7 +328,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Rechte Spalte: statt Stock-Fotos einfache Info-Karten */}
+          {/* Rechte Spalte: Info-Karten statt Fotos */}
           <div data-aos={animationRight} data-aos-duration="500" className="w-full md:w-3/5 grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="rounded-2xl p-6 bg-neutral-100">
               <h3 className="font-semibold text-xl mb-2">Tools &amp; Arbeitsweise</h3>
