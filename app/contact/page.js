@@ -1,252 +1,239 @@
-'use client'
+'use client';
 
-import Footer from '@/components/layout/Footer'
-import Navbar from '@/components/layout/Navbar'
-import AccordionExample from '@/components/ui/Accordian'
-import { ArrowRight, ArrowUpRight, Sun } from 'lucide-react'
-import React from 'react'
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
+import AccordionExample from '@/components/ui/Accordian';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-import Link from 'next/link'
-import emailjs from '@emailjs/browser'
+import { Mail, Phone, MapPin, Send, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
 
-const Contact = () => {
-    const [animationRight, setAnimationRight] = useState('fade-right');
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        message: "",
-    });
+export default function ContactPage() {
+  // ---- UI State ----
+  const [animationRight, setAnimationRight] = useState('fade-right');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [success, setSuccess] = useState('');
+  const [error, setError] = useState('');
 
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [success, setSuccess] = useState(false);
-    const [error, setError] = useState("");
+  // ---- Form State ----
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const onChange = (e) => setFormData((p) => ({ ...p, [e.target.name]: e.target.value }));
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-    };
+  // ---- AOS (nur Client) ----
+  useEffect(() => {
+    (async () => {
+      const AOS = (await import('aos')).default;
+      await import('aos/dist/aos.css');
+      AOS.init({ duration: 600, once: true, easing: 'ease-out' });
+    })();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-        setError("");
-        setSuccess(false);
+    const onResize = () => setAnimationRight(window.innerWidth < 768 ? 'fade-down' : 'fade-right');
+    onResize();
+    window.addEventListener('resize', onResize, { passive: true });
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
-        try {
-            const response = await emailjs.send(
-                "service_shzfs6c",
-                "template_12u0i0n",
-                formData,
-                "BTON8QXiLwUaNT5D4"
-            );
+  // ---- Submit mit EmailJS (Keys per ENV) ----
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError('');
+    setSuccess('');
 
-            if (response.status === 200) {
-                setSuccess(true);
-                setFormData({ name: "", email: "", message: "" });
-            } else {
-                throw new Error("Failed to send message. Please try again.");
-            }
-        } catch (err) {
-            setError(err.message || "Something went wrong. Please try again.");
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+    try {
+      const service = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_shzfs6c';
+      const template = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'template_12u0i0n';
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'BTON8QXiLwUaNT5D4';
 
-    useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth < 768) {
-                setAnimationRight('fade-down');
-            } else {
-                setAnimationRight('fade-right');
-            }
-        };
+      const emailjs = (await import('@emailjs/browser')).default;
+      const res = await emailjs.send(service, template, formData, publicKey);
 
-        // Initialize AOS
-        AOS.init({ duration: 500, once: true });
+      if (res?.status === 200) {
+        setSuccess('Danke! Deine Nachricht wurde erfolgreich gesendet.');
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        throw new Error('Senden fehlgeschlagen – bitte später erneut versuchen.');
+      }
+    } catch (err) {
+      setError(err?.message || 'Unerwarteter Fehler – bitte später erneut versuchen.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-        handleResize();
-        window.addEventListener('resize', handleResize);
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
+  return (
+    <div className="font-proxima bg-[#0A0A10] text-[#EDEDF2] antialiased">
+      <Navbar />
 
-    return (
-        <div className="font-proxima">
-            <Navbar />
-
-            <div className="px-5">
-                <div className="bg-neutral-800 rounded-3xl px-5 py-8 md:py-20 md:px-20 lg:px-32 flex flex-col gap-16">
-                    <div className="text-white flex flex-col items-center justify-center gap-4 md:gap-8 mx-auto max-w-4xl">
-                        <h2 className="font-medium text-3xl md:text-5xl">Get In Touch</h2>
-                        <p className="font-regular text-center text-base md:text-xl">Get in touch with us at Pave to explore how our innovative IT solutions can elevate your business. We&apos;re here to assist with any inquiries or support you need.</p>
-                    </div>
-
-                    <div className="flex flex-col justify-center items-center md:flex-row gap-8 md:items-start md:justify-between">
-                        <div className='flex flex-col md:items-start items-center justify-center gap-3 text-white w-[300px]'>
-                            <h4 className='uppercase'>contact</h4>
-                            <p className='text-xl md:text-left text-center'>+49 160 95757167 <br />
-                                info@paveconsultings.com</p>
-                        </div>
-
-                        <div className='flex flex-col items-center justify-center gap-3 text-white w-[300px]'>
-                            <h4 className='uppercase'>Our Address</h4>
-                            <p className='text-xl text-center'>63906 Erlenbach am Main <br />
-                                Am Streitberg 28, Germany</p>
-                        </div>
-
-                        <div className='flex flex-col md:items-end items-center justify-center gap-3 text-white w-[300px]'>
-                            <h4 className='uppercase'>Time</h4>
-                            <p className='text-xl md:text-right text-center'>Monday-Friday <br />
-                                14:00 - 20:00</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="px-5 py-10">
-                <div className="bg-neutral-100 rounded-3xl px-5 py-8 md:p-14 flex flex-col items-center justify-center gap-10">
-                    <div className="flex flex-col items-center justify-center gap-3 max-w-3xl">
-                        <div className="flex flex-col items-center justify-center gap-3">
-                            <Sun />
-                            <h2 className="font-medium text-xl md:text-2xl text-center">Services</h2>
-                        </div>
-                        <p className="font-medium text-3xl md:text-5xl text-center">Send us a message</p>
-                    </div>
-
-                    {/* <div className='w-full md:w-[714px] flex flex-col gap-6'>
-                        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 w-full'>
-                            <input type="text" placeholder='Name' className='w-full bg-white border-none outline-none p-3 rounded-xl' />
-                            <input type="email" placeholder='Email' className='w-full bg-white border-none outline-none p-3 rounded-xl' />
-                        </div>
-                        <div className='grid grid-cols-1'>
-                            <textarea rows="8" placeholder='Message' className='w-full bg-white border-none outline-none p-3 rounded-xl' />
-                        </div>
-                        <button className="w-full px-4 py-2 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-all duration-500 ease-out group">
-                            <span className="relative z-10 transition-colors duration-500 group-hover:text-violet-700">
-                                Send
-                            </span>
-                            <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
-                        </button>
-                    </div> */}
-
-                    <form
-                        onSubmit={handleSubmit}
-                        className="w-full md:w-[714px] flex flex-col gap-6"
-                    >
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                            <input
-                                type="text"
-                                name="name"
-                                placeholder="Name"
-                                className="w-full bg-white border-none outline-none p-3 rounded-xl"
-                                value={formData.name}
-                                onChange={handleChange}
-                                required
-                            />
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="Email"
-                                className="w-full bg-white border-none outline-none p-3 rounded-xl"
-                                value={formData.email}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="grid grid-cols-1">
-                            <textarea
-                                rows="8"
-                                name="message"
-                                placeholder="Message"
-                                className="w-full bg-white border-none outline-none p-3 rounded-xl"
-                                value={formData.message}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            className="w-full px-4 py-2 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-all duration-500 ease-out group"
-                            disabled={isSubmitting}
-                        >
-                            <span className="relative z-10 transition-colors duration-500 group-hover:text-violet-700">
-                                {isSubmitting ? "Sending..." : "Send"}
-                            </span>
-                            <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
-                        </button>
-                        {success && <p className="text-green-600">Message sent successfully!</p>}
-                        {error && <p className="text-red-600">{error}</p>}
-                    </form>
-                </div>
-            </div>
-
-            <div className="p-5 md:px-20 md:py-10 flex flex-col items-center justify-center gap-3 md:gap-10">
-                <div className="flex flex-col items-center justify-center gap-3 max-w-2xl">
-                    <div className="flex flex-col items-center justify-center gap-3">
-                        <Sun />
-                        <h2 className="font-medium text-xl md:text-2xl text-center">FAQs</h2>
-                    </div>
-                    <p className="font-medium text-3xl md:text-5xl text-center">Common Questions</p>
-                </div>
-
-                <div className="w-full md:w-[720px]">
-                    <AccordionExample />
-                </div>
-            </div>
-
-            <div className="px-5 md:px-20 py-6 md:py-24 flex flex-col md:flex-row gap-20">
-                <div data-aos="fade-up" data-aos-duration="500" className="w-full md:w-2/5 flex flex-col gap-12">
-                    <div className="flex flex-col gap-8">
-                        <h2 className="font-medium text-3xl md:text-5xl">Pave the way and get in touch with us.</h2>
-                        <p className="text-neutral-600">We&apos;re here to pave the way for you. Whether you need answers, support, or just a quick chat, our team is ready to assist. Reach out via contact form, email, or phone, and we’ll get back to you promptly.</p>
-                        <Link href='/request'>
-                            <button className="w-fit px-4 py-2 bg-violet-700 text-white rounded-full font-semibold border-2 border-violet-700 relative overflow-hidden transition-all duration-500 ease-out group">
-                                <span className="relative z-10 transition-colors duration-500 group-hover:text-violet-700">
-                                    Book an Appointment
-                                </span>
-                                <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
-                            </button>
-                        </Link>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <p className="text-xl font-medium">We look forward to connecting with you</p>
-                        <ArrowRight />
-                    </div>
-                </div>
-
-                <div data-aos={animationRight} data-aos-duration="500" data-aos-offset="300" className="flex flex-col md:flex-row items-center md:items-end gap-5 w-full md:w-3/5">
-                    <div className="w-full md:w-72 aspect-square rounded-2xl overflow-hidden relative">
-                        <div className="absolute bottom-2 left-2 flex items-center group">
-                            <button className="px-4 py-1 bg-violet-600 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
-                                Founder
-                            </button>
-                            {/* <button className="w-8 h-8 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-4">
-                                <ArrowUpRight />
-                            </button> */}
-                        </div>
-                        <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="relative w-full h-full rounded-2xl overflow-hidden">
-                        <Link href='/about' className="absolute top-4 right-4 flex items-center group">
-                            <button className="px-4 py-2 bg-violet-600 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
-                                Meet our Team
-                            </button>
-                            {/* <button className="w-10 h-10 flex items-center justify-center bg-violet-600 text-white rounded-full transition-all duration-500 z-10 -ml-2 group-hover:rounded-l-none group-hover:-ml-4">
-                                <ArrowUpRight />
-                            </button> */}
-                        </Link>
-                        <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1484&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="w-full h-full object-cover" />
-                    </div>
-                </div>
-            </div>
-
-            <Footer />
+      {/* HERO */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(1200px_600px_at_0%_0%,rgba(138,174,255,0.12),transparent_60%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,#12101f_0%,#0f1320_50%,#0a0d17_100%)]" />
+        <div className="relative z-10 px-5 md:px-20 pt-16 md:pt-24 pb-10">
+          <div className="mx-auto max-w-4xl text-center" data-aos="fade-up">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-[#C0C6D8]">
+              <Sparkles size={14} /> Kontakt
+            </span>
+            <h1 className="mt-4 text-3xl sm:text-5xl font-bold leading-[1.1]">
+              Lass uns sprechen – kurz, klar, zielführend.
+            </h1>
+            <p className="mt-4 text-[#BFC6D8] md:text-lg">
+              Ob konkrete Anfrage oder erstes Sparring: Schreib uns kurz, was du vorhast – wir melden uns zeitnah.
+            </p>
+          </div>
         </div>
-    )
-}
+      </section>
 
-export default Contact
+      {/* INFO-ZEILE */}
+      <section className="px-5 md:px-20 -mt-4 md:-mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <a
+            href="tel:+4916095757167"
+            className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur hover:bg-white/10 transition"
+            data-aos="fade-up"
+          >
+            <div className="flex items-center gap-3">
+              <div className="rounded-xl bg-violet-600/20 p-2 border border-violet-500/30">
+                <Phone size={18} className="text-violet-300" />
+              </div>
+              <div>
+                <p className="text-sm text-[#AAB1C2]">Telefon</p>
+                <p className="font-medium">+49 160 95757167</p>
+              </div>
+            </div>
+          </a>
+
+          <a
+            href="mailto:info@paveconsultings.com"
+            className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur hover:bg-white/10 transition"
+            data-aos="fade-up"
+            data-aos-delay="60"
+          >
+            <div className="flex items-center gap-3">
+              <div className="rounded-xl bg-violet-600/20 p-2 border border-violet-500/30">
+                <Mail size={18} className="text-violet-300" />
+              </div>
+              <div>
+                <p className="text-sm text-[#AAB1C2]">E-Mail</p>
+                <p className="font-medium">info@paveconsultings.com</p>
+              </div>
+            </div>
+          </a>
+
+          <div
+            className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur"
+            data-aos="fade-up"
+            data-aos-delay="120"
+          >
+            <div className="flex items-center gap-3">
+              <div className="rounded-xl bg-violet-600/20 p-2 border border-violet-500/30">
+                <MapPin size={18} className="text-violet-300" />
+              </div>
+              <div>
+                <p className="text-sm text-[#AAB1C2]">Adresse</p>
+                <p className="font-medium">Am Streitberg 28, 63906 Erlenbach a. Main</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FORMULAR */}
+      <section className="px-5 md:px-20 py-10 md:py-16">
+        <div className="mx-auto max-w-3xl rounded-3xl border border-white/10 bg-gradient-to-b from-[#151a2a] to-[#0e1321] p-5 md:p-8">
+          <div className="text-center mb-6" data-aos="fade-up">
+            <h2 className="text-2xl md:text-3xl font-semibold">Schreib uns eine Nachricht</h2>
+            <p className="text-[#AAB1C2] mt-1">Wir antworten in der Regel innerhalb von 24 Stunden.</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-5" data-aos={animationRight}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input
+                type="text"
+                name="name"
+                placeholder="Dein Name"
+                value={formData.name}
+                onChange={onChange}
+                required
+                className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-violet-500/60"
+              />
+              <input
+                type="email"
+                name="email"
+                placeholder="E-Mail"
+                value={formData.email}
+                onChange={onChange}
+                required
+                className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-violet-500/60"
+              />
+            </div>
+
+            <textarea
+              name="message"
+              rows={7}
+              placeholder="Worum geht’s? (Ziele, Status, Budgetrahmen – alles hilft!)"
+              value={formData.message}
+              onChange={onChange}
+              required
+              className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-violet-500/60"
+            />
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-violet-600 px-6 py-3 font-medium text-white border border-violet-500 transition-transform duration-300 hover:scale-[1.02] disabled:opacity-60"
+            >
+              {isSubmitting ? 'Wird gesendet…' : 'Senden'} <Send size={18} />
+            </button>
+
+            {success && (
+              <p className="mt-2 inline-flex items-center gap-2 text-emerald-400">
+                <CheckCircle2 size={18} /> {success}
+              </p>
+            )}
+            {error && (
+              <p className="mt-2 inline-flex items-center gap-2 text-rose-400">
+                <AlertCircle size={18} /> {error}
+              </p>
+            )}
+          </form>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="px-5 md:px-20 py-6 md:py-12">
+        <div className="mx-auto max-w-3xl text-center" data-aos="fade-up">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-[#C0C6D8]">
+            <Sparkles size={14} /> FAQs
+          </span>
+          <h3 className="mt-3 text-2xl md:text-4xl font-semibold">Häufige Fragen</h3>
+        </div>
+        <div className="mx-auto max-w-2xl mt-6">
+          <AccordionExample />
+        </div>
+      </section>
+
+      {/* CTA unten (ohne Fotos) */}
+      <section className="px-5 md:px-20 py-10 md:py-16">
+        <div
+          className="rounded-3xl border border-white/10 bg-[linear-gradient(135deg,rgba(138,174,255,0.12),rgba(16,14,32,0.7))] p-6 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6"
+          data-aos="fade-up"
+        >
+          <div>
+            <h4 className="text-2xl md:text-3xl font-semibold">Bereit, loszulegen?</h4>
+            <p className="text-[#AAB1C2] mt-2">
+              Kurzer Kennenlern-Call, klare Ziele, nächster Schritt – unkompliziert & verbindlich.
+            </p>
+          </div>
+          <Link
+            href="/request"
+            className="inline-flex items-center justify-center rounded-full bg-white text-neutral-900 font-semibold px-6 py-3 hover:bg-neutral-200 transition"
+          >
+            Termin anfragen
+          </Link>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
