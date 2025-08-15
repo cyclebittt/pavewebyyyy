@@ -1,61 +1,74 @@
-'use client'
+'use client';
 
-import { useState } from "react";
-import { ChevronDown } from "lucide-react";
-
-const faqs = [
-  {
-    question: "Welche Services bietet Pave an?",
-    answer: "Wir bieten Branding, Webdesign, Social Media Management, Content Creation und IT-Consulting. Unser Ziel ist es, Unternehmen digital sichtbar und erfolgreich zu machen."
-  },
-  {
-    question: "Wie läuft die Zusammenarbeit ab?",
-    answer: "Nach einer ersten Beratung erstellen wir einen individuellen Projektplan. Du erhältst volle Transparenz über die Schritte, Deadlines und Ergebnisse."
-  },
-  {
-    question: "Was kostet die Zusammenarbeit?",
-    answer: "Unsere Preise richten sich nach dem Umfang. Für Social Media Management gibt es Paketpreise, andere Services kalkulieren wir individuell nach Aufwand."
-  },
-  {
-    question: "Wie schnell bekomme ich Ergebnisse?",
-    answer: "Erste sichtbare Ergebnisse können oft schon nach 2–4 Wochen entstehen. Langfristige Projekte wie Branding oder SEO brauchen etwas mehr Zeit."
-  },
-];
+import { useState } from 'react';
+import { Plus, Minus } from 'lucide-react';
 
 export default function AccordionExample() {
-  const [openIndex, setOpenIndex] = useState(null);
+  const faqs = [
+    {
+      q: 'Was genau macht paveo?',
+      a: 'paveo ist ein modulares Kreativ-Studio für digitale Markenkommunikation. Wir kombinieren Branding, Webdesign, Content & Systeme – psychologisch fundiert und auf messbare Conversion ausgerichtet.',
+    },
+    {
+      q: 'Für wen ist paveo gedacht?',
+      a: 'Für Selbstständige, kleine Unternehmen & lokale Marken. Modular bedeutet: Du buchst nur die Bausteine, die du wirklich brauchst – ohne Brüche in Design, Content oder Technik.',
+    },
+    {
+      q: 'Wie läuft die Zusammenarbeit ab?',
+      a: 'Kurzbriefing → Analyse & Zielbild → modulare Roadmap → Umsetzung in Sprints → Testen & Optimieren. Transparente Kommunikation, klare Zuständigkeiten, schnelle Loops.',
+    },
+    {
+      q: 'Was kostet das?',
+      a: 'Es gibt fixe Paketpreise (z. B. Social Media) und individuell kalkulierte Module (Branding, Website). Wir starten schlank – skalieren dann nach Bedarf.',
+    },
+    {
+      q: 'Bietet ihr laufende Betreuung?',
+      a: 'Ja. Social Media Management, Content-Produktion, sowie Pflege/Optimierung deiner Systeme (CRM, Automationen). Monatsweise planbar & kündbar.',
+    },
+  ];
 
-  const toggleFAQ = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
+  const [open, setOpen] = useState(-1);
 
   return (
-    <div className="flex flex-col gap-4">
-      {faqs.map((faq, index) => (
-        <div
-          key={index}
-          className="bg-white border border-neutral-300 rounded-xl overflow-hidden transition-all"
-        >
-          <button
-            onClick={() => toggleFAQ(index)}
-            className="w-full flex justify-between items-center p-4 text-left text-lg font-medium text-neutral-800"
-          >
-            {faq.question}
-            <ChevronDown
-              className={`transition-transform duration-300 ${
-                openIndex === index ? "rotate-180" : ""
-              }`}
-            />
-          </button>
+    <div className="mx-auto w-full max-w-2xl">
+      {faqs.map((item, i) => {
+        const isOpen = open === i;
+        return (
           <div
-            className={`px-4 pb-4 text-neutral-600 transition-all duration-300 ${
-              openIndex === index ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
-            }`}
+            key={i}
+            className="mb-3 rounded-2xl border border-white/10 bg-white/[0.05] backdrop-blur transition hover:bg-white/[0.07]"
           >
-            {faq.answer}
+            <button
+              type="button"
+              onClick={() => setOpen(isOpen ? -1 : i)}
+              aria-expanded={isOpen}
+              aria-controls={`faq-panel-${i}`}
+              className="group flex w-full items-center justify-between gap-4 px-5 py-4 text-left outline-none focus-visible:ring-2 focus-visible:ring-violet-500/60"
+            >
+              <span className="text-base md:text-lg font-medium text-white">
+                {item.q}
+              </span>
+              <span className="shrink-0 rounded-full border border-white/15 bg-white/10 p-1.5 text-white transition-transform duration-300 group-hover:scale-105">
+                {isOpen ? <Minus size={18} /> : <Plus size={18} />}
+              </span>
+            </button>
+
+            <div
+              id={`faq-panel-${i}`}
+              role="region"
+              className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+                isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+              }`}
+            >
+              <div className="min-h-0 overflow-hidden">
+                <div className="px-5 pb-5 pt-0 text-sm md:text-base text-[#C9CEE0]">
+                  {item.a}
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
