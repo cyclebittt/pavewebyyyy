@@ -1,109 +1,90 @@
-'use client'
+'use client';
 
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import { CheckCircle } from "lucide-react";
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
+import Link from 'next/link';
+import { CheckCircle } from 'lucide-react';
 
 export default function ContentCreation() {
   return (
     <div className="font-proxima bg-gradient-to-br from-violet-900 via-neutral-900 to-black text-white">
       <Navbar />
 
-      {/* Hero Section */}
-      <div className="relative flex flex-col items-center justify-center text-center py-24 px-6 md:px-20">
+      {/* Hero */}
+      <section className="relative flex flex-col items-center text-center py-24 px-6 md:px-20">
         <h1 className="text-4xl md:text-6xl font-bold mb-6">
-          Content Creation, die <span className="text-violet-400">bewegt</span>.
+          Content, der <span className="text-violet-400">bewegt</span>.
         </h1>
         <p className="text-lg md:text-xl max-w-3xl text-neutral-300">
-          Wir erstellen Inhalte, die nicht nur Aufmerksamkeit erzeugen, sondern
-          echte Ergebnisse bringen – egal ob Text, Bild oder Video.
+          Foto, Video, Copy & Motion – konsistent zur Markenwelt und auf Conversion getrimmt.
         </p>
-      </div>
+      </section>
 
-      {/* Packages */}
-      <div className="px-6 md:px-20 py-20 grid grid-cols-1 md:grid-cols-3 gap-10">
-        {/* Starter */}
+      {/* Pakete */}
+      <section className="px-6 md:px-20 pb-20 grid grid-cols-1 md:grid-cols-3 gap-10">
+        {/* Essentials */}
         <div className="bg-neutral-800 rounded-2xl p-8 flex flex-col gap-6 shadow-xl hover:scale-105 transition-transform duration-500">
-          <h2 className="text-2xl font-bold">Starter</h2>
-          <p className="text-neutral-400">Für kleine Marken</p>
-          <p className="text-4xl font-bold">399€</p>
+          <h2 className="text-2xl font-bold">Essentials</h2>
+          <p className="text-neutral-400">Content-Basis</p>
+          <p className="text-4xl font-bold">499€</p>
           <ul className="flex flex-col gap-3">
-            <li className="flex items-center gap-2">
-              <CheckCircle className="text-violet-400" /> 4 Social Media Posts
-            </li>
-            <li className="flex items-center gap-2">
-              <CheckCircle className="text-violet-400" /> 1 Blogartikel
-            </li>
-            <li className="flex items-center gap-2">
-              <CheckCircle className="text-violet-400" /> Basisgrafiken
-            </li>
+            {['4 Grafiken + 2 Kurztexte', 'Bildbearbeitung', 'Posting-Vorlagen'].map((t) => (
+              <li key={t} className="flex items-center gap-2">
+                <CheckCircle className="text-violet-400" /> {t}
+              </li>
+            ))}
           </ul>
-          <button className="mt-auto bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold">
+          <Link href="/request" className="mt-auto text-center bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold">
             Paket wählen
-          </button>
+          </Link>
         </div>
 
-        {/* Business */}
+        {/* Creator (featured) */}
         <div className="bg-violet-700 rounded-2xl p-8 flex flex-col gap-6 shadow-xl hover:scale-105 transition-transform duration-500">
-          <h2 className="text-2xl font-bold">Business</h2>
-          <p className="text-neutral-200">Für Unternehmen im Wachstum</p>
-          <p className="text-4xl font-bold">799€</p>
+          <h2 className="text-2xl font-bold">Creator</h2>
+          <p className="text-neutral-200">Mixed Media</p>
+          <p className="text-4xl font-bold">899€</p>
           <ul className="flex flex-col gap-3">
-            <li className="flex items-center gap-2">
-              <CheckCircle className="text-white" /> 12 Social Media Posts
-            </li>
-            <li className="flex items-center gap-2">
-              <CheckCircle className="text-white" /> 2 Blogartikel
-            </li>
-            <li className="flex items-center gap-2">
-              <CheckCircle className="text-white" /> Grafik- & Videocontent
-            </li>
+            {['8 Grafiken + 4 Kurzvideos', 'Copywriting (Hooks/CTAs)', 'Brand-Guided Look'].map((t) => (
+              <li key={t} className="flex items-center gap-2">
+                <CheckCircle className="text-white" /> {t}
+              </li>
+            ))}
           </ul>
-          <button className="mt-auto bg-white text-violet-700 hover:bg-neutral-100 transition-colors rounded-full px-6 py-3 font-semibold">
+          <Link href="/request" className="mt-auto text-center bg-white text-violet-700 hover:bg-neutral-100 transition-colors rounded-full px-6 py-3 font-semibold">
             Paket wählen
-          </button>
+          </Link>
         </div>
 
-        {/* Premium */}
+        {/* Pro Studio */}
         <div className="bg-neutral-800 rounded-2xl p-8 flex flex-col gap-6 shadow-xl hover:scale-105 transition-transform duration-500">
-          <h2 className="text-2xl font-bold">Premium</h2>
-          <p className="text-neutral-400">Für maximale Sichtbarkeit</p>
-          <p className="text-4xl font-bold">1299€</p>
+          <h2 className="text-2xl font-bold">Pro Studio</h2>
+          <p className="text-neutral-400">Maximaler Output</p>
+          <p className="text-4xl font-bold">1499€</p>
           <ul className="flex flex-col gap-3">
-            <li className="flex items-center gap-2">
-              <CheckCircle className="text-violet-400" /> 20 Social Media Posts
-            </li>
-            <li className="flex items-center gap-2">
-              <CheckCircle className="text-violet-400" /> 4 Blogartikel
-            </li>
-            <li className="flex items-center gap-2">
-              <CheckCircle className="text-violet-400" /> Premium Video & Grafik
-            </li>
+            {['12 Grafiken + 8 Reels', 'Motion Design + Subtitles', 'Content-Plan & Übergabe'].map((t) => (
+              <li key={t} className="flex items-center gap-2">
+                <CheckCircle className="text-violet-400" /> {t}
+              </li>
+            ))}
           </ul>
-          <button className="mt-auto bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold">
+          <Link href="/request" className="mt-auto text-center bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold">
             Paket wählen
-          </button>
+          </Link>
         </div>
-      </div>
+      </section>
 
-      {/* Call to Action */}
-      <div className="px-6 md:px-20 py-20 text-center flex flex-col gap-6 items-center">
-        <h2 className="text-3xl md:text-5xl font-bold">
-          Bereit für Content, der performt?
-        </h2>
-        <p className="text-neutral-300 max-w-2xl">
-          Wähle dein Paket oder vereinbare einen Termin mit uns, um deine
-          Content-Strategie gemeinsam zu starten.
-        </p>
-        <a
-          href="/request"
-          className="bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-8 py-4 font-semibold"
-        >
+      {/* CTA */}
+      <section className="px-6 md:px-20 pb-20 text-center flex flex-col gap-6 items-center">
+        <h2 className="text-3xl md:text-5xl font-bold">Bereit für Content, der performt?</h2>
+        <p className="text-neutral-300 max-w-2xl">Wähle dein Paket – oder sprich mit uns über eine individuelle Produktion.</p>
+        <Link href="/request" className="bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-8 py-4 font-semibold">
           Termin vereinbaren
-        </a>
-      </div>
+        </Link>
+      </section>
 
       <Footer />
     </div>
   );
 }
+
