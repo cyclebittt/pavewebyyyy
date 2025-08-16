@@ -48,7 +48,7 @@ export default function Home() {
       title: 'Lead & Angebotsstruktur',
       desc: 'Strukturen für mehr Kunden, klare Angebote & bessere Abschlüsse.',
       icon: <Rocket size={26} className="text-violet-400" />,
-      href: '/services/lead',
+      href: '/services/leadsystem',
     },
   ];
 
