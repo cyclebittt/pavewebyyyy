@@ -18,15 +18,15 @@ export default function Navbar() {
   const pathnameFull = usePathname() || '/';
   const pathnameKey = pathnameFull.split('/')[1] ?? '';
 
-  const menuRef = useRef<HTMLDivElement | null>(null);
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const menuRef = useRef(null);
+  const buttonRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
+    const handleClickOutside = (e) => {
       if (
         openMobileMenu &&
-        menuRef.current && !menuRef.current.contains(e.target as Node) &&
-        buttonRef.current && !buttonRef.current.contains(e.target as Node)
+        menuRef.current && !menuRef.current.contains(e.target) &&
+        buttonRef.current && !buttonRef.current.contains(e.target)
       ) {
         setOpenMobileMenu(false);
       }
@@ -36,7 +36,7 @@ export default function Navbar() {
   }, [openMobileMenu]);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpenMobileMenu(false);
+    const onKey = (e) => e.key === 'Escape' && setOpenMobileMenu(false);
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, []);
@@ -56,7 +56,6 @@ export default function Navbar() {
       <nav className="relative z-50 bg-gradient-to-br from-[#0F0F18] via-[#131329] to-[#0B0B14] font-proxima flex items-center justify-between gap-10 px-5 md:px-20 py-4">
         <Link href="/" aria-label="Zur Startseite">
           <span className="flex items-center gap-3">
-            {/* Logo aktualisiert */}
             <Image
               src="/img/logo-paveo.png"
               alt="paveo Logo"
