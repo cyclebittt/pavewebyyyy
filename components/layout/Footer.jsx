@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -12,8 +13,17 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Logo & Claim */}
           <div className="flex flex-col gap-4">
-            <Link href="/" className="text-2xl font-extrabold text-white">
-              PAVEO
+            <Link href="/" aria-label="Zur Startseite">
+              <span className="flex items-center gap-3">
+                <Image
+                  src="/img/logo-paveo.png"
+                  alt="Paveo Logo"
+                  width={120}
+                  height={40}
+                  className="h-10 w-auto"
+                />
+                <span className="font-extrabold text-white text-lg">PAVEO</span>
+              </span>
             </Link>
             <p className="text-sm text-neutral-400">
               Wir machen Marken sichtbar, professionell & psychologisch wirkungsvoll.
@@ -24,7 +34,7 @@ export default function Footer() {
           <div className="flex flex-col gap-3">
             <h4 className="font-semibold text-white">Navigation</h4>
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
-            <Link href="/about" className="hover:text-white transition-colors">About</Link>
+            <Link href="/about" className="hover:text-white transition-colors">Über uns</Link>
             <Link href="/blogs" className="hover:text-white transition-colors">Blog</Link>
             <Link href="/contact" className="hover:text-white transition-colors">Kontakt</Link>
           </div>
