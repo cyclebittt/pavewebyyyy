@@ -1,141 +1,157 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import {
-  PenTool, CodeXml, Users, LayoutDashboard, ChartPie,
-  ArrowRight, Sun, Quote, Star
+  ArrowRight,
+  Sparkles,
+  Target,
+  LayoutTemplate,
+  Palette,
+  Rocket,
+  MessageSquare,
+  Quote,
 } from 'lucide-react';
 
-/* ----------------- Mini-Utils ----------------- */
-function useAOSDir() {
-  const [dir, setDir] = useState('fade-right');
-  useEffect(() => {
-    AOS.init({ duration: 600, once: true });
-    const onResize = () => setDir(window.innerWidth < 768 ? 'fade-down' : 'fade-right');
-    onResize();
-    window.addEventListener('resize', onResize, { passive: true });
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
-  return dir;
-}
+/* -------------------------------
+   Kleiner, lib-freier CountUp
+--------------------------------*/
+function useCountUp(target = 0, duration = 1500, start = 0, inView = true) {
+  const [val, setVal] = useState(start);
+  const startRef = useRef<number | null>(null);
 
-function CountUp({ to = 100, suffix = '', duration = 1400, className = '' }) {
-  const el = useRef(null);
   useEffect(() => {
-    let startTs;
-    let raf;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          const animate = (ts) => {
-            if (!startTs) startTs = ts;
-            const p = Math.min((ts - startTs) / duration, 1);
-            const val = Math.floor(p * to);
-            if (el.current) el.current.textContent = `${val}${suffix}`;
-            if (p < 1) raf = requestAnimationFrame(animate);
-          };
-          raf = requestAnimationFrame(animate);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.3 }
-    );
-    if (el.current) observer.observe(el.current);
-    return () => {
-      cancelAnimationFrame(raf);
-      observer.disconnect();
+    if (!inView) return;
+    let rafId: number;
+
+    const step = (ts: number) => {
+      if (startRef.current == null) startRef.current = ts;
+      const p = Math.min(1, (ts - startRef.current) / duration);
+      const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+      setVal(Math.round(start + (target - start) * eased));
+      if (p < 1) rafId = requestAnimationFrame(step);
     };
-  }, [to, duration, suffix]);
-  return <span ref={el} className={className} />;
+    rafId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafId);
+  }, [target, duration, start, inView]);
+
+  return val;
 }
 
-/* ----------------- Daten ----------------- */
-const TRUSTERS = ['Lokale Marken', 'Agentur-Partner', 'SaaS-Startups', 'Praxis & Kanzlei', 'Handwerk', 'Coaches'];
-const TESTIMONIALS = [
-  {
-    quote:
-      'Direkt messbare Wirkung. Struktur, Design und Funnel haben unsere Anfragen verdoppelt – ohne mehr Ads.',
-    name: 'M. Krämer',
-    role: 'Inhaber, Praxis',
-  },
-  {
-    quote:
-      'Von „hübsch“ zu „wirksam“ – das Messaging sitzt endlich. Social & Website performen spürbar besser.',
-    name: 'S. Wagner',
-    role: 'Geschäftsführung, D2C',
-  },
-  {
-    quote:
-      'Schnell, kollaborativ, auf den Punkt. Besonders stark: Positionierung & Content-Frameworks.',
-    name: 'T. Hofmann',
-    role: 'Leitung Marketing, KMU',
-  },
-  {
-    quote:
-      'Wir konnten modular starten und später skalieren – ohne Brüche. Genau das braucht man als kleines Team.',
-    name: 'L. Becker',
-    role: 'Founder, Service-Business',
-  },
-];
+function Stat({ label, value }: { label: string; value: number }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      ([e]) => setVisible(e.isIntersecting),
+      { threshold: 0.35 }
+    );
+    if (ref.current) io.observe(ref.current);
+    return () => io.disconnect();
+  }, []);
+  const n = useCountUp(value, 1400, 0, visible);
+  return (
+    <div ref={ref} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center">
+      <div className="text-4xl md:text-5xl font-extrabold tracking-tight text-indigo-300">{n.toLocaleString('de-DE')}</div>
+      <div className="mt-2 text-neutral-300">{label}</div>
+    </div>
+  );
+}
 
 export default function Home() {
-  const animationRight = useAOSDir();
-  const [activeCard, setActiveCard] = useState(null);
-  const toggleCard = (i) => setActiveCard((p) => (p === i ? null : i));
-  const onKeyToggle = (e, i) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      toggleCard(i);
-    }
-  };
+  const [fadeDir, setFadeDir] = useState<'fade-right' | 'fade-down'>('fade-right');
+
+  useEffect(() => {
+    AOS.init({ duration: 600, once: true });
+    const handleResize = () => setFadeDir(window.innerWidth < 768 ? 'fade-down' : 'fade-right');
+    handleResize();
+    window.addEventListener('resize', handleResize, { passive: true });
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const services = [
+    {
+      title: 'Social Media Management',
+      desc: 'Strategie, Content Creation & Performance – alles für einen starken Auftritt.',
+      icon: <MessageSquare size={26} className="text-violet-400" />,
+      href: '/services/socialmedia',
+    },
+    {
+      title: 'Branding & Positionierung',
+      desc: 'Klare Botschaften, starke Designs & Systeme, die wachsen.',
+      icon: <Target size={26} className="text-violet-400" />,
+      href: '/services/branding',
+    },
+    {
+      title: 'Webdesign',
+      desc: 'Websites, die begeistern: modern, schnell & nutzerfreundlich.',
+      icon: <LayoutTemplate size={26} className="text-violet-400" />,
+      href: '/services/webdesign',
+    },
+    {
+      title: 'Content Creation',
+      desc: 'Foto, Video & Design – Content, der deine Marke lebendig macht.',
+      icon: <Palette size={26} className="text-violet-400" />,
+      href: '/services/content',
+    },
+    {
+      title: 'Lead & Angebotsstruktur',
+      desc: 'Strukturen für mehr Kunden, klare Angebote & bessere Abschlüsse.',
+      icon: <Rocket size={26} className="text-violet-400" />,
+      href: '/services/lead',
+    },
+  ];
 
   return (
     <div className="font-proxima bg-[#0B0B0F] text-white">
       <Navbar />
 
       {/* HERO */}
-      <section className="px-5 md:px-8 lg:px-12">
-        <div className="relative overflow-hidden rounded-none md:rounded-3xl">
-          {/* kräftige diagonale Gradients */}
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_600px_at_-10%_-10%,rgba(129,51,241,.35),transparent_60%),radial-gradient(900px_600px_at_120%_0%,rgba(56,189,248,.22),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#101018_60%,#0B0B0F_100%)]" />
-          <div className="relative flex flex-col items-center text-center gap-6 md:gap-8 py-16 md:py-28 px-4">
-            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1]">
-              paveo — <span className="text-indigo-300">wirksame</span> Markenkommunikation.
-            </h1>
-            <p className="text-sm md:text-lg text-neutral-300 max-w-3xl">
-              Branding, Webdesign, Content & Systeme — modular, psychologisch fundiert
-              und praxistauglich für Selbstständige & KMU.
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/request"
-                className="px-5 py-2.5 md:px-7 md:py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-violet-400"
-              >
-                Termin anfragen <ArrowRight size={18} />
-              </Link>
-              <Link
-                href="/contact"
-                className="px-5 py-2.5 md:px-7 md:py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors"
-              >
-                Kontakt
-              </Link>
-            </div>
+      <section className="relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_600px_at_-10%_-10%,rgba(129,51,241,.35),transparent_60%),radial-gradient(900px_600px_at_120%_0%,rgba(56,189,248,.20),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#0E0E15_60%,#0B0B0F_100%)]" />
+        <div className="relative px-5 md:px-16 pt-20 md:pt-28 pb-24 md:pb-32 text-center max-w-4xl mx-auto">
+          <span className="inline-flex items-center gap-2 text-sm text-indigo-300/80 bg-white/5 ring-1 ring-white/10 px-3 py-1 rounded-full">
+            <Sparkles size={16} /> Kreativ-Studio für digitale Marken
+          </span>
+          <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight">
+            Wir machen Marken <span className="text-indigo-300">sichtbar</span>.
+          </h1>
+          <p className="mt-6 text-lg md:text-xl text-neutral-300">
+            Von Branding bis Content: Wir helfen Selbstständigen & Unternehmen dabei,
+            professionell und wirkungsvoll aufzutreten – digital & kreativ.
+          </p>
+          <div className="mt-8 flex justify-center gap-4">
+            <Link
+              href="/request"
+              className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2"
+            >
+              Projekt starten <ArrowRight size={18} />
+            </Link>
+            <Link
+              href="/contact"
+              className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold"
+            >
+              Kontakt aufnehmen
+            </Link>
           </div>
         </div>
       </section>
 
       {/* TRUST BAR */}
-      <section className="px-5 md:px-8 lg:px-12 py-6">
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3">
-          <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 text-sm text-neutral-300">
-            <span className="text-neutral-400">Vertraut von</span>
-            {TRUSTERS.map((t) => (
-              <span key={t} className="px-3 py-1 rounded-full bg-white/[0.06] border border-white/10">
+      <section className="px-5 md:px-16 -mt-8 mb-6">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm p-4 md:p-5">
+          <div className="flex flex-wrap items-center justify-center gap-3 md:gap-5">
+            {['KMU • DACH', 'Startups', 'Handwerk', 'Gastro', 'Dienstleister'].map((t, i) => (
+              <span
+                key={t}
+                data-aos="fade-up"
+                data-aos-delay={i * 80}
+                className="text-sm md:text-base text-neutral-200 px-3 py-1.5 rounded-full bg-white/5 ring-1 ring-white/10"
+              >
                 {t}
               </span>
             ))}
@@ -143,337 +159,105 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SERVICES */}
-      <section className="px-5 md:px-8 lg:px-12 py-10 md:py-14" aria-labelledby="services-heading">
-        <div className="bg-neutral-900/60 rounded-none md:rounded-3xl border border-white/10 px-5 py-8 md:p-12 flex flex-col items-center gap-10">
-          <div className="text-white flex flex-col items-center gap-3 max-w-2xl">
-            <div className="flex flex-col items-center gap-2">
-              <Sun aria-hidden="true" />
-              <h2 id="services-heading" className="font-medium text-xl md:text-2xl text-center">Leistungen</h2>
-            </div>
-            <p className="font-semibold text-2xl md:text-4xl text-center">
-              Modul für Modul zu mehr Wirkung.
-            </p>
-            <p className="text-neutral-300 text-center">
-              Buche nur, was du wirklich brauchst — kombiniert zu einem stimmigen, conversion-orientierten Gesamtauftritt.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-            {/* Branding */}
-            <Link
-              href="/services/branding"
-              className="group relative bg-[#353088] rounded-2xl p-6 min-h-[280px] flex flex-col justify-between transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
-              data-aos={animationRight}
-            >
-              <div className="flex items-center justify-between">
-                <div className="h-12 w-12 rounded-full text-[#353088] bg-neutral-200 flex items-center justify-center">
-                  <PenTool size={22} />
-                </div>
-                <span className="opacity-0 group-hover:opacity-100 transition-opacity text-white/90">→</span>
-              </div>
-              <div className="text-white mt-4">
-                <h3 className="font-bold text-2xl">Branding &amp; Positionierung</h3>
-                <p className="mt-2 text-white/90">
-                  Logo, Farbwelt, Tonalität, Kernbotschaft — psychologisch geschärft für Relevanz.
-                </p>
-              </div>
-            </Link>
-
-            {/* Webdesign + Social */}
-            <div className="flex flex-col gap-6" data-aos={animationRight}>
-              <Link
-                href="/services/webdesign"
-                className="group p-6 bg-[#7569AD] rounded-2xl min-h-[160px] flex flex-col justify-between transition-transform duration-300 hover:-translate-y-0.5"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="h-12 w-12 rounded-full text-[#4B3A98] bg-white flex items-center justify-center">
-                    <CodeXml size={22} />
-                  </div>
-                  <span className="opacity-0 group-hover:opacity-100 transition-opacity text-white">→</span>
-                </div>
-                <div className="text-white mt-3">
-                  <h3 className="font-bold text-2xl">Webdesign</h3>
-                  <p className="mt-1">Klar, modern, conversion-orientiert — Baukasten oder Custom.</p>
-                </div>
-              </Link>
-
-              <Link
-                href="/services/socialmedia"
-                className="group p-6 bg-[#B6B0D6] rounded-2xl min-h-[160px] flex flex-col justify-between transition-transform duration-300 hover:-translate-y-0.5"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="h-12 w-12 rounded-full text-[#222] bg-white flex items-center justify-center">
-                    <Users size={22} />
-                  </div>
-                  <span className="opacity-0 group-hover:opacity-100 transition-opacity text-neutral-900">→</span>
-                </div>
-                <div className="mt-3 text-neutral-900">
-                  <h3 className="font-bold text-2xl">Social Media Management</h3>
-                  <p className="mt-1 text-neutral-800">Strategie, Produktion, Analyse — ready-to-post.</p>
-                </div>
-              </Link>
-            </div>
-
-            {/* Content + Lead */}
-            <div className="flex flex-col gap-6" data-aos={animationRight}>
-              <Link
-                href="/services/content"
-                className="group p-6 bg-white rounded-2xl min-h-[160px] flex flex-col justify-between transition-transform duration-300 hover:-translate-y-0.5"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="h-12 w-12 rounded-full text-[#222] bg-neutral-200 flex items-center justify-center">
-                    <LayoutDashboard size={22} />
-                  </div>
-                  <span className="opacity-0 group-hover:opacity-100 transition-opacity text-neutral-900">→</span>
-                </div>
-                <div className="mt-3">
-                  <h3 className="font-bold text-2xl text-neutral-900">Content Creation</h3>
-                  <p className="mt-1 text-neutral-700">Foto, Video, Copy & Motion — konsistent zur Marke.</p>
-                </div>
-              </Link>
-
-              <Link
-                href="/services/lead"
-                className="group p-6 bg-[#F5F4FC] rounded-2xl min-h-[160px] flex flex-col justify-between transition-transform duration-300 hover:-translate-y-0.5"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="h-12 w-12 rounded-full text-[#222] bg-neutral-200 flex items-center justify-center">
-                    <ChartPie size={22} />
-                  </div>
-                  <span className="opacity-0 group-hover:opacity-100 transition-opacity text-neutral-900">→</span>
-                </div>
-                <div className="mt-3">
-                  <h3 className="font-bold text-2xl text-neutral-900">Leadsystem &amp; Angebote</h3>
-                  <p className="mt-1 text-neutral-700">
-                    Funnel, Formulare, CRM — digitale Prozesse, die konvertieren.
-                  </p>
-                </div>
-              </Link>
-            </div>
-          </div>
-
-          <Link
-            href="/request"
-            className="px-6 py-3 bg-violet-600 text-white rounded-full font-medium flex items-center gap-2 transition-transform duration-300 hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-violet-400"
-            aria-label="Leistungen anfragen"
-          >
-            Jetzt anfragen <ArrowRight className="hidden md:inline" />
-          </Link>
+      {/* KPIs / ERGEBNISSE */}
+      <section className="px-5 md:px-16 py-10 md:py-14">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <Stat label="umgesetzte Projekte" value={86} />
+          <Stat label="durchschn. Conversion-Lift" value={27} />
+          <Stat label="erstellte Inhalte / Jahr" value={420} />
+          <Stat label="Ø Kundenzufriedenheit" value={98} />
         </div>
       </section>
 
-      {/* TESTIMONIALS – Marquee */}
-      <section className="px-5 md:px-8 lg:px-12 py-10">
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-6 md:p-10">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-6">Was Kund:innen sagen</h2>
-
-          <style jsx global>{`
-            @keyframes marquee-left {
-              0% { transform: translateX(0); }
-              100% { transform: translateX(-50%); }
-            }
-            @keyframes marquee-right {
-              0% { transform: translateX(-50%); }
-              100% { transform: translateX(0); }
-            }
-          `}</style>
-
-          {/* Row 1 */}
-          <div className="relative w-full overflow-hidden">
-            <div
-              className="flex gap-5 min-w-[200%]"
-              style={{ animation: 'marquee-left 28s linear infinite' }}
+      {/* SERVICES */}
+      <section className="px-5 md:px-16 py-16">
+        <h2 className="text-2xl md:text-3xl font-semibold mb-10">Unsere Services</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {services.map(({ title, desc, icon, href }, i) => (
+            <Link
+              key={title}
+              href={href}
+              data-aos={fadeDir}
+              data-aos-delay={i * 100}
+              className="rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 p-6 backdrop-blur-sm hover:bg-white/[0.06] transition-colors flex flex-col"
             >
-              {[...TESTIMONIALS, ...TESTIMONIALS].map((t, i) => (
-                <div
-                  key={`t1-${i}`}
-                  className="w-[320px] md:w-[380px] shrink-0 rounded-2xl border border-white/10 bg-white/[0.06] p-5"
-                >
-                  <Quote className="text-indigo-300 mb-3" />
-                  <p className="text-neutral-100">{t.quote}</p>
-                  <div className="mt-4 flex items-center justify-between">
-                    <div className="text-sm">
-                      <div className="font-semibold">{t.name}</div>
-                      <div className="text-neutral-300">{t.role}</div>
-                    </div>
-                    <div className="flex gap-1">
-                      {Array.from({ length: 5 }).map((_, s) => (
-                        <Star key={s} size={16} className="text-yellow-300 fill-yellow-300" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+              <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+                {icon}
+              </div>
+              <h3 className="mt-4 text-xl font-semibold">{title}</h3>
+              <p className="mt-2 text-neutral-300">{desc}</p>
+              <span className="mt-4 inline-flex items-center gap-2 text-indigo-300 font-medium">
+                Mehr erfahren <ArrowRight size={16} />
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
 
-          {/* Row 2 */}
-          <div className="relative w-full overflow-hidden mt-5">
-            <div
-              className="flex gap-5 min-w-[200%]"
-              style={{ animation: 'marquee-right 32s linear infinite' }}
-            >
-              {[...TESTIMONIALS.reverse(), ...TESTIMONIALS].map((t, i) => (
-                <div
-                  key={`t2-${i}`}
-                  className="w-[320px] md:w-[380px] shrink-0 rounded-2xl border border-white/10 bg-white/[0.06] p-5"
-                >
-                  <Quote className="text-indigo-300 mb-3" />
-                  <p className="text-neutral-100">{t.quote}</p>
-                  <div className="mt-4 flex items-center justify-between">
-                    <div className="text-sm">
-                      <div className="font-semibold">{t.name}</div>
-                      <div className="text-neutral-300">{t.role}</div>
-                    </div>
-                    <div className="flex gap-1">
-                      {Array.from({ length: 5 }).map((_, s) => (
-                        <Star key={s} size={16} className="text-yellow-300 fill-yellow-300" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+      {/* TESTIMONIALS */}
+      <section className="px-5 md:px-16 pb-8 md:pb-14">
+        <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-6 md:p-10">
+          <h2 className="text-2xl md:text-3xl font-semibold mb-8">Was Kund:innen sagen</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                quote:
+                  'paveo hat unser Branding neu gedacht – endlich wirkt alles wie aus einem Guss und konvertiert spürbar besser.',
+                name: 'M. Richter',
+                role: 'Inhaber, Regionales Café',
+              },
+              {
+                quote:
+                  'Die Social-Strategie spart uns Zeit und bringt konstant Anfragen. Super pragmatisch und messbar.',
+                name: 'S. Wagner',
+                role: 'CEO, Handwerksbetrieb',
+              },
+              {
+                quote:
+                  'Website-Relaunch + Angebote strukturiert = kürzere Sales-Zyklen. Genau das, was wir gebraucht haben.',
+                name: 'E. Krauß',
+                role: 'Gründerin, Beratungsstudio',
+              },
+            ].map((t, i) => (
+              <figure
+                key={i}
+                data-aos="fade-up"
+                data-aos-delay={i * 120}
+                className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6"
+              >
+                <Quote className="absolute -top-4 -left-4 w-8 h-8 text-white/10" />
+                <blockquote className="text-neutral-200">{t.quote}</blockquote>
+                <figcaption className="mt-4 text-sm text-neutral-400">
+                  <span className="text-white font-medium">{t.name}</span> · {t.role}
+                </figcaption>
+              </figure>
+            ))}
           </div>
+        </div>
+      </section>
 
-          {/* Bottom CTA */}
-          <div className="mt-8 flex flex-wrap gap-3">
+      {/* CTA */}
+      <section className="px-5 md:px-16 py-16 md:py-20 text-center">
+        <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-10">
+          <h2 className="text-3xl md:text-4xl font-bold">
+            Bereit, deine Marke auf das nächste Level zu bringen?
+          </h2>
+          <p className="mt-4 text-neutral-300 max-w-2xl mx-auto">
+            Starte jetzt mit einem unverbindlichen Gespräch und finde heraus, wie wir dich unterstützen können.
+          </p>
+          <div className="mt-6 flex justify-center gap-4">
             <Link
               href="/request"
-              className="px-5 py-2.5 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2"
+              className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2"
             >
-              Projekt starten <ArrowRight size={18} />
+              Termin vereinbaren <ArrowRight size={18} />
             </Link>
             <Link
-              href="/contact"
-              className="px-5 py-2.5 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors"
+              href="/services/branding"
+              className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold"
             >
-              Erstes Sparring buchen
+              Leistungen ansehen
             </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* RESULTS / METRICS */}
-      <section className="px-5 md:px-8 lg:px-12 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div className="rounded-2xl border border-white/10 bg-[#353088] p-6 md:p-8">
-            <div className="text-4xl md:text-5xl font-extrabold">
-              <CountUp to={42} suffix="%" />+
-            </div>
-            <p className="text-neutral-100 mt-2">Durchschnittlicher Conversion-Lift</p>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-[#7569AD] p-6 md:p-8">
-            <div className="text-4xl md:text-5xl font-extrabold">
-              <CountUp to={120} />+
-            </div>
-            <p className="text-white mt-2">abgeschlossene Projekte & Sprints</p>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-6 md:p-8">
-            <div className="text-4xl md:text-5xl font-extrabold">
-              <CountUp to={98} suffix="%" />
-            </div>
-            <p className="text-neutral-100 mt-2">Weiterempfehlungsrate</p>
-          </div>
-        </div>
-      </section>
-
-      {/* WARUM PAVEO */}
-      <section className="px-5 md:px-8 lg:px-12 py-10" aria-labelledby="why-heading">
-        <div className="bg-white/5 border border-white/10 rounded-3xl px-5 py-8 md:p-12 flex flex-col gap-10">
-          <div className="flex gap-4 max-w-5xl">
-            <Sun className="min-w-[16px] text-indigo-300" aria-hidden="true" />
-            <div className="flex flex-col gap-6">
-              <h2 id="why-heading" className="font-medium text-xl md:text-2xl">Warum paveo</h2>
-              <p className="font-semibold text-2xl md:text-4xl">
-                Psychologisch fundiert. Modular &amp; flexibel. Kollaborativ. Für kleine Budgets — professionell umgesetzt.
-              </p>
-              <Link
-                href="/request"
-                className="w-fit px-6 py-3 bg-violet-600 text-white rounded-full font-medium transition-transform duration-300 hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-violet-400"
-              >
-                Projekt starten
-              </Link>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-            <div className="w-full bg-[#353088] rounded-2xl flex flex-col p-8 gap-4 items-center justify-center text-center">
-              <span className="text-white/90 bg-white/10 px-4 py-2 rounded-full">Psychologisch fundiert</span>
-              <p className="text-white">
-                Entscheidungen werden von Wahrnehmung & Kontext geprägt. Unsere Konzepte zielen darauf — für Relevanz & Conversion.
-              </p>
-            </div>
-
-            <div className="w-full bg-[#7569AD] rounded-2xl flex flex-col p-8 gap-4 items-center justify-center text-center text-white">
-              <span className="bg-white/10 px-4 py-2 rounded-full">Modular &amp; skalierbar</span>
-              <p>Starte schlank und erweitere später — ohne Brüche in Design, Content oder Technik.</p>
-            </div>
-
-            <div className="w-full bg-white/10 border border-white/10 rounded-2xl flex flex-col p-8 gap-4 items-center justify-center text-center">
-              <span className="text-indigo-200 bg-white/5 px-4 py-2 rounded-full">Kollaboratives Netzwerk</span>
-              <p className="text-neutral-100">
-                Kein starres Agenturmodell: Wir arbeiten mit einem wachsenden Netzwerk & fairen Beteiligungen — effizient & nahbar.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* KONTAKT / CTA */}
-      <section className="px-5 md:px-8 lg:px-12 py-12 md:py-20" aria-labelledby="contact-heading">
-        <div className="flex flex-col md:flex-row gap-10 md:gap-16">
-          <div data-aos="fade-up" className="w-full md:w-2/5 flex flex-col gap-8">
-            <div className="flex flex-col gap-5">
-              <h2 id="contact-heading" className="font-semibold text-3xl md:text-5xl">
-                Lass uns starten.
-              </h2>
-              <p className="text-neutral-300">
-                Ob konkrete Anfrage oder erstes Sparring: Schreib uns kurz, was du vorhast — wir melden uns zeitnah.
-              </p>
-              <Link
-                href="/request"
-                className="w-fit px-5 py-2.5 bg-violet-600 text-white rounded-full font-semibold border-2 border-violet-600 relative overflow-hidden transition-transform duration-300 hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-violet-400"
-              >
-                Termin buchen
-              </Link>
-            </div>
-            <div className="flex items-center gap-2 text-neutral-200">
-              <p className="text-lg md:text-xl font-medium">Wir freuen uns auf das Projekt!</p>
-              <ArrowRight aria-hidden="true" />
-            </div>
-          </div>
-
-          <div data-aos={animationRight} className="w-full md:w-3/5 grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="rounded-2xl p-6 bg-white/5 border border-white/10">
-              <h3 className="font-semibold text-xl mb-2">Tools &amp; Arbeitsweise</h3>
-              <ul className="list-disc pl-5 text-neutral-300">
-                <li>Slack &amp; Asana für smoothe Zusammenarbeit</li>
-                <li>Transparente Prozesse &amp; klare Zuständigkeiten</li>
-                <li>Templates &amp; Standards für Outreach &amp; Self-Branding</li>
-              </ul>
-            </div>
-            <div className="rounded-2xl p-6 bg-white/5 border border-white/10">
-              <h3 className="font-semibold text-xl mb-2">Beteiligungsmodell</h3>
-              <p className="text-neutral-300">
-                Teammitglieder erhalten prozentuale Anteile je nach Beitrag (z. B. 40 % bei Kundenakquise durch Outreach).
-              </p>
-            </div>
-            <div className="rounded-2xl p-6 bg-white/5 border border-white/10">
-              <h3 className="font-semibold text-xl mb-2">Interne Projekte</h3>
-              <ul className="list-disc pl-5 text-neutral-300">
-                <li>paveo Outreach (Leadgewinnung)</li>
-                <li>paveo General (Struktur &amp; Org)</li>
-                <li>paveo Social Media (eigener Auftritt)</li>
-              </ul>
-            </div>
-            <div className="rounded-2xl p-6 bg-white/5 border border-white/10">
-              <h3 className="font-semibold text-xl mb-2">Zielbild</h3>
-              <p className="text-neutral-300">
-                Eine smarte, klare Marke für KMU — mit reduzierten Designs, scharfem Messaging und skalierbaren Systemen.
-              </p>
-            </div>
           </div>
         </div>
       </section>
@@ -482,6 +266,3 @@ export default function Home() {
     </div>
   );
 }
-
-
-
