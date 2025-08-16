@@ -1,234 +1,211 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import AccordionExample from '@/components/ui/Accordian';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { Sparkles, ArrowRight, Mail, Phone, MapPin } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 
 export default function ContactPage() {
-  // UI State
-  const [animationRight, setAnimationRight] = useState('fade-right');
+  const [fadeDir, setFadeDir] = useState('fade-right');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [success, setSuccess] = useState('');
-  const [error, setError] = useState('');
+  const [msg, setMsg] = useState({ type: '', text: '' });
+  const [form, setForm] = useState({ name: '', email: '', message: '' });
 
-  // Form State
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const onChange = (e) => setFormData((p) => ({ ...p, [e.target.name]: e.target.value }));
-
-  // AOS (nur Client)
   useEffect(() => {
-    (async () => {
-      const AOS = (await import('aos')).default;
-      await import('aos/dist/aos.css');
-      AOS.init({ duration: 600, once: true, easing: 'ease-out' });
-    })();
-
-    const onResize = () => setAnimationRight(window.innerWidth < 768 ? 'fade-down' : 'fade-right');
+    AOS.init({ duration: 600, once: true });
+    const onResize = () => setFadeDir(window.innerWidth < 768 ? 'fade-down' : 'fade-right');
     onResize();
     window.addEventListener('resize', onResize, { passive: true });
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  // Submit via EmailJS (IDs über ENV; fallen sonst auf deine bisherigen Defaults zurück)
-  const handleSubmit = async (e) => {
+  const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const onSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError('');
-    setSuccess('');
+    setMsg({ type: '', text: '' });
 
     try {
-      const service = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_shzfs6c';
-      const template = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'template_12u0i0n';
-      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'BTON8QXiLwUaNT5D4';
-
-      const emailjs = (await import('@emailjs/browser')).default;
-      const res = await emailjs.send(service, template, formData, publicKey);
-
-      if (res?.status === 200) {
-        setSuccess('Danke! Deine Nachricht wurde erfolgreich gesendet.');
-        setFormData({ name: '', email: '', message: '' });
+      const res = await emailjs.send(
+        'service_shzfs6c',
+        'template_12u0i0n',
+        form,
+        'BTON8QXiLwUaNT5D4'
+      );
+      if (res.status === 200) {
+        setMsg({ type: 'ok', text: 'Nachricht erfolgreich gesendet!' });
+        setForm({ name: '', email: '', message: '' });
       } else {
-        throw new Error('Senden fehlgeschlagen – bitte später erneut versuchen.');
+        throw new Error('Senden fehlgeschlagen. Bitte erneut versuchen.');
       }
     } catch (err) {
-      setError(err?.message || 'Unerwarteter Fehler – bitte später erneut versuchen.');
+      setMsg({ type: 'err', text: err.message || 'Etwas ist schiefgelaufen. Bitte später erneut versuchen.' });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="font-proxima bg-[#0A0A10] text-[#EDEDF2] antialiased">
+    <div className="font-proxima bg-[#0B0B0F] text-white">
       <Navbar />
 
       {/* HERO */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(1200px_600px_at_0%_0%,rgba(138,174,255,0.12),transparent_60%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(135deg,#12101f_0%,#0f1320_50%,#0a0d17_100%)]" />
-        <div className="relative z-10 px-5 md:px-20 pt-16 md:pt-24 pb-10">
-          <div className="mx-auto max-w-4xl text-center" data-aos="fade-up">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-[#C0C6D8]">
-              <Sparkles size={14} /> Kontakt
-            </span>
-            <h1 className="mt-4 text-3xl sm:text-5xl font-bold leading-[1.1]">
-              Lass uns sprechen – kurz, klar, zielführend.
-            </h1>
-            <p className="mt-4 text-[#BFC6D8] md:text-lg">
-              Ob konkrete Anfrage oder erstes Sparring: Schreib uns kurz, was du vorhast – wir melden uns zeitnah.
-            </p>
-          </div>
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_600px_at_-10%_-10%,rgba(129,51,241,.35),transparent_60%),radial-gradient(900px_600px_at_120%_0%,rgba(56,189,248,.20),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#0E0E15_60%,#0B0B0F_100%)]" />
+        <div className="relative px-5 md:px-16 pt-20 md:pt-28 pb-16 text-center max-w-4xl mx-auto">
+          <span className="inline-flex items-center gap-2 text-sm text-indigo-300/80 bg-white/5 ring-1 ring-white/10 px-3 py-1 rounded-full">
+            <Sparkles size={16} /> Kontakt
+          </span>
+          <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight">
+            Lass uns sprechen.
+          </h1>
+          <p className="mt-6 text-lg md:text-xl text-neutral-300">
+            Kurze Nachricht reicht. Wir melden uns zeitnah mit einer klaren Einschätzung.
+          </p>
         </div>
       </section>
 
-      {/* INFO-ZEILE */}
-      <section className="px-5 md:px-20 -mt-4 md:-mt-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <a
-            href="tel:+4916095757167"
-            className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur hover:bg-white/10 transition"
-            data-aos="fade-up"
+      {/* INFO + FORM */}
+      <section className="px-5 md:px-16 pb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Info Cards */}
+          <div
+            data-aos={fadeDir}
+            className="rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 p-6 flex flex-col gap-3"
           >
-            <div className="flex items-center gap-3">
-              <div className="rounded-xl bg-violet-600/20 p-2 border border-violet-500/30">
-                <Phone size={18} className="text-violet-300" />
-              </div>
-              <div>
-                <p className="text-sm text-[#AAB1C2]">Telefon</p>
-                <p className="font-medium">+49 160 95757167</p>
-              </div>
+            <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+              <Phone className="text-indigo-300" />
             </div>
-          </a>
-
-          <a
-            href="mailto:info@paveconsultings.com"
-            className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur hover:bg-white/10 transition"
-            data-aos="fade-up"
-            data-aos-delay="60"
-          >
-            <div className="flex items-center gap-3">
-              <div className="rounded-xl bg-violet-600/20 p-2 border border-violet-500/30">
-                <Mail size={18} className="text-violet-300" />
-              </div>
-              <div>
-                <p className="text-sm text-[#AAB1C2]">E-Mail</p>
-                <p className="font-medium">info@paveconsultings.com</p>
-              </div>
-            </div>
-          </a>
+            <div className="text-neutral-300">Mo–Fr, 14:00–20:00</div>
+            <div className="text-neutral-100 font-semibold">+49 160 95757167</div>
+          </div>
 
           <div
-            className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur"
-            data-aos="fade-up"
-            data-aos-delay="120"
+            data-aos={fadeDir}
+            data-aos-delay="100"
+            className="rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 p-6 flex flex-col gap-3"
           >
-            <div className="flex items-center gap-3">
-              <div className="rounded-xl bg-violet-600/20 p-2 border border-violet-500/30">
-                <MapPin size={18} className="text-violet-300" />
-              </div>
-              <div>
-                <p className="text-sm text-[#AAB1C2]">Adresse</p>
-                <p className="font-medium">Am Streitberg 28, 63906 Erlenbach a. Main</p>
-              </div>
+            <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+              <Mail className="text-indigo-300" />
             </div>
+            <div className="text-neutral-300">Schreib uns jederzeit</div>
+            <div className="text-neutral-100 font-semibold">info@paveconsultings.com</div>
+          </div>
+
+          <div
+            data-aos={fadeDir}
+            data-aos-delay="200"
+            className="rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 p-6 flex flex-col gap-3"
+          >
+            <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+              <MapPin className="text-indigo-300" />
+            </div>
+            <div className="text-neutral-300">63906 Erlenbach am Main</div>
+            <div className="text-neutral-100 font-semibold">Am Streitberg 28, Germany</div>
           </div>
         </div>
-      </section>
 
-      {/* FORMULAR */}
-      <section className="px-5 md:px-20 py-10 md:py-16">
-        <div className="mx-auto max-w-3xl rounded-3xl border border-white/10 bg-gradient-to-b from-[#151a2a] to-[#0e1321] p-5 md:p-8">
-          <div className="text-center mb-6" data-aos="fade-up">
-            <h2 className="text-2xl md:text-3xl font-semibold">Schreib uns eine Nachricht</h2>
-            <p className="text-[#AAB1C2] mt-1">Wir antworten in der Regel innerhalb von 24 Stunden.</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-5" data-aos={animationRight}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                type="text"
-                name="name"
-                placeholder="Dein Name"
-                value={formData.name}
-                onChange={onChange}
-                required
-                className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-violet-500/60"
-              />
-              <input
-                type="email"
-                name="email"
-                placeholder="E-Mail"
-                value={formData.email}
-                onChange={onChange}
-                required
-                className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-violet-500/60"
-              />
-            </div>
-
+        {/* Form */}
+        <div className="mt-8 rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-6 md:p-10 max-w-3xl">
+          <h2 className="text-2xl md:text-3xl font-semibold">Nachricht senden</h2>
+          <form onSubmit={onSubmit} className="mt-6 grid grid-cols-1 gap-4">
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              required
+              value={form.name}
+              onChange={onChange}
+              className="w-full bg-white/5 border border-white/10 outline-none rounded-xl p-3 placeholder:text-neutral-400"
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="E-Mail"
+              required
+              value={form.email}
+              onChange={onChange}
+              className="w-full bg-white/5 border border-white/10 outline-none rounded-xl p-3 placeholder:text-neutral-400"
+            />
             <textarea
               name="message"
-              rows={7}
-              placeholder="Worum geht’s? (Ziele, Status, Budgetrahmen – alles hilft!)"
-              value={formData.message}
-              onChange={onChange}
+              rows={6}
+              placeholder="Deine Nachricht"
               required
-              className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-violet-500/60"
+              value={form.message}
+              onChange={onChange}
+              className="w-full bg-white/5 border border-white/10 outline-none rounded-xl p-3 placeholder:text-neutral-400"
             />
-
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-violet-600 px-6 py-3 font-medium text-white border border-violet-500 transition-transform duration-300 hover:scale-[1.02] disabled:opacity-60"
+              className="mt-2 px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2 disabled:opacity-60"
             >
-              {isSubmitting ? 'Wird gesendet…' : 'Senden'} <Send size={18} />
+              {isSubmitting ? 'Wird gesendet…' : 'Senden'}
             </button>
-
-            {success && (
-              <p className="mt-2 inline-flex items-center gap-2 text-emerald-400">
-                <CheckCircle2 size={18} /> {success}
-              </p>
-            )}
-            {error && (
-              <p className="mt-2 inline-flex items-center gap-2 text-rose-400">
-                <AlertCircle size={18} /> {error}
+            {msg.text && (
+              <p className={`text-sm ${msg.type === 'ok' ? 'text-emerald-400' : 'text-rose-400'}`}>
+                {msg.text}
               </p>
             )}
           </form>
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="px-5 md:px-20 py-6 md:py-12">
-        <div className="mx-auto max-w-3xl text-center" data-aos="fade-up">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-[#C0C6D8]">
-            <Sparkles size={14} /> FAQs
-          </span>
-        </div>
-        <div className="mx-auto max-w-2xl mt-6">
-          <AccordionExample />
+      {/* FAQ (leichtgewichtig, ohne extra Component) */}
+      <section className="px-5 md:px-16 pb-20">
+        <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-6 md:p-10">
+          <h2 className="text-2xl md:text-3xl font-semibold">FAQs</h2>
+          <div className="mt-6 space-y-4">
+            {[
+              {
+                q: 'Wie läuft ein Erstgespräch ab?',
+                a: 'Wir klären Ziele, Status quo und priorisieren nächste Schritte. Danach erhältst du ein kurzes Summary + Angebot.',
+              },
+              {
+                q: 'Können Module einzeln gebucht werden?',
+                a: 'Ja. Branding, Web, Content und Leads sind modular – du startest dort, wo der größte Hebel liegt.',
+              },
+              {
+                q: 'Was kostet ein Projekt?',
+                a: 'Hängt vom Umfang ab. Wir arbeiten mit klaren Paketpreisen oder modularen Angeboten – transparent und planbar.',
+              },
+            ].map((item, i) => (
+              <details
+                key={item.q}
+                className="group rounded-xl border border-white/10 bg-white/[0.03] p-4"
+              >
+                <summary className="cursor-pointer list-none font-medium flex items-center justify-between">
+                  <span>{item.q}</span>
+                  <span className="text-neutral-400 group-open:rotate-180 transition-transform">⌄</span>
+                </summary>
+                <p className="mt-3 text-neutral-300">{item.a}</p>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* CTA unten */}
-      <section className="px-5 md:px-20 py-10 md:py-16">
-        <div
-          className="rounded-3xl border border-white/10 bg-[linear-gradient(135deg,rgba(138,174,255,0.12),rgba(16,14,32,0.7))] p-6 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6"
-          data-aos="fade-up"
-        >
-          <div>
-            <h4 className="text-2xl md:text-3xl font-semibold">Bereit, loszulegen?</h4>
-            <p className="text-[#AAB1C2] mt-2">
-              Kurzer Kennenlern-Call, klare Ziele, nächster Schritt – unkompliziert & verbindlich.
-            </p>
+      {/* CTA */}
+      <section className="px-5 md:px-16 pb-20 text-center">
+        <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-10">
+          <h2 className="text-3xl md:text-4xl font-bold">Schnell & unkompliziert starten?</h2>
+          <p className="mt-4 text-neutral-300 max-w-2xl mx-auto">
+            Buch dir direkt einen Termin – oder schick uns eine kurze Nachricht.
+          </p>
+          <div className="mt-6 flex justify-center gap-4">
+            <Link href="/request" className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2">
+              Termin vereinbaren <ArrowRight size={18} />
+            </Link>
+            <Link href="/contact" className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold">
+              Nachricht senden
+            </Link>
           </div>
-          <Link
-            href="/request"
-            className="inline-flex items-center justify-center rounded-full bg-white text-neutral-900 font-semibold px-6 py-3 hover:bg-neutral-200 transition"
-          >
-            Termin anfragen
-          </Link>
         </div>
       </section>
 
@@ -236,3 +213,4 @@ export default function ContactPage() {
     </div>
   );
 }
+
