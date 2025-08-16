@@ -56,12 +56,12 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-neutral-500">
           <p>© {new Date().getFullYear()} Paveo. All rights reserved.</p>
           <div className="flex gap-6">
-            <Link href="/privacy" className="hover:text-neutral-300">Datenschutz</Link>
+            <Link href="/agb" className="hover:text-neutral-300">AGB</Link>
             <Link href="/impressum" className="hover:text-neutral-300">Impressum</Link>
+            <Link href="/datenschutz" className="hover:text-neutral-300">Datenschutzerklärung</Link>
           </div>
         </div>
       </div>
     </footer>
   );
 }
-
