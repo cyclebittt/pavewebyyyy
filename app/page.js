@@ -3,35 +3,94 @@
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import {
   PenTool, CodeXml, Users, LayoutDashboard, ChartPie,
-  ArrowRight, Sun
+  ArrowRight, Sun, Quote, Star
 } from 'lucide-react';
 
-export default function Home() {
-  const [animationRight, setAnimationRight] = useState('fade-right');
-  const [activeCard, setActiveCard] = useState(null);
-
-  const toggleCard = (index) => {
-    setActiveCard((prev) => (prev === index ? null : index));
-  };
-
-  // AOS + responsive Animationsrichtung
+/* ----------------- Mini-Utils ----------------- */
+function useAOSDir() {
+  const [dir, setDir] = useState('fade-right');
   useEffect(() => {
     AOS.init({ duration: 600, once: true });
-    const onResize = () => setAnimationRight(window.innerWidth < 768 ? 'fade-down' : 'fade-right');
+    const onResize = () => setDir(window.innerWidth < 768 ? 'fade-down' : 'fade-right');
     onResize();
     window.addEventListener('resize', onResize, { passive: true });
     return () => window.removeEventListener('resize', onResize);
   }, []);
+  return dir;
+}
 
-  const onKeyToggle = (e, index) => {
+function CountUp({ to = 100, suffix = '', duration = 1400, className = '' }) {
+  const el = useRef(null);
+  useEffect(() => {
+    let startTs;
+    let raf;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          const animate = (ts) => {
+            if (!startTs) startTs = ts;
+            const p = Math.min((ts - startTs) / duration, 1);
+            const val = Math.floor(p * to);
+            if (el.current) el.current.textContent = `${val}${suffix}`;
+            if (p < 1) raf = requestAnimationFrame(animate);
+          };
+          raf = requestAnimationFrame(animate);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    if (el.current) observer.observe(el.current);
+    return () => {
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+    };
+  }, [to, duration, suffix]);
+  return <span ref={el} className={className} />;
+}
+
+/* ----------------- Daten ----------------- */
+const TRUSTERS = ['Lokale Marken', 'Agentur-Partner', 'SaaS-Startups', 'Praxis & Kanzlei', 'Handwerk', 'Coaches'];
+const TESTIMONIALS = [
+  {
+    quote:
+      'Direkt messbare Wirkung. Struktur, Design und Funnel haben unsere Anfragen verdoppelt – ohne mehr Ads.',
+    name: 'M. Krämer',
+    role: 'Inhaber, Praxis',
+  },
+  {
+    quote:
+      'Von „hübsch“ zu „wirksam“ – das Messaging sitzt endlich. Social & Website performen spürbar besser.',
+    name: 'S. Wagner',
+    role: 'Geschäftsführung, D2C',
+  },
+  {
+    quote:
+      'Schnell, kollaborativ, auf den Punkt. Besonders stark: Positionierung & Content-Frameworks.',
+    name: 'T. Hofmann',
+    role: 'Leitung Marketing, KMU',
+  },
+  {
+    quote:
+      'Wir konnten modular starten und später skalieren – ohne Brüche. Genau das braucht man als kleines Team.',
+    name: 'L. Becker',
+    role: 'Founder, Service-Business',
+  },
+];
+
+export default function Home() {
+  const animationRight = useAOSDir();
+  const [activeCard, setActiveCard] = useState(null);
+  const toggleCard = (i) => setActiveCard((p) => (p === i ? null : i));
+  const onKeyToggle = (e, i) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      toggleCard(index);
+      toggleCard(i);
     }
   };
 
@@ -42,7 +101,7 @@ export default function Home() {
       {/* HERO */}
       <section className="px-5 md:px-8 lg:px-12">
         <div className="relative overflow-hidden rounded-none md:rounded-3xl">
-          {/* kräftige diagonale Gradients im Hintergrund */}
+          {/* kräftige diagonale Gradients */}
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_600px_at_-10%_-10%,rgba(129,51,241,.35),transparent_60%),radial-gradient(900px_600px_at_120%_0%,rgba(56,189,248,.22),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#101018_60%,#0B0B0F_100%)]" />
           <div className="relative flex flex-col items-center text-center gap-6 md:gap-8 py-16 md:py-28 px-4">
             <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1]">
@@ -70,6 +129,20 @@ export default function Home() {
         </div>
       </section>
 
+      {/* TRUST BAR */}
+      <section className="px-5 md:px-8 lg:px-12 py-6">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3">
+          <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 text-sm text-neutral-300">
+            <span className="text-neutral-400">Vertraut von</span>
+            {TRUSTERS.map((t) => (
+              <span key={t} className="px-3 py-1 rounded-full bg-white/[0.06] border border-white/10">
+                {t}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* SERVICES */}
       <section className="px-5 md:px-8 lg:px-12 py-10 md:py-14" aria-labelledby="services-heading">
         <div className="bg-neutral-900/60 rounded-none md:rounded-3xl border border-white/10 px-5 py-8 md:p-12 flex flex-col items-center gap-10">
@@ -86,7 +159,6 @@ export default function Home() {
             </p>
           </div>
 
-          {/* 5 Kacheln – klickbar zu einzelnen Service-Seiten */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
             {/* Branding */}
             <Link
@@ -108,7 +180,7 @@ export default function Home() {
               </div>
             </Link>
 
-            {/* Webdesign + Social als Spalte */}
+            {/* Webdesign + Social */}
             <div className="flex flex-col gap-6" data-aos={animationRight}>
               <Link
                 href="/services/webdesign"
@@ -143,7 +215,7 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Content + Lead als Spalte */}
+            {/* Content + Lead */}
             <div className="flex flex-col gap-6" data-aos={animationRight}>
               <Link
                 href="/services/content"
@@ -188,6 +260,122 @@ export default function Home() {
           >
             Jetzt anfragen <ArrowRight className="hidden md:inline" />
           </Link>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS – Marquee */}
+      <section className="px-5 md:px-8 lg:px-12 py-10">
+        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-6 md:p-10">
+          <h2 className="text-2xl md:text-3xl font-semibold mb-6">Was Kund:innen sagen</h2>
+
+          <style jsx global>{`
+            @keyframes marquee-left {
+              0% { transform: translateX(0); }
+              100% { transform: translateX(-50%); }
+            }
+            @keyframes marquee-right {
+              0% { transform: translateX(-50%); }
+              100% { transform: translateX(0); }
+            }
+          `}</style>
+
+          {/* Row 1 */}
+          <div className="relative w-full overflow-hidden">
+            <div
+              className="flex gap-5 min-w-[200%]"
+              style={{ animation: 'marquee-left 28s linear infinite' }}
+            >
+              {[...TESTIMONIALS, ...TESTIMONIALS].map((t, i) => (
+                <div
+                  key={`t1-${i}`}
+                  className="w-[320px] md:w-[380px] shrink-0 rounded-2xl border border-white/10 bg-white/[0.06] p-5"
+                >
+                  <Quote className="text-indigo-300 mb-3" />
+                  <p className="text-neutral-100">{t.quote}</p>
+                  <div className="mt-4 flex items-center justify-between">
+                    <div className="text-sm">
+                      <div className="font-semibold">{t.name}</div>
+                      <div className="text-neutral-300">{t.role}</div>
+                    </div>
+                    <div className="flex gap-1">
+                      {Array.from({ length: 5 }).map((_, s) => (
+                        <Star key={s} size={16} className="text-yellow-300 fill-yellow-300" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Row 2 */}
+          <div className="relative w-full overflow-hidden mt-5">
+            <div
+              className="flex gap-5 min-w-[200%]"
+              style={{ animation: 'marquee-right 32s linear infinite' }}
+            >
+              {[...TESTIMONIALS.reverse(), ...TESTIMONIALS].map((t, i) => (
+                <div
+                  key={`t2-${i}`}
+                  className="w-[320px] md:w-[380px] shrink-0 rounded-2xl border border-white/10 bg-white/[0.06] p-5"
+                >
+                  <Quote className="text-indigo-300 mb-3" />
+                  <p className="text-neutral-100">{t.quote}</p>
+                  <div className="mt-4 flex items-center justify-between">
+                    <div className="text-sm">
+                      <div className="font-semibold">{t.name}</div>
+                      <div className="text-neutral-300">{t.role}</div>
+                    </div>
+                    <div className="flex gap-1">
+                      {Array.from({ length: 5 }).map((_, s) => (
+                        <Star key={s} size={16} className="text-yellow-300 fill-yellow-300" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom CTA */}
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href="/request"
+              className="px-5 py-2.5 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2"
+            >
+              Projekt starten <ArrowRight size={18} />
+            </Link>
+            <Link
+              href="/contact"
+              className="px-5 py-2.5 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors"
+            >
+              Erstes Sparring buchen
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* RESULTS / METRICS */}
+      <section className="px-5 md:px-8 lg:px-12 py-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="rounded-2xl border border-white/10 bg-[#353088] p-6 md:p-8">
+            <div className="text-4xl md:text-5xl font-extrabold">
+              <CountUp to={42} suffix="%" />+
+            </div>
+            <p className="text-neutral-100 mt-2">Durchschnittlicher Conversion-Lift</p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-[#7569AD] p-6 md:p-8">
+            <div className="text-4xl md:text-5xl font-extrabold">
+              <CountUp to={120} />+
+            </div>
+            <p className="text-white mt-2">abgeschlossene Projekte & Sprints</p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-6 md:p-8">
+            <div className="text-4xl md:text-5xl font-extrabold">
+              <CountUp to={98} suffix="%" />
+            </div>
+            <p className="text-neutral-100 mt-2">Weiterempfehlungsrate</p>
+          </div>
         </div>
       </section>
 
@@ -294,5 +482,6 @@ export default function Home() {
     </div>
   );
 }
+
 
 
