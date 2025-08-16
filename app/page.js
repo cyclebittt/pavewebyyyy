@@ -1,118 +1,225 @@
-'use client';
+'use client'
 
+import { Testimonials } from "@/components/home/Testimonials";
+import Footer from "@/components/layout/Footer";
+import Navbar from "@/components/layout/Navbar";
+import { ArrowRight, ChartPie, ChevronDown, CodeXml, PenTool, Sun, Users, LayoutDashboard } from "lucide-react";
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-
-import {
-  ArrowRight,
-  Sun,
-  PenTool,
-  CodeXml,
-  Users,
-  LayoutDashboard,
-  ChartPie,
-} from 'lucide-react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import Link from "next/link";
 
 export default function Home() {
-  const [aosDir, setAosDir] = useState('fade-right');
+  const [animationRight, setAnimationRight] = useState('fade-right');
+  const [activeCard, setActiveCard] = useState(null);
+
+  const toggleCard = (index) => {
+    setActiveCard(activeCard === index ? null : index);
+  };
 
   useEffect(() => {
-    let cleanup = () => {};
-    (async () => {
-      const AOS = (await import('aos')).default;
-      await import('aos/dist/aos.css');
-      AOS.init({ duration: 600, once: true, easing: 'ease-out' });
-      cleanup = () => {};
-    })();
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setAnimationRight('fade-down');
+      } else {
+        setAnimationRight('fade-right');
+      }
+    };
 
-    const onResize = () => setAosDir(window.innerWidth < 768 ? 'fade-up' : 'fade-right');
-    onResize();
-    window.addEventListener('resize', onResize, { passive: true });
+    // Initialize AOS
+    AOS.init({ duration: 500, once: true });
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
     return () => {
-      window.removeEventListener('resize', onResize);
-      cleanup();
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
   return (
-    <div className="font-proxima bg-[#0B0C10] text-white">
+    <div className="font-proxima">
       <Navbar />
 
       {/* HERO */}
-      <section
-        className="
-          relative overflow-hidden
-          px-5 md:px-20 pt-16 md:pt-24 pb-24 md:pb-36
-        "
-        aria-labelledby="hero-heading"
-      >
-        {/* Gradient */}
-        <div
-          className="
-            absolute inset-0 -z-10
-            bg-[radial-gradient(1200px_500px_at_10%_10%,#1E1B4B_0%,transparent_60%),
-                radial-gradient(1000px_500px_at_90%_30%,#0EA5E9_0%,transparent_60%),
-                linear-gradient(135deg,#0B0C10_10%,#0F172A_60%,#0B0C10)]
-          "
-        />
+      <div className="md:px-5 md:pb-12">
+        <div className="relative flex flex-col items-center py-8 md:pt-40 md:pb-52 px-4 gap-4 md:gap-12 md:rounded-3xl overflow-hidden">
+          <img src="/img/bg.png" alt="" className="absolute inset-0 w-full h-full object-cover -z-10" />
 
-        <div className="max-w-6xl">
-          <span className="inline-flex items-center gap-2 text-xs md:text-sm text-white/70 bg-white/5 rounded-full px-3 py-1 ring-1 ring-white/10">
-            <Sun size={14} className="opacity-70" />
-            Modulare Markenkommunikation für Selbstständige & KMU
-          </span>
-
-          <h1
-            id="hero-heading"
-            className="font-proxima mt-6 text-4xl sm:text-6xl md:text-7xl font-extrabold leading-[1.05] tracking-tight"
-          >
-            Eine Marke, die <span className="text-sky-300">wirklich</span> wirkt.
-          </h1>
-
-          <p className="font-proxima mt-5 max-w-2xl text-white/70 text-base md:text-lg">
-            Branding, Webdesign, Content & Systeme – psychologisch fundiert, modular
-            aufgebaut und messbar auf Conversion ausgerichtet.
-          </p>
-
-          <div className="mt-8 flex items-center gap-3">
-            <Link
-              href="/request"
-              className="font-proxima px-5 py-2.5 md:px-6 md:py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold"
-            >
-              Jetzt starten
-            </Link>
-            <a
-              href="#services"
-              className="font-proxima px-5 py-2.5 md:px-6 md:py-3 rounded-full ring-1 ring-white/15 hover:ring-white/30 text-white/85 transition-all font-medium"
-            >
-              Mehr erfahren
-            </a>
+          <div className="flex text-white flex-col items-center justify-center gap-2 md:gap-4 max-w-3xl">
+            <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold text-center">
+              Paving <span className="text-violet-950">Your</span> Path <br /> to the Digital Future.
+            </h1>
+            <p className="text-xs md:text-lg text-center">
+              From strategy to implementation – empowering your digital transformation journey.
+            </p>
           </div>
+
+          <Link href='/request' className="flex items-center relative group">
+            <button className="px-4 py-2 md:px-8 md:py-3 text-sm md:text-base bg-violet-950 text-white rounded-full font-medium transition-all duration-500 group-hover:scale-105">
+              Let&apos;s get started
+            </button>
+          </Link>
         </div>
-      </section>
+      </div>
 
       {/* SERVICES */}
-      <section id="services" className="px-5 md:px-20 pb-20" aria-labelledby="services-heading">
-        <div className="max-w-7xl">
-          <h2 id="services-heading" className="font-proxima text-2xl md:text-4xl font-semibold mb-3">
-            Leistungen
-          </h2>
-          <p className="font-proxima text-white/60 mb-10">
-            Wähle nur die Bausteine, die du brauchst – oder kombiniere zu einem stimmigen Gesamtauftritt.
-          </p>
+      <div className="px-0 md:px-5 pb-10">
+        <div className="bg-neutral-800 md:rounded-3xl px-5 py-8 md:p-14 flex flex-col items-center justify-center gap-12">
+          <div className="flex flex-col items-center gap-14">
+            <div className="text-white flex flex-col items-center gap-3 max-w-2xl">
+              <Sun />
+              <h2 className="font-medium text-xl md:text-2xl text-center">Services</h2>
+              <p className="font-medium text-3xl md:text-5xl text-center">
+                Your Path Out of Paperwork
+              </p>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Beispiel-Karten */}
-            <Link href="/services/branding" data-aos={aosDir} className="group relative overflow-hidden rounded-2xl p-6 bg-gradient-to-br from-[#1B193F] via-[#151433] to-[#111225] ring-1 ring-white/10 hover:ring-white/20 transition-all">
-              <h3 className="font-proxima text-xl font-bold">Branding & Positionierung</h3>
-              <p className="font-proxima mt-2 text-white/70">Logo, Farbwelt, Tonalität & Kernbotschaft – entwickelt, um bei deiner Zielgruppe im Kopf zu bleiben.</p>
-            </Link>
-            {/* Rest analog */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full">
+              {/* Service 1 */}
+              <div data-aos={animationRight} onClick={() => toggleCard(0)} className="relative bg-[#353088] p-6 rounded-2xl flex flex-col gap-10 min-h-[420px] md:min-h-[540px]">
+                <div className="flex flex-col gap-5">
+                  <div className="flex justify-between items-center">
+                    <div className="h-12 w-12 rounded-full text-[#353088] bg-neutral-200 flex items-center justify-center">
+                      <Users size={24} />
+                    </div>
+                    <ChevronDown className="text-white md:hidden" />
+                  </div>
+                  <div className="flex flex-col gap-2 text-white">
+                    <h2 className="font-bold text-2xl">Internal Collaboration Solutions</h2>
+                    <p className={`transition-all duration-700 overflow-hidden ${activeCard === 0 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>
+                      Empower your team with tools that streamline workflows, eliminate bottlenecks, and create a culture of collaboration.
+                    </p>
+                  </div>
+                </div>
+                <img src="/img/insight.png" alt="" className="w-full" />
+              </div>
+
+              {/* Service 2 & 3 */}
+              <div className="flex flex-col gap-8 w-full">
+                <div onClick={() => toggleCard(1)} className="flex flex-col gap-5 p-6 bg-[#7569AD] rounded-2xl">
+                  <div className="flex justify-between items-center">
+                    <div className="h-12 w-12 rounded-full text-[#4B3A98] bg-white flex items-center justify-center">
+                      <ChartPie size={24} />
+                    </div>
+                    <ChevronDown className="text-white md:hidden" />
+                  </div>
+                  <div className="flex flex-col gap-2 text-white">
+                    <h2 className="font-bold text-2xl">Branding & Identity</h2>
+                    <p className={`transition-all duration-500 overflow-hidden ${activeCard === 1 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>
+                      More than a logo – it’s the heartbeat of your business. We craft a brand identity that truly connects with your audience.
+                    </p>
+                  </div>
+                </div>
+
+                <div onClick={() => toggleCard(2)} className="flex flex-col gap-5 p-6 bg-[#B6B0D6] rounded-2xl">
+                  <div className="flex justify-between items-center">
+                    <div className="h-12 w-12 rounded-full text-[#222] bg-white flex items-center justify-center">
+                      <PenTool size={24} />
+                    </div>
+                    <ChevronDown className="text-neutral-900 md:hidden" />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <h2 className="font-bold text-2xl">UX/UI Design</h2>
+                    <p className={`text-neutral-600 transition-all duration-500 overflow-hidden ${activeCard === 2 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>
+                      Intuitive and beautiful interfaces that turn first-time visitors into loyal fans.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Service 4 & 5 */}
+              <div className="flex flex-col gap-8 w-full">
+                <div onClick={() => toggleCard(3)} className="flex flex-col gap-5 p-6 bg-white rounded-2xl">
+                  <div className="flex justify-between items-center">
+                    <div className="h-12 w-12 rounded-full text-[#222] bg-neutral-200 flex items-center justify-center">
+                      <CodeXml size={24} />
+                    </div>
+                    <ChevronDown className="text-neutral-900 md:hidden" />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <h2 className="font-bold text-2xl">Web Development</h2>
+                    <p className={`text-neutral-600 transition-all duration-500 overflow-hidden ${activeCard === 3 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>
+                      Your website is the first impression – let’s make it unforgettable.
+                    </p>
+                  </div>
+                </div>
+
+                <div onClick={() => toggleCard(4)} className="flex flex-col gap-5 p-6 bg-[#F5F4FC] rounded-2xl">
+                  <div className="flex justify-between items-center">
+                    <div className="h-12 w-12 rounded-full text-[#222] bg-neutral-200 flex items-center justify-center">
+                      <LayoutDashboard size={24} />
+                    </div>
+                    <ChevronDown className="text-neutral-900 md:hidden" />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <h2 className="font-bold text-2xl">Content Creation</h2>
+                    <p className={`text-neutral-600 transition-all duration-500 overflow-hidden ${activeCard === 4 ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'} md:max-h-none md:opacity-100`}>
+                      Great content doesn’t just inform – it inspires action.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <Link href='/request'>
+            <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all duration-500 hover:scale-105">
+              Boost your efficiency – discover our digital solutions now!
+            </button>
+          </Link>
+        </div>
+      </div>
+
+      {/* WHY US */}
+      <div className="px-5 py-10">
+        <div className="bg-white rounded-3xl p-8 md:p-14 flex flex-col gap-14">
+          <div className="flex gap-4 max-w-6xl">
+            <Sun className="min-w-[16px]" />
+            <div className="flex flex-col gap-8">
+              <h2 className="font-medium text-xl md:text-2xl">Why Us</h2>
+              <p className="font-medium text-3xl md:text-5xl">
+                Tailored digital solutions that deliver measurable, long-lasting results.
+              </p>
+              <Link href='/request'>
+                <button className="px-8 py-3 bg-violet-600 text-white rounded-full font-medium transition-all duration-500 hover:scale-105">
+                  See Our Solutions
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
-      </section>
+      </div>
+
+      {/* CONTACT */}
+      <div className="px-5 md:px-20 py-24 flex flex-col md:flex-row gap-20">
+        <div className="w-full md:w-2/5 flex flex-col gap-12">
+          <h2 className="font-medium text-3xl md:text-5xl">
+            Pave the way and get in touch with us.
+          </h2>
+          <p className="text-neutral-600">
+            Whether you need answers, support, or just a quick chat, our team is ready to assist.
+          </p>
+          <Link href='/request'>
+            <button className="w-fit px-4 py-2 bg-violet-700 text-white rounded-full font-semibold">
+              Book an Appointment
+            </button>
+          </Link>
+        </div>
+
+        <div className="w-full md:w-3/5 flex flex-col md:flex-row gap-5">
+          <div className="w-full md:w-72 aspect-square rounded-2xl overflow-hidden relative">
+            <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1470" alt="" className="w-full h-full object-cover" />
+          </div>
+          <div className="relative w-full h-full rounded-2xl overflow-hidden">
+            <Link href='/about' className="absolute top-4 right-4">
+              <button className="px-4 py-2 bg-violet-600 text-white rounded-full font-medium hover:scale-105 transition-all">
+                Meet our Team
+              </button>
+            </Link>
+            <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1484" alt="" className="w-full h-full object-cover" />
+          </div>
+        </div>
+      </div>
 
       <Footer />
     </div>
