@@ -3,88 +3,40 @@
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Link from 'next/link';
-import {
-  CheckCircle2,
-  Sparkles,
-  Target,
-  Rows3,
-  MessageSquare,
-  LayoutTemplate,
-  Palette,
-  Type,
-  BadgeCheck,
-  Rocket,
-  ArrowRight,
-} from 'lucide-react';
+import { CheckCircle, Target, Rows3, MessageSquare, Palette, Type, BadgeCheck, LayoutTemplate, Rocket, Sparkles, ArrowRight } from 'lucide-react';
 
 export default function BrandingPage() {
   return (
-    <div className="font-proxima bg-gradient-to-br from-[#0B0B0F] via-[#0E0E15] to-black text-white">
+    <div className="font-proxima bg-gradient-to-br from-violet-900 via-neutral-900 to-black text-white">
       <Navbar />
 
-      {/* HERO */}
-      <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_600px_at_-10%_-10%,rgba(129,51,241,.35),transparent_60%),radial-gradient(900px_600px_at_120%_0%,rgba(56,189,248,.20),transparent_55%)]" />
-        <div className="relative px-6 md:px-16 pt-16 md:pt-24 pb-18 md:pb-24">
-          <div className="max-w-5xl">
-            <span className="inline-flex items-center gap-2 text-sm text-indigo-300/80 bg-white/5 ring-1 ring-white/10 px-3 py-1 rounded-full">
-              <Sparkles size={16} /> Branding & Positionierung
-            </span>
-            <h1 className="mt-5 text-4xl md:text-6xl font-extrabold tracking-tight">
-              Marke mit Substanz.
-              <span className="block text-indigo-300">Klar. Merkfähig. Skalierbar.</span>
-            </h1>
-            <p className="mt-5 max-w-2xl text-neutral-300">
-              Klares Fundament, scharfe Botschaften und ein visuelles System, das mitwächst.
-              Psychologisch fundiert statt nur „schön“ – für Wirkung, die hängen bleibt.
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href="/request"
-                className="px-5 py-2.5 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2"
-              >
-                Termin anfragen <ArrowRight size={18} />
-              </Link>
-              <Link
-                href="/contact"
-                className="px-5 py-2.5 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors"
-              >
-                Kontakt aufnehmen
-              </Link>
-            </div>
-          </div>
+      {/* Hero */}
+      <section className="relative flex flex-col items-center text-center py-24 px-6 md:px-20">
+        <h1 className="text-4xl md:text-6xl font-bold mb-6">
+          Branding mit <span className="text-violet-400">Substanz</span>.
+        </h1>
+        <p className="text-lg md:text-xl max-w-3xl text-neutral-300">
+          Klares Fundament, scharfe Botschaften und ein visuelles System, das mitwächst – psychologisch fundiert statt nur „schön“.
+        </p>
+        <div className="mt-8 flex gap-3">
+          <Link href="/request" className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2">
+            Projekt starten <ArrowRight size={18} />
+          </Link>
+          <Link href="/contact" className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors">
+            Erstes Sparring
+          </Link>
         </div>
       </section>
 
-      {/* WAS DEINE MARKE TRÄGT */}
-      <section className="px-6 md:px-16 py-12 md:py-16">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-8">Was deine Marke trägt</h2>
+      {/* Säulen */}
+      <section className="px-6 md:px-20 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
-            {
-              icon: <Target className="text-indigo-300" />,
-              title: 'Positionierung, die trägt',
-              desc:
-                'Klarer Fokus, scharfe Botschaften und konkrete Nutzen – für Relevanz bei deiner Zielgruppe.',
-            },
-            {
-              icon: <Rows3 className="text-indigo-300" />,
-              title: 'Visuelle Systeme',
-              desc:
-                'Logo, Farbwelt, Typo & Komponenten – als skalierbares System gedacht, nicht nur als Einzelstück.',
-            },
-            {
-              icon: <MessageSquare className="text-indigo-300" />,
-              title: 'Tonalität & Story',
-              desc:
-                'Wording, Claims, Narrative – psychologisch fundiert, damit Inhalte hängenbleiben und konvertieren.',
-            },
+            { icon: <Target className="text-indigo-300" />, title: 'Positionierung', desc: 'Klarer Fokus, Nutzenargumente & Zielgruppen-Schärfung für echte Relevanz.' },
+            { icon: <Rows3 className="text-indigo-300" />, title: 'Visuelles System', desc: 'Logo, Farben, Typo & Komponenten – als skalierbares System statt Einzelstücke.' },
+            { icon: <MessageSquare className="text-indigo-300" />, title: 'Tonalität & Story', desc: 'Wording, Claims, Narrative – damit Inhalte hängen bleiben und konvertieren.' },
           ].map(({ icon, title, desc }) => (
-            <div
-              key={title}
-              className="rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.03] border border-white/10 p-6 md:p-7 backdrop-blur-sm"
-            >
+            <div key={title} className="rounded-2xl bg-white/5 border border-white/10 p-6">
               <div className="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center">{icon}</div>
               <h3 className="mt-4 text-xl font-semibold">{title}</h3>
               <p className="mt-2 text-neutral-300">{desc}</p>
@@ -93,142 +45,40 @@ export default function BrandingPage() {
         </div>
       </section>
 
-      {/* LIEFERUMFANG / BAUSTEINE */}
-      <section className="px-6 md:px-16 py-10 md:py-14">
+      {/* Lieferumfang */}
+      <section className="px-6 md:px-20 py-12">
         <h2 className="text-2xl md:text-3xl font-semibold">Lieferumfang & Bausteine</h2>
-        <p className="mt-2 text-neutral-300 max-w-3xl">
-          Modulbasiert konfigurierbar – starte schlank und erweitere ohne Brüche.
-        </p>
+        <p className="mt-2 text-neutral-300 max-w-3xl">Modular konfigurierbar – starte schlank und erweitere ohne Brüche.</p>
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-5">
           {[
-            { icon: <Sparkles size={18} />, title: 'Brand Core (Leitbild, Werte, Nutzenversprechen)' },
-            { icon: <Target size={18} />, title: 'Positionierung & Zielgruppen-Segmente' },
-            { icon: <MessageSquare size={18} />, title: 'Naming, Claim & Tonalität' },
-            { icon: <LayoutTemplate size={18} />, title: 'Brand-Guidelines (PDF + Figma-Bibliothek)' },
-            { icon: <BadgeCheck size={18} />, title: 'Logo-System (Primär/Secondary/Monogram)' },
-            { icon: <Palette size={18} />, title: 'Farbwelt, Typografie, Komponenten' },
-            { icon: <Type size={18} />, title: 'Anwendungs-Beispiele (Web, Print, Ads)' },
-            { icon: <Rocket size={18} />, title: 'Rollout-Plan & Begleitung' },
-            { icon: <LayoutTemplate size={18} />, title: 'Social-Templates (Posts/Reels/Stories)' },
-          ].map(({ icon, title }) => (
-            <div
-              key={title}
-              className="rounded-xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.06] transition-colors p-4 flex items-center gap-3"
-            >
+            { icon: <Sparkles size={18} />, text: 'Brand Core (Leitbild, Werte, Nutzenversprechen)' },
+            { icon: <Target size={18} />, text: 'Positionierung & Zielgruppen-Segmente' },
+            { icon: <MessageSquare size={18} />, text: 'Naming, Claim & Tonalität' },
+            { icon: <LayoutTemplate size={18} />, text: 'Brand-Guidelines (PDF + Figma-Bibliothek)' },
+            { icon: <BadgeCheck size={18} />, text: 'Logo-System (Primär/Secondary/Monogram)' },
+            { icon: <Palette size={18} />, text: 'Farbwelt, Typografie, Komponenten' },
+            { icon: <Type size={18} />, text: 'Anwendungsbeispiele (Web, Print, Ads)' },
+            { icon: <Rocket size={18} />, text: 'Rollout-Plan & Begleitung' },
+            { icon: <LayoutTemplate size={18} />, text: 'Social-Templates (Posts/Reels/Stories)' },
+          ].map(({ icon, text }) => (
+            <div key={text} className="rounded-xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.06] transition-colors p-4 flex items-center gap-3">
               <span className="text-indigo-300">{icon}</span>
-              <span className="text-neutral-200">{title}</span>
+              <span className="text-neutral-200">{text}</span>
             </div>
           ))}
         </div>
       </section>
 
-      {/* PAKETE (OHNE PREIS) */}
-      <section className="px-6 md:px-16 py-12 md:py-16">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-2">Pakete</h2>
-        <p className="text-neutral-300 max-w-3xl">
-          Drei modulare Stufen — alle Leistungen sind kombinierbar und aufrüstbar.
-        </p>
-
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Core */}
-          <div className="rounded-2xl bg-neutral-900/70 border border-white/10 p-7 flex flex-col gap-5 hover:scale-[1.02] transition-transform">
-            <h3 className="text-xl font-bold">Core</h3>
-            <p className="text-neutral-300">
-              Das Fundament für Klarheit und Einheitlichkeit – ideal für einen fokussierten Start.
-            </p>
-            <ul className="mt-2 flex flex-col gap-3 text-neutral-200">
-              {[
-                'Brand Core (Vision, Werte, Nutzen)',
-                'Positionierungs-Canvas',
-                'Basale Tonalität & Key Messages',
-                'Kompaktes Logo-Set (Primär/Mono)',
-                'Mini-Styleguide (PDF)',
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 text-violet-400" size={18} /> {item}
-                </li>
-              ))}
-            </ul>
-            <Link
-              href="/request"
-              className="mt-4 inline-flex justify-center px-5 py-2.5 bg-violet-600 hover:bg-violet-500 rounded-full font-semibold"
-            >
-              Paket wählen
-            </Link>
-          </div>
-
-          {/* System+ */}
-          <div className="rounded-2xl bg-violet-700/90 border border-white/10 p-7 flex flex-col gap-5 hover:scale-[1.02] transition-transform">
-            <h3 className="text-xl font-bold">System+</h3>
-            <p className="text-violet-50/90">
-              Skalierbares Design-System mit klarer Tonalität – bereit für multiplatform Rollout.
-            </p>
-            <ul className="mt-2 flex flex-col gap-3 text-white">
-              {[
-                'Alles aus Core',
-                'Erweitertes Logo-System (Sekundär/Monogram)',
-                'Farbwelt, Typografie & Komponenten-Library',
-                'Ausformulierte Tonalität (Do/Don’t, Beispiele)',
-                'Brand-Guidelines (PDF + Figma-Bibliothek)',
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 text-white" size={18} /> {item}
-                </li>
-              ))}
-            </ul>
-            <Link
-              href="/request"
-              className="mt-4 inline-flex justify-center px-5 py-2.5 bg-white text-violet-800 hover:bg-neutral-100 rounded-full font-semibold"
-            >
-              Paket wählen
-            </Link>
-          </div>
-
-          {/* Rollout+ */}
-          <div className="rounded-2xl bg-neutral-900/70 border border-white/10 p-7 flex flex-col gap-5 hover:scale-[1.02] transition-transform">
-            <h3 className="text-xl font-bold">Rollout+</h3>
-            <p className="text-neutral-300">
-              Umsetzung & Begleitung – von Social-Templates bis Launch-Plan, inkl. Sparring.
-            </p>
-            <ul className="mt-2 flex flex-col gap-3 text-neutral-200">
-              {[
-                'Alles aus System+',
-                'Social-Templates (Posts/Reels/Stories)',
-                'Anwendungs-Beispiele (Web/Print/Ads)',
-                'Rollout-Plan & interne Schulung',
-                'Begleitung im Launch (optional)',
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 text-violet-400" size={18} /> {item}
-                </li>
-              ))}
-            </ul>
-            <Link
-              href="/request"
-              className="mt-4 inline-flex justify-center px-5 py-2.5 bg-violet-600 hover:bg-violet-500 rounded-full font-semibold"
-            >
-              Paket wählen
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* CTA */}
-      <section className="px-6 md:px-16 py-14 md:py-20">
+      <section className="px-6 md:px-20 py-16">
         <div className="relative overflow-hidden rounded-3xl border border-white/10">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_400px_at_10%_-10%,rgba(129,51,241,.35),transparent_60%),radial-gradient(900px_400px_at_90%_120%,rgba(56,189,248,.18),transparent_55%)]" />
           <div className="relative p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div>
               <h3 className="text-2xl md:text-3xl font-bold">Bereit für eine Marke mit Wirkung?</h3>
-              <p className="mt-2 text-neutral-200">
-                Wir schärfen dein Fundament – modular, skalierbar und messbar auf Conversion.
-              </p>
+              <p className="mt-2 text-neutral-200">Wir schärfen dein Fundament – modular, skalierbar und messbar auf Conversion.</p>
             </div>
-            <Link
-              href="/request"
-              className="px-5 py-2.5 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2"
-            >
+            <Link href="/request" className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2">
               Termin anfragen <ArrowRight size={18} />
             </Link>
           </div>
@@ -239,4 +89,5 @@ export default function BrandingPage() {
     </div>
   );
 }
+
 
