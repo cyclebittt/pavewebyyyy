@@ -18,23 +18,24 @@ import {
 } from 'lucide-react';
 
 /* -------------------------------
-   Kleiner, lib-freier CountUp
+   Kleiner, lib-freier CountUp (JS)
 --------------------------------*/
 function useCountUp(target = 0, duration = 1500, start = 0, inView = true) {
   const [val, setVal] = useState(start);
-  const startRef = useRef<number | null>(null);
+  const startRef = useRef(null);
 
   useEffect(() => {
     if (!inView) return;
-    let rafId: number;
+    let rafId;
 
-    const step = (ts: number) => {
+    const step = (ts) => {
       if (startRef.current == null) startRef.current = ts;
       const p = Math.min(1, (ts - startRef.current) / duration);
       const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
       setVal(Math.round(start + (target - start) * eased));
       if (p < 1) rafId = requestAnimationFrame(step);
     };
+
     rafId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(rafId);
   }, [target, duration, start, inView]);
@@ -42,9 +43,10 @@ function useCountUp(target = 0, duration = 1500, start = 0, inView = true) {
   return val;
 }
 
-function Stat({ label, value }: { label: string; value: number }) {
-  const ref = useRef<HTMLDivElement | null>(null);
+function Stat({ label, value }) {
+  const ref = useRef(null);
   const [visible, setVisible] = useState(false);
+
   useEffect(() => {
     const io = new IntersectionObserver(
       ([e]) => setVisible(e.isIntersecting),
@@ -53,17 +55,21 @@ function Stat({ label, value }: { label: string; value: number }) {
     if (ref.current) io.observe(ref.current);
     return () => io.disconnect();
   }, []);
+
   const n = useCountUp(value, 1400, 0, visible);
+
   return (
     <div ref={ref} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center">
-      <div className="text-4xl md:text-5xl font-extrabold tracking-tight text-indigo-300">{n.toLocaleString('de-DE')}</div>
+      <div className="text-4xl md:text-5xl font-extrabold tracking-tight text-indigo-300">
+        {n.toLocaleString('de-DE')}
+      </div>
       <div className="mt-2 text-neutral-300">{label}</div>
     </div>
   );
 }
 
 export default function Home() {
-  const [fadeDir, setFadeDir] = useState<'fade-right' | 'fade-down'>('fade-right');
+  const [fadeDir, setFadeDir] = useState('fade-right');
 
   useEffect(() => {
     AOS.init({ duration: 600, once: true });
@@ -163,9 +169,9 @@ export default function Home() {
       <section className="px-5 md:px-16 py-10 md:py-14">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           <Stat label="umgesetzte Projekte" value={86} />
-          <Stat label="durchschn. Conversion-Lift" value={27} />
+          <Stat label="durchschn. Conversion-Lift (%)" value={27} />
           <Stat label="erstellte Inhalte / Jahr" value={420} />
-          <Stat label="Ø Kundenzufriedenheit" value={98} />
+          <Stat label="Ø Kundenzufriedenheit (%)" value={98} />
         </div>
       </section>
 
@@ -242,7 +248,7 @@ export default function Home() {
           <h2 className="text-3xl md:text-4xl font-bold">
             Bereit, deine Marke auf das nächste Level zu bringen?
           </h2>
-          <p className="mt-4 text-neutral-300 max-w-2xl mx-auto">
+        <p className="mt-4 text-neutral-300 max-w-2xl mx-auto">
             Starte jetzt mit einem unverbindlichen Gespräch und finde heraus, wie wir dich unterstützen können.
           </p>
           <div className="mt-6 flex justify-center gap-4">
@@ -266,3 +272,4 @@ export default function Home() {
     </div>
   );
 }
+
