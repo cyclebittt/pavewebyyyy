@@ -2,6 +2,7 @@
 
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import CheckoutButton from '@/components/CheckoutButton'; // neu importiert
 import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
 
@@ -34,9 +35,15 @@ export default function ContentCreation() {
               </li>
             ))}
           </ul>
-          <Link href="/request" className="mt-auto text-center bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold">
-            Paket wählen
-          </Link>
+          <CheckoutButton
+            priceId="price_CONTENT_ESSENTIALS"        // echte Price-ID einsetzen
+            service="content"
+            pkg="Essentials"
+            label="Paket wählen"
+            className="mt-auto text-center bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold"
+            successPath="/success"
+            cancelPath="/services/content"
+          />
         </div>
 
         {/* Creator (featured) */}
@@ -51,9 +58,15 @@ export default function ContentCreation() {
               </li>
             ))}
           </ul>
-          <Link href="/request" className="mt-auto text-center bg-white text-violet-700 hover:bg-neutral-100 transition-colors rounded-full px-6 py-3 font-semibold">
-            Paket wählen
-          </Link>
+          <CheckoutButton
+            priceId="price_CONTENT_CREATOR"            // echte Price-ID einsetzen
+            service="content"
+            pkg="Creator"
+            label="Paket wählen"
+            className="mt-auto text-center bg-white text-violet-700 hover:bg-neutral-100 transition-colors rounded-full px-6 py-3 font-semibold"
+            successPath="/success"
+            cancelPath="/services/content"
+          />
         </div>
 
         {/* Pro Studio */}
@@ -68,9 +81,15 @@ export default function ContentCreation() {
               </li>
             ))}
           </ul>
-          <Link href="/request" className="mt-auto text-center bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold">
-            Paket wählen
-          </Link>
+          <CheckoutButton
+            priceId="price_CONTENT_PRO_STUDIO"        // echte Price-ID einsetzen
+            service="content"
+            pkg="Pro Studio"
+            label="Paket wählen"
+            className="mt-auto text-center bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold"
+            successPath="/success"
+            cancelPath="/services/content"
+          />
         </div>
       </section>
 
@@ -87,4 +106,3 @@ export default function ContentCreation() {
     </div>
   );
 }
-
