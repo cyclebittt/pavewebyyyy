@@ -2,6 +2,7 @@
 
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import CheckoutButton from '@/components/CheckoutButton';
 import { CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 
@@ -39,9 +40,15 @@ export default function LeadGeneration() {
               <CheckCircle className="text-violet-400" /> E-Mail Integration
             </li>
           </ul>
-          <button className="mt-auto bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold">
-            Paket wählen
-          </button>
+          <CheckoutButton
+            priceId="price_LEAD_STARTER"         // echte Price-ID einsetzen
+            service="lead"
+            pkg="Starter"
+            label="Paket wählen"
+            className="mt-auto bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold"
+            successPath="/success"
+            cancelPath="/services/lead"
+          />
         </div>
 
         {/* Growth */}
@@ -60,9 +67,15 @@ export default function LeadGeneration() {
               <CheckCircle className="text-white" /> Conversion Optimierung
             </li>
           </ul>
-          <button className="mt-auto bg-white text-violet-700 hover:bg-neutral-100 transition-colors rounded-full px-6 py-3 font-semibold">
-            Paket wählen
-          </button>
+          <CheckoutButton
+            priceId="price_LEAD_GROWTH"          // echte Price-ID einsetzen
+            service="lead"
+            pkg="Growth"
+            label="Paket wählen"
+            className="mt-auto bg-white text-violet-700 hover:bg-neutral-100 transition-colors rounded-full px-6 py-3 font-semibold"
+            successPath="/success"
+            cancelPath="/services/lead"
+          />
         </div>
 
         {/* Premium */}
@@ -81,17 +94,21 @@ export default function LeadGeneration() {
               <CheckCircle className="text-violet-400" /> A/B Testing & Analytics
             </li>
           </ul>
-          <button className="mt-auto bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold">
-            Paket wählen
-          </button>
+          <CheckoutButton
+            priceId="price_LEAD_PREMIUM"        // echte Price-ID einsetzen
+            service="lead"
+            pkg="Premium"
+            label="Paket wählen"
+            className="mt-auto bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold"
+            successPath="/success"
+            cancelPath="/services/lead"
+          />
         </div>
       </div>
 
       {/* Call to Action */}
       <div className="px-6 md:px-20 py-20 text-center flex flex-col gap-6 items-center">
-        <h2 className="text-3xl md:text-5xl font-bold">
-          Mehr Leads. Mehr Umsatz.
-        </h2>
+        <h2 className="text-3xl md:text-5xl font-bold">Mehr Leads. Mehr Umsatz.</h2>
         <p className="text-neutral-300 max-w-2xl">
           Starte jetzt mit deinem Lead-Funnel – und verwandle Besucher in Kunden.
         </p>
