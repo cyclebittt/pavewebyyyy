@@ -2,8 +2,9 @@
 
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import Link from 'next/link';
+import CheckoutButton from '@/components/CheckoutButton';
 import { CheckCircle } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Webdesign() {
   return (
@@ -34,9 +35,15 @@ export default function Webdesign() {
               </li>
             ))}
           </ul>
-          <Link href="/request" className="mt-auto text-center bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold">
-            Paket wählen
-          </Link>
+          <CheckoutButton
+            priceId="price_WEBDESIGN_STARTER"       // echte Price-ID einsetzen
+            service="webdesign"
+            pkg="Starter"
+            label="Paket wählen"
+            className="mt-auto text-center bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold"
+            successPath="/success"
+            cancelPath="/services/webdesign"
+          />
         </div>
 
         {/* Business (featured) */}
@@ -51,9 +58,15 @@ export default function Webdesign() {
               </li>
             ))}
           </ul>
-          <Link href="/request" className="mt-auto text-center bg-white text-violet-700 hover:bg-neutral-100 transition-colors rounded-full px-6 py-3 font-semibold">
-            Paket wählen
-          </Link>
+          <CheckoutButton
+            priceId="price_WEBDESIGN_BUSINESS"      // echte Price-ID einsetzen
+            service="webdesign"
+            pkg="Business"
+            label="Paket wählen"
+            className="mt-auto text-center bg-white text-violet-700 hover:bg-neutral-100 transition-colors rounded-full px-6 py-3 font-semibold"
+            successPath="/success"
+            cancelPath="/services/webdesign"
+          />
         </div>
 
         {/* Premium */}
@@ -68,9 +81,15 @@ export default function Webdesign() {
               </li>
             ))}
           </ul>
-          <Link href="/request" className="mt-auto text-center bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold">
-            Paket wählen
-          </Link>
+          <CheckoutButton
+            priceId="price_WEBDESIGN_PREMIUM"        // echte Price-ID einsetzen
+            service="webdesign"
+            pkg="Premium"
+            label="Paket wählen"
+            className="mt-auto text-center bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold"
+            successPath="/success"
+            cancelPath="/services/webdesign"
+          />
         </div>
       </section>
 
@@ -87,4 +106,3 @@ export default function Webdesign() {
     </div>
   );
 }
-
