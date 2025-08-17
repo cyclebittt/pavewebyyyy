@@ -2,6 +2,7 @@
 
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import CheckoutButton from '@/components/CheckoutButton';
 import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
 
@@ -34,9 +35,15 @@ export default function SocialMedia() {
               </li>
             ))}
           </ul>
-          <Link href="/request" className="mt-auto text-center bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold">
-            Paket wählen
-          </Link>
+          <CheckoutButton
+            priceId="price_SOCIALMEDIA_STARTER"      // echte Price-ID einsetzen
+            service="socialmedia"
+            pkg="Starter"
+            label="Paket wählen"
+            className="mt-auto text-center bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold"
+            successPath="/success"
+            cancelPath="/services/socialmedia"
+          />
         </div>
 
         {/* Visibility+ (featured) */}
@@ -51,9 +58,15 @@ export default function SocialMedia() {
               </li>
             ))}
           </ul>
-          <Link href="/request" className="mt-auto text-center bg-white text-violet-700 hover:bg-neutral-100 transition-colors rounded-full px-6 py-3 font-semibold">
-            Paket wählen
-          </Link>
+          <CheckoutButton
+            priceId="price_SOCIALMEDIA_VISIBILITY"      // echte Price-ID einsetzen
+            service="socialmedia"
+            pkg="Visibility+"
+            label="Paket wählen"
+            className="mt-auto text-center bg-white text-violet-700 hover:bg-neutral-100 transition-colors rounded-full px-6 py-3 font-semibold"
+            successPath="/success"
+            cancelPath="/services/socialmedia"
+          />
         </div>
 
         {/* Growth+ */}
@@ -68,9 +81,15 @@ export default function SocialMedia() {
               </li>
             ))}
           </ul>
-          <Link href="/request" className="mt-auto text-center bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold">
-            Paket wählen
-          </Link>
+          <CheckoutButton
+            priceId="price_SOCIALMEDIA_GROWTH"     // echte Price-ID einsetzen
+            service="socialmedia"
+            pkg="Growth+"
+            label="Paket wählen"
+            className="mt-auto text-center bg-violet-600 hover:bg-violet-500 transition-colors rounded-full px-6 py-3 font-semibold"
+            successPath="/success"
+            cancelPath="/services/socialmedia"
+          />
         </div>
       </section>
 
@@ -87,4 +106,3 @@ export default function SocialMedia() {
     </div>
   );
 }
-
