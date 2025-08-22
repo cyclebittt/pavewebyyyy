@@ -62,7 +62,7 @@ export default function AboutPage() {
             <Sparkles size={16} /> Über uns
           </span>
           <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight">
-            paveo – das modulare Kreativ-Studio
+            paveo – das mdulare Kreativ-Studio
           </h1>
           <p className="mt-6 text-lg md:text-xl text-neutral-300">
             Wir helfen Selbstständigen & KMU, sichtbar, professionell und psychologisch wirksam aufzutreten – mit
