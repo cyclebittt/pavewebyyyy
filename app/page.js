@@ -4,22 +4,23 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+
+// Icons
 import {
   ArrowRight,
   Sparkles,
+  Megaphone,
   Target,
   LayoutTemplate,
-  Palette,
   Rocket,
   MessageSquare,
   Quote,
+  ShieldCheck,
 } from 'lucide-react';
 
-/* -------------------------------
-   Kleiner, lib-freier CountUp (JS)
---------------------------------*/
+/* -------------------------------------------
+   Lightweight CountUp Hook (ohne externe Lib)
+--------------------------------------------*/
 function useCountUp(target = 0, duration = 1500, start = 0, inView = true) {
   const [val, setVal] = useState(start);
   const startRef = useRef(null);
@@ -48,10 +49,9 @@ function Stat({ label, value }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const io = new IntersectionObserver(
-      ([e]) => setVisible(e.isIntersecting),
-      { threshold: 0.35 }
-    );
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), {
+      threshold: 0.3,
+    });
     if (ref.current) io.observe(ref.current);
     return () => io.disconnect();
   }, []);
@@ -59,7 +59,10 @@ function Stat({ label, value }) {
   const n = useCountUp(value, 1400, 0, visible);
 
   return (
-    <div ref={ref} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center">
+    <div
+      ref={ref}
+      className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center"
+    >
       <div className="text-4xl md:text-5xl font-extrabold tracking-tight text-indigo-300">
         {n.toLocaleString('de-DE')}
       </div>
@@ -71,64 +74,41 @@ function Stat({ label, value }) {
 export default function Home() {
   const [fadeDir, setFadeDir] = useState('fade-right');
 
+  // AOS nur clientseitig laden
   useEffect(() => {
-    AOS.init({ duration: 600, once: true });
-    const handleResize = () => setFadeDir(window.innerWidth < 768 ? 'fade-down' : 'fade-right');
-    handleResize();
-    window.addEventListener('resize', handleResize, { passive: true });
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    let cleanup = () => {};
+    (async () => {
+      const AOS = (await import('aos')).default;
+      await import('aos/dist/aos.css');
+      AOS.init({ duration: 600, once: true, offset: 60 });
+      cleanup = () => {};
+    })();
 
-  const services = [
-    {
-      title: 'Social Media Management',
-      desc: 'Strategie, Content Creation & Performance – alles für einen starken Auftritt.',
-      icon: <MessageSquare size={26} className="text-violet-400" />,
-      href: '/services/socialmedia',
-    },
-    {
-      title: 'Branding & Positionierung',
-      desc: 'Klare Botschaften, starke Designs & Systeme, die wachsen.',
-      icon: <Target size={26} className="text-violet-400" />,
-      href: '/services/branding',
-    },
-    {
-      title: 'Webdesign',
-      desc: 'Websites, die begeistern: modern, schnell & nutzerfreundlich.',
-      icon: <LayoutTemplate size={26} className="text-violet-400" />,
-      href: '/services/webdesign',
-    },
-    {
-      title: 'Content Creation',
-      desc: 'Foto, Video & Design – Content, der deine Marke lebendig macht.',
-      icon: <Palette size={26} className="text-violet-400" />,
-      href: '/services/content',
-    },
-    {
-      title: 'Lead & Angebotsstruktur',
-      desc: 'Strukturen für mehr Kunden, klare Angebote & bessere Abschlüsse.',
-      icon: <Rocket size={26} className="text-violet-400" />,
-      href: '/services/lead',
-    },
-  ];
+    const onResize = () =>
+      setFadeDir(typeof window !== 'undefined' && window.innerWidth < 768 ? 'fade-down' : 'fade-right');
+    onResize();
+    window.addEventListener('resize', onResize, { passive: true });
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   return (
     <div className="font-proxima bg-[#0B0B0F] text-white">
       <Navbar />
 
-      {/* HERO */}
+      {/* HERO – Neukunden-Fokus */}
       <section className="relative overflow-hidden">
+        {/* kräftiger diagonaler Hintergrund */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_600px_at_-10%_-10%,rgba(129,51,241,.35),transparent_60%),radial-gradient(900px_600px_at_120%_0%,rgba(56,189,248,.20),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#0E0E15_60%,#0B0B0F_100%)]" />
         <div className="relative px-5 md:px-16 pt-20 md:pt-28 pb-24 md:pb-32 text-center max-w-4xl mx-auto">
           <span className="inline-flex items-center gap-2 text-sm text-indigo-300/80 bg-white/5 ring-1 ring-white/10 px-3 py-1 rounded-full">
-            <Sparkles size={16} /> Kreativ-Studio für digitale Marken
+            <Sparkles size={16} /> Modular. Messbar. Skalierbar.
           </span>
           <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight">
-            Wir machen Marken <span className="text-indigo-300">sichtbar</span>.
+            Wir generieren <span className="text-indigo-300">Neukunden</span> durch digitale Lösungen.
           </h1>
           <p className="mt-6 text-lg md:text-xl text-neutral-300">
-            Von Branding bis Content: Wir helfen Selbstständigen & Unternehmen dabei,
-            professionell und wirkungsvoll aufzutreten – digital & kreativ.
+            Von Social Media bis CRM-System: Wir kombinieren Branding, Content, Web & Funnel
+            zu einem System, das Interessenten in Kunden verwandelt.
           </p>
           <div className="mt-8 flex justify-center gap-4">
             <Link
@@ -175,16 +155,114 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SERVICES */}
+      {/* FUNNEL / PROZESS (3 Stufen) */}
+      <section className="px-5 md:px-16 py-12 md:py-16">
+        <h2 className="text-2xl md:text-3xl font-semibold mb-6">So werden aus Reichweite echte Kunden</h2>
+        <p className="text-neutral-300 max-w-3xl">
+          Wir bauen keine isolierten Einzellösungen – wir verbinden Module zu einem wirksamen System.
+          Von Aufmerksamkeit über Interesse bis zur Conversion und Bindung.
+        </p>
+
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            {
+              icon: <Megaphone className="text-indigo-300" />,
+              title: 'Aufmerksamkeit erzeugen',
+              points: [
+                'Social Media & Short-Form Content',
+                'Paid Social / Ads (optional)',
+                'Kreatives Storytelling',
+              ],
+            },
+            {
+              icon: <LayoutTemplate className="text-indigo-300" />,
+              title: 'Interesse binden',
+              points: [
+                'Markenkern & visuelles System',
+                'Website / Landingpages',
+                'Klares Messaging, klare Nutzen',
+              ],
+            },
+            {
+              icon: <Rocket className="text-indigo-300" />,
+              title: 'Leads konvertieren',
+              points: [
+                'Funnel & Angebotsstruktur',
+                'CRM-Setup & Automationen',
+                'Messung & Optimierung',
+              ],
+            },
+          ].map(({ icon, title, points }, i) => (
+            <div
+              key={title}
+              data-aos={fadeDir}
+              data-aos-delay={i * 120}
+              className="rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 p-6 backdrop-blur-sm"
+            >
+              <div className="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center">
+                {icon}
+              </div>
+              <h3 className="mt-4 text-xl font-semibold">{title}</h3>
+              <ul className="mt-3 space-y-2 text-neutral-300">
+                {points.map((p) => (
+                  <li key={p} className="flex items-start gap-2">
+                    <span className="mt-1 block h-1.5 w-1.5 rounded-full bg-indigo-300" />
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Micro‑Trust unter dem Prozess */}
+        <div className="mt-6 inline-flex items-center gap-2 text-sm text-[#AEB5C8]">
+          <ShieldCheck size={18} className="text-emerald-400" />
+          DSGVO‑konforme Setups • Transparente Sprints • Messbare Ergebnisse
+        </div>
+      </section>
+
+      {/* SERVICES (als Module klickbar – optional) */}
       <section className="px-5 md:px-16 py-16">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-10">Unsere Services</h2>
+        <h2 className="text-2xl md:text-3xl font-semibold mb-10">Module, die wir kombinieren</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {services.map(({ title, desc, icon, href }, i) => (
+          {[
+            {
+              title: 'Branding & Positionierung',
+              desc: 'Fundament, Botschaften & visuelles System – klar und skalierbar.',
+              icon: <Target size={26} className="text-violet-400" />,
+              href: '/services/branding',
+            },
+            {
+              title: 'Webdesign',
+              desc: 'Schnelle, fokussierte Web‑/Landingpages mit Conversion‑Fokus.',
+              icon: <LayoutTemplate size={26} className="text-violet-400" />,
+              href: '/services/webdesign',
+            },
+            {
+              title: 'Social & Content',
+              desc: 'Reels, Posts, Ads & Creatives – konsistent zur Marke.',
+              icon: <MessageSquare size={26} className="text-violet-400" />,
+              href: '/services/socialmedia',
+            },
+            {
+              title: 'Content Creation',
+              desc: 'Foto, Video, Design – Content, der deine Marke lebendig macht.',
+              icon: <Palette size={26} className="text-violet-400" />,
+              href: '/services/content',
+            },
+            {
+              title: 'Leads & Systeme',
+              desc: 'Funnel, CRM, Automationen & Angebotsstruktur – messbar & smart.',
+              icon: <Rocket size={26} className="text-violet-400" />,
+              href: '/services/lead',
+            },
+          ].map(({ title, desc, icon, href }, i) => (
             <Link
               key={title}
               href={href}
               data-aos={fadeDir}
-              data-aos-delay={i * 100}
+              data-aos-delay={i * 80}
               className="rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 p-6 backdrop-blur-sm hover:bg-white/[0.06] transition-colors flex flex-col"
             >
               <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
@@ -246,10 +324,10 @@ export default function Home() {
       <section className="px-5 md:px-16 py-16 md:py-20 text-center">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-10">
           <h2 className="text-3xl md:text-4xl font-bold">
-            Bereit, deine Marke auf das nächste Level zu bringen?
+            Lass uns dein Neukunden‑System bauen.
           </h2>
-        <p className="mt-4 text-neutral-300 max-w-2xl mx-auto">
-            Starte jetzt mit einem unverbindlichen Gespräch und finde heraus, wie wir dich unterstützen können.
+          <p className="mt-4 text-neutral-300 max-w-2xl mx-auto">
+            Unverbindlicher 30‑Minuten‑Call: Ziele, Fahrplan & nächste Schritte.
           </p>
           <div className="mt-6 flex justify-center gap-4">
             <Link
@@ -259,10 +337,10 @@ export default function Home() {
               Termin vereinbaren <ArrowRight size={18} />
             </Link>
             <Link
-              href="/services/branding"
+              href="/services/lead"
               className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold"
             >
-              Leistungen ansehen
+              Mehr zu Leads & Systemen
             </Link>
           </div>
         </div>
@@ -272,4 +350,3 @@ export default function Home() {
     </div>
   );
 }
-
