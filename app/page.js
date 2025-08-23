@@ -204,11 +204,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ALT vs. NEU */}
-      <section className="px-5 md:px-16 py-10 md:py-14">
+      /*{/* ALT vs. NEU */}
+      /*<section className="px-5 md:px-16 py-10 md:py-14">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Altes Paveo */}
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+        /*  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
             <h3 className="text-xl font-semibold">Altes Paveo – breit, aber unscharf</h3>
             <ul className="mt-4 space-y-2 text-neutral-300 list-disc pl-5">
               <li>Kreativstudio für “alle” – keine Nische, wenig Vertrauen.</li>
@@ -221,8 +221,8 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Neues Paveo */}
-          <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.05] to-white/[0.08] p-6">
+         {/* Neues Paveo */}
+          /*<div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.05] to-white/[0.08] p-6">
             <h3 className="text-xl font-semibold">Neues Paveo – spitz & förderfähig</h3>
             <ul className="mt-4 space-y-2 text-neutral-200 list-disc pl-5">
               <li>Spezialagentur für Arztpraxen (Haus‑/Fachärzte, ZÄ, MVZ).</li>
@@ -235,7 +235,7 @@ export default function Home() {
             </p>
           </div>
         </div>
-      </section>
+      </section>*/ 
 
       {/* MODULE als Scroll-Path (Top→Bottom) */}
       <section className="px-5 md:px-16 py-12 md:py-16">
