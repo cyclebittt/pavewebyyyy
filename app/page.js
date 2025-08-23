@@ -5,22 +5,24 @@ import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
-// Icons
+// AOS nur clientseitig laden
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
 import {
   ArrowRight,
   Sparkles,
-  Megaphone,
   Target,
   LayoutTemplate,
+  Palette,
   Rocket,
   MessageSquare,
   Quote,
-  ShieldCheck,
 } from 'lucide-react';
 
-/* -------------------------------------------
-   Lightweight CountUp Hook (ohne externe Lib)
---------------------------------------------*/
+/* -------------------------------
+   Kleiner, lib-freier CountUp (JS)
+--------------------------------*/
 function useCountUp(target = 0, duration = 1500, start = 0, inView = true) {
   const [val, setVal] = useState(start);
   const startRef = useRef(null);
@@ -50,7 +52,7 @@ function Stat({ label, value }) {
 
   useEffect(() => {
     const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), {
-      threshold: 0.3,
+      threshold: 0.35,
     });
     if (ref.current) io.observe(ref.current);
     return () => io.disconnect();
@@ -74,41 +76,72 @@ function Stat({ label, value }) {
 export default function Home() {
   const [fadeDir, setFadeDir] = useState('fade-right');
 
-  // AOS nur clientseitig laden
   useEffect(() => {
-    let cleanup = () => {};
-    (async () => {
-      const AOS = (await import('aos')).default;
-      await import('aos/dist/aos.css');
-      AOS.init({ duration: 600, once: true, offset: 60 });
-      cleanup = () => {};
-    })();
-
-    const onResize = () =>
-      setFadeDir(typeof window !== 'undefined' && window.innerWidth < 768 ? 'fade-down' : 'fade-right');
-    onResize();
-    window.addEventListener('resize', onResize, { passive: true });
-    return () => window.removeEventListener('resize', onResize);
+    AOS.init({ duration: 600, once: true });
+    const handleResize = () =>
+      setFadeDir(window.innerWidth < 768 ? 'fade-down' : 'fade-right');
+    handleResize();
+    window.addEventListener('resize', handleResize, { passive: true });
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Services führen NICHT zu Unterseiten: wir leiten auf /request mit Query um
+  const services = [
+    {
+      title: 'Social Media Management',
+      desc:
+        'Strategie, Content & Performance – Reichweite gezielt in Anfragen verwandeln.',
+      icon: <MessageSquare size={26} className="text-violet-400" />,
+      q: 'social-media',
+    },
+    {
+      title: 'Branding & Positionierung',
+      desc:
+        'Klare Botschaften & ein skalierbares Designsystem als Conversion-Fundament.',
+      icon: <Target size={26} className="text-violet-400" />,
+      q: 'branding',
+    },
+    {
+      title: 'Webdesign',
+      desc:
+        'Schnelle, moderne Websites, die Vertrauen aufbauen und Leads generieren.',
+      icon: <LayoutTemplate size={26} className="text-violet-400" />,
+      q: 'webdesign',
+    },
+    {
+      title: 'Content Creation',
+      desc:
+        'Foto, Video, Grafik — konsistent zur Marke, optimiert auf Wirkung.',
+      icon: <Palette size={26} className="text-violet-400" />,
+      q: 'content',
+    },
+    {
+      title: 'Lead & Angebotsstruktur',
+      desc:
+        'Funnel, Formulare, CRM: Systeme, die aus Besuchern verlässlich Kunden machen.',
+      icon: <Rocket size={26} className="text-violet-400" />,
+      q: 'lead-system',
+    },
+  ];
 
   return (
     <div className="font-proxima bg-[#0B0B0F] text-white">
       <Navbar />
 
-      {/* HERO – Neukunden-Fokus */}
+      {/* HERO */}
       <section className="relative overflow-hidden">
-        {/* kräftiger diagonaler Hintergrund */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_600px_at_-10%_-10%,rgba(129,51,241,.35),transparent_60%),radial-gradient(900px_600px_at_120%_0%,rgba(56,189,248,.20),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#0E0E15_60%,#0B0B0F_100%)]" />
         <div className="relative px-5 md:px-16 pt-20 md:pt-28 pb-24 md:pb-32 text-center max-w-4xl mx-auto">
           <span className="inline-flex items-center gap-2 text-sm text-indigo-300/80 bg-white/5 ring-1 ring-white/10 px-3 py-1 rounded-full">
-            <Sparkles size={16} /> Modular. Messbar. Skalierbar.
+            <Sparkles size={16} /> Messbare Neukundengewinnung
           </span>
           <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight">
-            Wir generieren <span className="text-indigo-300">Neukunden</span> durch digitale Lösungen.
+            Wir gewinnen Neukunden
+            <span className="block text-indigo-300">durch digitale Lösungen.</span>
           </h1>
           <p className="mt-6 text-lg md:text-xl text-neutral-300">
-            Von Social Media bis CRM-System: Wir kombinieren Branding, Content, Web & Funnel
-            zu einem System, das Interessenten in Kunden verwandelt.
+            Von Social Ads über Content bis Website & CRM: Wir bauen dir einen
+            schlanken Funnel, der zu dir passt — modular, messbar und skalierbar.
           </p>
           <div className="mt-8 flex justify-center gap-4">
             <Link
@@ -131,16 +164,18 @@ export default function Home() {
       <section className="px-5 md:px-16 -mt-8 mb-6">
         <div className="rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm p-4 md:p-5">
           <div className="flex flex-wrap items-center justify-center gap-3 md:gap-5">
-            {['KMU • DACH', 'Startups', 'Handwerk', 'Gastro', 'Dienstleister'].map((t, i) => (
-              <span
-                key={t}
-                data-aos="fade-up"
-                data-aos-delay={i * 80}
-                className="text-sm md:text-base text-neutral-200 px-3 py-1.5 rounded-full bg-white/5 ring-1 ring-white/10"
-              >
-                {t}
-              </span>
-            ))}
+            {['KMU • DACH', 'Startups', 'Handwerk', 'Gastro', 'Dienstleister'].map(
+              (t, i) => (
+                <span
+                  key={t}
+                  data-aos="fade-up"
+                  data-aos-delay={i * 80}
+                  className="text-sm md:text-base text-neutral-200 px-3 py-1.5 rounded-full bg-white/5 ring-1 ring-white/10"
+                >
+                  {t}
+                </span>
+              )
+            )}
           </div>
         </div>
       </section>
@@ -155,114 +190,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FUNNEL / PROZESS (3 Stufen) */}
-      <section className="px-5 md:px-16 py-12 md:py-16">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-6">So werden aus Reichweite echte Kunden</h2>
-        <p className="text-neutral-300 max-w-3xl">
-          Wir bauen keine isolierten Einzellösungen – wir verbinden Module zu einem wirksamen System.
-          Von Aufmerksamkeit über Interesse bis zur Conversion und Bindung.
-        </p>
-
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              icon: <Megaphone className="text-indigo-300" />,
-              title: 'Aufmerksamkeit erzeugen',
-              points: [
-                'Social Media & Short-Form Content',
-                'Paid Social / Ads (optional)',
-                'Kreatives Storytelling',
-              ],
-            },
-            {
-              icon: <LayoutTemplate className="text-indigo-300" />,
-              title: 'Interesse binden',
-              points: [
-                'Markenkern & visuelles System',
-                'Website / Landingpages',
-                'Klares Messaging, klare Nutzen',
-              ],
-            },
-            {
-              icon: <Rocket className="text-indigo-300" />,
-              title: 'Leads konvertieren',
-              points: [
-                'Funnel & Angebotsstruktur',
-                'CRM-Setup & Automationen',
-                'Messung & Optimierung',
-              ],
-            },
-          ].map(({ icon, title, points }, i) => (
-            <div
-              key={title}
-              data-aos={fadeDir}
-              data-aos-delay={i * 120}
-              className="rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 p-6 backdrop-blur-sm"
-            >
-              <div className="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center">
-                {icon}
-              </div>
-              <h3 className="mt-4 text-xl font-semibold">{title}</h3>
-              <ul className="mt-3 space-y-2 text-neutral-300">
-                {points.map((p) => (
-                  <li key={p} className="flex items-start gap-2">
-                    <span className="mt-1 block h-1.5 w-1.5 rounded-full bg-indigo-300" />
-                    {p}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        {/* Micro‑Trust unter dem Prozess */}
-        <div className="mt-6 inline-flex items-center gap-2 text-sm text-[#AEB5C8]">
-          <ShieldCheck size={18} className="text-emerald-400" />
-          DSGVO‑konforme Setups • Transparente Sprints • Messbare Ergebnisse
-        </div>
-      </section>
-
-      {/* SERVICES (als Module klickbar – optional) */}
+      {/* SERVICES (führen zu /request?service=...) */}
       <section className="px-5 md:px-16 py-16">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-10">Module, die wir kombinieren</h2>
+        <h2 className="text-2xl md:text-3xl font-semibold mb-10">
+          Bausteine für deinen Funnel
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              title: 'Branding & Positionierung',
-              desc: 'Fundament, Botschaften & visuelles System – klar und skalierbar.',
-              icon: <Target size={26} className="text-violet-400" />,
-              href: '/services/branding',
-            },
-            {
-              title: 'Webdesign',
-              desc: 'Schnelle, fokussierte Web‑/Landingpages mit Conversion‑Fokus.',
-              icon: <LayoutTemplate size={26} className="text-violet-400" />,
-              href: '/services/webdesign',
-            },
-            {
-              title: 'Social & Content',
-              desc: 'Reels, Posts, Ads & Creatives – konsistent zur Marke.',
-              icon: <MessageSquare size={26} className="text-violet-400" />,
-              href: '/services/socialmedia',
-            },
-            {
-              title: 'Content Creation',
-              desc: 'Foto, Video, Design – Content, der deine Marke lebendig macht.',
-              icon: <Palette size={26} className="text-violet-400" />,
-              href: '/services/content',
-            },
-            {
-              title: 'Leads & Systeme',
-              desc: 'Funnel, CRM, Automationen & Angebotsstruktur – messbar & smart.',
-              icon: <Rocket size={26} className="text-violet-400" />,
-              href: '/services/lead',
-            },
-          ].map(({ title, desc, icon, href }, i) => (
+          {services.map(({ title, desc, icon, q }, i) => (
             <Link
               key={title}
-              href={href}
+              href={`/request?service=${encodeURIComponent(q)}`}
               data-aos={fadeDir}
-              data-aos-delay={i * 80}
+              data-aos-delay={i * 100}
               className="rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 p-6 backdrop-blur-sm hover:bg-white/[0.06] transition-colors flex flex-col"
             >
               <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
@@ -271,7 +210,7 @@ export default function Home() {
               <h3 className="mt-4 text-xl font-semibold">{title}</h3>
               <p className="mt-2 text-neutral-300">{desc}</p>
               <span className="mt-4 inline-flex items-center gap-2 text-indigo-300 font-medium">
-                Mehr erfahren <ArrowRight size={16} />
+                Unverbindlich anfragen <ArrowRight size={16} />
               </span>
             </Link>
           ))}
@@ -281,7 +220,9 @@ export default function Home() {
       {/* TESTIMONIALS */}
       <section className="px-5 md:px-16 pb-8 md:pb-14">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-6 md:p-10">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-8">Was Kund:innen sagen</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold mb-8">
+            Was Kund:innen sagen
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
@@ -324,10 +265,11 @@ export default function Home() {
       <section className="px-5 md:px-16 py-16 md:py-20 text-center">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-10">
           <h2 className="text-3xl md:text-4xl font-bold">
-            Lass uns dein Neukunden‑System bauen.
+            Lass uns deinen Neukunden‑Funnel bauen.
           </h2>
           <p className="mt-4 text-neutral-300 max-w-2xl mx-auto">
-            Unverbindlicher 30‑Minuten‑Call: Ziele, Fahrplan & nächste Schritte.
+            Schlank starten, messbar skalieren: Wir kombinieren genau die
+            Leistungen, die du wirklich brauchst.
           </p>
           <div className="mt-6 flex justify-center gap-4">
             <Link
@@ -337,10 +279,10 @@ export default function Home() {
               Termin vereinbaren <ArrowRight size={18} />
             </Link>
             <Link
-              href="/services/lead"
+              href="/contact"
               className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold"
             >
-              Mehr zu Leads & Systemen
+              Kurzes Sparring buchen
             </Link>
           </div>
         </div>
