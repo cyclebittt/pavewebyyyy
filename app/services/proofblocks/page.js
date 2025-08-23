@@ -1,251 +1,103 @@
-'use client';
-
-import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
-import {
-  ArrowRight, Quote, Sparkles, Image as ImageIcon, LayoutTemplate, LineChart, Wand2
-} from 'lucide-react';
-
-/* ---------- Helpers ---------- */
-
-function Card({ children, className = '' }) {
+export default function ProofBlocks({ items = [] }) {
   return (
-    <div className={`rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur p-6 ${className}`}>
-      {children}
-    </div>
-  );
-}
-
-/* ---------- KPI (count-up) ---------- */
-function useCountUp(target = 0, duration = 1200, inView = true) {
-  const [val, setVal] = useState(0);
-  const start = useRef(null);
-  useEffect(() => {
-    if (!inView) return;
-    let raf;
-    const step = (ts) => {
-      if (start.current == null) start.current = ts;
-      const p = Math.min(1, (ts - start.current) / duration);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setVal(Math.round(target * eased));
-      if (p < 1) raf = requestAnimationFrame(step);
-    };
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
-  }, [target, duration, inView]);
-  return val;
-}
-
-export function KPIGrid({ items = [] }) {
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {items.map(({ label, value }, i) => (
-        <KPI key={i} label={label} value={value} />
-      ))}
-    </div>
-  );
-}
-
-function KPI({ label, value }) {
-  const ref = useRef(null);
-  const [v, setV] = useState(false);
-  useEffect(() => {
-    const io = new IntersectionObserver(([e]) => setV(e.isIntersecting), { threshold: 0.4 });
-    if (ref.current) io.observe(ref.current);
-    return () => io.disconnect();
-  }, []);
-  const n = useCountUp(value, 1100, v);
-  return (
-    <Card ref={ref} className="text-center">
-      <div className="text-4xl md:text-5xl font-extrabold tracking-tight text-indigo-300">{n.toLocaleString('de-DE')}</div>
-      <div className="mt-2 text-neutral-300">{label}</div>
-    </Card>
-  );
-}
-
-/* ---------- Mini Case Study ---------- */
-export function CaseStudy({ title, problem, approach, results = [], badge = 'Kurz-Case' }) {
-  return (
-    <Card className="flex flex-col gap-4">
-      <div className="inline-flex items-center gap-2 text-xs px-2 py-1 rounded-full bg-white/5 border border-white/10 w-fit">
-        <Sparkles size={14} /> {badge}
-      </div>
-      <h3 className="text-xl font-semibold">{title}</h3>
-      <div className="grid md:grid-cols-3 gap-4 text-neutral-200">
-        <div><p className="text-sm text-neutral-400">Problem</p><p>{problem}</p></div>
-        <div><p className="text-sm text-neutral-400">Vorgehen</p><p>{approach}</p></div>
-        <div>
-          <p className="text-sm text-neutral-400">Ergebnis</p>
-          <ul className="list-disc pl-5">
-            {results.map((r, i) => <li key={i}>{r}</li>)}
-          </ul>
-        </div>
-      </div>
-    </Card>
-  );
-}
-
-/* ---------- Before / After Slider ---------- */
-export function BeforeAfter({ before = '/img/before.jpg', after = '/img/after.jpg', labelBefore='Vorher', labelAfter='Nachher' }) {
-  const [v, setV] = useState(50);
-  return (
-    <Card className="overflow-hidden">
-      <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden bg-black/40">
-        <img src={before} alt="before" className="absolute inset-0 w-full h-full object-cover opacity-90" />
-        <div className="absolute inset-0 w-full h-full">
-          <div className="absolute inset-0 overflow-hidden" style={{clipPath: `inset(0 ${100 - v}% 0 0)`}}>
-            <img src={after} alt="after" className="w-full h-full object-cover" />
-          </div>
-        </div>
-        <input
-          type="range" min="0" max="100" value={v}
-          onChange={(e)=>setV(Number(e.target.value))}
-          className="absolute bottom-4 left-1/2 -translate-x-1/2 w-2/3"
-        />
-        <div className="absolute top-3 left-3 text-xs bg-white/10 px-2 py-1 rounded-full">{labelBefore}</div>
-        <div className="absolute top-3 right-3 text-xs bg-white/10 px-2 py-1 rounded-full">{labelAfter}</div>
-      </div>
-    </Card>
-  );
-}
-
-/* ---------- Output Grid (Thumbnails) ---------- */
-export function OutputGrid({ items = [] }) {
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-      {items.map((src, i) => (
-        <div key={i} className="rounded-xl overflow-hidden border border-white/10 bg-white/5">
-          <img src={src} alt="" className="w-full h-44 object-cover" />
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/* ---------- Testimonial ---------- */
-export function Testimonial({ quote, name, role }) {
-  return (
-    <Card className="relative">
-      <Quote className="absolute -top-4 -left-4 w-8 h-8 text-white/10" />
-      <blockquote className="text-neutral-100">{quote}</blockquote>
-      <p className="mt-3 text-sm text-neutral-400"><span className="text-white font-medium">{name}</span> · {role}</p>
-    </Card>
-  );
-}
-
-/* ---------- Process Steps ---------- */
-export function Process({ steps = [] }) {
-  return (
-    <div className="grid md:grid-cols-4 gap-4">
-      {steps.map((s, i) => (
-        <Card key={i}>
-          <div className="text-sm text-indigo-300 font-semibold">{String(i+1).padStart(2,'0')}</div>
-          <h4 className="mt-1 text-lg font-semibold">{s.title}</h4>
-          <p className="mt-1 text-neutral-300">{s.text}</p>
-        </Card>
-      ))}
-    </div>
-  );
-}
-
-/* ---------- Deliverables list ---------- */
-export function Deliverables({ items = [] }) {
-  return (
-    <div className="grid md:grid-cols-2 gap-4">
-      {items.map((d, i) => (
-        <Card key={i} className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-indigo-300">
-            {d.icon ?? <Wand2 size={18} />}
-          </div>
-          <div>
-            <h4 className="font-semibold">{d.title}</h4>
-            {d.desc && <p className="text-neutral-300">{d.desc}</p>}
-          </div>
-        </Card>
-      ))}
-    </div>
-  );
-}
-
-/* ---------- Generic Service Template ---------- */
-export default function ServiceTemplate({
-  NavbarCmp,
-  FooterCmp,
-  heroTitle,
-  heroSub,
-  ctaHref = '/request',
-  deliverables = [],
-  caseStudy,
-  beforeAfter,
-  outputs = [],
-  process = [],
-  testimonials = [],
-}) {
-  return (
-    <div className="font-proxima bg-[#0B0B0F] text-white">
-      {NavbarCmp}
-
-      {/* HERO */}
-      <section className="relative px-5 md:px-16 pt-20 md:pt-28 pb-12 text-center">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(800px_400px_at_-10%_-10%,rgba(129,51,241,.35),transparent_60%),radial-gradient(700px_500px_at_110%_-10%,rgba(56,189,248,.20),transparent_55%)]" />
-        <div className="relative max-w-3xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold">{heroTitle}</h1>
-          <p className="mt-4 text-lg text-neutral-300">{heroSub}</p>
-          <Link href={ctaHref} className="inline-flex items-center gap-2 mt-6 px-5 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition font-semibold">
-            Projekt starten <ArrowRight size={18} />
-          </Link>
-        </div>
-      </section>
-
-      {/* DELIVERABLES */}
-      {!!deliverables.length && (
-        <section className="px-5 md:px-16 py-10">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-6">Das ist enthalten</h2>
-          <Deliverables items={deliverables} />
-        </section>
-      )}
-
-      {/* PROOF: CASE + KPIs */}
-      {(caseStudy || outputs.length) && (
-        <section className="px-5 md:px-16 py-10 grid md:grid-cols-2 gap-6">
-          {caseStudy && <CaseStudy {...caseStudy} />}
-          {!!outputs.length && (
-            <Card>
-              <div className="mb-4 inline-flex items-center gap-2 text-xs px-2 py-1 rounded-full bg-white/5 border border-white/10">
-                <ImageIcon size={14} /> Beispiel‑Output
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      {items.map((it, i) => {
+        const box = (
+          <div
+            key={i}
+            className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 md:p-6"
+          >
+            {/* KOPF */}
+            {(it.eyebrow || it.title) && (
+              <div className="mb-3">
+                {it.eyebrow && (
+                  <span className="inline-block text-xs tracking-wider text-indigo-300/80 bg-white/5 border border-white/10 rounded-full px-2.5 py-1">
+                    {it.eyebrow}
+                  </span>
+                )}
+                {it.title && (
+                  <h3 className="mt-2 text-xl font-semibold text-white">{it.title}</h3>
+                )}
               </div>
-              <OutputGrid items={outputs} />
-            </Card>
-          )}
-        </section>
-      )}
+            )}
 
-      {/* BEFORE/AFTER */}
-      {beforeAfter && (
-        <section className="px-5 md:px-16 py-6">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-4">Vorher / Nachher</h2>
-          <BeforeAfter {...beforeAfter} />
-        </section>
-      )}
+            {/* INHALT */}
+            {it.type === "kpi" && (
+              <div className="text-center">
+                <div className="text-5xl font-extrabold text-indigo-300">{it.value}</div>
+                {it.note && <p className="mt-2 text-neutral-300">{it.note}</p>}
+              </div>
+            )}
 
-      {/* PROCESS */}
-      {!!process.length && (
-        <section className="px-5 md:px-16 py-10">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-6">So arbeiten wir</h2>
-          <Process steps={process} />
-        </section>
-      )}
+            {it.type === "quote" && (
+              <figure>
+                <blockquote className="text-neutral-200 leading-relaxed">“{it.text}”</blockquote>
+                <figcaption className="mt-3 text-sm text-neutral-400">
+                  {it.author && <span className="text-white font-medium">{it.author}</span>}
+                  {it.role && <> · {it.role}</>}
+                </figcaption>
+              </figure>
+            )}
 
-      {/* TESTIMONIALS */}
-      {!!testimonials.length && (
-        <section className="px-5 md:px-16 py-10">
-          <div className="grid md:grid-cols-3 gap-4">
-            {testimonials.map((t, i) => <Testimonial key={i} {...t} />)}
+            {it.type === "video" && (
+              <div className="aspect-video w-full overflow-hidden rounded-xl border border-white/10 bg-black/30">
+                {/* Demo/Case-Teaser (mp4/loom/embed möglich). Platzhalter: */}
+                <video controls className="w-full h-full object-cover" poster={it.poster || ""}>
+                  {it.src && <source src={it.src} type="video/mp4" />}
+                </video>
+                {it.caption && (
+                  <p className="mt-2 text-sm text-neutral-400">{it.caption}</p>
+                )}
+              </div>
+            )}
+
+            {it.type === "image" && (
+              <div>
+                <div className="rounded-xl overflow-hidden border border-white/10">
+                  <img src={it.src} alt={it.alt || ""} className="w-full h-full object-cover" />
+                </div>
+                {it.caption && (
+                  <p className="mt-2 text-sm text-neutral-400">{it.caption}</p>
+                )}
+              </div>
+            )}
+
+            {it.type === "beforeAfter" && (
+              <div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-lg overflow-hidden border border-white/10">
+                    <img src={it.before} alt="Vorher" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="rounded-lg overflow-hidden border border-white/10">
+                    <img src={it.after} alt="Nachher" className="w-full h-full object-cover" />
+                  </div>
+                </div>
+                <div className="mt-2 flex items-center justify-between text-xs text-neutral-400">
+                  <span>Vorher</span><span>Nachher</span>
+                </div>
+              </div>
+            )}
+
+            {it.type === "steps" && Array.isArray(it.steps) && (
+              <ol className="space-y-3">
+                {it.steps.map((s, idx) => (
+                  <li key={idx} className="flex gap-3">
+                    <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-indigo-600/25 text-indigo-200 text-xs">{idx+1}</span>
+                    <div>
+                      <div className="font-medium text-white">{s.title}</div>
+                      {s.desc && <p className="text-neutral-300 text-sm">{s.desc}</p>}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            )}
+
+            {it.type === "rich" && it.children}
           </div>
-        </section>
-      )}
+        );
 
-      {FooterCmp}
+        return box;
+      })}
     </div>
   );
 }
