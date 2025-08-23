@@ -21,9 +21,7 @@ import {
   Quote,
 } from 'lucide-react';
 
-/* -------------------------------
-   Kleiner, lib-freier CountUp (JS)
---------------------------------*/
+/* CountUp (leicht, ohne Lib) */
 function useCountUp(target = 0, duration = 1500, start = 0, inView = true) {
   const [val, setVal] = useState(start);
   const startRef = useRef(null);
@@ -31,39 +29,32 @@ function useCountUp(target = 0, duration = 1500, start = 0, inView = true) {
   useEffect(() => {
     if (!inView) return;
     let rafId;
-
     const step = (ts) => {
       if (startRef.current == null) startRef.current = ts;
       const p = Math.min(1, (ts - startRef.current) / duration);
-      const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+      const eased = 1 - Math.pow(1 - p, 3);
       setVal(Math.round(start + (target - start) * eased));
       if (p < 1) rafId = requestAnimationFrame(step);
     };
-
     rafId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(rafId);
   }, [target, duration, start, inView]);
 
   return val;
 }
-
 function Stat({ label, value, suffix = '' }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
-
   useEffect(() => {
     const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.35 });
     if (ref.current) io.observe(ref.current);
     return () => io.disconnect();
   }, []);
-
   const n = useCountUp(value, 1400, 0, visible);
-
   return (
     <div ref={ref} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center">
       <div className="text-4xl md:text-5xl font-extrabold tracking-tight text-indigo-300">
-        {n.toLocaleString('de-DE')}
-        {suffix}
+        {n.toLocaleString('de-DE')}{suffix}
       </div>
       <div className="mt-2 text-neutral-300">{label}</div>
     </div>
@@ -81,48 +72,41 @@ export default function Home() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Services als Module (keine Pakete) – nur Nutzen, kein “Buy Now”
   const modules = [
     {
       icon: <FileText size={22} className="text-violet-300" />,
       title: 'Digitale Praxisportale',
-      desc:
-        'Moderne, barrierearme, DSGVO‑konforme Websites mit Patientenportal, Formular‑Uploads & Videosprechstunden.',
+      desc: 'Moderne, barrierefreie, DSGVO‑konforme Websites mit Patientenportal, Formular‑Uploads & Videosprechstunden.',
       href: '/services/portal',
     },
     {
       icon: <CalendarDays size={22} className="text-violet-300" />,
       title: 'Digitale Terminvereinbarung',
-      desc:
-        'Automatisierte Buchung, Erinnerungs‑Workflows, Auslastungsanalysen & Anbindung an Praxis‑Systeme.',
+      desc: 'Automatisierte Buchung, Erinnerungs‑Workflows, Auslastungsanalysen & Anbindung an Praxis‑Systeme.',
       href: '/services/termine',
     },
     {
       icon: <Brain size={22} className="text-violet-300" />,
       title: 'KI‑gestützte Optimierung',
-      desc:
-        'Prognosen zu Auslastung & Patientenströmen, weniger No‑Shows, effizientere Personalplanung.',
+      desc: 'Prognosen zu Auslastung & Patientenströmen, weniger No‑Shows, effizientere Personalplanung.',
       href: '/services/ki',
     },
     {
       icon: <LinkIcon size={22} className="text-violet-300" />,
       title: 'TI‑Integration',
-      desc:
-        'Nahtlose Anbindung an die Telematikinfrastruktur (eAU, eRezept, KIM‑Mail, ePA) mit klarer Roadmap.',
+      desc: 'Nahtlose Anbindung an die Telematikinfrastruktur (eAU, eRezept, KIM‑Mail, ePA) mit klarer Roadmap.',
       href: '/services/ti',
     },
     {
       icon: <BarChart3 size={22} className="text-violet-300" />,
       title: 'Analytics & Reporting',
-      desc:
-        'Dashboards zur Echtzeit‑Analyse: Terminauslastung, Patientenfeedback & Performance‑KPIs.',
+      desc: 'Dashboards zur Echtzeit‑Analyse: Terminauslastung, Patientenfeedback & Performance‑KPIs.',
       href: '/services/analytics',
     },
     {
       icon: <Settings2 size={22} className="text-violet-300" />,
       title: 'Managed Digital Service',
-      desc:
-        'Laufende Betreuung: Updates, Sicherheit, Monitoring & Schulungen für das gesamte Praxisteam.',
+      desc: 'Laufende Betreuung: Updates, Sicherheit, Monitoring & Schulungen für das gesamte Praxisteam.',
       href: '/services/managed',
     },
   ];
@@ -133,7 +117,7 @@ export default function Home() {
 
       {/* HERO */}
       <section className="relative overflow-hidden">
-        {/* kräftiger diagonal-Gradient + zarte Glows */}
+        {/* Hintergrund */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_600px_at_-10%_-10%,rgba(129,51,241,.35),transparent_60%),radial-gradient(900px_600px_at_120%_0%,rgba(56,189,248,.20),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#0E0E15_60%,#0B0B0F_100%)]" />
         <div className="pointer-events-none absolute -top-24 -left-24 h-[28rem] w-[48rem] rounded-full bg-violet-600/20 blur-[120px]" />
         <div className="pointer-events-none absolute top-1/3 -right-24 h-[26rem] w-[44rem] rounded-full bg-blue-500/20 blur-[120px]" />
@@ -146,7 +130,7 @@ export default function Home() {
             Die Zukunft <span className="text-indigo-300">Ihrer Praxis</span> beginnt digital.
           </h1>
           <p className="mt-6 text-lg md:text-xl text-neutral-300">
-            Für Haus‑ & Fachärzte, Zahnärzte und Gemeinschaftspraxen: Praxisportale, Termin‑Automatisierung,
+            Für Haus‑ & Fachärzte, Zahnärzte und Gemeinschaftspraxen: Portale, Termin‑Automatisierung,
             KI‑Optimierung, TI‑Anbindung & Analytics – als modulare, skalierbare Systeme.
           </p>
 
@@ -198,7 +182,7 @@ export default function Home() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           <Stat label="aktive Praxis‑Kunden" value={32} />
           <Stat label="Ø No‑Show‑Reduktion" value={24} suffix="%" />
-          <Stat label="Zeitersparnis im Team" value={7} suffix=" h/Woche" />
+          <Stat label="Zeitersparnis im Team" value={7} suffix="h/Woche" />
           <Stat label="Zufriedenheit" value={97} suffix="%" />
         </div>
       </section>
@@ -206,11 +190,8 @@ export default function Home() {
       {/* MODULE als Scroll-Path (Top→Bottom) */}
       <section className="px-5 md:px-16 py-12 md:py-16">
         <h2 className="text-2xl md:text-3xl font-semibold mb-8">Kern‑Services & Nutzen</h2>
-
         <div className="relative">
-          {/* Leitlinie */}
           <div className="absolute left-4 md:left-1/2 -translate-x-0 md:-translate-x-1/2 top-0 bottom-0 w-[2px] bg-white/10" />
-
           <div className="space-y-8">
             {modules.map(({ icon, title, desc, href }, i) => (
               <div
@@ -219,26 +200,18 @@ export default function Home() {
                 data-aos-delay={i * 80}
                 className="relative flex flex-col md:flex-row items-start gap-4 md:gap-8"
               >
-                {/* Marker */}
                 <div className="absolute left-4 md:left-1/2 -translate-x-1 md:-translate-x-1/2 -top-1.5 w-4 h-4 rounded-full bg-violet-500 shadow-[0_0_0_6px_rgba(129,51,241,0.25)]" />
-
-                {/* Card */}
                 <div
                   className={`w-full md:w-[48%] rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur
                   ${i % 2 === 0 ? 'md:ml-auto' : 'md:mr-auto'}`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                      {icon}
-                    </div>
+                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">{icon}</div>
                     <h3 className="text-lg md:text-xl font-semibold">{title}</h3>
                   </div>
                   <p className="mt-3 text-neutral-300">{desc}</p>
                   <div className="mt-4">
-                    <Link
-                      href={href}
-                      className="inline-flex items-center gap-2 text-indigo-300 hover:text-indigo-200"
-                    >
+                    <Link href={href} className="inline-flex items-center gap-2 text-indigo-300 hover:text-indigo-200">
                       Details ansehen <ArrowRight size={16} />
                     </Link>
                   </div>
@@ -278,7 +251,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TESTIMONIALS (text-only, anonymisiert – ohne Uploads) */}
+      {/* TESTIMONIALS (anonymisiert, text-only) */}
       <section className="px-5 md:px-16 pb-8 md:pb-14">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-6 md:p-10">
           <h2 className="text-2xl md:text-3xl font-semibold mb-8">Erfahrungen aus der Praxis</h2>
@@ -286,7 +259,7 @@ export default function Home() {
             {[
               {
                 quote:
-                  'Termin‑Automatisierung und Erinnerungen senkten unsere No‑Shows deutlich. Das Team hat jetzt messbar mehr Zeit.',
+                  'Termin‑Automatisierung + Erinnerungen senkten unsere No‑Shows deutlich. Das Team hat jetzt messbar mehr Zeit.',
                 name: 'Hausarztpraxis (Bayern)',
               },
               {
@@ -315,12 +288,10 @@ export default function Home() {
             ))}
           </div>
 
-          {/* DSGVO/Transparenz */}
           <div className="mt-6 flex items-start gap-2 text-sm text-[#AEB5C8]">
             <CheckCircle2 className="shrink-0 text-emerald-400" size={18} />
             <p>
-              Zitate anonymisiert und sinngemäß zusammengefasst. Keine Bild‑Uploads, kein Tracking‑Overkill –
-              nur saubere Ergebnisse & klare Prozesse.
+              Zitate anonymisiert und sinngemäß zusammengefasst. Keine Bild‑Uploads – nur saubere Ergebnisse & klare Prozesse.
             </p>
           </div>
         </div>
@@ -329,12 +300,9 @@ export default function Home() {
       {/* CTA */}
       <section className="px-5 md:px-16 py-16 md:py-20 text-center">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-10">
-          <h2 className="text-3xl md:text-4xl font-bold">
-            Bereit, Ihre Praxis digital zu stärken?
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-bold">Bereit, Ihre Praxis digital zu stärken?</h2>
           <p className="mt-4 text-neutral-300 max-w-2xl mx-auto">
-            Kurzer Call – klare nächste Schritte, modulare Planung, optional förderfähig. Wir zeigen Ihnen
-            pragmatisch, was wirklich wirkt.
+            Kurzer Call – klare nächsten Schritte, modulare Planung, optional förderfähig. Wir zeigen pragmatisch, was wirklich wirkt.
           </p>
           <div className="mt-6 flex justify-center gap-4">
             <Link
