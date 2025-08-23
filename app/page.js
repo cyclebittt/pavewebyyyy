@@ -9,11 +9,15 @@ import 'aos/dist/aos.css';
 import {
   ArrowRight,
   Sparkles,
-  Target,
-  LayoutTemplate,
-  Palette,
-  Rocket,
-  MessageSquare,
+  CalendarDays,
+  ShieldCheck,
+  Activity,
+  Brain,
+  Settings2,
+  Link as LinkIcon,
+  BarChart3,
+  FileText,
+  CheckCircle2,
   Quote,
 } from 'lucide-react';
 
@@ -43,15 +47,12 @@ function useCountUp(target = 0, duration = 1500, start = 0, inView = true) {
   return val;
 }
 
-function Stat({ label, value }) {
+function Stat({ label, value, suffix = '' }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const io = new IntersectionObserver(
-      ([e]) => setVisible(e.isIntersecting),
-      { threshold: 0.35 }
-    );
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.35 });
     if (ref.current) io.observe(ref.current);
     return () => io.disconnect();
   }, []);
@@ -62,55 +63,9 @@ function Stat({ label, value }) {
     <div ref={ref} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center">
       <div className="text-4xl md:text-5xl font-extrabold tracking-tight text-indigo-300">
         {n.toLocaleString('de-DE')}
+        {suffix}
       </div>
       <div className="mt-2 text-neutral-300">{label}</div>
-    </div>
-  );
-}
-
-/* ---------------------------------
-   Service Node (für Service-Pfad)
----------------------------------- */
-function ServiceNode({ icon, title, desc, cta, href, index }) {
-  return (
-    <div className="relative grid grid-cols-[28px,1fr] gap-4 md:gap-6">
-      {/* Node + Tail */}
-      <div className="flex flex-col items-center">
-        <span className="relative z-10 grid place-items-center w-7 h-7 rounded-full bg-white/10 ring-1 ring-white/20">
-          <span className="absolute inset-0 rounded-full bg-gradient-to-br from-violet-400/60 to-sky-300/60 blur-[6px]" />
-          <span className="relative text-white">{icon}</span>
-        </span>
-        {/* Linie nach unten */}
-        <span className="flex-1 w-[2px] bg-gradient-to-b from-violet-400/50 via-white/10 to-transparent mt-2" />
-      </div>
-
-      {/* Content */}
-      <div
-        className="group rounded-2xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.06] transition-colors p-5 md:p-6"
-        data-aos="fade-up"
-        data-aos-delay={index * 120}
-      >
-        <div className="flex items-center justify-between gap-4">
-          <h3 className="text-xl md:text-2xl font-semibold">{title}</h3>
-          {cta && href && (
-            <Link
-              href={href}
-              className="hidden md:inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-sm hover:border-white/30"
-            >
-              {cta} <ArrowRight size={16} />
-            </Link>
-          )}
-        </div>
-        <p className="mt-2 text-neutral-300">{desc}</p>
-        {cta && href && (
-          <Link
-            href={href}
-            className="mt-3 inline-flex md:hidden items-center gap-2 text-indigo-300"
-          >
-            {cta} <ArrowRight size={16} />
-          </Link>
-        )}
-      </div>
     </div>
   );
 }
@@ -126,25 +81,76 @@ export default function Home() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Services als Module (keine Pakete) – nur Nutzen, kein “Buy Now”
+  const modules = [
+    {
+      icon: <FileText size={22} className="text-violet-300" />,
+      title: 'Digitale Praxisportale',
+      desc:
+        'Moderne, barrierefreie, DSGVO‑konforme Websites mit Patientenportal, Formular‑Uploads & Videosprechstunden.',
+      href: '/services/webdesign',
+    },
+    {
+      icon: <CalendarDays size={22} className="text-violet-300" />,
+      title: 'Digitale Terminvereinbarung',
+      desc:
+        'Automatisierte Buchung, Erinnerungs‑Workflows, Auslastungsanalysen & Anbindung an Praxis‑Systeme.',
+      href: '/services/lead',
+    },
+    {
+      icon: <Brain size={22} className="text-violet-300" />,
+      title: 'KI‑gestützte Optimierung',
+      desc:
+        'Prognosen zu Auslastung & Patientenströmen, weniger No‑Shows, effizientere Personalplanung.',
+      href: '/services/content',
+    },
+    {
+      icon: <LinkIcon size={22} className="text-violet-300" />,
+      title: 'TI‑Integration',
+      desc:
+        'Nahtlose Anbindung an Telematikinfrastruktur (eAU, eRezept, KIM‑Mail, ePA) mit klarer Roadmap.',
+      href: '/services/branding',
+    },
+    {
+      icon: <BarChart3 size={22} className="text-violet-300" />,
+      title: 'Analytics & Reporting',
+      desc:
+        'Dashboards zur Echtzeit‑Analyse: Terminauslastung, Patientenfeedback & Performance‑KPIs.',
+      href: '/services/lead',
+    },
+    {
+      icon: <Settings2 size={22} className="text-violet-300" />,
+      title: 'Managed Digital Service',
+      desc:
+        'Laufende Betreuung: Updates, Sicherheit, Monitoring & Schulungen für das gesamte Praxisteam.',
+      href: '/services/branding',
+    },
+  ];
+
   return (
     <div className="font-proxima bg-[#0B0B0F] text-white">
       <Navbar />
 
       {/* HERO */}
       <section className="relative overflow-hidden">
+        {/* kräftiger diagonal-Gradient + zarte Glows */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_600px_at_-10%_-10%,rgba(129,51,241,.35),transparent_60%),radial-gradient(900px_600px_at_120%_0%,rgba(56,189,248,.20),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#0E0E15_60%,#0B0B0F_100%)]" />
-        <div className="relative px-5 md:px-16 pt-20 md:pt-28 pb-24 md:pb-32 text-center max-w-4xl mx-auto">
+        <div className="pointer-events-none absolute -top-24 -left-24 h-[28rem] w-[48rem] rounded-full bg-violet-600/20 blur-[120px]" />
+        <div className="pointer-events-none absolute top-1/3 -right-24 h-[26rem] w-[44rem] rounded-full bg-blue-500/20 blur-[120px]" />
+
+        <div className="relative px-5 md:px-16 pt-20 md:pt-28 pb-20 md:pb-28 text-center max-w-4xl mx-auto">
           <span className="inline-flex items-center gap-2 text-sm text-indigo-300/80 bg-white/5 ring-1 ring-white/10 px-3 py-1 rounded-full">
-            <Sparkles size={16} /> Neukunden durch digitale Systeme
+            <Sparkles size={16} /> Spezialagentur für digitale Praxis‑Lösungen
           </span>
           <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight">
-            Wir generieren <span className="text-indigo-300">Neukunden</span> –
-            maßgeschneidert mit Branding, Content, Web & Funnels.
+            Wir gewinnen <span className="text-indigo-300">Neupatient:innen</span> –
+            mit förderfähigen, digitalen Lösungen.
           </h1>
           <p className="mt-6 text-lg md:text-xl text-neutral-300">
-            Keine Paket-Schubladen. Wir bauen dir den Mix, der wirklich wirkt:
-            Sichtbarkeit → Website → Funnel → CRM. Messbar, sauber, skalierbar.
+            Für Haus‑ & Fachärzte, Zahnärzte und Gemeinschaftspraxen: Portale, Termin‑Automatisierung,
+            KI‑Optimierung, TI‑Anbindung & Analytics – als modulare, skalierbare Systeme.
           </p>
+
           <div className="mt-8 flex justify-center gap-4">
             <Link
               href="/request"
@@ -156,134 +162,176 @@ export default function Home() {
               href="/contact"
               className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold"
             >
-              Kontakt aufnehmen
+              Erstes Sparring
             </Link>
+          </div>
+
+          {/* Förder-Hinweis */}
+          <div className="mt-6 flex items-center justify-center gap-2 text-sm text-indigo-200/90">
+            <ShieldCheck size={16} className="text-emerald-400" />
+            Bis zu <strong className="mx-1">90 % förderfähig</strong> über BayDiGuP (je nach Projekt).
           </div>
         </div>
       </section>
 
       {/* TRUST BAR */}
-      <section className="px-5 md:px-16 -mt-8 mb-6">
+      <section className="px-5 md:px-16 -mt-6 mb-8">
         <div className="rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm p-4 md:p-5">
           <div className="flex flex-wrap items-center justify-center gap-3 md:gap-5">
-            {['KMU • DACH', 'Startups', 'Handwerk', 'Gastro', 'Dienstleister'].map((t, i) => (
-              <span
-                key={t}
-                data-aos="fade-up"
+            {['DSGVO‑konform', 'Barrierearm', 'TI‑ready', 'Analytics‑getrieben', 'BayDiGuP‑förderfähig'].map(
+              (t, i) => (
+                <span
+                  key={t}
+                  data-aos="fade-up"
+                  data-aos-delay={i * 80}
+                  className="text-sm md:text-base text-neutral-200 px-3 py-1.5 rounded-full bg-white/5 ring-1 ring-white/10"
+                >
+                  {t}
+                </span>
+              )
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* KPIs */}
+      <section className="px-5 md:px-16 py-8 md:py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <Stat label="aktive Praxis‑Kunden" value={32} />
+          <Stat label="Ø No‑Show‑Reduktion" value={24} suffix="%" />
+          <Stat label="Zeitersparnis im Team" value={7} suffix="h/Woche" />
+          <Stat label="Zufriedenheit" value={97} suffix="%" />
+        </div>
+      </section>
+
+      {/* ALT vs. NEU */}
+      <section className="px-5 md:px-16 py-10 md:py-14">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Altes Paveo */}
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+            <h3 className="text-xl font-semibold">Altes Paveo – breit, aber unscharf</h3>
+            <ul className="mt-4 space-y-2 text-neutral-300 list-disc pl-5">
+              <li>Kreativstudio für “alle” – keine Nische, wenig Vertrauen.</li>
+              <li>Schwache Abschlussquote (Budget/Verständnis fehlte).</li>
+              <li>Austauschbares Angebot, kein Innovationsfaktor.</li>
+              <li>Keine Förderrelevanz – Digitalbonus kaum erreichbar.</li>
+            </ul>
+            <p className="mt-4 text-neutral-400">
+              Ergebnis: schöne Website, aber wenig echte Kundenprojekte & Outreach ins Leere.
+            </p>
+          </div>
+
+          {/* Neues Paveo */}
+          <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.05] to-white/[0.08] p-6">
+            <h3 className="text-xl font-semibold">Neues Paveo – spitz & förderfähig</h3>
+            <ul className="mt-4 space-y-2 text-neutral-200 list-disc pl-5">
+              <li>Spezialagentur für Arztpraxen (Haus‑/Fachärzte, ZÄ, MVZ).</li>
+              <li>Modulare Systeme: Portal, Termine, KI, TI, Analytics.</li>
+              <li>Bis zu 90 % Förderung über BayDiGuP (projektabhängig).</li>
+              <li>Langfristige Betreuung & wiederkehrende Umsätze.</li>
+            </ul>
+            <p className="mt-4 text-indigo-200">
+              Unser Narrativ: echte Prozessoptimierung statt “nur Design”.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* MODULE als Scroll-Path (Top→Bottom) */}
+      <section className="px-5 md:px-16 py-12 md:py-16">
+        <h2 className="text-2xl md:text-3xl font-semibold mb-8">Kern‑Services & Nutzen</h2>
+
+        <div className="relative">
+          {/* Leitlinie */}
+          <div className="absolute left-4 md:left-1/2 -translate-x-0 md:-translate-x-1/2 top-0 bottom-0 w-[2px] bg-white/10" />
+
+          <div className="space-y-8">
+            {modules.map(({ icon, title, desc, href }, i) => (
+              <div
+                key={title}
+                data-aos={fadeDir}
                 data-aos-delay={i * 80}
-                className="text-sm md:text-base text-neutral-200 px-3 py-1.5 rounded-full bg-white/5 ring-1 ring-white/10"
+                className={`relative flex flex-col md:flex-row items-start gap-4 md:gap-8`}
               >
-                {t}
-              </span>
+                {/* Marker */}
+                <div className="absolute left-4 md:left-1/2 -translate-x-1 md:-translate-x-1/2 -top-1.5 w-4 h-4 rounded-full bg-violet-500 shadow-[0_0_0_6px_rgba(129,51,241,0.25)]" />
+
+                {/* Card */}
+                <div
+                  className={`w-full md:w-[48%] rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur
+                  ${i % 2 === 0 ? 'md:ml-auto' : 'md:mr-auto'}`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                      {icon}
+                    </div>
+                    <h3 className="text-lg md:text-xl font-semibold">{title}</h3>
+                  </div>
+                  <p className="mt-3 text-neutral-300">{desc}</p>
+                  <div className="mt-4">
+                    <Link
+                      href={href}
+                      className="inline-flex items-center gap-2 text-indigo-300 hover:text-indigo-200"
+                    >
+                      Details ansehen <ArrowRight size={16} />
+                    </Link>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
-      </section>
 
-      {/* KPIs / ERGEBNISSE */}
-      <section className="px-5 md:px-16 py-10 md:py-14">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          <Stat label="umgesetzte Projekte" value={86} />
-          <Stat label="durchschn. Conversion-Lift (%)" value={27} />
-          <Stat label="erstellte Inhalte / Jahr" value={420} />
-          <Stat label="Ø Kundenzufriedenheit (%)" value={98} />
+        {/* Vorteile */}
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            {
+              icon: <ShieldCheck className="text-emerald-400" size={18} />,
+              title: 'Förderfähig',
+              desc: 'Projekte können – je nach Umfang – über BayDiGuP bis zu 90 % gefördert werden.',
+            },
+            {
+              icon: <Activity className="text-sky-300" size={18} />,
+              title: 'Hoher Business‑Impact',
+              desc: 'Weniger No‑Shows, bessere Auslastung, klare Prozesse & messbare Ergebnisse.',
+            },
+            {
+              icon: <Settings2 className="text-violet-300" size={18} />,
+              title: 'Skalierbar & modular',
+              desc: 'Start schlank, erweitere schrittweise – ohne Brüche im System.',
+            },
+          ].map((b, i) => (
+            <div key={i} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm text-indigo-200">
+                {b.icon}
+                <span>{b.title}</span>
+              </div>
+              <p className="mt-3 text-neutral-300">{b.desc}</p>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* SERVICE-PFAD (kreativ, vertikale Timeline) */}
-      <section className="px-5 md:px-16 py-10 md:py-16">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-6">So entsteht Neukunden-Wachstum</h2>
-        <p className="text-neutral-300 mb-10 max-w-3xl">
-          Wir kombinieren Module so, wie es zu deiner Situation passt. Kein Overkill, kein Leerlauf –
-          nur das, was Wirkung bringt.
-        </p>
-
-        <div className="relative">
-          {/* sanfter, diagonaler Glow hinter der Timeline */}
-          <div className="pointer-events-none absolute -top-16 -left-24 h-72 w-[36rem] rounded-full bg-violet-600/20 blur-[120px]" />
-          <div className="pointer-events-none absolute top-1/3 -right-16 h-72 w-[36rem] rounded-full bg-blue-500/20 blur-[120px]" />
-
-          <div className="relative grid gap-10">
-            <ServiceNode
-              index={0}
-              icon={<Target size={16} />}
-              title="Positionierung & Brand‑Fundament"
-              desc="Kernbotschaft, Nutzen, Tonalität & visuelle Basis. Damit alles danach greift und konvertiert."
-              cta="Branding ansehen"
-              href="/services/branding"
-            />
-            <ServiceNode
-              index={1}
-              icon={<MessageSquare size={16} />}
-              title="Content, der zieht"
-              desc="Reels, Posts, Ads & Landing‑Snippets – zugeschnitten auf deine Zielgruppe, ready‑to‑post."
-              cta="Content ansehen"
-              href="/services/content"
-            />
-            <ServiceNode
-              index={2}
-              icon={<LayoutTemplate size={16} />}
-              title="Webdesign & Performance"
-              desc="Schnelle, klare Seiten mit Conversion‑Struktur: Vertrauen, Relevanz, klare CTAs."
-              cta="Webdesign ansehen"
-              href="/services/webdesign"
-            />
-            <ServiceNode
-              index={3}
-              icon={<Rocket size={16} />}
-              title="Funnel & CRM"
-              desc="Leads abholen, qualifizieren, nachfassen. Formulare, Automationen, CRM‑Flows – sauber integriert."
-              cta="Lead & Systeme"
-              href="/services/lead"
-            />
-            <ServiceNode
-              index={4}
-              icon={<Palette size={16} />}
-              title="Iterieren & Skalieren"
-              desc="Quick‑Wins messen, Hypothesen testen, Creatives & Landing‑Blöcke weiter schärfen."
-            />
-          </div>
-        </div>
-
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link
-            href="/request"
-            className="px-5 py-2.5 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2"
-          >
-            Projekt starten <ArrowRight size={18} />
-          </Link>
-          <Link
-            href="/contact"
-            className="px-5 py-2.5 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors"
-          >
-            Erstes Sparring
-          </Link>
-        </div>
-      </section>
-
-      {/* TESTIMONIALS */}
+      {/* TESTIMONIALS (text-only, anonymisiert – ohne Uploads) */}
       <section className="px-5 md:px-16 pb-8 md:pb-14">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-6 md:p-10">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-8">Was Kund:innen sagen</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold mb-8">Erfahrungen aus der Praxis</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
                 quote:
-                  'paveo hat unser Branding neu gedacht – endlich wirkt alles wie aus einem Guss und konvertiert spürbar besser.',
-                name: 'M. Richter',
-                role: 'Inhaber, Regionales Café',
+                  'Termin‑Automatisierung + Erinnerungen senkten unsere No‑Shows deutlich. Das Team hat jetzt messbar mehr Zeit.',
+                name: 'Hausarztpraxis (Bayern)',
               },
               {
                 quote:
-                  'Die Social-Strategie spart uns Zeit und bringt konstant Anfragen. Super pragmatisch und messbar.',
-                name: 'S. Wagner',
-                role: 'CEO, Handwerksbetrieb',
+                  'Das neue Portal mit Formular‑Uploads beschleunigt Abläufe. Patient:innen finden schneller, was sie brauchen.',
+                name: 'Facharztzentrum (NRW)',
               },
               {
                 quote:
-                  'Website-Relaunch + Angebote strukturiert = kürzere Sales-Zyklen. Genau das, was wir gebraucht haben.',
-                name: 'E. Krauß',
-                role: 'Gründerin, Beratungsstudio',
+                  'Wir sind förderfähig vorgegangen – der Prozess war klar, und das Ergebnis nachhaltig.',
+                name: 'Zahnarztpraxis (Süddeutschland)',
               },
             ].map((t, i) => (
               <figure
@@ -295,10 +343,19 @@ export default function Home() {
                 <Quote className="absolute -top-4 -left-4 w-8 h-8 text-white/10" />
                 <blockquote className="text-neutral-200">{t.quote}</blockquote>
                 <figcaption className="mt-4 text-sm text-neutral-400">
-                  <span className="text-white font-medium">{t.name}</span> · {t.role}
+                  <span className="text-white font-medium">{t.name}</span>
                 </figcaption>
               </figure>
             ))}
+          </div>
+
+          {/* DSGVO/Transparenz */}
+          <div className="mt-6 flex items-start gap-2 text-sm text-[#AEB5C8]">
+            <CheckCircle2 className="shrink-0 text-emerald-400" size={18} />
+            <p>
+              Zitate anonymisiert und sinngemäß zusammengefasst. Keine Bild‑Uploads, kein Tracking‑Overkill –
+              nur saubere Ergebnisse & klare Prozesse.
+            </p>
           </div>
         </div>
       </section>
@@ -307,10 +364,11 @@ export default function Home() {
       <section className="px-5 md:px-16 py-16 md:py-20 text-center">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-10">
           <h2 className="text-3xl md:text-4xl font-bold">
-            Bereit, planbar Neukunden zu gewinnen?
+            Bereit, deine Praxis digital zu stärken?
           </h2>
           <p className="mt-4 text-neutral-300 max-w-2xl mx-auto">
-            Lass uns kurz sprechen – wir skizzieren dir einen modularen, schlanken Weg zur Wirkung.
+            Kurzer Call – klare nächsten Schritte, modulare Planung, optional förderfähig. Wir zeigen dir
+            pragmatisch, was wirklich wirkt.
           </p>
           <div className="mt-6 flex justify-center gap-4">
             <Link
@@ -320,10 +378,10 @@ export default function Home() {
               Termin vereinbaren <ArrowRight size={18} />
             </Link>
             <Link
-              href="/services/branding"
+              href="/contact"
               className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold"
             >
-              Leistungen ansehen
+              Kontakt aufnehmen
             </Link>
           </div>
         </div>
