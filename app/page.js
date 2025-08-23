@@ -87,43 +87,43 @@ export default function Home() {
       icon: <FileText size={22} className="text-violet-300" />,
       title: 'Digitale Praxisportale',
       desc:
-        'Moderne, barrierefreie, DSGVO‑konforme Websites mit Patientenportal, Formular‑Uploads & Videosprechstunden.',
-      href: '/services/webdesign',
+        'Moderne, barrierearme, DSGVO‑konforme Websites mit Patientenportal, Formular‑Uploads & Videosprechstunden.',
+      href: '/services/portal',
     },
     {
       icon: <CalendarDays size={22} className="text-violet-300" />,
       title: 'Digitale Terminvereinbarung',
       desc:
         'Automatisierte Buchung, Erinnerungs‑Workflows, Auslastungsanalysen & Anbindung an Praxis‑Systeme.',
-      href: '/services/lead',
+      href: '/services/termine',
     },
     {
       icon: <Brain size={22} className="text-violet-300" />,
       title: 'KI‑gestützte Optimierung',
       desc:
         'Prognosen zu Auslastung & Patientenströmen, weniger No‑Shows, effizientere Personalplanung.',
-      href: '/services/content',
+      href: '/services/ki',
     },
     {
       icon: <LinkIcon size={22} className="text-violet-300" />,
       title: 'TI‑Integration',
       desc:
-        'Nahtlose Anbindung an Telematikinfrastruktur (eAU, eRezept, KIM‑Mail, ePA) mit klarer Roadmap.',
-      href: '/services/branding',
+        'Nahtlose Anbindung an die Telematikinfrastruktur (eAU, eRezept, KIM‑Mail, ePA) mit klarer Roadmap.',
+      href: '/services/ti',
     },
     {
       icon: <BarChart3 size={22} className="text-violet-300" />,
       title: 'Analytics & Reporting',
       desc:
         'Dashboards zur Echtzeit‑Analyse: Terminauslastung, Patientenfeedback & Performance‑KPIs.',
-      href: '/services/lead',
+      href: '/services/analytics',
     },
     {
       icon: <Settings2 size={22} className="text-violet-300" />,
       title: 'Managed Digital Service',
       desc:
         'Laufende Betreuung: Updates, Sicherheit, Monitoring & Schulungen für das gesamte Praxisteam.',
-      href: '/services/branding',
+      href: '/services/managed',
     },
   ];
 
@@ -143,11 +143,10 @@ export default function Home() {
             <Sparkles size={16} /> Spezialagentur für digitale Praxis‑Lösungen
           </span>
           <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight">
-            Wir gewinnen <span className="text-indigo-300">Neupatient:innen</span> –
-            mit förderfähigen, digitalen Lösungen.
+            Die Zukunft <span className="text-indigo-300">Ihrer Praxis</span> beginnt digital.
           </h1>
           <p className="mt-6 text-lg md:text-xl text-neutral-300">
-            Für Haus‑ & Fachärzte, Zahnärzte und Gemeinschaftspraxen: Portale, Termin‑Automatisierung,
+            Für Haus‑ & Fachärzte, Zahnärzte und Gemeinschaftspraxen: Praxisportale, Termin‑Automatisierung,
             KI‑Optimierung, TI‑Anbindung & Analytics – als modulare, skalierbare Systeme.
           </p>
 
@@ -199,43 +198,10 @@ export default function Home() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           <Stat label="aktive Praxis‑Kunden" value={32} />
           <Stat label="Ø No‑Show‑Reduktion" value={24} suffix="%" />
-          <Stat label="Zeitersparnis im Team" value={7} suffix="h/Woche" />
+          <Stat label="Zeitersparnis im Team" value={7} suffix=" h/Woche" />
           <Stat label="Zufriedenheit" value={97} suffix="%" />
         </div>
       </section>
-
-      /*{/* ALT vs. NEU */}
-      /*<section className="px-5 md:px-16 py-10 md:py-14">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Altes Paveo */}
-        /*  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-            <h3 className="text-xl font-semibold">Altes Paveo – breit, aber unscharf</h3>
-            <ul className="mt-4 space-y-2 text-neutral-300 list-disc pl-5">
-              <li>Kreativstudio für “alle” – keine Nische, wenig Vertrauen.</li>
-              <li>Schwache Abschlussquote (Budget/Verständnis fehlte).</li>
-              <li>Austauschbares Angebot, kein Innovationsfaktor.</li>
-              <li>Keine Förderrelevanz – Digitalbonus kaum erreichbar.</li>
-            </ul>
-            <p className="mt-4 text-neutral-400">
-              Ergebnis: schöne Website, aber wenig echte Kundenprojekte & Outreach ins Leere.
-            </p>
-          </div>
-
-         {/* Neues Paveo */}
-          /*<div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.05] to-white/[0.08] p-6">
-            <h3 className="text-xl font-semibold">Neues Paveo – spitz & förderfähig</h3>
-            <ul className="mt-4 space-y-2 text-neutral-200 list-disc pl-5">
-              <li>Spezialagentur für Arztpraxen (Haus‑/Fachärzte, ZÄ, MVZ).</li>
-              <li>Modulare Systeme: Portal, Termine, KI, TI, Analytics.</li>
-              <li>Bis zu 90 % Förderung über BayDiGuP (projektabhängig).</li>
-              <li>Langfristige Betreuung & wiederkehrende Umsätze.</li>
-            </ul>
-            <p className="mt-4 text-indigo-200">
-              Unser Narrativ: echte Prozessoptimierung statt “nur Design”.
-            </p>
-          </div>
-        </div>
-      </section>*/ 
 
       {/* MODULE als Scroll-Path (Top→Bottom) */}
       <section className="px-5 md:px-16 py-12 md:py-16">
@@ -251,7 +217,7 @@ export default function Home() {
                 key={title}
                 data-aos={fadeDir}
                 data-aos-delay={i * 80}
-                className={`relative flex flex-col md:flex-row items-start gap-4 md:gap-8`}
+                className="relative flex flex-col md:flex-row items-start gap-4 md:gap-8"
               >
                 {/* Marker */}
                 <div className="absolute left-4 md:left-1/2 -translate-x-1 md:-translate-x-1/2 -top-1.5 w-4 h-4 rounded-full bg-violet-500 shadow-[0_0_0_6px_rgba(129,51,241,0.25)]" />
@@ -298,7 +264,7 @@ export default function Home() {
             {
               icon: <Settings2 className="text-violet-300" size={18} />,
               title: 'Skalierbar & modular',
-              desc: 'Start schlank, erweitere schrittweise – ohne Brüche im System.',
+              desc: 'Starten Sie schlank und erweitern Sie schrittweise – ohne Brüche im System.',
             },
           ].map((b, i) => (
             <div key={i} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
@@ -320,7 +286,7 @@ export default function Home() {
             {[
               {
                 quote:
-                  'Termin‑Automatisierung + Erinnerungen senkten unsere No‑Shows deutlich. Das Team hat jetzt messbar mehr Zeit.',
+                  'Termin‑Automatisierung und Erinnerungen senkten unsere No‑Shows deutlich. Das Team hat jetzt messbar mehr Zeit.',
                 name: 'Hausarztpraxis (Bayern)',
               },
               {
@@ -364,10 +330,10 @@ export default function Home() {
       <section className="px-5 md:px-16 py-16 md:py-20 text-center">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-10">
           <h2 className="text-3xl md:text-4xl font-bold">
-            Bereit, deine Praxis digital zu stärken?
+            Bereit, Ihre Praxis digital zu stärken?
           </h2>
           <p className="mt-4 text-neutral-300 max-w-2xl mx-auto">
-            Kurzer Call – klare nächsten Schritte, modulare Planung, optional förderfähig. Wir zeigen dir
+            Kurzer Call – klare nächste Schritte, modulare Planung, optional förderfähig. Wir zeigen Ihnen
             pragmatisch, was wirklich wirkt.
           </p>
           <div className="mt-6 flex justify-center gap-4">
