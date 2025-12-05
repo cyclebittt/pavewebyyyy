@@ -37,14 +37,14 @@ export default function AboutPage() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_600px_at_-10%_-10%,rgba(129,51,241,.35),transparent_60%),radial-gradient(900px_600px_at_120%_0%,rgba(56,189,248,.20),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#0E0E15_60%,#0B0B0F_100%)]" />
         <div className="relative px-5 md:px-16 pt-20 md:pt-28 pb-16 md:pb-24 text-center max-w-4xl mx-auto">
           <span className="inline-flex items-center gap-2 text-sm text-indigo-300/80 bg-white/5 ring-1 ring-white/10 px-3 py-1 rounded-full">
-            <Sparkles size={16} /> Über paveo
+            <Sparkles size={16} /> Über mich & paveo
           </span>
           <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight">
-            Die Zukunft Ihrer Praxis beginnt digital.
+            Digitale Projekte – klein gedacht, sorgfältig umgesetzt.
           </h1>
           <p className="mt-6 text-lg md:text-xl text-neutral-300">
-            Wir verbinden Design, Automatisierung, KI und TI‑Anbindung zu
-            förderfähigen, skalierbaren Praxis‑Systemen. Messbar, sicher, DSGVO‑konform.
+            Statt Vollzeit-Agentur begleite ich ausgewählte Projekte: Spendenaktionen, Events und andere Vorhaben, die
+            online klar, verständlich und nutzbar werden sollen – mit Fokus auf Struktur, Story und stabiler Technik.
           </p>
         </div>
       </section>
@@ -57,17 +57,17 @@ export default function AboutPage() {
               {
                 icon: <Target className="text-indigo-300" size={18} />,
                 title: 'Fokus',
-                desc: 'Spezialisiert auf Arzt‑, Zahn‑ und Gemeinschaftspraxen. Keine Experimente, sondern Best Practices.',
+                desc: 'Digitale Projekte mit einem klaren Ziel: informieren, aktivieren oder unterstützen – statt „Website um der Website willen“.'
               },
               {
                 icon: <ShieldCheck className="text-emerald-400" size={18} />,
-                title: 'Sicherheit',
-                desc: 'DSGVO‑konforme Prozesse, klare Rollen, sichere Datenflüsse – transparent dokumentiert.',
+                title: 'Verlässlichkeit',
+                desc: 'Klare Absprachen, transparente Timings und realistische Zusagen – lieber ehrlich „nein“ als halbe Sachen.'
               },
               {
                 icon: <Settings2 className="text-violet-300" size={18} />,
-                title: 'Skalierbarkeit',
-                desc: 'Modularer Aufbau: Portal, Termine, KI, TI, Analytics. Starten, ausbauen, standardisieren.',
+                title: 'Schlanke Lösungen',
+                desc: 'So viel Technik wie nötig, so wenig Ballast wie möglich – damit ihr versteht, was gebaut wurde und es selbst nutzen könnt.'
               },
             ].map((b, i) => (
               <div
@@ -89,15 +89,36 @@ export default function AboutPage() {
 
       {/* VORGEHEN */}
       <section className="px-5 md:px-16 py-8 md:py-12">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-6">Vorgehen – klar & kollaborativ</h2>
+        <h2 className="text-2xl md:text-3xl font-semibold mb-6">Vorgehen – klar & überschaubar</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {[
-            { step: '01', title: 'Kickoff & Analyse', desc: 'Ziele, Team, Status Quo. Risiken, Chancen, Förderfähigkeit.' },
-            { step: '02', title: 'Roadmap & Module', desc: 'Portal, Termine, KI, TI, Analytics – sinnvoll priorisiert.' },
-            { step: '03', title: 'Umsetzung & Schulung', desc: 'Sprints, saubere Übergaben, Team‑Enablement, Sicherheit.' },
-            { step: '04', title: 'Betrieb & Optimierung', desc: 'Monitoring, Updates, Berichte – langfristig & messbar.' },
+            {
+              step: '01',
+              title: 'Kennenlernen & Kontext',
+              desc: 'Worum geht es, wer soll erreicht werden, was gibt es schon? Kurz, ehrlich und ohne Buzzwords.'
+            },
+            {
+              step: '02',
+              title: 'Struktur & Konzept',
+              desc: 'Gemeinsam klären wir Aufbau, Inhalte und Wege: Was sieht man wo, und wie wird aus Interesse eine Aktion?'
+            },
+            {
+              step: '03',
+              title: 'Umsetzung & Feinschliff',
+              desc: 'Landingpage, Formulare, Zahlungswege und begleitende Medien werden umgesetzt und mit euch abgestimmt.'
+            },
+            {
+              step: '04',
+              title: 'Übergabe & kleine Anpassungen',
+              desc: 'Kurze Einweisung, saubere Übergabe und – wenn gewünscht – spätere, punktuelle Anpassungen statt Dauerbetreuung.'
+            },
           ].map((s, i) => (
-            <div key={i} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6" data-aos="fade-up" data-aos-delay={i * 100}>
+            <div
+              key={i}
+              className="rounded-2xl border border-white/10 bg-white/[0.04] p-6"
+              data-aos="fade-up"
+              data-aos-delay={i * 100}
+            >
               <div className="text-sm text-indigo-300 font-semibold">{s.step}</div>
               <h3 className="mt-2 text-xl font-semibold">{s.title}</h3>
               <p className="mt-2 text-neutral-300">{s.desc}</p>
@@ -106,17 +127,34 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* TEAM (anonymisiert / ohne Uploads) */}
+      {/* "TEAM" → Hintergrund & Arbeitsweise */}
       <section className="px-5 md:px-16 py-8 md:py-12">
         <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 md:p-10">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-6">Team & Expertise</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold mb-6">Hintergrund & Arbeitsweise</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { icon: <Users />, title: 'Praxis‑Verständnis', desc: 'Wir sprechen Praxis‑Alltag: Abläufe, Peaks, Komplexität.' },
-              { icon: <Brain />, title: 'Tech & KI', desc: 'Automatisierung, Prognosen, Datenmodelle – pragmatisch einsetzbar.' },
-              { icon: <Rocket />, title: 'MarTech & Rollout', desc: 'Saubere Einführung, Training & Change‑Enablement.' },
+              {
+                icon: <Users />,
+                title: 'Nah an echten Abläufen',
+                desc: 'Projekte entstehen im Austausch mit Teams vor Ort – mit Blick auf reale Prozesse, Engpässe und Verantwortlichkeiten.'
+              },
+              {
+                icon: <Brain />,
+                title: 'Digital & strukturiert',
+                desc: 'Kombination aus Web, Formularen, Zahlungswegen und klarer Informationsarchitektur – damit aus „Idee“ ein nutzbares System wird.'
+              },
+              {
+                icon: <Rocket />,
+                title: 'Schrittweise wachsen',
+                desc: 'Statt „alles auf einmal“ lieber klein starten, Erfahrungen sammeln und bei Bedarf weiterentwickeln – im eigenen Tempo.'
+              },
             ].map((t, i) => (
-              <div key={i} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6" data-aos="fade-up" data-aos-delay={i * 120}>
+              <div
+                key={i}
+                className="rounded-2xl border border-white/10 bg-white/[0.03] p-6"
+                data-aos="fade-up"
+                data-aos-delay={i * 120}
+              >
                 <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-indigo-300">
                   {t.icon}
                 </div>
@@ -127,7 +165,8 @@ export default function AboutPage() {
           </div>
           <p className="mt-6 text-sm text-[#AEB5C8] flex items-start gap-2">
             <CheckCircle2 className="text-emerald-400" size={18} />
-            Kein Bild‑Upload nötig – wir arbeiten text‑ und systembasiert, mit klarer Dokumentation.
+            Ich arbeite bewusst ohne große Agenturstruktur: direkte Kommunikation, klare Dokumentation und
+            überschaubare Projekte, die in euren Alltag passen.
           </p>
         </div>
       </section>
@@ -135,15 +174,22 @@ export default function AboutPage() {
       {/* CTA */}
       <section className="px-5 md:px-16 py-14 md:py-20 text-center">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-10">
-          <h3 className="text-3xl md:text-4xl font-bold">Lassen Sie uns starten.</h3>
+          <h3 className="text-3xl md:text-4xl font-bold">Schauen wir, ob ich zu eurem Projekt passe.</h3>
           <p className="mt-4 text-neutral-300 max-w-2xl mx-auto">
-            Kurzer Call – klare nächsten Schritte, optional förderfähig. Wir richten uns nach Ihrem Team und Tempo.
+            In einem kurzen Austausch klären wir, was ihr vorhabt, ob ich helfen kann und wie ein realistischer Rahmen
+            aussehen könnte – ohne Druck und ohne Verkaufs­präsentation.
           </p>
           <div className="mt-6 flex justify-center gap-4">
-            <Link href="/request" className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2">
-              Termin vereinbaren <ArrowRight size={18} />
+            <Link
+              href="/request"
+              className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2"
+            >
+              Projekt anfragen <ArrowRight size={18} />
             </Link>
-            <Link href="/contact" className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold">
+            <Link
+              href="/contact"
+              className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold"
+            >
               Kontakt aufnehmen
             </Link>
           </div>
