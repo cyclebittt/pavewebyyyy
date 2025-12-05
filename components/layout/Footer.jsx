@@ -26,7 +26,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-sm text-neutral-400">
-              Wir machen Marken sichtbar, professionell & psychologisch wirkungsvoll.
+              Digitale Begleitung für klar umrissene Projekte: Landingpages, Formulare, Zahlungswege und begleitende Medien.
             </p>
           </div>
 
@@ -34,25 +34,37 @@ export default function Footer() {
           <div className="flex flex-col gap-3">
             <h4 className="font-semibold text-white">Navigation</h4>
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
-            <Link href="/about" className="hover:text-white transition-colors">Über uns</Link>
-            <Link href="/blogs" className="hover:text-white transition-colors">Blog</Link>
+            <Link href="/about" className="hover:text-white transition-colors">Über mich & paveo</Link>
+            <Link href="/request" className="hover:text-white transition-colors">Termin buchen</Link>
             <Link href="/contact" className="hover:text-white transition-colors">Kontakt</Link>
           </div>
 
           {/* Services */}
           <div className="flex flex-col gap-3">
-            <h4 className="font-semibold text-white">Services</h4>
-            <Link href="/services/socialmedia" className="hover:text-white transition-colors">Social Media</Link>
-            <Link href="/services/branding" className="hover:text-white transition-colors">Branding</Link>
-            <Link href="/services/webdesign" className="hover:text-white transition-colors">Webdesign</Link>
-            <Link href="/services/content" className="hover:text-white transition-colors">Content Creation</Link>
-            <Link href="/services/lead" className="hover:text-white transition-colors">Lead Generation</Link>
+            <h4 className="font-semibold text-white">Leistungen</h4>
+            <Link href="/services/landingpages" className="hover:text-white transition-colors">
+              Projekt-Landingpages
+            </Link>
+            <Link href="/services/campaigns" className="hover:text-white transition-colors">
+              Aktionen & Kampagnen
+            </Link>
+            <Link href="/services/forms" className="hover:text-white transition-colors">
+              Formulare & Zahlungswege
+            </Link>
+            <Link href="/services/media" className="hover:text-white transition-colors">
+              Begleitende Medien
+            </Link>
+            <Link href="/services/managed" className="hover:text-white transition-colors">
+              Digitales Setup & Betreuung
+            </Link>
           </div>
 
           {/* CTA */}
           <div className="flex flex-col gap-4">
-            <h4 className="font-semibold text-white">Let’s Talk</h4>
-            <p className="text-sm text-neutral-400">Starte dein Projekt mit uns.</p>
+            <h4 className="font-semibold text-white">Lust auf ein gemeinsames Projekt?</h4>
+            <p className="text-sm text-neutral-400">
+              In einem kurzen Call klären wir, ob und wie ich euer Vorhaben sinnvoll unterstützen kann.
+            </p>
             <Link
               href="/request"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-violet-600 hover:bg-violet-500 text-white font-semibold transition-colors w-fit"
@@ -64,7 +76,7 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-neutral-500">
-          <p>© {new Date().getFullYear()} Paveo. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} PAVEO. Alle Rechte vorbehalten.</p>
           <div className="flex gap-6">
             <Link href="/agb" className="hover:text-neutral-300">AGB</Link>
             <Link href="/impressum" className="hover:text-neutral-300">Impressum</Link>
