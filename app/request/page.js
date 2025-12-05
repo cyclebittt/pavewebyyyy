@@ -1,15 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import CalendlyEmbed from '@/components/contact/CalendlyEmbed';
 import { ShieldCheck, Clock, Sparkles, CheckCircle2, CalendarDays, ArrowRight } from 'lucide-react';
 
 export default function RequestPage() {
-  const [loaded, setLoaded] = useState(false);
-
   useEffect(() => {
     let cleanup = () => {};
     (async () => {
@@ -34,7 +31,7 @@ export default function RequestPage() {
         <div className="relative px-5 md:px-20 py-16 md:py-24">
           <div className="max-w-4xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs tracking-wide text-[#C9CEE0]">
-              <CalendarDays size={14} /> Kurzen Austausch buchen
+              <CalendarDays size={14} /> Kurzen Austausch anfragen
             </span>
             <h1 id="rq-hero" className="mt-5 text-4xl md:text-6xl font-bold leading-tight" data-aos="fade-up">
               Ein Call, um Ihr digitales Projekt <span className="bg-gradient-to-r from-violet-300 to-blue-300 bg-clip-text text-transparent">klar zu bekommen.</span>
@@ -58,67 +55,75 @@ export default function RequestPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <Step
             index="01"
-            title="Kontext & Ziel"
-            text="Was plant ihr, wer soll erreicht werden und was ist euch am wichtigsten? Kurz, aber konkret."
+            title="Kurz anfragen"
+            text="Schreiben Sie mir über das Kontaktformular oder per E-Mail, worum es ungefähr geht und wie ich Sie erreichen kann."
           />
           <Step
             index="02"
-            title="Idee & Struktur"
-            text="Gemeinsam skizzieren wir, wie eine mögliche Seite oder ein kleines Setup aussehen könnte."
+            title="Terminvorschläge"
+            text="Ich melde mich mit 1–2 Vorschlägen für einen kurzen Video-Call oder Telefontermin – passend zu Ihrem Alltag."
           />
           <Step
             index="03"
-            title="Realistischer Rahmen"
-            text="Wenn es passt: grober Zeitplan, Aufwandsschätzung und wie wir im Alltag gut zusammenarbeiten können."
+            title="Gemeinsamer Call"
+            text="Wir schauen gemeinsam auf Ihr Vorhaben und klären, ob und wie eine Zusammenarbeit sinnvoll wäre."
           />
         </div>
       </section>
 
-      {/* CALENDLY */}
-      <section className="px-5 md:px-20 pb-16 md:pb-24">
-        <div className="rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur p-3 md:p-6" data-aos="fade-up">
-          {!loaded && (
-            <div className="mb-4 rounded-xl bg-white/5 p-4">
-              <div className="h-5 w-40 animate-pulse rounded bg-white/10" />
-              <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="h-28 animate-pulse rounded-xl bg-white/10" />
-                <div className="h-28 animate-pulse rounded-xl bg-white/10" />
-              </div>
-              <div className="mt-3 h-12 w-full animate-pulse rounded-xl bg-white/10" />
-            </div>
-          )}
-
-          <CalendlyEmbed
-            url="https://calendly.com/leonseitz-paveconsultings/30min?hide_gdpr_banner=1&primary_color=8133f1"
-            onLoad={() => setLoaded(true)}
-          />
-        </div>
-
-        <div className="mt-6 flex flex-col md:flex-row items-start md:items-center gap-3 text-sm text-[#AEB5C8]">
-          <CheckCircle2 className="shrink-0 text-emerald-400" size={18} />
-          <p>
-            Die Angaben werden ausschließlich zur Terminabstimmung genutzt. Wenn kein passender Slot frei ist, schreiben Sie
-            gerne direkt an{' '}
-            <a className="underline hover:text-white" href="mailto:info@paveconsultings.com">
+      {/* HINWEIS ZUM ABLAUF */}
+      <section className="px-5 md:px-20 pb-16 md:pb-20">
+        <div className="max-w-4xl mx-auto rounded-3xl border border-white/10 bg-white/[0.04] p-6 md:p-8">
+          <h2 className="text-2xl md:text-3xl font-semibold mb-4">So erreichen Sie mich</h2>
+          <p className="text-sm md:text-base text-[#C9CEE0]">
+            Am einfachsten ist eine kurze Nachricht mit ein paar Stichpunkten zu Ihrem Projekt. Schreiben Sie mir über das{' '}
+            <Link href="/contact" className="underline hover:text-white">
+              Kontaktformular
+            </Link>{' '}
+            oder direkt per E-Mail an{' '}
+            <a href="mailto:info@paveconsultings.com" className="underline hover:text-white">
               info@paveconsultings.com
             </a>
-            .
+            . Ich melde mich in der Regel innerhalb eines Werktags zurück.
           </p>
+
+          <div className="mt-4 flex flex-wrap gap-3 text-sm text-[#AEB5C8]">
+            <span className="inline-flex items-center gap-2 rounded-full bg-white/5 px-3 py-1">
+              <CheckCircle2 size={16} className="text-emerald-400" />
+              Keine automatisierten Buchungstools, sondern persönliche Abstimmung.
+            </span>
+          </div>
+
+          <div className="mt-8 flex flex-wrap gap-4">
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold"
+            >
+              Kontaktformular öffnen <ArrowRight size={18} />
+            </Link>
+            <a
+              href="mailto:info@paveconsultings.com"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/20 bg-white/5 hover:border-white/40 transition-colors font-semibold text-sm"
+            >
+              E-Mail schreiben
+            </a>
+          </div>
         </div>
       </section>
 
       {/* CTA */}
       <section className="px-5 md:px-20 pb-16 text-center">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-10">
-          <h3 className="text-3xl md:text-4xl font-bold">Lieber zuerst schriftlich anfragen?</h3>
+          <h3 className="text-3xl md:text-4xl font-bold">Noch unsicher, ob Ihr Projekt „groß genug“ ist?</h3>
           <p className="mt-3 text-neutral-300">
-            Kein Problem – schreiben Sie kurz, worum es geht. Ich melde mich mit einer Rückfrage oder einer ersten Einschätzung.
+            Schreiben Sie mir einfach kurz, was Sie vorhaben. Ich sage ehrlich, ob ich dazu passe – oder empfehle eher,
+            es intern oder mit jemand anderem zu lösen.
           </p>
           <Link
             href="/contact"
             className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold"
           >
-            Kontakt aufnehmen <ArrowRight size={18} />
+            Kurz anfragen <ArrowRight size={18} />
           </Link>
         </div>
       </section>
