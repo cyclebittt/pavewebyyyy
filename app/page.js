@@ -24,12 +24,12 @@ import {
 /* CountUp (leicht, ohne Lib) */
 function useCountUp(target = 0, duration = 1500, start = 0, inView = true) {
   const [val, setVal] = useState(start);
-  const startRef = useRef<number | null>(null);
+  const startRef = useRef(null);
 
   useEffect(() => {
     if (!inView) return;
-    let rafId: number;
-    const step = (ts: number) => {
+    let rafId;
+    const step = (ts) => {
       if (startRef.current == null) startRef.current = ts;
       const p = Math.min(1, (ts - startRef.current) / duration);
       const eased = 1 - Math.pow(1 - p, 3);
@@ -43,15 +43,18 @@ function useCountUp(target = 0, duration = 1500, start = 0, inView = true) {
   return val;
 }
 
-function Stat({ label, value, suffix = '' }: { label: string; value: number; suffix?: string }) {
-  const ref = useRef<HTMLDivElement | null>(null);
+function Stat({ label, value, suffix = '' }) {
+  const ref = useRef(null);
   const [visible, setVisible] = useState(false);
+
   useEffect(() => {
     const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.35 });
     if (ref.current) io.observe(ref.current);
     return () => io.disconnect();
   }, []);
+
   const n = useCountUp(value, 1400, 0, visible);
+
   return (
     <div ref={ref} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center">
       <div className="text-4xl md:text-5xl font-extrabold tracking-tight text-indigo-300">
@@ -64,7 +67,7 @@ function Stat({ label, value, suffix = '' }: { label: string; value: number; suf
 }
 
 export default function Home() {
-  const [fadeDir, setFadeDir] = useState<'fade-right' | 'fade-down'>('fade-right');
+  const [fadeDir, setFadeDir] = useState('fade-right');
 
   useEffect(() => {
     AOS.init({ duration: 600, once: true });
@@ -314,3 +317,24 @@ export default function Home() {
             Kurzer Austausch, klare nächsten Schritte, realistische Planung. Ohne Druck, aber mit dem Anspruch, eure Idee
             online verständlich und nutzbar zu machen.
           </p>
+          <div className="mt-6 flex justify-center gap-4">
+            <Link
+              href="/request"
+              className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2"
+            >
+              Projekt anfragen <ArrowRight size={18} />
+            </Link>
+            <Link
+              href="/contact"
+              className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold"
+            >
+              Kontakt aufnehmen
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
