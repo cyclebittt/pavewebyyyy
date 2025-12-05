@@ -34,23 +34,20 @@ export default function RequestPage() {
         <div className="relative px-5 md:px-20 py-16 md:py-24">
           <div className="max-w-4xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs tracking-wide text-[#C9CEE0]">
-              <CalendarDays size={14} /> Termin vereinbaren
+              <CalendarDays size={14} /> Kurzen Austausch buchen
             </span>
             <h1 id="rq-hero" className="mt-5 text-4xl md:text-6xl font-bold leading-tight" data-aos="fade-up">
-              Die Zukunft Ihrer Praxis beginnt digital –{' '}
-              <span className="bg-gradient-to-r from-violet-300 to-blue-300 bg-clip-text text-transparent">
-                kurzer Call, klare nächsten Schritte.
-              </span>
+              Ein Call, um Ihr digitales Projekt <span className="bg-gradient-to-r from-violet-300 to-blue-300 bg-clip-text text-transparent">klar zu bekommen.</span>
             </h1>
             <p className="mt-4 max-w-2xl text-[#C9CEE0]" data-aos="fade-up" data-aos-delay="80">
-              30 Minuten Fokus: Ziele verstehen, Roadmap skizzieren, zeitliche Einordnung & Fördercheck.
-              Unverbindlich, effizient, planbar.
+              In 20–30 Minuten klären wir, worum es geht, was bereits vorhanden ist und ob ich euch mit einer Landingpage,
+              Formularen, Zahlungswegen oder begleitenden Medien sinnvoll unterstützen kann.
             </p>
 
             <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3" data-aos="fade-up" data-aos-delay="120">
-              <Badge icon={<Clock size={16} />} text="30 Min. Video‑Call" />
-              <Badge icon={<Sparkles size={16} />} text="Konkrete Quick‑Wins" />
-              <Badge icon={<ShieldCheck size={16} />} text="DSGVO & klarer Rahmen" />
+              <Badge icon={<Clock size={16} />} text="20–30 Min. Video-Call" />
+              <Badge icon={<Sparkles size={16} />} text="Ehrliche Einschätzung & Ideen" />
+              <Badge icon={<ShieldCheck size={16} />} text="Klare Rahmen & nächste Schritte" />
             </div>
           </div>
         </div>
@@ -59,9 +56,21 @@ export default function RequestPage() {
       {/* SCHRITTE */}
       <section className="px-5 md:px-20 py-10 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <Step index="01" title="Ziele & Status" text="Kurzbriefing: Was gibt es bereits? Wo hakt es? Was soll erreicht werden?" />
-          <Step index="02" title="Modulare Roadmap" text="Portal, Termine, KI, TI, Analytics – sinnvoll priorisiert & förderfähig geplant." />
-          <Step index="03" title="Start & Sprints" text="Kickoff, klare To‑dos, Team‑Enablement – sichtbar & messbar." />
+          <Step
+            index="01"
+            title="Kontext & Ziel"
+            text="Was plant ihr, wer soll erreicht werden und was ist euch am wichtigsten? Kurz, aber konkret."
+          />
+          <Step
+            index="02"
+            title="Idee & Struktur"
+            text="Gemeinsam skizzieren wir, wie eine mögliche Seite oder ein kleines Setup aussehen könnte."
+          />
+          <Step
+            index="03"
+            title="Realistischer Rahmen"
+            text="Wenn es passt: grober Zeitplan, Aufwandsschätzung und wie wir im Alltag gut zusammenarbeiten können."
+          />
         </div>
       </section>
 
@@ -88,7 +97,8 @@ export default function RequestPage() {
         <div className="mt-6 flex flex-col md:flex-row items-start md:items-center gap-3 text-sm text-[#AEB5C8]">
           <CheckCircle2 className="shrink-0 text-emerald-400" size={18} />
           <p>
-            Ihre Daten werden ausschließlich zur Terminabstimmung genutzt. Alternativ:{' '}
+            Die Angaben werden ausschließlich zur Terminabstimmung genutzt. Wenn kein passender Slot frei ist, schreiben Sie
+            gerne direkt an{' '}
             <a className="underline hover:text-white" href="mailto:info@paveconsultings.com">
               info@paveconsultings.com
             </a>
@@ -100,8 +110,10 @@ export default function RequestPage() {
       {/* CTA */}
       <section className="px-5 md:px-20 pb-16 text-center">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-10">
-          <h3 className="text-3xl md:text-4xl font-bold">Oder vorab Fragen klären?</h3>
-          <p className="mt-3 text-neutral-300">Schreiben Sie uns kurz – wir melden uns zeitnah.</p>
+          <h3 className="text-3xl md:text-4xl font-bold">Lieber zuerst schriftlich anfragen?</h3>
+          <p className="mt-3 text-neutral-300">
+            Kein Problem – schreiben Sie kurz, worum es geht. Ich melde mich mit einer Rückfrage oder einer ersten Einschätzung.
+          </p>
           <Link
             href="/contact"
             className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold"
