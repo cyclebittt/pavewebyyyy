@@ -132,7 +132,7 @@ export default function Home() {
             <Sparkles size={16} /> Digitale Begleitung für Projekte & Aktionen
           </span>
           <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight">
-            Digitale Projekte, die Menschen <span className="text-indigo-300">ins Handeln bringen.</span>
+            Ich helfe bei eurem <span className="text-indigo-300">digtalen Projekt.</span>
           </h1>
           <p className="mt-6 text-lg md:text-xl text-neutral-300">
             Ich unterstütze Teams, Organisationen und kleine Unternehmen dabei, Spendenaktionen, Events und andere
