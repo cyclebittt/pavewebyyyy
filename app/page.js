@@ -24,12 +24,12 @@ import {
 /* CountUp (leicht, ohne Lib) */
 function useCountUp(target = 0, duration = 1500, start = 0, inView = true) {
   const [val, setVal] = useState(start);
-  const startRef = useRef(null);
+  const startRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!inView) return;
-    let rafId;
-    const step = (ts) => {
+    let rafId: number;
+    const step = (ts: number) => {
       if (startRef.current == null) startRef.current = ts;
       const p = Math.min(1, (ts - startRef.current) / duration);
       const eased = 1 - Math.pow(1 - p, 3);
@@ -42,8 +42,9 @@ function useCountUp(target = 0, duration = 1500, start = 0, inView = true) {
 
   return val;
 }
-function Stat({ label, value, suffix = '' }) {
-  const ref = useRef(null);
+
+function Stat({ label, value, suffix = '' }: { label: string; value: number; suffix?: string }) {
+  const ref = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
     const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.35 });
@@ -54,7 +55,8 @@ function Stat({ label, value, suffix = '' }) {
   return (
     <div ref={ref} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center">
       <div className="text-4xl md:text-5xl font-extrabold tracking-tight text-indigo-300">
-        {n.toLocaleString('de-DE')}{suffix}
+        {n.toLocaleString('de-DE')}
+        {suffix}
       </div>
       <div className="mt-2 text-neutral-300">{label}</div>
     </div>
@@ -62,7 +64,7 @@ function Stat({ label, value, suffix = '' }) {
 }
 
 export default function Home() {
-  const [fadeDir, setFadeDir] = useState('fade-right');
+  const [fadeDir, setFadeDir] = useState<'fade-right' | 'fade-down'>('fade-right');
 
   useEffect(() => {
     AOS.init({ duration: 600, once: true });
@@ -75,39 +77,39 @@ export default function Home() {
   const modules = [
     {
       icon: <FileText size={22} className="text-violet-300" />,
-      title: 'Digitale Praxisportale',
-      desc: 'Moderne, barrierefreie, DSGVO‑konforme Websites mit Patientenportal, Formular‑Uploads & Videosprechstunden.',
-      href: '/services/portal',
+      title: 'Projekt-Landingpages',
+      desc: 'Klar strukturierte Seiten für Spendenaktionen, Events oder andere Vorhaben – mit Story, Formularen & klaren Calls-to-Action.',
+      href: '/services/landingpages',
     },
     {
       icon: <CalendarDays size={22} className="text-violet-300" />,
-      title: 'Digitale Terminvereinbarung',
-      desc: 'Automatisierte Buchung, Erinnerungs‑Workflows, Auslastungsanalysen & Anbindung an Praxis‑Systeme.',
-      href: '/services/termine',
-    },
-    {
-      icon: <Brain size={22} className="text-violet-300" />,
-      title: 'KI‑gestützte Optimierung',
-      desc: 'Prognosen zu Auslastung & Patientenströmen, weniger No‑Shows, effizientere Personalplanung.',
-      href: '/services/ki',
+      title: 'Aktionen & Kampagnen',
+      desc: 'Digitale Begleitung für zeitlich begrenzte Aktionen – von der Struktur über die Inhalte bis zur Umsetzung der Seite.',
+      href: '/services/campaigns',
     },
     {
       icon: <LinkIcon size={22} className="text-violet-300" />,
-      title: 'TI‑Integration',
-      desc: 'Nahtlose Anbindung an die Telematikinfrastruktur (eAU, eRezept, KIM‑Mail, ePA) mit klarer Roadmap.',
-      href: '/services/ti',
+      title: 'Formulare & Zahlungswege',
+      desc: 'Einbindung von Zahlungsanbietern, Anmeldeformularen und automatischen Bestätigungen – passend zu euren bestehenden Abläufen.',
+      href: '/services/forms',
     },
     {
       icon: <BarChart3 size={22} className="text-violet-300" />,
-      title: 'Analytics & Reporting',
-      desc: 'Dashboards zur Echtzeit‑Analyse: Terminauslastung, Patientenfeedback & Performance‑KPIs.',
+      title: 'Struktur & Auswertung',
+      desc: 'Einfache Auswertung, was funktioniert hat: Wo kamen Anfragen oder Spenden her, und was nimmt man fürs nächste Projekt mit.',
       href: '/services/analytics',
     },
     {
       icon: <Settings2 size={22} className="text-violet-300" />,
-      title: 'Managed Digital Service',
-      desc: 'Laufende Betreuung: Updates, Sicherheit, Monitoring & Schulungen für das gesamte Praxisteam.',
+      title: 'Digitales Setup & Betreuung',
+      desc: 'Technisches Fundament, Updates und kleinere Anpassungen – damit alles stabil läuft, ohne dass ihr euch darum kümmern müsst.',
       href: '/services/managed',
+    },
+    {
+      icon: <Sparkles size={22} className="text-violet-300" />,
+      title: 'Begleitende Medien',
+      desc: 'Flyer, einfache Visuals und kurze Projektvideos, die eure Botschaft unterstützen – online wie offline.',
+      href: '/services/media',
     },
   ];
 
@@ -124,14 +126,15 @@ export default function Home() {
 
         <div className="relative px-5 md:px-16 pt-20 md:pt-28 pb-20 md:pb-28 text-center max-w-4xl mx-auto">
           <span className="inline-flex items-center gap-2 text-sm text-indigo-300/80 bg-white/5 ring-1 ring-white/10 px-3 py-1 rounded-full">
-            <Sparkles size={16} /> Spezialagentur für digitale Praxis‑Lösungen
+            <Sparkles size={16} /> Digitale Begleitung für Projekte & Aktionen
           </span>
           <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight">
-            Die Zukunft <span className="text-indigo-300">Ihrer Praxis</span> beginnt digital.
+            Digitale Projekte, die Menschen <span className="text-indigo-300">ins Handeln bringen.</span>
           </h1>
           <p className="mt-6 text-lg md:text-xl text-neutral-300">
-            Für Haus‑ & Fachärzte, Zahnärzte und Gemeinschaftspraxen: Portale, Termin‑Automatisierung,
-            KI‑Optimierung, TI‑Anbindung & Analytics – als modulare, skalierbare Systeme.
+            Ich unterstütze Teams, Organisationen und kleine Unternehmen dabei, Spendenaktionen, Events und andere
+            Vorhaben online klar, verständlich und nutzbar zu machen – mit Landingpages, Formularen, Zahlungswegen
+            und begleitenden Medien.
           </p>
 
           <div className="mt-8 flex justify-center gap-4">
@@ -139,20 +142,20 @@ export default function Home() {
               href="/request"
               className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2"
             >
-              Projekt starten <ArrowRight size={18} />
+              Projekt anfragen <ArrowRight size={18} />
             </Link>
             <Link
               href="/contact"
               className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold"
             >
-              Erstes Sparring
+              Unverbindliches Sparring
             </Link>
           </div>
 
-          {/* Förder-Hinweis */}
+          {/* Hinweis */}
           <div className="mt-6 flex items-center justify-center gap-2 text-sm text-indigo-200/90">
             <ShieldCheck size={16} className="text-emerald-400" />
-            Bis zu <strong className="mx-1">90 % förderfähig</strong> über BayDiGuP (je nach Projekt).
+            Klar begrenzte Projekte, transparente Konditionen und ehrliche Kommunikation – ohne Dauerbetreuungs-Verträge.
           </div>
         </div>
       </section>
@@ -161,7 +164,7 @@ export default function Home() {
       <section className="px-5 md:px-16 -mt-6 mb-8">
         <div className="rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm p-4 md:p-5">
           <div className="flex flex-wrap items-center justify-center gap-3 md:gap-5">
-            {['DSGVO‑konform', 'Barrierearm', 'TI‑ready', 'Analytics‑getrieben', 'BayDiGuP‑förderfähig'].map(
+            {['Klar strukturiert', 'Projektbasiert', 'DSGVO-bewusst', 'Mobil optimiert', 'Keine Dauerverträge'].map(
               (t, i) => (
                 <span
                   key={t}
@@ -177,19 +180,24 @@ export default function Home() {
         </div>
       </section>
 
-      {/* KPIs */}
+      {/* RAHMEN / KPIs */}
       <section className="px-5 md:px-16 py-8 md:py-12">
+        <h2 className="text-xl md:text-2xl font-semibold mb-4">Wie ich arbeite</h2>
+        <p className="text-neutral-300 mb-6 max-w-2xl">
+          Der Fokus liegt auf wenigen, gut begleiteten Projekten statt auf möglichst vielen Aufträgen parallel. So bleibt
+          genug Raum für Schule, Studium – und für saubere Ergebnisse.
+        </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          <Stat label="aktive Praxis‑Kunden" value={32} />
-          <Stat label="Ø No‑Show‑Reduktion" value={24} suffix="%" />
-          <Stat label="Zeitersparnis im Team" value={7} suffix="h/Woche" />
-          <Stat label="Zufriedenheit" value={97} suffix="%" />
+          <Stat label="Maximale parallele Projekte" value={2} />
+          <Stat label="Geplante Projekte pro Jahr" value={4} />
+          <Stat label="Ziel-Zufriedenheit" value={100} suffix="%" />
+          <Stat label="Fokus-Zeit pro Woche (max.)" value={10} suffix="h" />
         </div>
       </section>
 
       {/* MODULE als Scroll-Path (Top→Bottom) */}
       <section className="px-5 md:px-16 py-12 md:py-16">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-8">Kern‑Services & Nutzen</h2>
+        <h2 className="text-2xl md:text-3xl font-semibold mb-8">Kern-Services & Nutzen</h2>
         <div className="relative">
           <div className="absolute left-4 md:left-1/2 -translate-x-0 md:-translate-x-1/2 top-0 bottom-0 w-[2px] bg-white/10" />
           <div className="space-y-8">
@@ -225,19 +233,19 @@ export default function Home() {
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             {
-              icon: <ShieldCheck className="text-emerald-400" size={18} />,
-              title: 'Förderfähig',
-              desc: 'Projekte können – je nach Umfang – über BayDiGuP bis zu 90 % gefördert werden.',
-            },
-            {
               icon: <Activity className="text-sky-300" size={18} />,
-              title: 'Hoher Business‑Impact',
-              desc: 'Weniger No‑Shows, bessere Auslastung, klare Prozesse & messbare Ergebnisse.',
+              title: 'Projektfokus statt Dauerstress',
+              desc: 'Klar begrenzte Projekte mit Anfang und Ende, statt dauerhafter Betreuung auf Zuruf.',
             },
             {
-              icon: <Settings2 className="text-violet-300" size={18} />,
-              title: 'Skalierbar & modular',
-              desc: 'Starten Sie schlank und erweitern Sie schrittweise – ohne Brüche im System.',
+              icon: <Brain className="text-violet-300" size={18} />,
+              title: 'Story & Struktur',
+              desc: 'Nicht nur „eine Website“, sondern ein roter Faden: Warum, für wen, und was der nächste Schritt ist.',
+            },
+            {
+              icon: <Settings2 className="text-emerald-400" size={18} />,
+              title: 'Technik, die trägt',
+              desc: 'Formulare, Zahlungswege und Setups, die stabil laufen – ohne dass du dich tief einarbeiten musst.',
             },
           ].map((b, i) => (
             <div key={i} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
@@ -254,23 +262,23 @@ export default function Home() {
       {/* TESTIMONIALS (anonymisiert, text-only) */}
       <section className="px-5 md:px-16 pb-8 md:pb-14">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-6 md:p-10">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-8">Erfahrungen aus der Praxis</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold mb-8">Rückmeldungen aus Projekten</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
                 quote:
-                  'Termin‑Automatisierung + Erinnerungen senkten unsere No‑Shows deutlich. Das Team hat jetzt messbar mehr Zeit.',
-                name: 'Hausarztpraxis (Bayern)',
+                  'Die Spenden-Aktion war online viel greifbarer – Infos, Geschichte und Zahlungswege an einem Ort.',
+                name: 'Leitung eines Projekts',
               },
               {
                 quote:
-                  'Das neue Portal mit Formular‑Uploads beschleunigt Abläufe. Patient:innen finden schneller, was sie brauchen.',
-                name: 'Facharztzentrum (NRW)',
+                  'Die Landingpage hat uns geholfen, Menschen schnell und ohne Umwege auf die Aktion aufmerksam zu machen.',
+                name: 'Organisationsteam einer Aktion',
               },
               {
                 quote:
-                  'Wir sind förderfähig vorgegangen – der Prozess war klar, und das Ergebnis nachhaltig.',
-                name: 'Zahnarztpraxis (Süddeutschland)',
+                  'Es war angenehm, ein zeitlich klares Projekt zu haben statt eine endlose Online-Baustelle.',
+                name: 'Verantwortliche Person eines lokalen Projekts',
               },
             ].map((t, i) => (
               <figure
@@ -291,7 +299,8 @@ export default function Home() {
           <div className="mt-6 flex items-start gap-2 text-sm text-[#AEB5C8]">
             <CheckCircle2 className="shrink-0 text-emerald-400" size={18} />
             <p>
-              Zitate anonymisiert und sinngemäß zusammengefasst. Keine Bild‑Uploads – nur saubere Ergebnisse & klare Prozesse.
+              Beispiele anonymisiert und sinngemäß zusammengefasst. Der Fokus liegt auf klaren Projekten, stabiler Technik
+              und verständlicher Kommunikation.
             </p>
           </div>
         </div>
@@ -300,28 +309,8 @@ export default function Home() {
       {/* CTA */}
       <section className="px-5 md:px-16 py-16 md:py-20 text-center">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-10">
-          <h2 className="text-3xl md:text-4xl font-bold">Bereit, Ihre Praxis digital zu stärken?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold">Lust, ein digitales Projekt anzustoßen?</h2>
           <p className="mt-4 text-neutral-300 max-w-2xl mx-auto">
-            Kurzer Call – klare nächsten Schritte, modulare Planung, optional förderfähig. Wir zeigen pragmatisch, was wirklich wirkt.
+            Kurzer Austausch, klare nächsten Schritte, realistische Planung. Ohne Druck, aber mit dem Anspruch, eure Idee
+            online verständlich und nutzbar zu machen.
           </p>
-          <div className="mt-6 flex justify-center gap-4">
-            <Link
-              href="/request"
-              className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2"
-            >
-              Termin vereinbaren <ArrowRight size={18} />
-            </Link>
-            <Link
-              href="/contact"
-              className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold"
-            >
-              Kontakt aufnehmen
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <Footer />
-    </div>
-  );
-}
