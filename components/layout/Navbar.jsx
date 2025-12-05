@@ -8,8 +8,9 @@ import React, { useEffect, useRef, useState } from 'react';
 
 const links = [
   { href: '/', label: 'Start', key: '' },
-  { href: '/about', label: 'Über uns', key: 'about' },
-  { href: '/blogs', label: 'Blog', key: 'blogs' },
+  { href: '/about', label: 'Über mich', key: 'about' },
+  // Blog erstmal raus, solange du nichts hast:
+  // { href: '/blogs', label: 'Blog', key: 'blogs' },
   { href: '/contact', label: 'Kontakt', key: 'contact' },
 ];
 
@@ -25,8 +26,10 @@ export default function Navbar() {
     const handleClickOutside = (e) => {
       if (
         openMobileMenu &&
-        menuRef.current && !menuRef.current.contains(e.target) &&
-        buttonRef.current && !buttonRef.current.contains(e.target)
+        menuRef.current &&
+        !menuRef.current.contains(e.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(e.target)
       ) {
         setOpenMobileMenu(false);
       }
@@ -47,7 +50,9 @@ export default function Navbar() {
     if (openMobileMenu) {
       const { overflow } = document.body.style;
       document.body.style.overflow = 'hidden';
-      return () => { document.body.style.overflow = overflow; };
+      return () => {
+        document.body.style.overflow = overflow;
+      };
     }
   }, [openMobileMenu]);
 
@@ -74,12 +79,17 @@ export default function Navbar() {
             const active = pathnameKey === key;
             return (
               <li key={href} className="relative group">
-                <Link href={href} className="outline-none focus-visible:ring-2 focus-visible:ring-violet-400 rounded-sm">
+                <Link
+                  href={href}
+                  className="outline-none focus-visible:ring-2 focus-visible:ring-violet-400 rounded-sm"
+                >
                   {label}
                 </Link>
                 <span
                   aria-hidden="true"
-                  className={`absolute -bottom-1 left-0 h-[3px] bg-violet-500 transition-all duration-300 ${active ? 'w-full' : 'w-0 group-hover:w-full'}`}
+                  className={`absolute -bottom-1 left-0 h-[3px] bg-violet-500 transition-all duration-300 ${
+                    active ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`}
                 />
               </li>
             );
@@ -92,7 +102,7 @@ export default function Navbar() {
           className="hidden md:inline-flex px-5 py-2 bg-violet-600 text-white rounded-full font-semibold border border-violet-500 shadow-[0_0_20px_-5px_rgba(139,92,246,0.5)] transition-all duration-300 hover:scale-[1.05] hover:bg-violet-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-violet-400"
           role="button"
         >
-          Termin anfragen
+          Termin vereinbaren
         </Link>
 
         {/* Mobile Menu Button */}
@@ -110,7 +120,9 @@ export default function Navbar() {
       {/* Mobile Menü */}
       <div
         ref={menuRef}
-        className={`md:hidden absolute left-0 w-full bg-gradient-to-b from-[#0F0F18] via-[#131329] to-[#0B0B14] border-t border-white/10 font-medium text-white/90 transition-transform duration-300 ease-in-out ${openMobileMenu ? 'translate-y-0' : '-translate-y-full'} z-40`}
+        className={`md:hidden absolute left-0 w-full bg-gradient-to-b from-[#0F0F18] via-[#131329] to-[#0B0B14] border-t border-white/10 font-medium text-white/90 transition-transform duration-300 ease-in-out ${
+          openMobileMenu ? 'translate-y-0' : '-translate-y-full'
+        } z-40`}
       >
         <ul className="flex flex-col py-3">
           {links.map(({ href, label }) => (
@@ -132,7 +144,7 @@ export default function Navbar() {
               href="/request"
               className="inline-flex w-full justify-center px-4 py-2 bg-violet-600 text-white rounded-full font-semibold border border-violet-500 shadow-[0_0_20px_-5px_rgba(139,92,246,0.5)] transition-transform duration-200 hover:scale-[1.02] hover:bg-violet-500"
             >
-              Termin anfragen
+              Termin vereinbaren
             </Link>
           </li>
         </ul>
