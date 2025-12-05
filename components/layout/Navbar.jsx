@@ -69,7 +69,7 @@ export default function Navbar() {
               className="h-10 w-auto"
               priority
             />
-            <span className="font-bold text-lg text-white">paveo</span>
+            <span className="font-bold text-lg text-white">Leon Seitz</span>
           </span>
         </Link>
 
