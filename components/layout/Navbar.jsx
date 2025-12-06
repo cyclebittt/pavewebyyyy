@@ -19,17 +19,17 @@ export default function Navbar() {
   const pathnameFull = usePathname() || '/';
   const pathnameKey = pathnameFull.split('/')[1] ?? '';
 
-  const menuRef = useRef<HTMLDivElement | null>(null);
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const menuRef = useRef(null);
+  const buttonRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
+    const handleClickOutside = (e) => {
       if (
         openMobileMenu &&
         menuRef.current &&
-        !menuRef.current.contains(e.target as Node) &&
+        !menuRef.current.contains(e.target) &&
         buttonRef.current &&
-        !buttonRef.current.contains(e.target as Node)
+        !buttonRef.current.contains(e.target)
       ) {
         setOpenMobileMenu(false);
       }
@@ -39,7 +39,9 @@ export default function Navbar() {
   }, [openMobileMenu]);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpenMobileMenu(false);
+    const onKey = (e) => {
+      if (e.key === 'Escape') setOpenMobileMenu(false);
+    };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, []);
@@ -51,10 +53,10 @@ export default function Navbar() {
 
   useEffect(() => {
     if (openMobileMenu) {
-      const { overflow } = document.body.style;
+      const prev = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
       return () => {
-        document.body.style.overflow = overflow;
+        document.body.style.overflow = prev;
       };
     }
   }, [openMobileMenu]);
