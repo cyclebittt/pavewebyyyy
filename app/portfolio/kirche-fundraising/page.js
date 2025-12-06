@@ -4,7 +4,16 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, ArrowRight, Sparkles, Globe2, FileText, CreditCard, Video, Clock } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowRight,
+  Sparkles,
+  Globe2,
+  FileText,
+  Video,
+  Clock,
+  LayoutTemplate,
+} from 'lucide-react';
 
 export default function KircheFundraisingPage() {
   return (
@@ -34,25 +43,25 @@ export default function KircheFundraisingPage() {
               </h1>
 
               <p className="mt-4 text-neutral-300 text-sm md:text-base max-w-xl">
-                Um den Bau eines neuen Kirchenzuhauses zu ermöglichen, habe ich für die Kirche für Aschaffenburg
+                Um den Bau eines neuen Kirchenzuhause zu ermöglichen, habe ich für die Kirche für Aschaffenburg
                 eine komplette Fundraising-Präsenz aufgebaut – inklusive Landingpage, Texten, Design, Zahlungswegen,
                 Formularen, Flyern und Video. In nur zwei Wochen, rechtzeitig vor der Spendenreise in die USA.
               </p>
 
               <div className="mt-6 flex flex-wrap gap-3 text-xs md:text-sm">
                 <Badge>Landingpage</Badge>
-                <Badge>Story & Texte</Badge>
+                <Badge>Story &amp; Texte</Badge>
                 <Badge>Formulare</Badge>
-                <Badge>PayPal & Überweisung</Badge>
-                <Badge>Flyer (Print & digital)</Badge>
+                <Badge>PayPal &amp; Überweisung</Badge>
+                <Badge>Flyer (Print &amp; digital)</Badge>
                 <Badge>Video</Badge>
-                <Badge>DE & EN</Badge>
+                <Badge>DE &amp; EN</Badge>
               </div>
             </div>
 
-            {/* Hero Mock / Screenshot */}
+            {/* Hero Screenshot */}
             <div className="relative w-full h-56 md:h-72 lg:h-80 rounded-3xl overflow-hidden border border-white/10 bg-white/5">
-              {/* TODO: Ersetze den Platzhalter-Pfad durch einen echten Screenshot */}
+              {/* TODO: Ersetze den Pfad durch einen echten Screenshot */}
               <Image
                 src="/img/portfolio/kirche-hero.jpg"
                 alt="Fundraising-Landingpage Kirche für Aschaffenburg"
@@ -63,7 +72,7 @@ export default function KircheFundraisingPage() {
               <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-3 text-xs md:text-sm">
                 <div className="flex items-center gap-2 text-neutral-100">
                   <Globe2 size={16} />
-                  <span>DE & EN Landingpage</span>
+                  <span>DE &amp; EN Landingpage</span>
                 </div>
                 <Link
                   href="https://kircheab.de/spenden"
@@ -81,10 +90,10 @@ export default function KircheFundraisingPage() {
       {/* META / ÜBERSICHT */}
       <section className="px-5 md:px-16 pb-12 md:pb-16">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
-          <MetaCard label="Ziel" value="Spenden sammeln für ein neues Kirchenzuhause" />
+          <MetaCard label="Ziel" value="Spenden für ein neues Kirchenzuhause" />
           <MetaCard label="Rolle" value="Konzept, Texte, Design, Umsetzung, Video, Flyer" />
           <MetaCard label="Zeitraum" value="ca. 2 Wochen bis zum Go-Live" icon={<Clock size={16} />} />
-          <MetaCard label="Sprachen" value="Deutsch & Englisch" />
+          <MetaCard label="Sprachen" value="Deutsch &amp; Englisch" />
         </div>
       </section>
 
@@ -92,7 +101,7 @@ export default function KircheFundraisingPage() {
       <section className="px-5 md:px-16 pb-10 md:pb-14">
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8">
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 md:p-8">
-            <h2 className="text-2xl md:text-3xl font-semibold mb-3">Ausgangslage & Idee</h2>
+            <h2 className="text-2xl md:text-3xl font-semibold mb-3">Ausgangslage &amp; Idee</h2>
             <p className="text-sm md:text-base text-neutral-200 leading-relaxed">
               Die Kirche für Aschaffenburg stand vor einer großen Aufgabe: Ein neues Kirchenzuhause sollte finanziert
               werden. Es gab nur wenige vorhandene Informationen und keine klare digitale Struktur, wie das Anliegen
@@ -108,13 +117,13 @@ export default function KircheFundraisingPage() {
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 md:p-8 space-y-4">
             <h3 className="text-lg font-semibold mb-1">Was ich übernommen habe</h3>
             <ul className="text-sm md:text-base text-neutral-200 space-y-1.5 list-disc list-inside">
-              <li>Konzept & Struktur der kompletten Fundraising-Landingpage</li>
+              <li>Konzept &amp; Struktur der kompletten Fundraising-Landingpage</li>
               <li>Formulierung aller Texte (Story, Vision, FAQs, Call-to-Action)</li>
-              <li>Design & Auswahl der Bilder, inkl. Bildbearbeitung</li>
+              <li>Design &amp; Auswahl der Bilder, inkl. Bildbearbeitung</li>
               <li>Einbindung von PayPal und klassischer Überweisung</li>
-              <li>Hosting-Setup & technische Umsetzung</li>
-              <li>Erstellung von 4 unterschiedlichen Flyern (Print & digital)</li>
-              <li>Aufnahme & Schnitt eines Projektvideos</li>
+              <li>Hosting-Setup &amp; technische Umsetzung</li>
+              <li>Erstellung von vier unterschiedlichen Flyern (Print &amp; digital)</li>
+              <li>Aufnahme &amp; Schnitt eines Projektvideos</li>
               <li>Feinabstimmung mit dem Pastor und dem Kernteam</li>
             </ul>
           </div>
@@ -124,12 +133,14 @@ export default function KircheFundraisingPage() {
       {/* UMSETZUNG – STRUKTUR & MODULE */}
       <section className="px-5 md:px-16 pb-10 md:pb-14">
         <div className="max-w-6xl mx-auto rounded-3xl border border-white/10 bg-white/[0.035] p-6 md:p-8">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-4">Umsetzung: Von einer Idee zur klaren digitalen Reise</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold mb-4">
+            Umsetzung: Von einer Idee zur klaren digitalen Reise
+          </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <StepCard
               icon={<FileText size={18} />}
-              title="Story & Inhalte"
+              title="Story &amp; Inhalte"
               items={[
                 'Entwicklung einer klaren Erzählung: Warum ein neues Gebäude?',
                 'Strukturierung von Vision, Hintergrund, Ablauf und Spendenziel',
@@ -138,16 +149,16 @@ export default function KircheFundraisingPage() {
             />
             <StepCard
               icon={<LayoutTemplate size={18} />}
-              title="Seite & Formulare"
+              title="Seite &amp; Spendenwege"
               items={[
                 'Landingpage mit Fokus auf Verständlichkeit und Vertrauen',
-                'Einbindung von einfachen Spendenwegen (PayPal & Überweisung)',
+                'Einbindung von einfachen Spendenwegen (PayPal &amp; Überweisung)',
                 'Logische Platzierung von CTAs und QR-Code-Verwendung',
               ]}
             />
             <StepCard
               icon={<Video size={18} />}
-              title="Medien & Druck"
+              title="Medien &amp; Druck"
               items={[
                 'Aufnahme und Schnitt eines Projektvideos für Gemeindekontext',
                 'Vier Flyer-Varianten für unterschiedliche Einsätze',
@@ -162,15 +173,19 @@ export default function KircheFundraisingPage() {
       <section className="px-5 md:px-16 pb-12 md:pb-16">
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 items-start">
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 md:p-8">
-            <h2 className="text-2xl md:text-3xl font-semibold mb-3">Ergebnis & Wirkung</h2>
+            <h2 className="text-2xl md:text-3xl font-semibold mb-3">Ergebnis &amp; Wirkung</h2>
             <p className="text-sm md:text-base text-neutral-200 leading-relaxed">
               Durch die eigene Fundraising-Seite wurde das Projekt greifbar: Menschen konnten jederzeit nachlesen,
               worum es geht, warum das neue Kirchenzuhause wichtig ist und auf welchem Weg sie unterstützen können.
             </p>
             <ul className="mt-3 text-sm md:text-base text-neutral-200 space-y-1.5 list-disc list-inside">
               <li>Spenden wurden über einen klaren, einfachen Weg möglich gemacht.</li>
-              <li>Alle wichtigen Informationen waren gebündelt auf einer Seite statt über verschiedene Kanäle verteilt.</li>
-              <li>Die Pastoren konnten vor Ort in den USA direkt auf eine moderne, strukturierte Online-Präsenz verweisen.</li>
+              <li>
+                Alle wichtigen Informationen waren gebündelt auf einer Seite statt über verschiedene Kanäle verteilt.
+              </li>
+              <li>
+                Die Pastoren konnten vor Ort in den USA direkt auf eine moderne, strukturierte Online-Präsenz verweisen.
+              </li>
             </ul>
             <p className="mt-3 text-sm md:text-base text-neutral-200 leading-relaxed">
               Besonders wichtig war mir, dass Menschen sich sicher und abgeholt fühlen – unabhängig davon, ob sie Teil
@@ -183,13 +198,26 @@ export default function KircheFundraisingPage() {
             <h3 className="text-lg font-semibold">Einblicke in das Projekt</h3>
             <div className="grid grid-cols-2 gap-3">
               {/* Diese Bildpfade kannst du durch eigene Screenshots ersetzen */}
-              <Screenshot src="/img/portfolio/kirche-page.jpg" alt="Ausschnitt der Fundraising-Landingpage" />
-              <Screenshot src="/img/portfolio/kirche-form.jpg" alt="Spendenformular / Zahlungsinfo" />
-              <Screenshot src="/img/portfolio/kirche-flyer.jpg" alt="Flyer-Design für die Spendenaktion" />
-              <Screenshot src="/img/portfolio/kirche-video-still.jpg" alt="Standbild aus dem Projektvideo" />
+              <Screenshot
+                src="/img/portfolio/kirche-page.jpg"
+                alt="Ausschnitt der Fundraising-Landingpage"
+              />
+              <Screenshot
+                src="/img/portfolio/kirche-form.jpg"
+                alt="Spendenbereich / Zahlungsinfos"
+              />
+              <Screenshot
+                src="/img/portfolio/kirche-flyer.jpg"
+                alt="Flyer-Design für die Spendenaktion"
+              />
+              <Screenshot
+                src="/img/portfolio/kirche-video-still.jpg"
+                alt="Standbild aus dem Projektvideo"
+              />
             </div>
             <p className="text-xs md:text-sm text-neutral-400">
-              Hinweis: Screenshots und Bilder sind exemplarisch – je nach finaler Auswahl können sie ausgetauscht werden.
+              Hinweis: Screenshots und Bilder sind exemplarisch – je nach finaler Auswahl können sie ausgetauscht
+              werden.
             </p>
           </div>
         </div>
@@ -199,9 +227,7 @@ export default function KircheFundraisingPage() {
       <section className="px-5 md:px-16 pb-16">
         <div className="max-w-6xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-6 md:p-9 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div>
-            <h3 className="text-2xl md:text-3xl font-bold">
-              Ähnliches Projekt geplant?
-            </h3>
+            <h3 className="text-2xl md:text-3xl font-bold">Ähnliches Projekt geplant?</h3>
             <p className="mt-3 text-sm md:text-base text-neutral-300 max-w-xl">
               Ob Fundraising, Projektvorstellung oder Event – ich unterstütze bei Landingpages, Formularen,
               Zahlungswegen und begleitenden Medien, damit eure Idee klar und vertrauenswürdig ankommt.
