@@ -8,7 +8,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 const links = [
   { href: '/', label: 'Start', key: '' },
-  { href: '/about', label: 'Über mich & paveo', key: 'about' },
+  { href: '/about', label: 'Über mich', key: 'about' },
   { href: '/portfolio', label: 'Portfolio', key: 'portfolio' },
   // { href: '/blogs', label: 'Blog', key: 'blogs' },
   { href: '/contact', label: 'Kontakt', key: 'contact' },
@@ -74,7 +74,7 @@ export default function Navbar() {
               className="h-10 w-auto"
               priority
             />
-            <span className="font-bold text-lg text-white">paveo</span>
+            <span className="font-bold text-lg text-white">Leon Seitz</span>
           </span>
         </Link>
 
