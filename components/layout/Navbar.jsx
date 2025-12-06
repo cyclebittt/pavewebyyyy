@@ -8,8 +8,8 @@ import React, { useEffect, useRef, useState } from 'react';
 
 const links = [
   { href: '/', label: 'Start', key: '' },
-  { href: '/about', label: 'Über mich', key: 'about' },
-  // Blog erstmal raus, solange du nichts hast:
+  { href: '/about', label: 'Über mich & paveo', key: 'about' },
+  { href: '/portfolio', label: 'Portfolio', key: 'portfolio' },
   // { href: '/blogs', label: 'Blog', key: 'blogs' },
   { href: '/contact', label: 'Kontakt', key: 'contact' },
 ];
@@ -19,17 +19,17 @@ export default function Navbar() {
   const pathnameFull = usePathname() || '/';
   const pathnameKey = pathnameFull.split('/')[1] ?? '';
 
-  const menuRef = useRef(null);
-  const buttonRef = useRef(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
-    const handleClickOutside = (e) => {
+    const handleClickOutside = (e: MouseEvent) => {
       if (
         openMobileMenu &&
         menuRef.current &&
-        !menuRef.current.contains(e.target) &&
+        !menuRef.current.contains(e.target as Node) &&
         buttonRef.current &&
-        !buttonRef.current.contains(e.target)
+        !buttonRef.current.contains(e.target as Node)
       ) {
         setOpenMobileMenu(false);
       }
@@ -39,12 +39,15 @@ export default function Navbar() {
   }, [openMobileMenu]);
 
   useEffect(() => {
-    const onKey = (e) => e.key === 'Escape' && setOpenMobileMenu(false);
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpenMobileMenu(false);
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, []);
 
-  useEffect(() => setOpenMobileMenu(false), [pathnameFull]);
+  useEffect(() => {
+    // Menü schließen, wenn Route wechselt
+    setOpenMobileMenu(false);
+  }, [pathnameFull]);
 
   useEffect(() => {
     if (openMobileMenu) {
@@ -69,7 +72,7 @@ export default function Navbar() {
               className="h-10 w-auto"
               priority
             />
-            <span className="font-bold text-lg text-white">Leon Seitz</span>
+            <span className="font-bold text-lg text-white">paveo</span>
           </span>
         </Link>
 
