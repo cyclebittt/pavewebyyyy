@@ -185,8 +185,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* NEU: Echte, belegbare „Stats“ (aus dem Fundraising-Projekt) */}
-      <section className="px-5 md:px-16 py-8 md:py-12">
+       {/* NEU: Echte, belegbare „Stats“ (aus dem Fundraising-Projekt) */}
+     /* <section className="px-5 md:px-16 py-8 md:py-12">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-semibold mb-6">Beispiel aus einem echten Projekt</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
@@ -194,7 +194,7 @@ export default function Home() {
             <Stat label="Sprachen" value={2} />
             <Stat label="Flyer-Varianten" value={4} />
             <Stat label="Zahlungswege" value={2} />
-          </div>
+          </div> */ 
 
           <div className="mt-4 flex items-start gap-2 text-sm text-[#AEB5C8]">
             <CheckCircle2 className="shrink-0 text-emerald-400" size={18} />
