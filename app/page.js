@@ -101,8 +101,10 @@ export default function Home() {
           </span>
 
           <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight">
-            Ein digitales Projekt?<span className="text-indigo-300">Dann bist du hier richtig.</span>.
-          </h1>
+  <span className="block">Ein digitales Projekt?</span>
+  <span className="block text-indigo-300">Dann bist du hier richtig.</span>
+</h1>
+
 
           <p className="mt-6 text-lg md:text-xl text-neutral-300">
             Landingpages, Formulare, Zahlungswege und Medien für Projekte & Kampagnen – ohne Dauerbindung, ohne Social-Media-Zwang.
