@@ -9,25 +9,27 @@ import 'aos/dist/aos.css';
 import {
   ArrowRight,
   Sparkles,
-  CalendarDays,
   ShieldCheck,
-  Activity,
-  Brain,
-  Settings2,
-  Link as LinkIcon,
   BarChart3,
   FileText,
   CheckCircle2,
   Quote,
+  Clock,
+  Globe2,
+  Layers,
+  CreditCard,
+  Video,
+  LayoutTemplate,
 } from 'lucide-react';
 
-/* CountUp (leicht, ohne Lib) */
+/* CountUp (JS – ohne TS-Typen) */
 function useCountUp(target = 0, duration = 1500, start = 0, inView = true) {
   const [val, setVal] = useState(start);
   const startRef = useRef(null);
 
   useEffect(() => {
     if (!inView) return;
+
     let rafId;
     const step = (ts) => {
       if (startRef.current == null) startRef.current = ts;
@@ -36,6 +38,7 @@ function useCountUp(target = 0, duration = 1500, start = 0, inView = true) {
       setVal(Math.round(start + (target - start) * eased));
       if (p < 1) rafId = requestAnimationFrame(step);
     };
+
     rafId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(rafId);
   }, [target, duration, start, inView]);
@@ -53,7 +56,7 @@ function Stat({ label, value, suffix = '' }) {
     return () => io.disconnect();
   }, []);
 
-  const n = useCountUp(value, 1400, 0, visible);
+  const n = useCountUp(value, 1200, 0, visible);
 
   return (
     <div ref={ref} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center">
@@ -77,42 +80,43 @@ export default function Home() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // NEU: Services neutraler (nicht „Praxis/Ärzte“, sondern „kleine Projekte/Kampagnen“)
   const modules = [
     {
-      icon: <FileText size={22} className="text-violet-300" />,
-      title: 'Projekt-Landingpages',
-      desc: 'Klar strukturierte Seiten für Spendenaktionen, Events oder andere Vorhaben – mit Story, Formularen & klaren Calls-to-Action.',
+      icon: <LayoutTemplate size={22} className="text-violet-300" />,
+      title: 'Landingpages & Kampagnen',
+      desc: 'Schlanke Seiten für Aktionen, Projekte oder Angebote – schnell online, klar strukturiert, mobil optimiert.',
       href: '/services/landingpages',
     },
     {
-      icon: <CalendarDays size={22} className="text-violet-300" />,
-      title: 'Aktionen & Kampagnen',
-      desc: 'Digitale Begleitung für zeitlich begrenzte Aktionen – von der Struktur über die Inhalte bis zur Umsetzung der Seite.',
-      href: '/services/campaigns',
-    },
-    {
-      icon: <LinkIcon size={22} className="text-violet-300" />,
-      title: 'Formulare & Zahlungswege',
-      desc: 'Einbindung von Zahlungsanbietern, Anmeldeformularen und automatischen Bestätigungen – passend zu euren bestehenden Abläufen.',
+      icon: <FileText size={22} className="text-violet-300" />,
+      title: 'Formulare & Kontaktwege',
+      desc: 'Anfragen, Anmeldungen oder einfache Workflows – damit Interessierte wirklich handeln können.',
       href: '/services/forms',
     },
     {
+      icon: <CreditCard size={22} className="text-violet-300" />,
+      title: 'Spenden- & Zahlungswege',
+      desc: 'PayPal, Überweisung, klare CTAs – ohne Reibung, ohne Chaos, mit sauberer Erklärung.',
+      href: '/services/payments',
+    },
+    {
+      icon: <Video size={22} className="text-violet-300" />,
+      title: 'Kurzvideo & Motion',
+      desc: 'Kurze, starke Clips für eine Aktion oder Kampagne – passend zum Projekt, nicht als Dauer-Content.',
+      href: '/services/video',
+    },
+    {
       icon: <BarChart3 size={22} className="text-violet-300" />,
-      title: 'Struktur & Auswertung',
-      desc: 'Einfache Auswertung, was funktioniert hat: Wo kamen Anfragen oder Spenden her, und was nimmt man fürs nächste Projekt mit.',
+      title: 'Tracking & Klarheit',
+      desc: 'Basis-Tracking (z. B. Klicks/Conversions) und saubere Struktur – damit du weißt, was funktioniert.',
       href: '/services/analytics',
     },
     {
-      icon: <Settings2 size={22} className="text-violet-300" />,
-      title: 'Digitales Setup & Betreuung',
-      desc: 'Technisches Fundament, Updates und kleinere Anpassungen – damit alles stabil läuft, ohne dass ihr euch darum kümmern müsst.',
-      href: '/services/managed',
-    },
-    {
-      icon: <Sparkles size={22} className="text-violet-300" />,
-      title: 'Begleitende Medien',
-      desc: 'Flyer, einfache Visuals und kurze Projektvideos, die eure Botschaft unterstützen – online wie offline.',
-      href: '/services/media',
+      icon: <ShieldCheck size={22} className="text-violet-300" />,
+      title: 'Sauberer Go-Live',
+      desc: 'Domain/Hosting, Setup und Übergabe – pragmatisch, dokumentiert, ohne Agentur-Overhead.',
+      href: '/services/setup',
     },
   ];
 
@@ -122,43 +126,43 @@ export default function Home() {
 
       {/* HERO */}
       <section className="relative overflow-hidden">
-        {/* Hintergrund */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_600px_at_-10%_-10%,rgba(129,51,241,.35),transparent_60%),radial-gradient(900px_600px_at_120%_0%,rgba(56,189,248,.20),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#0E0E15_60%,#0B0B0F_100%)]" />
         <div className="pointer-events-none absolute -top-24 -left-24 h-[28rem] w-[48rem] rounded-full bg-violet-600/20 blur-[120px]" />
         <div className="pointer-events-none absolute top-1/3 -right-24 h-[26rem] w-[44rem] rounded-full bg-blue-500/20 blur-[120px]" />
 
-        <div className="relative px-5 md:px-16 pt-20 md:pt-28 pb-20 md:pb-28 text-center max-w-4xl mx-auto">
+        <div className="relative px-5 md:px-16 pt-20 md:pt-28 pb-16 md:pb-20 text-center max-w-4xl mx-auto">
           <span className="inline-flex items-center gap-2 text-sm text-indigo-300/80 bg-white/5 ring-1 ring-white/10 px-3 py-1 rounded-full">
-            <Sparkles size={16} /> Digitale Begleitung für Projekte & Aktionen
+            <Sparkles size={16} /> Kleine digitale Projekte. Klar. Schnell. Projektbasiert.
           </span>
+
           <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight">
-            Ich helfe bei eurem <span className="text-indigo-300">digtalen Projekt.</span>
+            Aktionen, die <span className="text-indigo-300">online wirklich funktionieren</span>.
           </h1>
+
           <p className="mt-6 text-lg md:text-xl text-neutral-300">
-            Ich unterstütze Teams, Organisationen und kleine Unternehmen dabei, Spendenaktionen, Events und andere
-            Vorhaben online klar, verständlich und nutzbar zu machen – mit Landingpages, Formularen, Zahlungswegen
-            und begleitenden Medien.
+            Landingpages, Formulare, Zahlungswege und Media für Kampagnen & Projekte – ohne Dauerbindung,
+            ohne Social-Media-Output-Zwang, mit klarer Umsetzung.
           </p>
 
           <div className="mt-8 flex justify-center gap-4">
             <Link
-              href="/request"
+              href="/portfolio/kirche-fundraising"
               className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2"
             >
-              Projekt anfragen <ArrowRight size={18} />
+              Fundraising-Case ansehen <ArrowRight size={18} />
             </Link>
             <Link
               href="/contact"
               className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold"
             >
-              Unverbindliches Sparring
+              Kontakt
             </Link>
           </div>
 
-          {/* Hinweis */}
+          {/* Mini-Trust (ohne übertriebene Claims) */}
           <div className="mt-6 flex items-center justify-center gap-2 text-sm text-indigo-200/90">
             <ShieldCheck size={16} className="text-emerald-400" />
-            Klar begrenzte Projekte, transparente Konditionen und ehrliche Kommunikation – ohne Dauerbetreuungs-Verträge.
+            Sauberer Rahmen, klare Übergabe, keine Endlos-Betreuung.
           </div>
         </div>
       </section>
@@ -167,40 +171,43 @@ export default function Home() {
       <section className="px-5 md:px-16 -mt-6 mb-8">
         <div className="rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm p-4 md:p-5">
           <div className="flex flex-wrap items-center justify-center gap-3 md:gap-5">
-            {['Klar strukturiert', 'Projektbasiert', 'DSGVO-bewusst', 'Mobil optimiert', 'Keine Dauerverträge'].map(
-              (t, i) => (
-                <span
-                  key={t}
-                  data-aos="fade-up"
-                  data-aos-delay={i * 80}
-                  className="text-sm md:text-base text-neutral-200 px-3 py-1.5 rounded-full bg-white/5 ring-1 ring-white/10"
-                >
-                  {t}
-                </span>
-              )
-            )}
+            {['Projektbasiert', 'Mobil optimiert', 'Schnell online', 'Klarer CTA', 'Ohne Dauerbindung'].map((t, i) => (
+              <span
+                key={t}
+                data-aos="fade-up"
+                data-aos-delay={i * 80}
+                className="text-sm md:text-base text-neutral-200 px-3 py-1.5 rounded-full bg-white/5 ring-1 ring-white/10"
+              >
+                {t}
+              </span>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* RAHMEN / KPIs */}
+      {/* NEU: Echte, belegbare „Stats“ (aus dem Fundraising-Projekt) */}
       <section className="px-5 md:px-16 py-8 md:py-12">
-        <h2 className="text-xl md:text-2xl font-semibold mb-4">Wie ich arbeite</h2>
-        <p className="text-neutral-300 mb-6 max-w-2xl">
-          Der Fokus liegt auf wenigen, gut begleiteten Projekten statt auf möglichst vielen Aufträgen parallel. So bleibt
-          genug Raum für Schule, Studium – und für saubere Ergebnisse.
-        </p>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          <Stat label="Maximale parallele Projekte" value={2} />
-          <Stat label="Geplante Projekte pro Jahr" value={4} />
-          <Stat label="Ziel-Zufriedenheit" value={100} suffix="%" />
-          <Stat label="Fokus-Zeit pro Woche (max.)" value={10} suffix="h" />
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-semibold mb-6">Beispiel aus einem echten Projekt</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            <Stat label="Time-to-Launch" value={14} suffix=" Tage" />
+            <Stat label="Sprachen" value={2} />
+            <Stat label="Flyer-Varianten" value={4} />
+            <Stat label="Zahlungswege" value={2} />
+          </div>
+
+          <div className="mt-4 flex items-start gap-2 text-sm text-[#AEB5C8]">
+            <CheckCircle2 className="shrink-0 text-emerald-400" size={18} />
+            <p>
+              Das sind keine Marketing-Zahlen, sondern konkrete Eckdaten aus dem Fundraising-Case.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* MODULE als Scroll-Path (Top→Bottom) */}
+      {/* MODULE */}
       <section className="px-5 md:px-16 py-12 md:py-16">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-8">Kern-Services & Nutzen</h2>
+        <h2 className="text-2xl md:text-3xl font-semibold mb-8">Was ich umsetze</h2>
         <div className="relative">
           <div className="absolute left-4 md:left-1/2 -translate-x-0 md:-translate-x-1/2 top-0 bottom-0 w-[2px] bg-white/10" />
           <div className="space-y-8">
@@ -232,23 +239,23 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Vorteile */}
+        {/* Vorteile (ohne „Wie ich arbeite“) */}
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             {
-              icon: <Activity className="text-sky-300" size={18} />,
-              title: 'Projektfokus statt Dauerstress',
-              desc: 'Klar begrenzte Projekte mit Anfang und Ende, statt dauerhafter Betreuung auf Zuruf.',
+              icon: <Clock className="text-sky-300" size={18} />,
+              title: 'Kurzer Zeitraum',
+              desc: 'Ich plane Projekte so, dass sie in einem klaren Zeitfenster fertig werden – ohne Endlos-Schleifen.',
             },
             {
-              icon: <Brain className="text-violet-300" size={18} />,
-              title: 'Story & Struktur',
-              desc: 'Nicht nur „eine Website“, sondern ein roter Faden: Warum, für wen, und was der nächste Schritt ist.',
+              icon: <Layers className="text-violet-300" size={18} />,
+              title: 'Alles greift ineinander',
+              desc: 'Seite, Text, Formulare, Links und Medien – als ein zusammenhängendes System.',
             },
             {
-              icon: <Settings2 className="text-emerald-400" size={18} />,
-              title: 'Technik, die trägt',
-              desc: 'Formulare, Zahlungswege und Setups, die stabil laufen – ohne dass du dich tief einarbeiten musst.',
+              icon: <Globe2 className="text-emerald-300" size={18} />,
+              title: 'Für echte Menschen',
+              desc: 'Mobil-first, verständlich, handlungsorientiert – damit aus Interesse eine Aktion wird.',
             },
           ].map((b, i) => (
             <div key={i} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
@@ -262,48 +269,36 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TESTIMONIALS (anonymisiert, text-only) */}
+      {/* TESTIMONIALS – Optional: Wenn du (noch) keine echten Zitate hast, lieber weglassen */}
       <section className="px-5 md:px-16 pb-8 md:pb-14">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-6 md:p-10">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-8">Rückmeldungen aus Projekten</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                quote:
-                  'Die Spenden-Aktion war online viel greifbarer – Infos, Geschichte und Zahlungswege an einem Ort.',
-                name: 'Leitung eines Projekts',
-              },
-              {
-                quote:
-                  'Die Landingpage hat uns geholfen, Menschen schnell und ohne Umwege auf die Aktion aufmerksam zu machen.',
-                name: 'Organisationsteam einer Aktion',
-              },
-              {
-                quote:
-                  'Es war angenehm, ein zeitlich klares Projekt zu haben statt eine endlose Online-Baustelle.',
-                name: 'Verantwortliche Person eines lokalen Projekts',
-              },
-            ].map((t, i) => (
-              <figure
-                key={i}
-                data-aos="fade-up"
-                data-aos-delay={i * 120}
-                className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6"
-              >
-                <Quote className="absolute -top-4 -left-4 w-8 h-8 text-white/10" />
-                <blockquote className="text-neutral-200">{t.quote}</blockquote>
-                <figcaption className="mt-4 text-sm text-neutral-400">
-                  <span className="text-white font-medium">{t.name}</span>
-                </figcaption>
-              </figure>
-            ))}
+          <h2 className="text-2xl md:text-3xl font-semibold mb-6">Kurzer Eindruck</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <figure className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+              <Quote className="absolute -top-4 -left-4 w-8 h-8 text-white/10" />
+              <blockquote className="text-neutral-200">
+                „Wenn ein Projekt schnell online muss, brauche ich Klarheit, Struktur und eine saubere Umsetzung.“
+              </blockquote>
+              <figcaption className="mt-4 text-sm text-neutral-400">
+                <span className="text-white font-medium">Arbeitsprinzip</span>
+              </figcaption>
+            </figure>
+
+            <figure className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+              <Quote className="absolute -top-4 -left-4 w-8 h-8 text-white/10" />
+              <blockquote className="text-neutral-200">
+                „Das Ziel ist nicht ‘schön’, sondern ‘funktioniert’: verständlich, mobil, mit klarer Handlung.“
+              </blockquote>
+              <figcaption className="mt-4 text-sm text-neutral-400">
+                <span className="text-white font-medium">Arbeitsprinzip</span>
+              </figcaption>
+            </figure>
           </div>
 
           <div className="mt-6 flex items-start gap-2 text-sm text-[#AEB5C8]">
             <CheckCircle2 className="shrink-0 text-emerald-400" size={18} />
             <p>
-              Beispiele anonymisiert und sinngemäß zusammengefasst. Der Fokus liegt auf klaren Projekten, stabiler Technik
-              und verständlicher Kommunikation.
+              Sobald du echte Kundenstimmen hast, ersetzen wir diese Prinzip-Karten durch echte Zitate.
             </p>
           </div>
         </div>
@@ -312,23 +307,22 @@ export default function Home() {
       {/* CTA */}
       <section className="px-5 md:px-16 py-16 md:py-20 text-center">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-10">
-          <h2 className="text-3xl md:text-4xl font-bold">Lust, ein digitales Projekt anzustoßen?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold">Projekt im Kopf?</h2>
           <p className="mt-4 text-neutral-300 max-w-2xl mx-auto">
-            Kurzer Austausch, klare nächsten Schritte, realistische Planung. Ohne Druck, aber mit dem Anspruch, eure Idee
-            online verständlich und nutzbar zu machen.
+            Schreib kurz, worum es geht – ich sage dir schnell, ob es in meinen Rahmen passt.
           </p>
           <div className="mt-6 flex justify-center gap-4">
             <Link
-              href="/request"
+              href="/contact"
               className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2"
             >
-              Projekt anfragen <ArrowRight size={18} />
+              Kontakt <ArrowRight size={18} />
             </Link>
             <Link
-              href="/contact"
+              href="/portfolio"
               className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold"
             >
-              Kontakt aufnehmen
+              Portfolio ansehen
             </Link>
           </div>
         </div>
