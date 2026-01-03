@@ -12,7 +12,6 @@ import {
   ShieldCheck,
   BarChart3,
   FileText,
-  Quote,
   Clock,
   Globe2,
   Layers,
@@ -71,11 +70,28 @@ export default function Home() {
     },
   ];
 
+  const qualities = [
+    {
+      icon: <Clock className="text-sky-300" size={18} />,
+      title: 'Überschaubar',
+      desc: 'Klare Projekte mit festem Zeitrahmen – kein Dauerstress.',
+    },
+    {
+      icon: <Layers className="text-violet-300" size={18} />,
+      title: 'Zusammenhängend',
+      desc: 'Design, Inhalte und Technik greifen logisch ineinander.',
+    },
+    {
+      icon: <Globe2 className="text-emerald-300" size={18} />,
+      title: 'Für echte Nutzung',
+      desc: 'Mobil-first, verständlich, handlungsorientiert.',
+    },
+  ];
+
   return (
     <div className="font-proxima bg-[#0B0B0F] text-white">
       <Navbar />
 
-      {/* HERO */}
       <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_600px_at_-10%_-10%,rgba(129,51,241,.35),transparent_60%),radial-gradient(900px_600px_at_120%_0%,rgba(56,189,248,.20),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#0E0E15_60%,#0B0B0F_100%)]" />
 
@@ -89,8 +105,7 @@ export default function Home() {
           </h1>
 
           <p className="mt-6 text-lg md:text-xl text-neutral-300">
-            Landingpages, Formulare, Zahlungswege und Medien für Projekte & Kampagnen –
-            ohne Dauerbindung, ohne Social-Media-Zwang.
+            Landingpages, Formulare, Zahlungswege und Medien für Projekte & Kampagnen – ohne Dauerbindung, ohne Social-Media-Zwang.
           </p>
 
           <div className="mt-8 flex justify-center gap-4">
@@ -115,7 +130,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TRUST BAR */}
       <section className="px-5 md:px-16 -mt-6 mb-10">
         <div className="rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm p-4 md:p-5">
           <div className="flex flex-wrap items-center justify-center gap-3 md:gap-5">
@@ -133,7 +147,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SERVICES */}
       <section className="px-5 md:px-16 py-12 md:py-16">
         <h2 className="text-2xl md:text-3xl font-semibold mb-8">Was ich umsetze</h2>
 
@@ -170,25 +183,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* QUALITÄTEN (ohne „Wie ich arbeite“) */}
         <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              icon: <Clock className="text-sky-300" size={18} />,
-              title: 'Überschaubar',
-              desc: 'Klare Projekte mit festem Zeitrahmen – kein Dauerstress.',
-            },
-            {
-              icon: <Layers className="text-violet-300" size={18} />,
-              title: 'Zusammenhängend',
-              desc: 'Design, Inhalte und Technik greifen logisch ineinander.',
-            },
-            {
-              icon: <Globe2 className="text-emerald-300" size={18} />,
-              title: 'Für echte Nutzung',
-              desc: 'Mobil-first, verständlich, handlungsorientiert.',
-            },
-          ].map((b) => (
+          {qualities.map((b) => (
             <div key={b.title} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
               <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm text-indigo-200">
                 {b.icon}
@@ -200,7 +196,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="px-5 md:px-16 py-16 md:py-20 text-center">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-10">
           <h2 className="text-3xl md:text-4xl font-bold">Ein Projekt im Kopf?</h2>
