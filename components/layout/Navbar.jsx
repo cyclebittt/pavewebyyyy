@@ -8,11 +8,10 @@ import React, { useEffect, useRef, useState } from 'react';
 
 const links = [
   { href: '/', label: 'Start', key: '' },
-  { href: '/about', label: 'Über mich', key: 'about' },
   { href: '/portfolio', label: 'Portfolio', key: 'portfolio' },
-  // { href: '/blogs', label: 'Blog', key: 'blogs' },
   { href: '/contact', label: 'Kontakt', key: 'contact' },
 ];
+
 
 export default function Navbar() {
   const [openMobileMenu, setOpenMobileMenu] = useState(false);
