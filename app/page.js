@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -8,84 +8,57 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import {
   ArrowRight,
-  Sparkles,
   ShieldCheck,
-  BarChart3,
-  FileText,
-  Clock,
-  Globe2,
-  Layers,
+  Sparkles,
+  LayoutTemplate,
   CreditCard,
   Video,
-  LayoutTemplate,
+  FileText,
+  CheckCircle2,
 } from 'lucide-react';
 
 export default function Home() {
-  const [fadeDir, setFadeDir] = useState('fade-right');
-
   useEffect(() => {
-    AOS.init({ duration: 600, once: true });
-    const handleResize = () => setFadeDir(window.innerWidth < 768 ? 'fade-down' : 'fade-right');
-    handleResize();
-    window.addEventListener('resize', handleResize, { passive: true });
-    return () => window.removeEventListener('resize', handleResize);
+    AOS.init({ duration: 500, once: true, offset: 40 });
   }, []);
 
-  const modules = [
+  const services = [
     {
-      icon: <LayoutTemplate size={22} className="text-violet-300" />,
-      title: 'Landingpages & Kampagnen',
-      desc: 'Schlanke Seiten für Aktionen, Projekte oder Angebote – schnell online, klar strukturiert.',
+      icon: <LayoutTemplate size={18} className="text-violet-300" />,
+      title: 'Landingpages & Websites',
+      desc: 'Klarer Aufbau, mobil optimiert, schnelle Umsetzung.',
       href: '/services/landingpages',
     },
     {
-      icon: <FileText size={22} className="text-violet-300" />,
-      title: 'Formulare & Kontaktwege',
-      desc: 'Anfragen, Anmeldungen oder einfache Workflows – damit Interesse nicht verpufft.',
-      href: '/services/forms',
-    },
-    {
-      icon: <CreditCard size={22} className="text-violet-300" />,
-      title: 'Spenden- & Zahlungswege',
-      desc: 'PayPal, Überweisung, klare CTAs – ohne Reibung, ohne Umwege.',
+      icon: <CreditCard size={18} className="text-violet-300" />,
+      title: 'Zahlungswege & Spenden',
+      desc: 'PayPal/Überweisung/CTAs – ohne Reibung.',
       href: '/services/payments',
     },
     {
-      icon: <Video size={22} className="text-violet-300" />,
+      icon: <FileText size={18} className="text-violet-300" />,
+      title: 'Formulare & Kontakt',
+      desc: 'Anfragen, Anmeldungen, klare Workflows.',
+      href: '/services/forms',
+    },
+    {
+      icon: <Video size={18} className="text-violet-300" />,
       title: 'Kurzvideo & Motion',
-      desc: 'Ein starkes Video oder Motion-Element für eine konkrete Aktion – kein Dauer-Content.',
+      desc: 'Ein Clip für eine Aktion – kein Dauer-Content.',
       href: '/services/video',
-    },
-    {
-      icon: <BarChart3 size={22} className="text-violet-300" />,
-      title: 'Grundlegendes Tracking',
-      desc: 'Einfaches Tracking, saubere Struktur – damit klar ist, was funktioniert.',
-      href: '/services/analytics',
-    },
-    {
-      icon: <ShieldCheck size={22} className="text-violet-300" />,
-      title: 'Sauberer Go-Live',
-      desc: 'Domain, Hosting & Übergabe – pragmatisch, dokumentiert, ohne Agentur-Overhead.',
-      href: '/services/setup',
     },
   ];
 
-  const qualities = [
-    {
-      icon: <Clock className="text-sky-300" size={18} />,
-      title: 'Überschaubar',
-      desc: 'Klare Projekte mit festem Zeitrahmen – kein Dauerstress.',
-    },
-    {
-      icon: <Layers className="text-violet-300" size={18} />,
-      title: 'Zusammenhängend',
-      desc: 'Design, Inhalte und Technik greifen logisch ineinander.',
-    },
-    {
-      icon: <Globe2 className="text-emerald-300" size={18} />,
-      title: 'Für echte Nutzung',
-      desc: 'Mobil-first, verständlich, handlungsorientiert.',
-    },
+  const proof = [
+    { k: 'Case', v: 'Fundraising-Kampagne (zweisprachig)' },
+    { k: 'Deliverables', v: 'Website, Flyer, Video, Zahlungswege' },
+    { k: 'Timing', v: 'Launch in 2 Wochen (Fixtermin)' },
+  ];
+
+  const trust = [
+    { title: 'Projektbasiert', text: 'Klare Zeitfenster statt Endlos-Betreuung.' },
+    { title: 'Umsetzungsfokus', text: 'Nicht “Strategie-PowerPoint”, sondern Go-Live.' },
+    { title: 'Einfach & nutzbar', text: 'Struktur, CTA, klare Wege – damit Leute handeln.' },
   ];
 
   return (
@@ -95,127 +68,120 @@ export default function Home() {
       <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_600px_at_-10%_-10%,rgba(129,51,241,.35),transparent_60%),radial-gradient(900px_600px_at_120%_0%,rgba(56,189,248,.20),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#0E0E15_60%,#0B0B0F_100%)]" />
 
-        <div className="relative px-5 md:px-16 pt-20 md:pt-28 pb-16 md:pb-20 text-center max-w-4xl mx-auto">
-          <span className="inline-flex items-center gap-2 text-sm text-indigo-300/80 bg-white/5 ring-1 ring-white/10 px-3 py-1 rounded-full">
-            <Sparkles size={16} /> Kleine digitale Projekte · klar & projektbasiert
-          </span>
+        <div className="relative px-5 md:px-16 pt-20 md:pt-28 pb-10 md:pb-12 max-w-5xl mx-auto">
+          <div className="text-center">
+            <span className="inline-flex items-center gap-2 text-sm text-indigo-300/80 bg-white/5 ring-1 ring-white/10 px-3 py-1 rounded-full">
+              <Sparkles size={16} /> Projektbasierte digitale Umsetzung
+            </span>
 
-          <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight">
-  <span className="block">Ein digitales Projekt?</span>
-  <span className="block text-indigo-300">Dann bist du hier richtig.</span>
-</h1>
+            <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight" data-aos="fade-up">
+              <span className="block">Ich baue Websites & Kampagnen-Medien,</span>
+              <span className="block text-indigo-300">die schnell online gehen und genutzt werden.</span>
+            </h1>
 
+            <p className="mt-5 text-base md:text-lg text-neutral-300 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="60">
+              Für Aktionen, Projekte und kleine Unternehmen, die Klarheit wollen: Was ist das? Warum ist es wichtig? Was soll ich jetzt tun?
+            </p>
 
-          <p className="mt-6 text-lg md:text-xl text-neutral-300">
-            Landingpages, Formulare, Zahlungswege und Medien für Projekte & Kampagnen – ohne Dauerbindung, ohne Social-Media-Zwang.
-          </p>
-
-          <div className="mt-8 flex justify-center gap-4">
-            <Link
-              href="/portfolio/kirche-fundraising"
-              className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2"
-            >
-              Fundraising-Projekt ansehen <ArrowRight size={18} />
-            </Link>
-            <Link
-              href="/contact"
-              className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold"
-            >
-              Kontakt
-            </Link>
-          </div>
-
-          <div className="mt-6 flex items-center justify-center gap-2 text-sm text-indigo-200/90">
-            <ShieldCheck size={16} className="text-emerald-400" />
-            Klarer Rahmen · keine Endlos-Betreuung
-          </div>
-        </div>
-      </section>
-
-      <section className="px-5 md:px-16 -mt-6 mb-10">
-        <div className="rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm p-4 md:p-5">
-          <div className="flex flex-wrap items-center justify-center gap-3 md:gap-5">
-            {['Projektbasiert', 'Mobil optimiert', 'Schnell online', 'Klare Handlungswege', 'Ohne Dauerbindung'].map(
-              (t) => (
-                <span
-                  key={t}
-                  className="text-sm md:text-base text-neutral-200 px-3 py-1.5 rounded-full bg-white/5 ring-1 ring-white/10"
-                >
-                  {t}
-                </span>
-              )
-            )}
-          </div>
-        </div>
-      </section>
-
-      <section className="px-5 md:px-16 py-12 md:py-16">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-8">Was ich umsetze</h2>
-
-        <div className="relative">
-          <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-[2px] bg-white/10" />
-          <div className="space-y-8">
-            {modules.map((m, i) => (
-              <div
-                key={m.title}
-                data-aos={fadeDir}
-                data-aos-delay={i * 80}
-                className="relative flex flex-col md:flex-row items-start gap-4 md:gap-8"
+            <div className="mt-7 flex flex-col sm:flex-row justify-center gap-3" data-aos="fade-up" data-aos-delay="120">
+              <Link
+                href="/contact"
+                className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center justify-center gap-2"
               >
-                <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 -top-1.5 w-4 h-4 rounded-full bg-violet-500 shadow-[0_0_0_6px_rgba(129,51,241,0.25)]" />
-                <div
-                  className={`w-full md:w-[48%] rounded-2xl border border-white/10 bg-white/[0.04] p-6
-                  ${i % 2 === 0 ? 'md:ml-auto' : 'md:mr-auto'}`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                      {m.icon}
-                    </div>
-                    <h3 className="text-lg md:text-xl font-semibold">{m.title}</h3>
-                  </div>
-                  <p className="mt-3 text-neutral-300">{m.desc}</p>
-                  <div className="mt-4">
-                    <Link href={m.href} className="inline-flex items-center gap-2 text-indigo-300 hover:text-indigo-200">
-                      Details ansehen <ArrowRight size={16} />
-                    </Link>
-                  </div>
-                </div>
+                Projekt anfragen <ArrowRight size={18} />
+              </Link>
+              <Link
+                href="/portfolio/kirche-fundraising"
+                className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold inline-flex items-center justify-center gap-2"
+              >
+                Case ansehen <ArrowRight size={18} />
+              </Link>
+            </div>
+
+            <div className="mt-6 flex items-center justify-center gap-2 text-sm text-indigo-200/90">
+              <ShieldCheck size={16} className="text-emerald-400" />
+              Klarer Rahmen · feste Absprachen · keine Endlos-Betreuung
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 md:px-16 pb-10">
+        <div className="max-w-5xl mx-auto rounded-3xl border border-white/10 bg-white/[0.04] p-5 md:p-7">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {proof.map((p, i) => (
+              <div key={p.k} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5" data-aos="fade-up" data-aos-delay={i * 80}>
+                <div className="text-xs uppercase tracking-wide text-neutral-400">{p.k}</div>
+                <div className="mt-2 text-white font-semibold">{p.v}</div>
               </div>
             ))}
           </div>
         </div>
+      </section>
 
-        <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-6">
-          {qualities.map((b) => (
-            <div key={b.title} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm text-indigo-200">
-                {b.icon}
-                <span>{b.title}</span>
-              </div>
-              <p className="mt-3 text-neutral-300">{b.desc}</p>
-            </div>
-          ))}
+      <section className="px-5 md:px-16 py-10 md:py-12">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex items-end justify-between gap-4">
+            <h2 className="text-2xl md:text-3xl font-semibold">Was du bekommst</h2>
+            <Link href="/portfolio" className="hidden md:inline-flex text-indigo-300 hover:text-indigo-200 items-center gap-2">
+              Portfolio <ArrowRight size={16} />
+            </Link>
+          </div>
+
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+            {services.map((s, i) => (
+              <Link
+                key={s.title}
+                href={s.href}
+                className="group rounded-2xl border border-white/10 bg-white/[0.04] p-6 hover:border-white/20 transition-colors"
+                data-aos="fade-up"
+                data-aos-delay={i * 80}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                    {s.icon}
+                  </div>
+                  <div className="text-lg font-semibold">{s.title}</div>
+                </div>
+                <div className="mt-3 text-neutral-300">{s.desc}</div>
+                <div className="mt-4 text-sm text-indigo-300 group-hover:text-indigo-200 inline-flex items-center gap-2">
+                  Details ansehen <ArrowRight size={14} />
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section className="px-5 md:px-16 py-16 md:py-20 text-center">
-        <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-10">
-          <h2 className="text-3xl md:text-4xl font-bold">Ein Projekt im Kopf?</h2>
+      <section className="px-5 md:px-16 py-10 md:py-12">
+        <div className="max-w-5xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-6 md:p-10">
+          <h2 className="text-2xl md:text-3xl font-semibold">Warum du mir vertrauen kannst</h2>
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-5">
+            {trust.map((t, i) => (
+              <div key={t.title} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6" data-aos="fade-up" data-aos-delay={i * 80}>
+                <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm text-indigo-200">
+                  <CheckCircle2 size={16} className="text-emerald-400" />
+                  {t.title}
+                </div>
+                <p className="mt-3 text-neutral-300">{t.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 md:px-16 py-14 md:py-20 text-center">
+        <div className="max-w-5xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-10">
+          <h3 className="text-3xl md:text-4xl font-bold">Sag mir kurz, was du brauchst.</h3>
           <p className="mt-4 text-neutral-300 max-w-2xl mx-auto">
-            Schreib kurz, worum es geht – ich sage dir ehrlich, ob es in meinen Rahmen passt.
+            3 Sätze reichen: Ziel, Deadline, was schon da ist. Ich sage dir ehrlich, ob es passt.
           </p>
-          <div className="mt-6 flex justify-center gap-4">
+          <div className="mt-6 flex justify-center">
             <Link
               href="/contact"
-              className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center gap-2"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold"
             >
-              Kontakt aufnehmen <ArrowRight size={18} />
-            </Link>
-            <Link
-              href="/portfolio"
-              className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold"
-            >
-              Portfolio ansehen
+              Kontakt <ArrowRight size={18} />
             </Link>
           </div>
         </div>
