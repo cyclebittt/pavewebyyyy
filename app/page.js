@@ -129,26 +129,26 @@ export default function Home() {
           </div>
 
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5">
-            {services.map((s, i) => (
-              <Link
-                key={s.title}
-                href={s.href}
-                className="group rounded-2xl border border-white/10 bg-white/[0.04] p-6 hover:border-white/20 transition-colors"
-                data-aos="fade-up"
-                data-aos-delay={i * 80}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                    {s.icon}
-                  </div>
-                  <div className="text-lg font-semibold">{s.title}</div>
-                </div>
-                <div className="mt-3 text-neutral-300">{s.desc}</div>
-                <div className="mt-4 text-sm text-indigo-300 group-hover:text-indigo-200 inline-flex items-center gap-2">
-                  Details ansehen <ArrowRight size={14} />
-                </div>
-              </Link>
-            ))}
+          {services.map((s, i) => (
+  <div
+    key={s.title}
+    className="rounded-2xl border border-white/10 bg-white/[0.04] p-6"
+    data-aos="fade-up"
+    data-aos-delay={i * 80}
+  >
+    <div className="flex items-center gap-3">
+      <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+        {s.icon}
+      </div>
+      <div className="text-lg font-semibold">{s.title}</div>
+    </div>
+
+    <div className="mt-3 text-neutral-300">
+      {s.desc}
+    </div>
+  </div>
+))}
+
           </div>
         </div>
       </section>
