@@ -66,7 +66,7 @@ export default function ContactPage() {
             </Link>
 
             <a
-              href="mailto:info@paveconsultings.com?subject=Projektanfrage&body=Hi Leon,%0D%0A%0D%0AZiel:%0D%0ADeadline:%0D%0AStand:%0D%0A%0D%0AKurz Kontext:%0D%0A"
+              href="mailto:leonseitz25@icloud.com?subject=Projektanfrage&body=Hi Leon,%0D%0A%0D%0AZiel:%0D%0ADeadline:%0D%0AStand:%0D%0A%0D%0AKurz Kontext:%0D%0A"
               className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold inline-flex items-center justify-center gap-2"
             >
               E-Mail senden <Mail size={18} />
@@ -85,11 +85,11 @@ export default function ContactPage() {
           <ContactCard
             icon={<Mail size={18} className="text-indigo-300" />}
             title="E-Mail"
-            value="info@paveconsultings.com"
+            value="leonseitz25@icloud.com"
             action={
               <a
                 className="text-indigo-300 hover:text-indigo-200 inline-flex items-center gap-2"
-                href="mailto:info@paveconsultings.com"
+                href="mailto:leonseitz25@icloud.com"
               >
                 Mail öffnen <ArrowRight size={14} />
               </a>
