@@ -57,7 +57,31 @@ export default function ContactPage() {
             Ziel · Deadline · Was ist schon vorhanden? Mehr brauche ich nicht für eine klare Einschätzung.
           </p>
 
-          <div className="mt-7 flex flex-col sm:flex-row justify-center gap-3" data-aos="fade-up" data-aos-delay="120">
+          <div className="mt-7 flex flex-col sm:flex-row justify-center gap-3">
+  <Link
+    href="/request"
+    className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center justify-center gap-2"
+  >
+    Termin vereinbaren <ArrowRight size={18} />
+  </Link>
+
+  <a
+    href="https://wa.me/4916095757167?text=Hi%20Leon,%0A%0AZiel:%0ADeadline:%0AStand:%0A%0AKurzer%20Kontext:"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold inline-flex items-center justify-center gap-2"
+  >
+    WhatsApp schreiben <MessageCircle size={18} />
+  </a>
+
+  <a
+    href="mailto:info@paveconsultings.com?subject=Projektanfrage&body=Hi%20Leon,%0A%0AZiel:%0ADeadline:%0AStand:%0A%0AKurzer%20Kontext:"
+    className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold inline-flex items-center justify-center gap-2"
+  >
+    E-Mail senden <Mail size={18} />
+  </a>
+</div>
+
             <Link
               href="/request"
               className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center justify-center gap-2"
