@@ -31,8 +31,8 @@ export default function Home() {
     },
     {
       icon: <CreditCard size={18} className="text-violet-300" />,
-      title: 'Zahlungswege & Spenden',
-      desc: 'PayPal/Überweisung/CTAs – ohne Reibung.',
+      title: 'Zahlungswege',
+      desc: 'Einrichtung von PayPal/Überweisung/CTAs auf deiner Website',
       href: '/services/payments',
     },
     {
@@ -43,22 +43,22 @@ export default function Home() {
     },
     {
       icon: <Video size={18} className="text-violet-300" />,
-      title: 'Kurzvideo & Motion',
-      desc: 'Ein Clip für eine Aktion – kein Dauer-Content.',
+      title: 'Videoediting',
+      desc: 'Visualisieren deiner Vision - sei es mit Drohnenaufnahmen, Motion Designs, Short-Form, uvm.',
       href: '/services/video',
     },
   ];
 
   const proof = [
-    { k: 'Case', v: 'Fundraising-Kampagne (zweisprachig)' },
-    { k: 'Deliverables', v: 'Website, Flyer, Video, Zahlungswege' },
+    { k: 'Case', v: 'Fundraising-Kampagne' },
+    { k: 'Deliverables', v: 'Website, Video Pre- & Postproduction, Einrichtung verschiedener Zahlungswege' },
     { k: 'Timing', v: 'Launch in 2 Wochen (Fixtermin)' },
   ];
 
   const trust = [
-    { title: 'Projektbasiert', text: 'Klare Zeitfenster statt Endlos-Betreuung.' },
-    { title: 'Umsetzungsfokus', text: 'Nicht “Strategie-PowerPoint”, sondern Go-Live.' },
-    { title: 'Einfach & nutzbar', text: 'Struktur, CTA, klare Wege – damit Leute handeln.' },
+    { title: 'Projektbasiert', text: 'Ich fokussiere mich völlig auf dein Projekt.' },
+    { title: 'Umsetzungsfokus', text: 'Ich setze deine Vision in wenigen Tagen um und reagiere auf dein Feedback.' },
+    { title: 'Kommunikativ', text: 'Ich antworte dir in weniger als 24h.' },
   ];
 
   return (
