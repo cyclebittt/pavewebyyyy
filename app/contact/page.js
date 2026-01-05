@@ -28,7 +28,7 @@ export default function ContactPage() {
   const whatsappHref =
     'https://wa.me/4916095757167?text=Hi%20Leon,%0A%0AZiel:%0ADeadline:%0AStand:%0A%0AKurzer%20Kontext:';
   const mailHref =
-    'mailto:info@paveconsultings.com?subject=Projektanfrage&body=Hi%20Leon,%0A%0AZiel:%0ADeadline:%0AStand:%0A%0AKurzer%20Kontext:';
+    'mailto:leonseitz25@icloud.com?subject=Projektanfrage&body=Hi%20Leon,%0A%0AZiel:%0ADeadline:%0AStand:%0A%0AKurzer%20Kontext:';
 
   const faqs = [
     {
