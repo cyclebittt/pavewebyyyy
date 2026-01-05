@@ -203,5 +203,3 @@ function ContactCard({ icon, title, value, action }) {
     </div>
   );
 }
-
-
