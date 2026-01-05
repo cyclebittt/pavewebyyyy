@@ -8,7 +8,7 @@ export default function Footer() {
   const whatsappHref =
     'https://wa.me/4916095757167?text=Hi%20Leon,%0A%0AZiel:%0ADeadline:%0AStand:%0A%0AKurzer%20Kontext:';
   const mailHref =
-    'mailto:info@paveconsultings.com?subject=Projektanfrage&body=Hi%20Leon,%0A%0AZiel:%0ADeadline:%0AStand:%0A%0AKurzer%20Kontext:';
+    'mailto:leonseitz25@icloud.com?subject=Projektanfrage&body=Hi%20Leon,%0A%0AZiel:%0ADeadline:%0AStand:%0A%0AKurzer%20Kontext:';
 
   return (
     <footer className="relative bg-gradient-to-br from-[#0B0B0F] via-[#0E0E15] to-black text-neutral-300 border-t border-white/10">
@@ -26,7 +26,7 @@ export default function Footer() {
                   height={40}
                   className="h-10 w-auto"
                 />
-                <span className="font-extrabold text-white text-lg">PAVEO</span>
+                <span className="font-extrabold text-white text-lg">Leon Seitz</span>
               </span>
             </Link>
 
