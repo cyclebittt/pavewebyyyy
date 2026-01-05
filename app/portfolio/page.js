@@ -51,7 +51,7 @@ export default function PortfolioPage() {
               </p>
 
               {/* kleines, ruhiges Titelbild links unten (optional) */}
-              <div className="mt-6">
+             /* <div className="mt-6">
                 <div className="relative w-full max-w-xl h-40 md:h-44 rounded-3xl overflow-hidden border border-white/10 bg-white/[0.04]">
                   <Image
                     src="/img/portfolio/erkin.jpg"
