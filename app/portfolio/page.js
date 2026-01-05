@@ -46,8 +46,7 @@ export default function PortfolioPage() {
               Projekte, die in Sekunden klar werden.
             </h1>
             <p className="mt-4 text-neutral-300 text-base md:text-lg">
-              Wenig Blabla, klare Wirkung: Landingpages & Medien, die Menschen sofort verstehen — und die nächste Aktion
-              auslösen.
+              Meine letzten Projekte auf einem Blick
             </p>
           </div>
         </div>
