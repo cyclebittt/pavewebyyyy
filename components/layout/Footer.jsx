@@ -55,7 +55,7 @@ export default function Footer() {
               className="inline-flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors"
             >
               <Mail size={16} />
-              info@paveconsultings.com
+              leonseitz25@icloud.com
             </a>
 
             <p className="text-xs text-neutral-500 mt-2">
