@@ -32,7 +32,7 @@ export default function PortfolioPage() {
     <div className="font-proxima bg-[#0B0B0F] text-white min-h-screen">
       <Navbar />
 
-      {/* HERO */}
+      {/* HERO (ohne oberes Rectangle) */}
       <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_600px_at_-10%_-10%,rgba(129,51,241,.35),transparent_60%),radial-gradient(900px_600px_at_120%_0%,rgba(56,189,248,.18),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#0E0E15_60%,#0B0B0F_100%)]" />
 
@@ -41,36 +41,14 @@ export default function PortfolioPage() {
             <Sparkles size={16} /> Portfolio
           </span>
 
-          <div className="mt-5 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 items-start">
-            <div>
-              <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
-                Projekte, die in Sekunden klar werden.
-              </h1>
-              <p className="mt-4 text-neutral-300 text-base md:text-lg max-w-xl">
-                Wenig Blabla, klare Wirkung: Landingpages & Medien, die Menschen sofort verstehen — und die nächste Aktion auslösen.
-              </p>
-
-              {/* kleines, ruhiges Titelbild links unten (optional) */}
-             /* <div className="mt-6">
-                <div className="relative w-full max-w-xl h-40 md:h-44 rounded-3xl overflow-hidden border border-white/10 bg-white/[0.04]">
-                  <Image
-                    src="/img/portfolio/erkin.jpg"
-                    alt="Erkin – Portfolio Titelbild"
-                    fill
-                    sizes="(max-width: 768px) 100vw, 600px"
-                    className="object-cover"
-                    priority
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
-                  <div className="absolute bottom-3 left-4 right-4 text-xs md:text-sm text-neutral-100/90">
-                    Fokus: klarer Aufbau · kurze Inhalte · starke CTAs
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* rechte Seite leer lassen – clean */}
-            <div className="hidden lg:block" />
+          <div className="mt-5 max-w-3xl">
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
+              Projekte, die in Sekunden klar werden.
+            </h1>
+            <p className="mt-4 text-neutral-300 text-base md:text-lg">
+              Wenig Blabla, klare Wirkung: Landingpages & Medien, die Menschen sofort verstehen — und die nächste Aktion
+              auslösen.
+            </p>
           </div>
         </div>
       </section>
@@ -106,6 +84,7 @@ function CaseCard({ project }) {
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
           className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          priority
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
       </div>
