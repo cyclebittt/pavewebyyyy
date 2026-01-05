@@ -114,7 +114,7 @@ export default function ContactPage() {
           <ContactCard
             icon={<Mail size={18} className="text-indigo-300" />}
             title="E-Mail"
-            value="info@paveconsultings.com"
+            value="leonseitz25@icloud.com"
             action={
               <a className="text-indigo-300 hover:text-indigo-200 inline-flex items-center gap-2" href={mailHref}>
                 Mail öffnen <ArrowRight size={14} />
