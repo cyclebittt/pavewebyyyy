@@ -1,53 +1,37 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import {
-  Mail,
-  Phone,
-  ArrowRight,
-  ChevronDown,
-  Sparkles,
-  ShieldCheck,
-  MessageCircle,
-} from 'lucide-react';
+import { Mail, Phone, ArrowRight, ChevronDown, Sparkles, ShieldCheck, MessageCircle } from 'lucide-react';
 
 export default function ContactPage() {
   const [open, setOpen] = useState(null);
-
-  useEffect(() => {
-    (async () => {
-      const AOS = (await import('aos')).default;
-      await import('aos/dist/aos.css');
-      AOS.init({ duration: 500, once: true, offset: 40 });
-    })();
-  }, []);
-
-  const faqs = [
-    {
-      q: 'Wie starten wir?',
-      a: 'Schreib mir kurz Ziel + Deadline + was schon da ist. Dann sage ich dir ehrlich, ob ich helfen kann und wie der nächste Schritt aussieht.',
-    },
-    {
-      q: 'Welche Projekte passen besonders?',
-      a: 'Klar begrenzte Vorhaben: Landingpage/Website, Formular, Zahlungsweg (z. B. PayPal/Überweisung) und ggf. begleitende Medien (Flyer/kurzes Video).',
-    },
-    {
-      q: 'Gibt es laufende Betreuung?',
-      a: 'Mein Fokus sind Projekte mit Anfang und Ende. Kleine Anpassungen danach sind möglich, aber keine Dauerverträge.',
-    },
-    {
-      q: 'Wie schnell geht das?',
-      a: 'Viele Projekte sind in wenigen Tagen bis wenigen Wochen realistisch – abhängig von Umfang und Deadline.',
-    },
-  ];
 
   const whatsappHref =
     'https://wa.me/4916095757167?text=Hi%20Leon,%0A%0AZiel:%0ADeadline:%0AStand:%0A%0AKurzer%20Kontext:';
   const mailHref =
     'mailto:info@paveconsultings.com?subject=Projektanfrage&body=Hi%20Leon,%0A%0AZiel:%0ADeadline:%0AStand:%0A%0AKurzer%20Kontext:';
+
+  const faqs = [
+    {
+      q: 'Wie starten wir?',
+      a: 'Schick mir Ziel + Deadline + was schon da ist. Dann sage ich dir direkt, ob ich helfen kann und wie der nächste Schritt aussieht.',
+    },
+    {
+      q: 'Welche Projekte passen?',
+      a: 'Klar begrenzte Projekte: Website/Landingpage, Formular, Zahlungsweg (PayPal/Überweisung) + optional Flyer oder kurzes Video.',
+    },
+    {
+      q: 'Gibt es laufende Betreuung?',
+      a: 'Fokus auf Projekte mit Anfang und Ende. Kleine Anpassungen später sind möglich, aber keine Dauerverträge.',
+    },
+    {
+      q: 'Wie schnell geht das?',
+      a: 'Oft wenige Tage bis wenige Wochen – je nach Umfang und Deadline.',
+    },
+  ];
 
   return (
     <div className="font-proxima bg-[#0B0B0F] text-white">
@@ -62,24 +46,16 @@ export default function ContactPage() {
             <Sparkles size={16} /> Kontakt
           </span>
 
-          <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight" data-aos="fade-up">
+          <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight">
             <span className="block">Schick mir 3 Sätze.</span>
             <span className="block text-indigo-300">Ich sage dir ehrlich, ob es passt.</span>
           </h1>
 
-          <p
-            className="mt-5 text-base md:text-lg text-neutral-300 max-w-2xl mx-auto"
-            data-aos="fade-up"
-            data-aos-delay="60"
-          >
+          <p className="mt-5 text-base md:text-lg text-neutral-300 max-w-2xl mx-auto">
             Ziel · Deadline · Was ist schon vorhanden? Mehr brauche ich nicht für eine klare Einschätzung.
           </p>
 
-          <div
-            className="mt-7 flex flex-col sm:flex-row justify-center gap-3"
-            data-aos="fade-up"
-            data-aos-delay="120"
-          >
+          <div className="mt-7 flex flex-col sm:flex-row justify-center gap-3">
             <Link
               href="/request"
               className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center justify-center gap-2"
@@ -118,41 +94,25 @@ export default function ContactPage() {
             icon={<MessageCircle size={18} className="text-indigo-300" />}
             title="WhatsApp"
             value="Schnellster Weg"
-            action={
-              <a
-                className="text-indigo-300 hover:text-indigo-200 inline-flex items-center gap-2"
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Chat öffnen <ArrowRight size={14} />
-              </a>
-            }
+            href={whatsappHref}
+            linkLabel="Chat öffnen"
+            external
           />
 
           <ContactCard
             icon={<Mail size={18} className="text-indigo-300" />}
             title="E-Mail"
             value="info@paveconsultings.com"
-            action={
-              <a className="text-indigo-300 hover:text-indigo-200 inline-flex items-center gap-2" href={mailHref}>
-                Mail öffnen <ArrowRight size={14} />
-              </a>
-            }
+            href={mailHref}
+            linkLabel="Mail öffnen"
           />
 
           <ContactCard
             icon={<Phone size={18} className="text-indigo-300" />}
             title="Telefon"
             value="+49 160 95757167"
-            action={
-              <a
-                className="text-indigo-300 hover:text-indigo-200 inline-flex items-center gap-2"
-                href="tel:+4916095757167"
-              >
-                Anrufen <ArrowRight size={14} />
-              </a>
-            }
+            href="tel:+4916095757167"
+            linkLabel="Anrufen"
           />
         </div>
       </section>
@@ -211,7 +171,7 @@ export default function ContactPage() {
   );
 }
 
-function ContactCard({ icon, title, value, action }) {
+function ContactCard({ icon, title, value, href, linkLabel, external = false }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
       <div className="flex items-center gap-3">
@@ -220,8 +180,17 @@ function ContactCard({ icon, title, value, action }) {
       </div>
 
       <div className="mt-3 text-neutral-200 break-all">{value}</div>
-      <div className="mt-4">{action}</div>
+
+      <div className="mt-4">
+        <a
+          className="text-indigo-300 hover:text-indigo-200 inline-flex items-center gap-2"
+          href={href}
+          target={external ? '_blank' : undefined}
+          rel={external ? 'noopener noreferrer' : undefined}
+        >
+          {linkLabel} <ArrowRight size={14} />
+        </a>
+      </div>
     </div>
   );
 }
-
