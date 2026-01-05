@@ -1,22 +1,25 @@
 'use client';
 
-import { useEffect } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { ShieldCheck, Clock, Sparkles, CheckCircle2, CalendarDays, ArrowRight } from 'lucide-react';
+import {
+  ShieldCheck,
+  Clock,
+  Sparkles,
+  CheckCircle2,
+  CalendarDays,
+  ArrowRight,
+  Mail,
+  MessageCircle,
+} from 'lucide-react';
+
+const EMAIL = 'leonseitz25@icloud.com';
+const WHATSAPP = '4916095757167';
 
 export default function RequestPage() {
-  useEffect(() => {
-    let cleanup = () => {};
-    (async () => {
-      const AOS = (await import('aos')).default;
-      await import('aos/dist/aos.css');
-      AOS.init({ duration: 600, once: true, offset: 40 });
-      cleanup = () => {};
-    })();
-    return () => cleanup();
-  }, []);
+  const mailto = `mailto:${EMAIL}?subject=Projektanfrage&body=Hi%20Leon,%0A%0AZiel:%0ADeadline:%0AStand:%0A%0AKurzer%20Kontext:`;
+  const whatsapp = `https://wa.me/${WHATSAPP}?text=Hi%20Leon,%0A%0AZiel:%0ADeadline:%0AStand:%0A%0AKurzer%20Kontext:`;
 
   return (
     <div className="font-proxima bg-[#0C0D12] text-white">
@@ -24,107 +27,108 @@ export default function RequestPage() {
 
       {/* HERO */}
       <section className="relative overflow-hidden" aria-labelledby="rq-hero">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#111226] via-[#151A35] to-[#0B0E19]" />
-        <div className="pointer-events-none absolute -top-24 -left-32 h-96 w-[42rem] rounded-full bg-violet-600/20 blur-[110px]" />
-        <div className="pointer-events-none absolute top-1/3 -right-24 h-96 w-[42rem] rounded-full bg-blue-500/20 blur-[120px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(1200px_700px_at_-10%_-10%,rgba(129,51,241,.30),transparent_60%),radial-gradient(900px_650px_at_115%_10%,rgba(56,189,248,.18),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#0E0E15_60%,#0B0B0F_100%)]" />
 
-        <div className="relative px-5 md:px-20 py-16 md:py-24">
+        <div className="relative px-5 md:px-20 pt-14 md:pt-20 pb-10 md:pb-14">
           <div className="max-w-4xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs tracking-wide text-[#C9CEE0]">
-              <CalendarDays size={14} /> Kurzen Austausch anfragen
+              <CalendarDays size={14} /> Anfrage für kurzen Austausch
             </span>
-            <h1 id="rq-hero" className="mt-5 text-4xl md:text-6xl font-bold leading-tight" data-aos="fade-up">
-              Ein Call, um Ihr digitales Projekt <span className="bg-gradient-to-r from-violet-300 to-blue-300 bg-clip-text text-transparent">klar zu bekommen.</span>
+
+            <h1
+              id="rq-hero"
+              className="mt-5 text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05]"
+            >
+              20 Minuten. <span className="block">Klare Einschätzung.</span>
+              <span className="block bg-gradient-to-r from-violet-300 to-blue-300 bg-clip-text text-transparent">
+                Nächster Schritt.
+              </span>
             </h1>
-            <p className="mt-4 max-w-2xl text-[#C9CEE0]" data-aos="fade-up" data-aos-delay="80">
-              In 20–30 Minuten klären wir, worum es geht, was bereits vorhanden ist und ob ich euch mit einer Landingpage,
-              Formularen, Zahlungswegen oder begleitenden Medien sinnvoll unterstützen kann.
+
+            <p className="mt-4 max-w-2xl text-[#C9CEE0] text-base md:text-lg leading-relaxed">
+              Du schickst mir kurz <span className="text-white">Ziel + Deadline + Stand</span>.  
+              Ich sage dir ehrlich, ob ich helfen kann – und wie wir es schlank umsetzen.
             </p>
 
-            <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3" data-aos="fade-up" data-aos-delay="120">
-              <Badge icon={<Clock size={16} />} text="20–30 Min. Video-Call" />
-              <Badge icon={<Sparkles size={16} />} text="Ehrliche Einschätzung & Ideen" />
-              <Badge icon={<ShieldCheck size={16} />} text="Klare Rahmen & nächste Schritte" />
+            <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <Badge icon={<Clock size={16} />} text="20–30 Min. Call" />
+              <Badge icon={<Sparkles size={16} />} text="Ideen & Struktur" />
+              <Badge icon={<ShieldCheck size={16} />} text="Klare Grenzen" />
+            </div>
+
+            <div className="mt-7 flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold w-full sm:w-auto"
+              >
+                Kurz anfragen <ArrowRight size={18} />
+              </Link>
+
+              <a
+                href={mailto}
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/15 bg-white/5 hover:border-white/30 transition-colors font-semibold w-full sm:w-auto"
+              >
+                <Mail size={18} /> E-Mail
+              </a>
+
+              <a
+                href={whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/15 bg-white/5 hover:border-white/30 transition-colors font-semibold w-full sm:w-auto"
+              >
+                <MessageCircle size={18} /> WhatsApp
+              </a>
+            </div>
+
+            <div className="mt-5 flex items-center gap-2 text-sm text-indigo-200/90">
+              <CheckCircle2 size={16} className="text-emerald-400" />
+              Keine Tools, kein Stress – du bekommst eine persönliche Rückmeldung.
             </div>
           </div>
         </div>
       </section>
 
-      {/* SCHRITTE */}
-      <section className="px-5 md:px-20 py-10 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <Step
-            index="01"
-            title="Kurz anfragen"
-            text="Schreiben Sie mir über das Kontaktformular oder per E-Mail, worum es ungefähr geht und wie ich Sie erreichen kann."
-          />
-          <Step
-            index="02"
-            title="Terminvorschläge"
-            text="Ich melde mich mit 1–2 Vorschlägen für einen kurzen Video-Call oder Telefontermin – passend zu Ihrem Alltag."
-          />
-          <Step
-            index="03"
-            title="Gemeinsamer Call"
-            text="Wir schauen gemeinsam auf Ihr Vorhaben und klären, ob und wie eine Zusammenarbeit sinnvoll wäre."
-          />
+      {/* 3 SCHRITTE (kurz) */}
+      <section className="px-5 md:px-20 py-10 md:py-14">
+        <div className="max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+          <Step index="01" title="3 Sätze" text="Ziel, Deadline, Stand. Fertig." />
+          <Step index="02" title="Rückmeldung" text="Ich sage dir, ob es passt – inkl. grobem Rahmen." />
+          <Step index="03" title="Call" text="Wenn sinnvoll: 20–30 Minuten, klare nächste Schritte." />
         </div>
       </section>
 
-      {/* HINWEIS ZUM ABLAUF */}
-      <section className="px-5 md:px-20 pb-16 md:pb-20">
+      {/* KONTAKTBOX */}
+      <section className="px-5 md:px-20 pb-14 md:pb-20">
         <div className="max-w-4xl mx-auto rounded-3xl border border-white/10 bg-white/[0.04] p-6 md:p-8">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-4">So erreichen Sie mich</h2>
-          <p className="text-sm md:text-base text-[#C9CEE0]">
-            Am einfachsten ist eine kurze Nachricht mit ein paar Stichpunkten zu Ihrem Projekt. Schreiben Sie mir über das{' '}
-            <Link href="/contact" className="underline hover:text-white">
-              Kontaktformular
-            </Link>{' '}
-            oder direkt per E-Mail an{' '}
-            <a href="mailto:info@paveconsultings.com" className="underline hover:text-white">
-              info@paveconsultings.com
-            </a>
-            . Ich melde mich in der Regel innerhalb eines Werktags zurück.
+          <h2 className="text-2xl md:text-3xl font-semibold">Kontakt</h2>
+          <p className="mt-3 text-sm md:text-base text-[#C9CEE0] leading-relaxed">
+            Schreib mir direkt an{' '}
+            <a href={`mailto:${EMAIL}`} className="underline hover:text-white">
+              {EMAIL}
+            </a>{' '}
+            – oder nutze die Kontaktseite. Ich antworte meist innerhalb eines Werktags.
           </p>
 
-          <div className="mt-4 flex flex-wrap gap-3 text-sm text-[#AEB5C8]">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/5 px-3 py-1">
-              <CheckCircle2 size={16} className="text-emerald-400" />
-              Keine automatisierten Buchungstools, sondern persönliche Abstimmung.
-            </span>
-          </div>
-
-          <div className="mt-8 flex flex-wrap gap-4">
+          <div className="mt-5 flex flex-col sm:flex-row gap-3">
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold w-full sm:w-auto"
             >
-              Kontaktformular öffnen <ArrowRight size={18} />
+              Kontakt öffnen <ArrowRight size={18} />
             </Link>
             <a
-              href="mailto:info@paveconsultings.com"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/20 bg-white/5 hover:border-white/40 transition-colors font-semibold text-sm"
+              href={mailto}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/15 bg-white/5 hover:border-white/30 transition-colors font-semibold w-full sm:w-auto"
             >
               E-Mail schreiben
             </a>
           </div>
-        </div>
-      </section>
 
-      {/* CTA */}
-      <section className="px-5 md:px-20 pb-16 text-center">
-        <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-10">
-          <h3 className="text-3xl md:text-4xl font-bold">Noch unsicher, ob Ihr Projekt „groß genug“ ist?</h3>
-          <p className="mt-3 text-neutral-300">
-            Schreiben Sie mir einfach kurz, was Sie vorhaben. Ich sage ehrlich, ob ich dazu passe – oder empfehle eher,
-            es intern oder mit jemand anderem zu lösen.
-          </p>
-          <Link
-            href="/contact"
-            className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold"
-          >
-            Kurz anfragen <ArrowRight size={18} />
-          </Link>
+          <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-white/5 px-3 py-1 text-sm text-[#AEB5C8]">
+            <ShieldCheck size={16} className="text-emerald-400" />
+            Deine Angaben nutze ich nur zur Rückmeldung.
+          </div>
         </div>
       </section>
 
@@ -144,12 +148,13 @@ function Badge({ icon, text }) {
 
 function Step({ index, title, text }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur" data-aos="fade-up">
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
       <div className="mb-3 inline-flex items-center justify-center rounded-full bg-violet-600/20 px-3 py-1 text-violet-200">
         <span className="text-xs tracking-wider">{index}</span>
       </div>
-      <h3 className="text-xl font-semibold">{title}</h3>
+      <h3 className="text-lg md:text-xl font-semibold">{title}</h3>
       <p className="mt-2 text-[#C9CEE0]">{text}</p>
     </div>
   );
 }
+
