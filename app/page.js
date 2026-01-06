@@ -111,7 +111,7 @@ export default function Home() {
 
             {/* Ultra-klar, scanbar */}
             <p className="max-w-2xl text-base md:text-xl text-neutral-300 leading-relaxed">
-              Websites, (Motion-) Designs, Video- & Fotobearbeitung, qualitative Preproduction (auch mit Drohnenaufnahmen)
+              Websites, (Motion-) Designs, Video- & Fotobearbeitung, qualitative Preproduction (auch mit Drohnenaufnahmen).
               Sauber, schnell, verständlich.
             </p>
 
@@ -198,7 +198,7 @@ export default function Home() {
             <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-4">
               <Stat value="3–10" label="Tage: starke Landingpage" />
               <Stat value="1–2" label="Feedback-Runden (max.)" />
-              <Stat value="24h" label="Antwort innerhalb" />
+              <Stat value="24h" label="maximale Antwortdauer" />
               <Stat value="20–30" label="Min. für Einschätzung" />
             </div>
           </div>
