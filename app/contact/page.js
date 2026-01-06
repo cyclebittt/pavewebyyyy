@@ -72,7 +72,7 @@ export default function ContactPage() {
             data-aos="fade-up"
             data-aos-delay="60"
           >
-            Ziel · Deadline · Was ist schon vorhanden? Mehr brauche ich nicht für eine klare Einschätzung.
+            Ziel, Deadline, Was ist schon vorhanden? Mehr brauche ich nicht für eine klare Einschätzung.
           </p>
 
           {/* CTA BUTTONS */}
