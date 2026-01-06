@@ -111,8 +111,8 @@ export default function Home() {
 
             {/* Ultra-klar, scanbar */}
             <p className="max-w-2xl text-base md:text-xl text-neutral-300 leading-relaxed">
-              Landingpage oder Website, Formular & Zahlungsweg – plus optional Flyer/Foto/kurzes Video.
-              Ohne Agentur-Overhead. Sauber, schnell, verständlich.
+              Websites, (Motion-) Designs, Video- & Fotobearbeitung, qualitative Preproduction (auch mit Drohnenaufnahmen)
+              Sauber, schnell, verständlich.
             </p>
 
             {/* CTA */}
@@ -156,22 +156,22 @@ export default function Home() {
             <Card
               icon={<LayoutTemplate size={18} />}
               title="Landingpage / Website"
-              desc="Mobile-first, klare Struktur, schneller Überblick: Besucher verstehen in Sekunden, worum es geht."
+              desc="Klare Struktur, schneller Überblick: Ready innerhalb weniger Tage"
             />
             <Card
               icon={<FormInput size={18} />}
-              title="Formulare & Anmeldungen"
-              desc="Kontakt, Anmeldung, Uploads – simpel, zuverlässig, sauber umgesetzt."
+              title="Formulare & Automatisierungen"
+              desc="Wiederkehrende Prozesse automatisiert und digitalisiert: Simpel, zuverlässig, sauber umgesetzt."
             />
             <Card
               icon={<CreditCard size={18} />}
               title="Zahlungswege & QR-Codes"
-              desc="PayPal / Überweisung / Links & QR-Codes – damit Menschen ohne Hürden zum Ziel kommen."
+              desc="QR-Codes, CTAs, clevere Verlinkungen: Damit Menschen es einfacher haben, deinen Service zu bezahlen"
             />
             <Card
               icon={<ImageIcon size={18} />}
-              title="Medien (optional, zeitlich begrenzt)"
-              desc="Flyer, Social-Assets, kurze Videos oder Motion – passend zum Projekt, ohne Dauerstress."
+              title="Medien"
+              desc="Fotos, Videos, Designs: Um deiner Vision ein Gesicht und Aufmerksamkeit auf Social Media zu schenken"
             />
           </div>
 
@@ -191,14 +191,14 @@ export default function Home() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
               <h2 className="text-xl md:text-2xl font-semibold">Was realistisch ist</h2>
               <p className="text-sm md:text-base text-neutral-400 max-w-xl">
-                Damit Erwartungen sauber bleiben – klare Grenzen, klare Abläufe.
+                Damit Erwartungen sauber bleiben.
               </p>
             </div>
 
             <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-4">
               <Stat value="3–10" label="Tage: starke Landingpage" />
               <Stat value="1–2" label="Feedback-Runden (max.)" />
-              <Stat value="1" label="Projekt zur gleichen Zeit" />
+              <Stat value="24h" label="Antwort innerhalb" />
               <Stat value="20–30" label="Min. für Einschätzung" />
             </div>
           </div>
@@ -247,7 +247,7 @@ export default function Home() {
           <div className="mt-8 rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-6 md:p-10 text-center">
             <h3 className="text-2xl md:text-3xl font-bold">Bereit für Klarheit?</h3>
             <p className="mt-3 text-neutral-300 max-w-2xl mx-auto">
-              Kein Buzzword-Bingo: Ich sag dir ehrlich, ob es passt – und wenn ja, wie wir’s sauber umsetzen.
+              Ich sag dir ehrlich, ob es passt. Wenn ja, auch wie wir’s sauber umsetzen.
             </p>
             <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
               <Link
