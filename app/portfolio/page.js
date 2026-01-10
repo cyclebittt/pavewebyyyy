@@ -25,6 +25,15 @@ const projects = [
     image: '/img/portfolio/motion-poster.jpg',
     cta: 'Motion ansehen',
   },
+  {
+    type: 'externalVideo',
+    title: 'Influencer-Edit: Thyssenkrupp Probetag',
+    description: 'Schnitt & Motion: ein kompletter Tag als YouTube-Story erzählt.',
+    tags: ['Video Editing', 'Motion', 'YouTube'],
+    image: '/img/portfolio/thyssenkrupp.png',
+    href: 'https://youtu.be/Xt9Rm2pDoiE?si=BDxBO3DdHhnE-BSG',
+    cta: 'Video ansehen',
+  },
 ];
 
 export default function PortfolioPage() {
@@ -50,9 +59,10 @@ export default function PortfolioPage() {
 
       <section className="px-5 md:px-16 pb-20">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-          {projects.map((p) => (
-            <ProjectCard key={p.slug} project={p} />
-          ))}
+          {projects.map((p) => {
+            if (p.type === 'externalVideo') return <ExternalVideoCard key={p.href} project={p} />;
+            return <InternalCard key={p.slug} project={p} />;
+          })}
         </div>
       </section>
 
@@ -61,46 +71,75 @@ export default function PortfolioPage() {
   );
 }
 
-function ProjectCard({ project }) {
+function InternalCard({ project }) {
   return (
     <Link
       href={`/portfolio/${project.slug}`}
       className="group rounded-3xl border border-white/10 bg-white/[0.04] overflow-hidden hover:border-white/25 transition-colors"
     >
-      <div className="relative h-56 overflow-hidden">
-        <Image
-          src={project.image}
-          alt={project.title}
-          fill
-          className="object-cover group-hover:scale-[1.03] transition-transform"
-        />
-        {project.type === 'motion' && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="rounded-full bg-black/50 p-4 border border-white/20">
-              <Play />
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="p-6">
-        <h2 className="text-xl font-semibold">{project.title}</h2>
-        <p className="mt-2 text-sm text-neutral-300">{project.description}</p>
-
-        <div className="mt-3 flex flex-wrap gap-2">
-          {project.tags.map((t) => (
-            <span key={t} className="text-xs px-2 py-1 rounded-full bg-white/5 border border-white/10">
-              {t}
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-4 inline-flex items-center gap-2 text-indigo-200">
-          {project.cta}
-          <ArrowRight size={16} />
-        </div>
-      </div>
+      <CardMedia project={project} />
+      <CardBody project={project} />
     </Link>
   );
 }
 
+function ExternalVideoCard({ project }) {
+  return (
+    <a
+      href={project.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group rounded-3xl border border-white/10 bg-white/[0.04] overflow-hidden hover:border-white/25 transition-colors"
+    >
+      <CardMedia project={project} isExternalVideo />
+      <CardBody project={project} />
+    </a>
+  );
+}
+
+function CardMedia({ project, isExternalVideo = false }) {
+  return (
+    <div className="relative h-56 overflow-hidden bg-white/[0.03]">
+      <Image
+        src={project.image}
+        alt={project.title}
+        fill
+        sizes="(max-width: 768px) 100vw, 50vw"
+        className="object-cover group-hover:scale-[1.03] transition-transform"
+        priority={false}
+      />
+
+      {(project.type === 'motion' || isExternalVideo) && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="rounded-full bg-black/45 p-4 border border-white/20 backdrop-blur-sm">
+            <Play />
+          </div>
+        </div>
+      )}
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+    </div>
+  );
+}
+
+function CardBody({ project }) {
+  return (
+    <div className="p-6">
+      <h2 className="text-xl font-semibold">{project.title}</h2>
+      <p className="mt-2 text-sm text-neutral-300">{project.description}</p>
+
+      <div className="mt-3 flex flex-wrap gap-2">
+        {project.tags.map((t) => (
+          <span key={t} className="text-xs px-2 py-1 rounded-full bg-white/5 border border-white/10">
+            {t}
+          </span>
+        ))}
+      </div>
+
+      <div className="mt-4 inline-flex items-center gap-2 text-indigo-200 group-hover:text-indigo-100">
+        {project.cta}
+        <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+      </div>
+    </div>
+  );
+}
