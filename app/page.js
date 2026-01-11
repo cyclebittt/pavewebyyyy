@@ -17,7 +17,7 @@ import {
   Zap,
 } from 'lucide-react';
 
-function Pill({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
+function Pill({ icon, children }) {
   return (
     <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs md:text-sm text-white/80">
       <span className="text-emerald-400">{icon}</span>
@@ -26,7 +26,7 @@ function Pill({ icon, children }: { icon: React.ReactNode; children: React.React
   );
 }
 
-function Card({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
+function Card({ icon, title, desc }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 md:p-6">
       <div className="flex items-start gap-3">
@@ -42,7 +42,7 @@ function Card({ icon, title, desc }: { icon: React.ReactNode; title: string; des
   );
 }
 
-function Stat({ value, label }: { value: string; label: string }) {
+function Stat({ value, label }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 md:p-6">
       <div className="text-2xl md:text-3xl font-extrabold tracking-tight text-indigo-200">{value}</div>
@@ -51,21 +51,7 @@ function Stat({ value, label }: { value: string; label: string }) {
   );
 }
 
-function VisualCard({
-  eyebrow,
-  title,
-  desc,
-  bullets,
-  ctaHref,
-  ctaLabel,
-}: {
-  eyebrow: string;
-  title: string;
-  desc: string;
-  bullets: string[];
-  ctaHref?: string;
-  ctaLabel?: string;
-}) {
+function VisualCard({ eyebrow, title, desc, bullets, ctaHref, ctaLabel }) {
   return (
     <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.05] to-white/[0.02] p-6 md:p-8">
       <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">
@@ -123,8 +109,8 @@ export default function Home() {
             </h1>
 
             <p className="max-w-2xl text-base md:text-xl text-neutral-300 leading-relaxed">
-              Ich unterstütze bei Websites, Automatisierungen und digitalen Abläufen. Mir ist wichtig, dass Ziel,
-              Umfang und Ablauf von Anfang an klar sind und dass du dich auf die Umsetzung verlassen kannst.
+              Ich unterstütze bei Websites, Automatisierungen und digitalen Abläufen. Mir ist wichtig, dass Ziel, Umfang
+              und Ablauf von Anfang an klar sind und dass du dich auf die Umsetzung verlassen kannst.
             </p>
 
             {/* CTA */}
