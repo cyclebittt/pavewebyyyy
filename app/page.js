@@ -8,8 +8,8 @@ import {
   CheckCircle2,
   Sparkles,
   LayoutTemplate,
-  CreditCard,
   FormInput,
+  CreditCard,
   Image as ImageIcon,
   ShieldCheck,
   Timer,
@@ -35,9 +35,18 @@ function Card({ icon, title, desc }) {
         </div>
         <div className="min-w-0">
           <h3 className="text-base md:text-lg font-semibold leading-snug">{title}</h3>
-          <p className="mt-1 text-sm md:text-base text-neutral-300 leading-relaxed">{desc}</p>
+          <p className="mt-2 text-sm md:text-base text-neutral-300 leading-relaxed">{desc}</p>
         </div>
       </div>
+    </div>
+  );
+}
+
+function MiniCard({ title, desc }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 md:p-6">
+      <h3 className="text-base md:text-lg font-semibold leading-snug">{title}</h3>
+      <p className="mt-2 text-sm md:text-base text-neutral-300 leading-relaxed">{desc}</p>
     </div>
   );
 }
@@ -51,37 +60,30 @@ function Stat({ value, label }) {
   );
 }
 
-function VisualCard({ eyebrow, title, desc, bullets, ctaHref, ctaLabel }) {
+function Section({ title, subtitle, children }) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.05] to-white/[0.02] p-6 md:p-8">
-      <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">
-        <Zap size={14} className="text-indigo-300" />
-        {eyebrow}
-      </div>
-
-      <h3 className="mt-4 text-xl md:text-2xl font-semibold leading-tight">{title}</h3>
-      <p className="mt-3 text-sm md:text-base text-neutral-300 leading-relaxed">{desc}</p>
-
-      <ul className="mt-5 space-y-2 text-sm md:text-base text-neutral-200">
-        {bullets.map((b) => (
-          <li key={b} className="flex items-start gap-2">
-            <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-emerald-400" />
-            <span className="text-neutral-200">{b}</span>
-          </li>
-        ))}
-      </ul>
-
-      {ctaHref && ctaLabel && (
-        <div className="mt-6">
-          <Link
-            href={ctaHref}
-            className="inline-flex items-center gap-2 text-indigo-300 hover:text-indigo-200 font-semibold"
-          >
-            {ctaLabel} <ArrowRight size={16} />
-          </Link>
+    <section className="px-5 md:px-16 py-10 md:py-14">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
+          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">{title}</h2>
+          {subtitle ? (
+            <p className="text-sm md:text-base text-neutral-400 max-w-xl leading-relaxed">{subtitle}</p>
+          ) : null}
         </div>
-      )}
-    </div>
+        <div className="mt-6">{children}</div>
+      </div>
+    </section>
+  );
+}
+
+function PrimaryCTA() {
+  return (
+    <Link
+      href="/contact"
+      className="px-6 py-3 md:px-7 md:py-3.5 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center justify-center gap-2"
+    >
+      Kurz anfragen <ArrowRight size={18} />
+    </Link>
   );
 }
 
@@ -104,165 +106,183 @@ export default function Home() {
             </span>
 
             <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
-              <span className="block">Digitale Projekte,</span>
-              <span className="block text-indigo-300">die zuverlässig umgesetzt werden.</span>
+              <span className="block">Digitale Umsetzung,</span>
+              <span className="block text-indigo-300">auf die du dich verlassen kannst.</span>
             </h1>
 
+            {/* 1 Satz, scanbar, keine Leistungsliste */}
             <p className="max-w-2xl text-base md:text-xl text-neutral-300 leading-relaxed">
-              Ich unterstütze bei Websites, Automatisierungen und digitalen Abläufen. Mir ist wichtig, dass Ziel, Umfang
-              und Ablauf von Anfang an klar sind und dass du dich auf die Umsetzung verlassen kannst.
+              Ich setze Websites und digitale Abläufe so um, dass du am Ende etwas hast, das steht. Ziel, Umfang und
+              Ablauf sind von Anfang an klar.
             </p>
 
-            {/* CTA */}
-            <div className="w-full flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
-              <Link
-                href="/request"
-                className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center justify-center gap-2"
-              >
-                Projekt anfragen <ArrowRight size={18} />
-              </Link>
-
-              <Link
-                href="/contact"
-                className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold inline-flex items-center justify-center gap-2"
-              >
-                Kurz schildern, worum es geht <ArrowRight size={18} />
-              </Link>
+            {/* Single CTA */}
+            <div className="w-full flex flex-col items-center gap-3">
+              <PrimaryCTA />
+              <p className="text-sm md:text-base text-neutral-400 max-w-xl">
+                Wenn du mir Ziel, Deadline und Stand schickst, bekommst du eine klare Einschätzung, ob es passt und wie
+                wir starten.
+              </p>
             </div>
 
             {/* Trust pills */}
             <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
-              <Pill icon={<Timer size={14} />}>Klare Struktur</Pill>
-              <Pill icon={<ShieldCheck size={14} />}>Verlässlicher Ablauf</Pill>
-              <Pill icon={<LineChart size={14} />}>Saubere Übergabe</Pill>
+              <Pill icon={<Timer size={14} />}>Klare Schritte</Pill>
+              <Pill icon={<ShieldCheck size={14} />}>Saubere Übergabe</Pill>
+              <Pill icon={<LineChart size={14} />}>Übersichtlich statt kompliziert</Pill>
             </div>
           </div>
         </div>
       </section>
 
-      {/* WAS DU BEKOMMST */}
-      <section className="px-5 md:px-16 pb-10 md:pb-14">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
-            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Was du bekommst</h2>
-            <p className="text-sm md:text-base text-neutral-400 max-w-xl">
-              Keine Textwände. Ein klarer Überblick, was möglich ist und wie es am Ende aussieht.
-            </p>
-          </div>
+      {/* PROOF FIRST (weil Leute erst vertrauen, dann lesen sie mehr) */}
+      <Section
+        title="Was du erwarten kannst"
+        subtitle="Kurz und realistisch. Damit du nicht raten musst, wie der Ablauf aussieht."
+      >
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Stat value="3–10" label="Tage bis live (typisch)" />
+          <Stat value="1–2" label="Feedback-Runden" />
+          <Stat value="24h" label="Antwortzeit (Mo–Fr)" />
+          <Stat value="20–30" label="Min. für Einschätzung" />
+        </div>
 
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-            <Card
-              icon={<LayoutTemplate size={18} />}
-              title="Landingpage / Website"
-              desc="Übersichtlich aufgebaut, technisch sauber umgesetzt und so strukturiert, dass Besucher schnell verstehen, worum es geht."
-            />
-            <Card
-              icon={<FormInput size={18} />}
-              title="Formulare & Automatisierungen"
-              desc="Digitale Abläufe, die im Alltag funktionieren und nicht ständig nachgebessert werden müssen."
-            />
-            <Card
-              icon={<CreditCard size={18} />}
-              title="Zahlungswege & QR-Codes"
-              desc="Einfache und nachvollziehbare Wege für Spenden, Buchungen oder Zahlungen, passend zu deinem Ablauf."
-            />
-            <Card
-              icon={<ImageIcon size={18} />}
-              title="Medien"
-              desc="Wenn sinnvoll ergänze ich die Umsetzung durch Design, Foto oder Video, damit alles zusammenpasst."
-            />
-          </div>
-
-          <div className="mt-6 flex items-start gap-2 text-sm text-neutral-400">
+        <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5 md:p-6">
+          <div className="flex items-start gap-2">
             <CheckCircle2 className="shrink-0 text-emerald-400" size={18} />
-            <p>
-              Ich arbeite projektbasiert. Umfang und Ablauf werden vorab festgelegt. So bleibt es übersichtlich und
-              planbar.
+            <p className="text-sm md:text-base text-neutral-300 leading-relaxed">
+              Ich arbeite projektbasiert. Umfang und Ablauf werden vorab festgelegt. So bleibt es planbar und du landest
+              nicht in Endlosschleifen.
             </p>
           </div>
         </div>
-      </section>
+      </Section>
 
-      {/* REALISTISCHE ERWARTUNGEN */}
-      <section className="px-5 md:px-16 pb-10 md:pb-14">
-        <div className="max-w-6xl mx-auto">
-          <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-5 md:p-8">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-              <h2 className="text-xl md:text-2xl font-semibold">So läuft es normalerweise</h2>
-              <p className="text-sm md:text-base text-neutral-400 max-w-xl">
-                Damit du planen kannst und weißt, was dich erwartet.
-              </p>
-            </div>
+      {/* HOW IT WORKS (3 steps, super scanbar) */}
+      <Section
+        title="So starten wir"
+        subtitle="Drei Schritte. Keine langen Calls, kein unnötiges Hin und Her."
+      >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+          <MiniCard
+            title="1. Kurz schildern"
+            desc="Du schickst mir Ziel, Deadline und Stand. Mehr brauche ich am Anfang nicht."
+          />
+          <MiniCard
+            title="2. Klare Einschätzung"
+            desc="Ich sage dir, ob es passt und was sinnvoll ist. Falls es passt, bekommst du einen klaren Ablauf."
+          />
+          <MiniCard
+            title="3. Umsetzung & Übergabe"
+            desc="Ich setze es sauber um und übergebe es ordentlich, damit du damit weiterarbeiten kannst."
+          />
+        </div>
 
-            <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Stat value="3–10" label="Tage bis live" />
-              <Stat value="1–2" label="Feedback-Runden" />
-              <Stat value="24h" label="Antwortzeit (Mo–Fr)" />
-              <Stat value="20–30" label="Minuten für Einschätzung" />
+        <div className="mt-6 flex justify-center">
+          <PrimaryCTA />
+        </div>
+
+        <p className="mt-3 text-center text-sm md:text-base text-neutral-400">
+          Termin kommt danach, wenn klar ist, dass es Sinn ergibt.
+        </p>
+      </Section>
+
+      {/* OFFER (keep short, not “I can do everything”) */}
+      <Section
+        title="Wobei ich helfen kann"
+        subtitle="Das sind die häufigsten Dinge, für die Leute bei mir anfragen."
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <Card
+            icon={<LayoutTemplate size={18} />}
+            title="Landingpage / Website"
+            desc="Übersichtlich aufgebaut, technisch sauber umgesetzt und so strukturiert, dass Besucher schnell verstehen, worum es geht."
+          />
+          <Card
+            icon={<FormInput size={18} />}
+            title="Formulare & Automatisierungen"
+            desc="Digitale Abläufe, die im Alltag funktionieren und nicht ständig nachgebessert werden müssen."
+          />
+          <Card
+            icon={<CreditCard size={18} />}
+            title="Zahlungswege & QR-Codes"
+            desc="Einfache und nachvollziehbare Wege für Spenden, Buchungen oder Zahlungen."
+          />
+          <Card
+            icon={<ImageIcon size={18} />}
+            title="Medien (optional)"
+            desc="Wenn sinnvoll ergänze ich die Umsetzung durch Design, Foto oder Video, damit alles zusammenpasst."
+          />
+        </div>
+      </Section>
+
+      {/* PORTFOLIO TEASER (one decision, not a list of many) */}
+      <Section
+        title="Beispiele"
+        subtitle="Wenn du kurz sehen willst, wie ich arbeite, findest du hier Projekte."
+      >
+        <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.05] to-white/[0.02] p-6 md:p-8">
+          <h3 className="text-xl md:text-2xl font-semibold leading-tight">Portfolio öffnen</h3>
+          <p className="mt-3 text-sm md:text-base text-neutral-300 leading-relaxed max-w-2xl">
+            Ich halte die Seite bewusst übersichtlich. Du sollst schnell sehen, wie Struktur, Design und Umsetzung bei
+            mir aussehen.
+          </p>
+
+          <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <Link
+              href="/portfolio"
+              className="inline-flex items-center gap-2 text-indigo-300 hover:text-indigo-200 font-semibold"
+            >
+              Zu den Projekten <ArrowRight size={16} />
+            </Link>
+            <div className="text-sm text-neutral-400">
+              Wenn du direkt starten willst: <Link href="/contact" className="underline hover:text-white">Kurz anfragen</Link>
             </div>
           </div>
         </div>
-      </section>
+      </Section>
 
-      {/* PROOF */}
+      {/* FAQ (only 4, no essay) */}
+      <Section title="Kurz beantwortet" subtitle="Die wichtigsten Fragen, ohne Roman.">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <MiniCard
+            title="Wie schnell geht das?"
+            desc="Je nach Umfang meist innerhalb weniger Tage. Wenn es dringend ist, sag das direkt in der Anfrage."
+          />
+          <MiniCard
+            title="Was brauchst du von mir?"
+            desc="Am Anfang reichen Ziel, Deadline und Stand. Inhalte können wir Schritt für Schritt klären."
+          />
+          <MiniCard
+            title="Wie läuft Feedback?"
+            desc="Mit klaren Feedback-Runden. So bleibt es planbar und das Projekt zieht sich nicht."
+          />
+          <MiniCard
+            title="Kann ich erst unverbindlich fragen?"
+            desc="Ja. Genau dafür ist die Anfrage da. Ich sage dir ehrlich, ob es passt."
+          />
+        </div>
+
+        <div className="mt-6 flex justify-center">
+          <PrimaryCTA />
+        </div>
+      </Section>
+
+      {/* FINAL CTA */}
       <section className="px-5 md:px-16 pb-14 md:pb-20">
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
-            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Beispiele aus Projekten</h2>
-            <p className="text-sm md:text-base text-neutral-400 max-w-xl">
-              Du kannst dir anschauen, wie ich arbeite, bevor du entscheidest.
-            </p>
-          </div>
-
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-            <VisualCard
-              eyebrow="Portfolio"
-              title="So sieht der Standard aus"
-              desc="Struktur, Tempo und Übergabe sind mir wichtig. Du sollst vorher wissen, woran du bist."
-              bullets={[
-                'Klare Nutzerführung und saubere Struktur',
-                'Mobile-first umgesetzt',
-                'Übergabe nachvollziehbar und ordentlich',
-              ]}
-              ctaHref="/portfolio"
-              ctaLabel="Portfolio öffnen"
-            />
-
-            <VisualCard
-              eyebrow="Kurz starten"
-              title="Drei Infos reichen"
-              desc="Schick mir kurz Ziel, Deadline und Stand. Dann kann ich dir sagen, ob es passt und wie wir sinnvoll starten."
-              bullets={[
-                'Ziel: Was soll am Ende passieren?',
-                'Deadline: Bis wann muss es stehen?',
-                'Stand: Was gibt es schon?',
-              ]}
-              ctaHref="/contact"
-              ctaLabel="Kurz anfragen"
-            />
-          </div>
-
-          {/* Final CTA */}
-          <div className="mt-8 rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-6 md:p-10 text-center">
-            <h3 className="text-2xl md:text-3xl font-bold">Wenn du Klarheit willst</h3>
+          <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-6 md:p-10 text-center">
+            <h3 className="text-2xl md:text-3xl font-bold">Kurz anfragen</h3>
             <p className="mt-3 text-neutral-300 max-w-2xl mx-auto">
-              Ich sage dir ehrlich, ob es passt. Wenn ja, bekommst du eine klare Einschätzung, wie der Ablauf aussieht
-              und was der nächste Schritt ist.
+              Schick mir Ziel, Deadline und Stand. Dann bekommst du eine klare Einschätzung, ob es passt und wie wir
+              starten.
             </p>
-            <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
-              <Link
-                href="/request"
-                className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center justify-center gap-2"
-              >
-                Termin vereinbaren <ArrowRight size={18} />
-              </Link>
-              <Link
-                href="/contact"
-                className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold inline-flex items-center justify-center gap-2"
-              >
-                Kontakt <ArrowRight size={18} />
-              </Link>
+            <div className="mt-6 flex justify-center">
+              <PrimaryCTA />
             </div>
+            <p className="mt-3 text-sm text-neutral-400">
+              Termin kommt danach, wenn klar ist, dass es Sinn ergibt.
+            </p>
           </div>
         </div>
       </section>
