@@ -17,7 +17,7 @@ import {
   Zap,
 } from 'lucide-react';
 
-function Pill({ icon, children }) {
+function Pill({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
     <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs md:text-sm text-white/80">
       <span className="text-emerald-400">{icon}</span>
@@ -26,7 +26,7 @@ function Pill({ icon, children }) {
   );
 }
 
-function Card({ icon, title, desc }) {
+function Card({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 md:p-6">
       <div className="flex items-start gap-3">
@@ -42,7 +42,7 @@ function Card({ icon, title, desc }) {
   );
 }
 
-function Stat({ value, label }) {
+function Stat({ value, label }: { value: string; label: string }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 md:p-6">
       <div className="text-2xl md:text-3xl font-extrabold tracking-tight text-indigo-200">{value}</div>
@@ -51,7 +51,21 @@ function Stat({ value, label }) {
   );
 }
 
-function VisualCard({ eyebrow, title, desc, bullets, ctaHref, ctaLabel }) {
+function VisualCard({
+  eyebrow,
+  title,
+  desc,
+  bullets,
+  ctaHref,
+  ctaLabel,
+}: {
+  eyebrow: string;
+  title: string;
+  desc: string;
+  bullets: string[];
+  ctaHref?: string;
+  ctaLabel?: string;
+}) {
   return (
     <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.05] to-white/[0.02] p-6 md:p-8">
       <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">
@@ -100,19 +114,17 @@ export default function Home() {
         <div className="relative px-5 md:px-16 pt-16 md:pt-24 pb-10 md:pb-16 max-w-6xl mx-auto">
           <div className="flex flex-col items-center text-center gap-6">
             <span className="inline-flex items-center gap-2 text-xs md:text-sm text-indigo-300/80 bg-white/5 ring-1 ring-white/10 px-3 py-1 rounded-full">
-              <Sparkles size={16} /> Klar begrenzte digitale Projekte
+              <Sparkles size={16} /> Klar strukturierte digitale Projekte
             </span>
 
-            {/* 2 Zeilen */}
             <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
-              <span className="block">Ein digitales Projekt?</span>
-              <span className="block text-indigo-300">Dann bist du hier richtig.</span>
+              <span className="block">Digitale Projekte,</span>
+              <span className="block text-indigo-300">die zuverlässig umgesetzt werden.</span>
             </h1>
 
-            {/* Ultra-klar, scanbar */}
             <p className="max-w-2xl text-base md:text-xl text-neutral-300 leading-relaxed">
-              Websites, (Motion-) Designs, Video- & Fotobearbeitung, qualitative Preproduction (auch mit Drohnenaufnahmen).
-              Sauber, schnell, verständlich.
+              Ich unterstütze bei Websites, Automatisierungen und digitalen Abläufen. Mir ist wichtig, dass Ziel,
+              Umfang und Ablauf von Anfang an klar sind und dass du dich auf die Umsetzung verlassen kannst.
             </p>
 
             {/* CTA */}
@@ -121,34 +133,34 @@ export default function Home() {
                 href="/request"
                 className="px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-semibold inline-flex items-center justify-center gap-2"
               >
-                Termin vereinbaren <ArrowRight size={18} />
+                Projekt anfragen <ArrowRight size={18} />
               </Link>
 
               <Link
                 href="/contact"
                 className="px-6 py-3 rounded-full border border-white/15 hover:border-white/30 bg-white/5 transition-colors font-semibold inline-flex items-center justify-center gap-2"
               >
-                Kurz anfragen <ArrowRight size={18} />
+                Kurz schildern, worum es geht <ArrowRight size={18} />
               </Link>
             </div>
 
             {/* Trust pills */}
             <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
-              <Pill icon={<Timer size={14} />}>Klarer Zeitrahmen</Pill>
-              <Pill icon={<ShieldCheck size={14} />}>Saubere Übergabe</Pill>
-              <Pill icon={<LineChart size={14} />}>Fokus auf Wirkung</Pill>
+              <Pill icon={<Timer size={14} />}>Klare Struktur</Pill>
+              <Pill icon={<ShieldCheck size={14} />}>Verlässlicher Ablauf</Pill>
+              <Pill icon={<LineChart size={14} />}>Saubere Übergabe</Pill>
             </div>
           </div>
         </div>
       </section>
 
-      {/* WAS DU BEKOMMST (nicht klickbar) */}
+      {/* WAS DU BEKOMMST */}
       <section className="px-5 md:px-16 pb-10 md:pb-14">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
             <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Was du bekommst</h2>
             <p className="text-sm md:text-base text-neutral-400 max-w-xl">
-              Kurz erklärt, schnell verstanden. Keine Textwände.
+              Keine Textwände. Ein klarer Überblick, was möglich ist und wie es am Ende aussieht.
             </p>
           </div>
 
@@ -156,87 +168,88 @@ export default function Home() {
             <Card
               icon={<LayoutTemplate size={18} />}
               title="Landingpage / Website"
-              desc="Klare Struktur, schneller Überblick: Ready innerhalb weniger Tage"
+              desc="Übersichtlich aufgebaut, technisch sauber umgesetzt und so strukturiert, dass Besucher schnell verstehen, worum es geht."
             />
             <Card
               icon={<FormInput size={18} />}
               title="Formulare & Automatisierungen"
-              desc="Wiederkehrende Prozesse automatisiert und digitalisiert: Simpel, zuverlässig, sauber umgesetzt."
+              desc="Digitale Abläufe, die im Alltag funktionieren und nicht ständig nachgebessert werden müssen."
             />
             <Card
               icon={<CreditCard size={18} />}
               title="Zahlungswege & QR-Codes"
-              desc="QR-Codes, CTAs, clevere Verlinkungen: Damit Menschen es einfacher haben, deinen Service zu bezahlen"
+              desc="Einfache und nachvollziehbare Wege für Spenden, Buchungen oder Zahlungen, passend zu deinem Ablauf."
             />
             <Card
               icon={<ImageIcon size={18} />}
               title="Medien"
-              desc="Fotos, Videos, Designs: Um deiner Vision ein Gesicht und Aufmerksamkeit auf Social Media zu schenken"
+              desc="Wenn sinnvoll ergänze ich die Umsetzung durch Design, Foto oder Video, damit alles zusammenpasst."
             />
           </div>
 
           <div className="mt-6 flex items-start gap-2 text-sm text-neutral-400">
             <CheckCircle2 className="shrink-0 text-emerald-400" size={18} />
             <p>
-              Fokus auf Projekte mit Anfang & Ende – keine laufenden Pakete, kein „immer wieder kurz was ändern“ ohne Rahmen.
+              Ich arbeite projektbasiert. Umfang und Ablauf werden vorab festgelegt. So bleibt es übersichtlich und
+              planbar.
             </p>
           </div>
         </div>
       </section>
 
-      {/* STATISTIKEN (realistisch, ohne „Fake-Claims“) */}
+      {/* REALISTISCHE ERWARTUNGEN */}
       <section className="px-5 md:px-16 pb-10 md:pb-14">
         <div className="max-w-6xl mx-auto">
           <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-5 md:p-8">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-              <h2 className="text-xl md:text-2xl font-semibold">Was realistisch ist</h2>
+              <h2 className="text-xl md:text-2xl font-semibold">So läuft es normalerweise</h2>
               <p className="text-sm md:text-base text-neutral-400 max-w-xl">
-                Damit Erwartungen sauber bleiben.
+                Damit du planen kannst und weißt, was dich erwartet.
               </p>
             </div>
 
             <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Stat value="3–10" label="Tage: starke Landingpage" />
-              <Stat value="1–2" label="Feedback-Runden (max.)" />
-              <Stat value="24h" label="maximale Antwortdauer" />
-              <Stat value="20–30" label="Min. für Einschätzung" />
+              <Stat value="3–10" label="Tage bis live" />
+              <Stat value="1–2" label="Feedback-Runden" />
+              <Stat value="24h" label="Antwortzeit (Mo–Fr)" />
+              <Stat value="20–30" label="Minuten für Einschätzung" />
             </div>
           </div>
         </div>
       </section>
 
-      {/* PROOF (ohne Bilder) */}
+      {/* PROOF */}
       <section className="px-5 md:px-16 pb-14 md:pb-20">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
-            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Proof statt Versprechen</h2>
+            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Beispiele aus Projekten</h2>
             <p className="text-sm md:text-base text-neutral-400 max-w-xl">
-              Du willst Klarheit? Dann zeig mir Ziel + Deadline + Stand.
+              Du kannst dir anschauen, wie ich arbeite, bevor du entscheidest.
             </p>
           </div>
 
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <VisualCard
               eyebrow="Portfolio"
-              title="Ein Projekt – sauber umgesetzt"
-              desc="Ich zeige lieber, wie ich arbeite, als es auszuschmücken."
+              title="So sieht der Standard aus"
+              desc="Struktur, Tempo und Übergabe sind mir wichtig. Du sollst vorher wissen, woran du bist."
               bullets={[
-                'Klare Story: worum geht’s, warum zählt’s, was ist der nächste Schritt?',
-                'Zahlungsweg / Formular so einfach wie möglich',
-                'Mobile-first Struktur, damit’s auf dem Handy sofort funktioniert',
+                'Klare Nutzerführung und saubere Struktur',
+                'Mobile-first umgesetzt',
+                'Übergabe nachvollziehbar und ordentlich',
               ]}
               ctaHref="/portfolio"
               ctaLabel="Portfolio öffnen"
             />
 
             <VisualCard
-              eyebrow="Start in 3 Sätzen"
-              title="Schick mir 3 Stichpunkte"
-              desc="Wenn du mir das schickst, kann ich dir meist sofort sagen, ob es realistisch ist und wie wir starten."
+              eyebrow="Kurz starten"
+              title="Drei Infos reichen"
+              desc="Schick mir kurz Ziel, Deadline und Stand. Dann kann ich dir sagen, ob es passt und wie wir sinnvoll starten."
               bullets={[
-                'Ziel (was soll passieren?)',
-                'Deadline (bis wann?)',
-                'Stand (was gibt’s schon?)',
+                'Ziel: Was soll am Ende passieren?',
+                'Deadline: Bis wann muss es stehen?',
+                'Stand: Was gibt es schon?',
               ]}
               ctaHref="/contact"
               ctaLabel="Kurz anfragen"
@@ -245,9 +258,10 @@ export default function Home() {
 
           {/* Final CTA */}
           <div className="mt-8 rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-6 md:p-10 text-center">
-            <h3 className="text-2xl md:text-3xl font-bold">Bereit für Klarheit?</h3>
+            <h3 className="text-2xl md:text-3xl font-bold">Wenn du Klarheit willst</h3>
             <p className="mt-3 text-neutral-300 max-w-2xl mx-auto">
-              Ich sag dir ehrlich, ob es passt. Wenn ja, auch wie wir’s sauber umsetzen.
+              Ich sage dir ehrlich, ob es passt. Wenn ja, bekommst du eine klare Einschätzung, wie der Ablauf aussieht
+              und was der nächste Schritt ist.
             </p>
             <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
               <Link
