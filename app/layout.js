@@ -2,7 +2,7 @@ import Head from "next/head";
 import "./globals.css";
 
 export const metadata = {
-  title: "Paveo",
+  title: "Leon Seitz - Webdesign & digitale Lösungen",
   description: "Design, Content & Strategie – Wir machen Marken sichtbar, professionell & psychologisch wirkungsvoll.",
   keywords: "Paveo, Branding, Webdesign, Content Creation, Social Media, Lead Generation",
   openGraph: {
