@@ -33,31 +33,34 @@ export default function KircheFundraisingPage() {
             <ArrowLeft size={16} /> Zurück zum Portfolio
           </Link>
 
-          <div className="mt-5 grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-6 md:gap-8 items-start">
-            {/* Left: Ultra short copy */}
+          <div className="mt-6 grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-6 md:gap-8 items-start">
+            {/* Left */}
             <div>
               <span className="inline-flex items-center gap-2 text-xs md:text-sm text-indigo-300/80 bg-white/5 ring-1 ring-white/10 px-3 py-1 rounded-full">
-                <Sparkles size={16} /> Fundraising · Kirche für Aschaffenburg
+                <Sparkles size={16} /> Case Study · Kirche für Aschaffenburg
               </span>
 
               <h1 className="mt-4 text-3xl md:text-5xl font-extrabold tracking-tight leading-[1.05]">
-                <span className="block">Fundraising-Seite</span>
-                <span className="block text-indigo-300">in 2 Wochen live.</span>
+                <span className="block">Fundraising-Seite,</span>
+                <span className="block text-indigo-300">klar aufgebaut und schnell live.</span>
               </h1>
 
-              <p className="mt-4 text-neutral-300 text-sm md:text-base max-w-xl">
-                DE/EN Landingpage + Spendenwege + Flyer + Video — damit Menschen sofort verstehen & spenden können.
+              <p className="mt-4 text-neutral-300 text-sm md:text-base max-w-xl leading-relaxed">
+                Ziel war eine Seite, die ohne Erklärung funktioniert: Anliegen verstehen, Vertrauen bekommen,
+                Spendenweg wählen. Dazu DE/EN Inhalte, Flyer und ein Projektvideo.
               </p>
 
               <div className="mt-6 flex flex-wrap gap-2 text-xs md:text-sm">
                 <Badge>Landingpage</Badge>
                 <Badge>DE &amp; EN</Badge>
                 <Badge>PayPal &amp; Überweisung</Badge>
+                <Badge>QR-Codes</Badge>
                 <Badge>Flyer</Badge>
                 <Badge>Video</Badge>
               </div>
 
-              <div className="mt-7 flex flex-col sm:flex-row gap-3">
+              {/* CTA: one loud, one quiet */}
+              <div className="mt-7 flex flex-col items-start gap-3">
                 <a
                   href="https://kircheab.de/spenden"
                   target="_blank"
@@ -67,16 +70,13 @@ export default function KircheFundraisingPage() {
                   Zur Spenden-Seite <ArrowRight size={18} />
                 </a>
 
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-white/20 bg-white/5 hover:border-white/35 transition-colors font-semibold text-sm md:text-base"
-                >
-                  Ähnliches Projekt anfragen
+                <Link href="/contact" className="text-sm md:text-base text-neutral-300 hover:text-white transition-colors">
+                  Ähnliches Projekt anfragen <span className="text-neutral-500">(Ziel, Deadline, Stand)</span>
                 </Link>
               </div>
             </div>
 
-            {/* Right: YouTube Embed */}
+            {/* Right: Video + Proof */}
             <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-3 md:p-4">
               <div className="flex items-center justify-between gap-3 px-2 pb-3">
                 <div className="inline-flex items-center gap-2 text-xs md:text-sm text-neutral-200">
@@ -100,6 +100,15 @@ export default function KircheFundraisingPage() {
                 />
               </div>
 
+              {/* Proof number as scan-stopper */}
+              <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 md:p-5">
+                <div className="text-xs uppercase tracking-wide text-neutral-400">Spenden in 2 Monaten</div>
+                <div className="mt-1 text-3xl md:text-4xl font-extrabold tracking-tight text-indigo-200">17.000 €</div>
+                <p className="mt-2 text-sm md:text-base text-neutral-300 leading-relaxed">
+                  Wir sind sehr dankbar. Aus unserer Sicht wäre das ohne Gott nicht möglich gewesen.
+                </p>
+              </div>
+
               <div className="mt-3 px-2">
                 <a
                   href="https://kircheab.de/spenden"
@@ -115,53 +124,68 @@ export default function KircheFundraisingPage() {
         </div>
       </section>
 
-      {/* META (super kurz) */}
+      {/* META */}
       <section className="px-5 md:px-16 pb-10 md:pb-12">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
           <MetaCard label="Ziel" value="Spenden sammeln" />
-          <MetaCard label="Zeitraum" value="~ 2 Wochen" icon={<Clock size={16} />} />
-          <MetaCard label="Rolle" value="Konzept · Umsetzung" />
-          <MetaCard label="Setup" value="DE/EN · Payments" />
+          <MetaCard label="Zeitraum" value="~ 2 Wochen bis live" icon={<Clock size={16} />} />
+          <MetaCard label="Rolle" value="Konzept · Design · Umsetzung" />
+          <MetaCard label="Setup" value="DE/EN · Payments · QR" />
         </div>
       </section>
 
-      {/* WHAT I DID (scanbar) */}
+      {/* WHAT I DID */}
       <section className="px-5 md:px-16 pb-12 md:pb-16">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-5">Was ich geliefert habe</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold mb-2">Was geliefert wurde</h2>
+          <p className="text-sm md:text-base text-neutral-400 max-w-2xl leading-relaxed">
+            Fokus war weniger „schön“, sondern „verständlich und einfach zu nutzen“: klare Story, klare Spendenwege,
+            sauberer Ablauf.
+          </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             <MiniCard
               icon={<LayoutTemplate size={18} />}
               title="Landingpage"
-              bullets={['Klarer Aufbau', 'Mobile-first', 'CTAs & Vertrauen']}
+              bullets={['Story und Struktur', 'Mobile-first Umsetzung', 'Vertrauen und klare CTAs']}
             />
             <MiniCard
               icon={<CreditCard size={18} />}
               title="Spendenwege"
-              bullets={['PayPal', 'Überweisung', 'QR-Codes & Links']}
+              bullets={['PayPal und Überweisung', 'QR-Codes und kurze Links', 'so wenig Reibung wie möglich']}
             />
             <MiniCard
               icon={<FileText size={18} />}
-              title="Content & Medien"
-              bullets={['Texte (DE/EN)', '4 Flyer', 'Projektvideo']}
+              title="Content und Medien"
+              bullets={['Texte in DE und EN', '4 Flyer für Verteilung', 'Projektvideo für Reichweite']}
             />
           </div>
         </div>
       </section>
 
-      {/* IMPACT (1 Box, sehr kurz) */}
+      {/* IMPACT */}
       <section className="px-5 md:px-16 pb-16">
         <div className="max-w-6xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-6 md:p-9">
-          <h3 className="text-xl md:text-2xl font-bold">Wirkung</h3>
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+              <h3 className="text-xl md:text-2xl font-bold">Wirkung</h3>
+              <p className="mt-2 text-sm md:text-base text-neutral-300 max-w-2xl leading-relaxed">
+                Die Seite wurde so gebaut, dass Menschen schnell verstehen, worum es geht, und ohne Hürden spenden können.
+              </p>
+            </div>
 
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
-            <ImpactItem text="Menschen verstehen das Anliegen in Sekunden." />
-            <ImpactItem text="Spenden sind ohne Hürden möglich." />
-            <ImpactItem text="USA-Reise: einfacher Verweis per QR/Link." />
+            <Link href="/contact" className="text-sm md:text-base text-neutral-300 hover:text-white transition-colors md:text-right">
+              Ähnliches Projekt anfragen <span className="text-neutral-500">(3 Infos reichen)</span>
+            </Link>
           </div>
 
-          <div className="mt-6 flex flex-col sm:flex-row gap-3">
+          <div className="mt-5 grid grid-cols-1 md:grid-cols-3 gap-3">
+            <ImpactItem text="Anliegen in wenigen Sekunden verständlich durch Story und klare Struktur." />
+            <ImpactItem text="Spendenweg direkt: PayPal oder Überweisung, ergänzt durch QR-Codes." />
+            <ImpactItem text="Einheitliche Assets (Flyer und Video), damit überall auf dasselbe Ziel verlinkt wird." />
+          </div>
+
+          <div className="mt-6 flex flex-col items-start gap-3">
             <a
               href="https://kircheab.de/spenden"
               target="_blank"
@@ -170,11 +194,8 @@ export default function KircheFundraisingPage() {
             >
               Zur Spenden-Seite <ArrowRight size={18} />
             </a>
-            <Link
-              href="/portfolio"
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-white/20 bg-white/5 hover:border-white/35 transition-colors font-semibold text-sm md:text-base"
-            >
-              Mehr Portfolio ansehen
+            <Link href="/portfolio" className="text-sm md:text-base text-neutral-300 hover:text-white transition-colors">
+              Mehr Projekte ansehen
             </Link>
           </div>
         </div>
@@ -235,4 +256,5 @@ function ImpactItem({ text }) {
     </div>
   );
 }
+
 
