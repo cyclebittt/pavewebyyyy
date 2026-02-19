@@ -30,79 +30,79 @@ const SECTIONS = [
 ];
 
 /**
- * Scenes: deutlich, aber ohne brutalen "Hero neon overload".
- * Wir nutzen 2 Gradient-Layer + 3 Lightleak-Blobs. Beim Übergang wird weich gecrossfaded.
+ * Scenes: weiche, aber klar unterschiedliche Farbräume.
+ * Hintergrund wird global gemorpht (Crossfade + blur + scale), keine harten Cuts.
  */
 const SCENES = {
   s1: {
     base: '#070312',
-    g1: `radial-gradient(1200px 700px at 18% 18%, rgba(168,85,247,0.38), transparent 60%),
-         radial-gradient(900px 700px at 82% 25%, rgba(56,189,248,0.18), transparent 55%)`,
+    g1: `radial-gradient(1200px 700px at 18% 18%, rgba(168,85,247,0.36), transparent 60%),
+         radial-gradient(900px 700px at 82% 25%, rgba(56,189,248,0.16), transparent 55%)`,
     g2: `linear-gradient(135deg, #070312 0%, #0b0b1a 50%, #03040e 100%)`,
     blobs: [
-      { cls: 'bg-violet-500/22', x: '-20%', y: '-18%', s: '56rem', blur: 140 },
-      { cls: 'bg-cyan-500/14', x: '70%', y: '10%', s: '54rem', blur: 150 },
+      { cls: 'bg-violet-500/20', x: '-20%', y: '-18%', s: '56rem', blur: 140 },
+      { cls: 'bg-cyan-500/12', x: '70%', y: '10%', s: '54rem', blur: 150 },
       { cls: 'bg-fuchsia-500/10', x: '20%', y: '80%', s: '46rem', blur: 150 },
     ],
     accent: 'from-violet-200 via-indigo-200 to-cyan-200',
   },
   s2: {
     base: '#021019',
-    g1: `radial-gradient(1100px 750px at 22% 20%, rgba(34,211,238,0.30), transparent 60%),
-         radial-gradient(900px 700px at 88% 15%, rgba(99,102,241,0.22), transparent 55%)`,
+    g1: `radial-gradient(1100px 750px at 22% 20%, rgba(34,211,238,0.28), transparent 60%),
+         radial-gradient(900px 700px at 88% 15%, rgba(99,102,241,0.20), transparent 55%)`,
     g2: `linear-gradient(135deg, #021019 0%, #07102a 55%, #05010b 100%)`,
     blobs: [
-      { cls: 'bg-cyan-500/20', x: '-10%', y: '-10%', s: '58rem', blur: 150 },
-      { cls: 'bg-indigo-500/18', x: '72%', y: '0%', s: '54rem', blur: 150 },
+      { cls: 'bg-cyan-500/18', x: '-10%', y: '-10%', s: '58rem', blur: 150 },
+      { cls: 'bg-indigo-500/16', x: '72%', y: '0%', s: '54rem', blur: 150 },
       { cls: 'bg-emerald-500/10', x: '10%', y: '75%', s: '46rem', blur: 160 },
     ],
     accent: 'from-cyan-200 via-indigo-200 to-violet-200',
   },
   s3: {
     base: '#120316',
-    g1: `radial-gradient(1200px 750px at 20% 10%, rgba(244,114,182,0.22), transparent 60%),
-         radial-gradient(950px 750px at 84% 30%, rgba(168,85,247,0.26), transparent 55%)`,
+    g1: `radial-gradient(1200px 750px at 20% 10%, rgba(244,114,182,0.20), transparent 60%),
+         radial-gradient(950px 750px at 84% 30%, rgba(168,85,247,0.24), transparent 55%)`,
     g2: `linear-gradient(135deg, #120316 0%, #1a0714 55%, #040312 100%)`,
     blobs: [
-      { cls: 'bg-pink-500/16', x: '-18%', y: '-12%', s: '56rem', blur: 160 },
-      { cls: 'bg-violet-500/20', x: '68%', y: '12%', s: '56rem', blur: 150 },
+      { cls: 'bg-pink-500/14', x: '-18%', y: '-12%', s: '56rem', blur: 160 },
+      { cls: 'bg-violet-500/18', x: '68%', y: '12%', s: '56rem', blur: 150 },
       { cls: 'bg-cyan-500/10', x: '10%', y: '80%', s: '46rem', blur: 170 },
     ],
     accent: 'from-pink-200 via-fuchsia-200 to-indigo-200',
   },
   s4: {
     base: '#03110a',
-    g1: `radial-gradient(1200px 750px at 18% 10%, rgba(16,185,129,0.16), transparent 60%),
-         radial-gradient(900px 700px at 85% 20%, rgba(59,130,246,0.20), transparent 55%)`,
+    g1: `radial-gradient(1200px 750px at 18% 10%, rgba(16,185,129,0.14), transparent 60%),
+         radial-gradient(900px 700px at 85% 20%, rgba(59,130,246,0.18), transparent 55%)`,
     g2: `linear-gradient(135deg, #03110a 0%, #0a1020 55%, #04060d 100%)`,
     blobs: [
-      { cls: 'bg-emerald-500/14', x: '-12%', y: '-16%', s: '54rem', blur: 170 },
-      { cls: 'bg-cyan-500/14', x: '75%', y: '8%', s: '56rem', blur: 160 },
-      { cls: 'bg-indigo-500/14', x: '18%', y: '82%', s: '48rem', blur: 170 },
+      { cls: 'bg-emerald-500/12', x: '-12%', y: '-16%', s: '54rem', blur: 170 },
+      { cls: 'bg-cyan-500/12', x: '75%', y: '8%', s: '56rem', blur: 160 },
+      { cls: 'bg-indigo-500/12', x: '18%', y: '82%', s: '48rem', blur: 170 },
     ],
     accent: 'from-emerald-200 via-cyan-200 to-indigo-200',
   },
   s5: {
     base: '#120b02',
-    g1: `radial-gradient(1200px 750px at 15% 10%, rgba(250,204,21,0.12), transparent 60%),
-         radial-gradient(900px 700px at 88% 25%, rgba(236,72,153,0.20), transparent 55%)`,
+    g1: `radial-gradient(1200px 750px at 15% 10%, rgba(250,204,21,0.10), transparent 60%),
+         radial-gradient(900px 700px at 88% 25%, rgba(236,72,153,0.18), transparent 55%)`,
     g2: `linear-gradient(135deg, #120b02 0%, #1b0713 55%, #05020a 100%)`,
     blobs: [
       { cls: 'bg-amber-400/10', x: '-10%', y: '-14%', s: '56rem', blur: 170 },
-      { cls: 'bg-pink-500/14', x: '74%', y: '10%', s: '56rem', blur: 160 },
-      { cls: 'bg-violet-500/14', x: '18%', y: '82%', s: '48rem', blur: 170 },
+      { cls: 'bg-pink-500/12', x: '74%', y: '10%', s: '56rem', blur: 160 },
+      { cls: 'bg-violet-500/12', x: '18%', y: '82%', s: '48rem', blur: 170 },
     ],
     accent: 'from-amber-200 via-pink-200 to-violet-200',
   },
   request: {
     base: '#04040a',
-    g1: `radial-gradient(1200px 750px at 15% 0%, rgba(99,102,241,0.22), transparent 60%),
-         radial-gradient(900px 700px at 90% 15%, rgba(56,189,248,0.14), transparent 55%)`,
+    g1: `radial-gradient(1200px 750px at 15% 0%, rgba(99,102,241,0.20), transparent 60%),
+         radial-gradient(900px 700px at 90% 15%, rgba(56,189,248,0.12), transparent 55%)`,
     g2: `linear-gradient(135deg, #04040a 0%, #07071a 55%, #04030a 100%)`,
     blobs: [
-      { cls: 'bg-indigo-500/14', x: '-12%', y: '-18%', s: '56rem', blur: 170 },
+      { cls: 'bg-indigo-500/12', x: '-12%', y: '-18%', s: '56rem', blur: 170 },
       { cls: 'bg-cyan-500/10', x: '76%', y: '8%', s: '56rem', blur: 170 },
-      { cls: 'bg-violet-500/12', x: '18%', y: '82%', s: '48rem', blur: 170 },
+      { cls: 'bg-violet-500/10', x: '18%', y: '82%', s: '48rem', blur: 170 },
     ],
     accent: 'from-indigo-200 via-violet-200 to-cyan-200',
   },
@@ -161,6 +161,7 @@ function useReveal(ref) {
   return shown;
 }
 
+/** rAF based numeric tween for "live" feeling */
 function useCountUp({ target, durationMs = 1200 }) {
   const [value, setValue] = useState(0);
   const rafRef = useRef(null);
@@ -181,42 +182,8 @@ function useCountUp({ target, durationMs = 1200 }) {
   return { value, start };
 }
 
-/* ---------- UI ---------- */
+/* ---------- GLOBAL BACKGROUND (SMOOTH MORPH) ---------- */
 
-function ProgressRail({ activeIndex }) {
-  return (
-    <div className="hidden md:block fixed left-6 top-1/2 -translate-y-1/2 z-50">
-      <div className="rounded-2xl border border-white/15 bg-black/20 backdrop-blur-md px-3 py-4">
-        <div className="text-xs uppercase tracking-wide text-white/60">
-          {String(activeIndex + 1).padStart(2, '0')} / {String(SECTIONS.length).padStart(2, '0')}
-        </div>
-        <div className="mt-3 flex flex-col gap-2">
-          {SECTIONS.map((s, i) => (
-            <a key={s.id} href={`/#${s.id}`} className="group flex items-center gap-2">
-              <span
-                className={cx(
-                  'w-2.5 h-2.5 rounded-full border transition-all',
-                  i === activeIndex
-                    ? 'bg-white border-white scale-110'
-                    : 'bg-white/10 border-white/25 group-hover:border-white/50'
-                )}
-              />
-              <span className={cx('text-xs', i === activeIndex ? 'text-white/85' : 'text-white/45')}>
-                {s.label}
-              </span>
-            </a>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/**
- * GlobalBackground:
- * Wir rendern ALLE Scenes gleichzeitig als Layer und blenden weich um (opacity + blur + slight scale).
- * Dadurch kein harter Cut, obwohl Szene wechselt.
- */
 function GlobalBackground({ activeId }) {
   return (
     <div className="fixed inset-0 -z-10">
@@ -228,8 +195,8 @@ function GlobalBackground({ activeId }) {
           <div
             key={key}
             className={cx(
-              'absolute inset-0 transition-[opacity,filter,transform] duration-[900ms] ease-out will-change-[opacity,filter,transform]',
-              on ? 'opacity-100 blur-0 scale-100' : 'opacity-0 blur-[10px] scale-[1.02]'
+              'absolute inset-0 transition-[opacity,filter,transform] duration-[1100ms] ease-out will-change-[opacity,filter,transform]',
+              on ? 'opacity-100 blur-0 scale-100' : 'opacity-0 blur-[12px] scale-[1.02]'
             )}
             style={{
               backgroundColor: s.base,
@@ -239,7 +206,6 @@ function GlobalBackground({ activeId }) {
         );
       })}
 
-      {/* Noise + Grain immer on */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.10] mix-blend-overlay"
         style={{
@@ -250,17 +216,11 @@ function GlobalBackground({ activeId }) {
         }}
       />
 
-      {/* Soft vignette damit Text immer lesbar bleibt */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_35%,transparent_0%,rgba(0,0,0,0.40)_65%,rgba(0,0,0,0.70)_100%)]" />
     </div>
   );
 }
 
-/**
- * GlobalLightLeaks:
- * Blobs werden ebenfalls pro Scene als Layer gerendert, weich gecrossfaded.
- * Dadurch passt sich das „Lightleak Gefühl“ fließend an.
- */
 function GlobalLightLeaks({ activeId }) {
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none">
@@ -272,7 +232,7 @@ function GlobalLightLeaks({ activeId }) {
           <div
             key={key}
             className={cx(
-              'absolute inset-0 transition-[opacity,filter] duration-[900ms] ease-out will-change-[opacity,filter]',
+              'absolute inset-0 transition-[opacity,filter] duration-[1100ms] ease-out will-change-[opacity,filter]',
               on ? 'opacity-100 blur-0' : 'opacity-0 blur-[18px]'
             )}
           >
@@ -282,7 +242,11 @@ function GlobalLightLeaks({ activeId }) {
                 className={cx(
                   'absolute rounded-full',
                   b.cls,
-                  i === 0 ? 'animate-[blob_10s_ease-in-out_infinite]' : i === 1 ? 'animate-[blob2_12s_ease-in-out_infinite]' : 'animate-[blob3_14s_ease-in-out_infinite]'
+                  i === 0
+                    ? 'animate-[blob_10s_ease-in-out_infinite]'
+                    : i === 1
+                      ? 'animate-[blob2_12s_ease-in-out_infinite]'
+                      : 'animate-[blob3_14s_ease-in-out_infinite]'
                 )}
                 style={{
                   left: b.x,
@@ -299,6 +263,8 @@ function GlobalLightLeaks({ activeId }) {
     </div>
   );
 }
+
+/* ---------- LAYOUT ---------- */
 
 function Scene({ id, children }) {
   return (
@@ -329,6 +295,35 @@ function Reveal({ children, delayMs = 0 }) {
   );
 }
 
+function ProgressRail({ activeIndex }) {
+  return (
+    <div className="hidden md:block fixed left-6 top-1/2 -translate-y-1/2 z-50">
+      <div className="rounded-2xl border border-white/15 bg-black/20 backdrop-blur-md px-3 py-4">
+        <div className="text-xs uppercase tracking-wide text-white/60">
+          {String(activeIndex + 1).padStart(2, '0')} / {String(SECTIONS.length).padStart(2, '0')}
+        </div>
+        <div className="mt-3 flex flex-col gap-2">
+          {SECTIONS.map((s, i) => (
+            <a key={s.id} href={`/#${s.id}`} className="group flex items-center gap-2">
+              <span
+                className={cx(
+                  'w-2.5 h-2.5 rounded-full border transition-all',
+                  i === activeIndex
+                    ? 'bg-white border-white scale-110'
+                    : 'bg-white/10 border-white/25 group-hover:border-white/50'
+                )}
+              />
+              <span className={cx('text-xs', i === activeIndex ? 'text-white/85' : 'text-white/45')}>
+                {s.label}
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PrimaryCTA({ label = 'Projekt anfragen' }) {
   return (
     <Link
@@ -352,7 +347,94 @@ function GhostCTA({ href, children }) {
   );
 }
 
-function ProofStat({ sceneId, label, target, display, durationMs = 1200 }) {
+/* ---------- SPLIT-FLAP (AIRPORT BOARD) ---------- */
+
+function FlipNumber({ value, pad = 2 }) {
+  const str = Math.max(0, value).toString().padStart(pad, '0');
+  return (
+    <div className="flex items-center gap-1">
+      {str.split('').map((ch, i) => (
+        <FlipDigit key={`${i}-${ch}`} digit={ch} />
+      ))}
+    </div>
+  );
+}
+
+function FlipDigit({ digit }) {
+  const [prev, setPrev] = useState(digit);
+  const [flipping, setFlipping] = useState(false);
+
+  useEffect(() => {
+    if (digit === prev) return;
+
+    setFlipping(true);
+    const t1 = setTimeout(() => {
+      setPrev(digit);
+    }, 180);
+
+    const t2 = setTimeout(() => {
+      setFlipping(false);
+    }, 360);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [digit, prev]);
+
+  const topText = prev;
+  const bottomText = digit;
+
+  return (
+    <div className="relative w-[0.78em] md:w-[0.86em] h-[1.12em] md:h-[1.18em] [perspective:900px]">
+      <div className="absolute inset-0 rounded-[0.18em] border border-white/20 bg-black/35 backdrop-blur-md" />
+
+      <div className="absolute left-0 right-0 top-0 h-1/2 overflow-hidden rounded-t-[0.18em]">
+        <div className="h-full flex items-center justify-center text-4xl md:text-5xl font-extrabold tracking-tight text-white/90 leading-none translate-y-[0.06em]">
+          {topText}
+        </div>
+        <div className="absolute inset-x-0 bottom-0 h-px bg-white/12" />
+      </div>
+
+      <div className="absolute left-0 right-0 bottom-0 h-1/2 overflow-hidden rounded-b-[0.18em]">
+        <div className="h-full flex items-center justify-center text-4xl md:text-5xl font-extrabold tracking-tight text-white/90 leading-none -translate-y-[0.46em]">
+          {bottomText}
+        </div>
+      </div>
+
+      <div
+        className={cx(
+          'absolute left-0 right-0 top-0 h-1/2 overflow-hidden rounded-t-[0.18em] origin-bottom',
+          flipping ? 'animate-[flapTop_360ms_ease-in-out_forwards]' : ''
+        )}
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        <div className="h-full flex items-center justify-center text-4xl md:text-5xl font-extrabold tracking-tight text-white/95 leading-none translate-y-[0.06em]">
+          {topText}
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-black/35" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-white/12" />
+      </div>
+
+      <div
+        className={cx(
+          'absolute left-0 right-0 bottom-0 h-1/2 overflow-hidden rounded-b-[0.18em] origin-top',
+          flipping ? 'animate-[flapBottom_360ms_ease-in-out_forwards]' : ''
+        )}
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        <div className="h-full flex items-center justify-center text-4xl md:text-5xl font-extrabold tracking-tight text-white/95 leading-none -translate-y-[0.46em]">
+          {bottomText}
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-white/5 to-black/35" />
+      </div>
+    </div>
+  );
+}
+
+/* ---------- PROOF STAT (COUNTUP + FLIP DISPLAY) ---------- */
+
+function ProofStat({ sceneId, label, target, suffix = '', pad = 2, durationMs = 900 }) {
   const ref = useRef(null);
   const shown = useReveal(ref);
   const { value, start } = useCountUp({ target, durationMs });
@@ -362,13 +444,100 @@ function ProofStat({ sceneId, label, target, display, durationMs = 1200 }) {
   }, [shown, start]);
 
   return (
-    <div ref={ref} className="relative overflow-hidden rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8">
-      <div className="absolute -left-24 top-0 h-full w-56 rotate-12 bg-white/15 blur-2xl opacity-25 animate-[shine_2.8s_ease-in-out_infinite]" />
+    <div
+      ref={ref}
+      className="relative overflow-hidden rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8"
+    >
+      <div className="absolute -left-24 top-0 h-full w-56 rotate-12 bg-white/15 blur-2xl opacity-20 animate-[shine_3.0s_ease-in-out_infinite]" />
       <div className="text-xs uppercase tracking-wide text-white/55">Proof</div>
-      <div className="mt-3 text-4xl md:text-6xl font-extrabold tracking-tight">
-        <TitleGradient sceneId={sceneId}>{display ?? value.toLocaleString('de-DE')}</TitleGradient>
+
+      <div className="mt-3 flex items-end gap-3 flex-wrap">
+        <FlipNumber value={value} pad={pad} />
+        {suffix ? (
+          <span className="text-white/75 text-xl md:text-2xl font-semibold">
+            <TitleGradient sceneId={sceneId}>{suffix}</TitleGradient>
+          </span>
+        ) : null}
       </div>
+
       <div className="mt-2 text-sm md:text-base text-white/80">{label}</div>
+    </div>
+  );
+}
+
+/* ---------- SMALL COMPONENTS ---------- */
+
+function MiniTile({ icon, title, sub }) {
+  return (
+    <div className="rounded-2xl border border-white/15 bg-black/15 backdrop-blur-md p-4 text-left">
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">{icon}</div>
+        <div>
+          <div className="text-sm font-semibold text-white/90">{title}</div>
+          <div className="text-xs text-white/60">{sub}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Stripe({ title, desc, icon }) {
+  return (
+    <div className="rounded-2xl border border-white/15 bg-white/10 p-4 md:p-5 flex items-start gap-3">
+      <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">{icon}</div>
+      <div className="min-w-0">
+        <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
+        <div className="mt-1 text-sm text-white/65 leading-relaxed">{desc}</div>
+      </div>
+    </div>
+  );
+}
+
+function BigService({ sceneId, icon, kicker, title, desc }) {
+  return (
+    <Reveal>
+      <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8 overflow-hidden relative">
+        <div className="absolute -left-24 top-0 h-full w-56 rotate-12 bg-white/15 blur-2xl opacity-18 animate-[shine_3.2s_ease-in-out_infinite]" />
+        <div className="flex items-center justify-between gap-4">
+          <div className="inline-flex items-center gap-2 text-xs uppercase tracking-wide text-white/60">
+            <span className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center">{icon}</span>
+            {kicker}
+          </div>
+          <Wand2 size={18} className="text-white/55" />
+        </div>
+
+        <div className="mt-4 text-2xl md:text-4xl font-extrabold leading-tight text-white">
+          {title}
+          <span className="block text-base md:text-lg mt-2">
+            <TitleGradient sceneId={sceneId}>Als System gedacht, nicht als Einzelteil.</TitleGradient>
+          </span>
+        </div>
+
+        <p className="mt-4 text-sm md:text-base text-white/70 leading-relaxed max-w-2xl">{desc}</p>
+
+        <div className="mt-6">
+          <Link
+            href="/#request"
+            className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors font-semibold"
+          >
+            Kurz anfragen <ArrowRight size={16} />
+          </Link>
+        </div>
+      </div>
+    </Reveal>
+  );
+}
+
+function Step({ n, title, desc }) {
+  return (
+    <div className="rounded-2xl border border-white/15 bg-black/20 backdrop-blur-md p-4 md:p-5">
+      <div className="flex items-center gap-3">
+        <div className="w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center font-extrabold">
+          {n}
+        </div>
+        <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
+      </div>
+      <div className="mt-2 text-sm text-white/70 leading-relaxed">{desc}</div>
     </div>
   );
 }
@@ -395,7 +564,6 @@ export default function Home() {
     <div className="font-proxima text-white">
       <style>{globalKeyframes}</style>
 
-      {/* Global background morph */}
       <GlobalBackground activeId={activeId} />
       <GlobalLightLeaks activeId={activeId} />
 
@@ -403,6 +571,7 @@ export default function Home() {
       <ProgressRail activeIndex={activeIndex} />
 
       <main className="md:snap-y md:snap-mandatory">
+        {/* 01 */}
         <Scene id="s1">
           <div className="flex flex-col items-center text-center gap-6">
             <Reveal>
@@ -422,8 +591,8 @@ export default function Home() {
 
             <Reveal delayMs={160}>
               <p className="max-w-2xl text-base md:text-xl text-white/80 leading-relaxed">
-                Brandbooks, Motiondesign, Webdevelopment und Videoediting – als System, damit Kampagnen nicht nur “nice”
-                sind, sondern Ergebnisse liefern.
+                Brandbooks, Motiondesign, Webdevelopment und Videoediting – als System, damit Kampagnen nicht nur „nice“
+                aussehen, sondern Ergebnisse liefern.
               </p>
             </Reveal>
 
@@ -447,6 +616,7 @@ export default function Home() {
           </div>
         </Scene>
 
+        {/* 02 */}
         <Scene id="s2">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
@@ -500,11 +670,24 @@ export default function Home() {
                   <div className="text-xs uppercase tracking-wide text-white/55">So sieht das als System aus</div>
 
                   <div className="mt-5 space-y-3">
-                    <Stripe title="1) Brandbook" desc="Regeln, Look, Tone. Damit alles gleich wirkt." icon={<BookOpen size={18} />} />
-                    <Stripe title="2) Motion & Video" desc="Hook, Tempo, Stil. Damit es hängen bleibt." icon={<Play size={18} />} />
-                    <Stripe title="3) Web & Funnel" desc="Ein klarer Weg bis zur Anfrage." icon={<Monitor size={18} />} />
+                    <Stripe
+                      title="1) Brandbook"
+                      desc="Regeln, Look, Tone. Damit alles gleich wirkt."
+                      icon={<BookOpen size={18} />}
+                    />
+                    <Stripe
+                      title="2) Motion & Video"
+                      desc="Hook, Tempo, Stil. Damit es hängen bleibt."
+                      icon={<Play size={18} />}
+                    />
+                    <Stripe
+                      title="3) Web & Funnel"
+                      desc="Ein klarer Weg bis zur Anfrage."
+                      icon={<Monitor size={18} />}
+                    />
                   </div>
 
+                  {/* optional: preview image */}
                   <div className="mt-6 relative rounded-2xl border border-white/15 overflow-hidden h-40 md:h-48">
                     <Image
                       src="/img/home/preview-system.jpg"
@@ -529,6 +712,7 @@ export default function Home() {
           </div>
         </Scene>
 
+        {/* 03 */}
         <Scene id="s3">
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 items-start">
             <div className="lg:sticky lg:top-24">
@@ -591,6 +775,7 @@ export default function Home() {
           </div>
         </Scene>
 
+        {/* 04 */}
         <Scene id="s4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
@@ -624,13 +809,15 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-              <ProofStat sceneId="s4" label="Likes generiert" target={15000000} display="15+ Mio" durationMs={1100} />
-              <ProofStat sceneId="s4" label="Klicks auf Social Media erzielt" target={10000000} display="10+ Mio" durationMs={1100} />
-              <ProofStat sceneId="s4" label="Abgeschlossene Projekte" target={100} display="100+" durationMs={900} />
+              {/* Airport-board style: wir flippen hier die "Mio"-Zahl (15 / 10), suffix bleibt statisch */}
+              <ProofStat sceneId="s4" label="Likes generiert" target={15} suffix="+ Mio" pad={2} durationMs={900} />
+              <ProofStat sceneId="s4" label="Klicks auf Social Media erzielt" target={10} suffix="+ Mio" pad={2} durationMs={900} />
+              <ProofStat sceneId="s4" label="Abgeschlossene Projekte" target={100} suffix="+" pad={3} durationMs={900} />
             </div>
           </div>
         </Scene>
 
+        {/* 05 */}
         <Scene id="s5">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
@@ -689,6 +876,7 @@ export default function Home() {
           </div>
         </Scene>
 
+        {/* 06 */}
         <Scene id="request">
           <div className="rounded-3xl border border-white/15 bg-black/25 backdrop-blur-md p-6 md:p-12">
             <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
@@ -711,11 +899,7 @@ export default function Home() {
 
                 <Reveal delayMs={240}>
                   <div className="mt-6 space-y-3">
-                    {[
-                      'Ziel (was soll passieren?)',
-                      'Deadline (bis wann?)',
-                      'Stand (Branding/Material/Beispiele?)',
-                    ].map((t) => (
+                    {['Ziel (was soll passieren?)', 'Deadline (bis wann?)', 'Stand (Branding/Material/Beispiele?)'].map((t) => (
                       <div key={t} className="flex items-start gap-2">
                         <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
                         <span className="text-sm md:text-base text-white/80">{t}</span>
@@ -765,80 +949,6 @@ Link/Beispiele (optional):`}
   );
 }
 
-/* ---------- SMALL COMPONENTS ---------- */
-
-function MiniTile({ icon, title, sub }) {
-  return (
-    <div className="rounded-2xl border border-white/15 bg-black/15 backdrop-blur-md p-4 text-left">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">{icon}</div>
-        <div>
-          <div className="text-sm font-semibold text-white/90">{title}</div>
-          <div className="text-xs text-white/60">{sub}</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Stripe({ title, desc, icon }) {
-  return (
-    <div className="rounded-2xl border border-white/15 bg-white/10 p-4 md:p-5 flex items-start gap-3">
-      <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">{icon}</div>
-      <div className="min-w-0">
-        <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
-        <div className="mt-1 text-sm text-white/65 leading-relaxed">{desc}</div>
-      </div>
-    </div>
-  );
-}
-
-function BigService({ sceneId, icon, kicker, title, desc }) {
-  return (
-    <Reveal>
-      <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8 overflow-hidden relative">
-        <div className="absolute -left-24 top-0 h-full w-56 rotate-12 bg-white/15 blur-2xl opacity-20 animate-[shine_3.0s_ease-in-out_infinite]" />
-        <div className="flex items-center justify-between gap-4">
-          <div className="inline-flex items-center gap-2 text-xs uppercase tracking-wide text-white/60">
-            <span className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center">{icon}</span>
-            {kicker}
-          </div>
-          <Wand2 size={18} className="text-white/60" />
-        </div>
-
-        <div className="mt-4 text-2xl md:text-4xl font-extrabold leading-tight text-white">
-          {title}
-          <span className="block text-base md:text-lg mt-2">
-            <TitleGradient sceneId={sceneId}>Als System gedacht, nicht als Einzelteil.</TitleGradient>
-          </span>
-        </div>
-
-        <p className="mt-4 text-sm md:text-base text-white/70 leading-relaxed max-w-2xl">{desc}</p>
-
-        <div className="mt-6">
-          <Link href="/#request" className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors font-semibold">
-            Kurz anfragen <ArrowRight size={16} />
-          </Link>
-        </div>
-      </div>
-    </Reveal>
-  );
-}
-
-function Step({ n, title, desc }) {
-  return (
-    <div className="rounded-2xl border border-white/15 bg-black/20 backdrop-blur-md p-4 md:p-5">
-      <div className="flex items-center gap-3">
-        <div className="w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center font-extrabold">
-          {n}
-        </div>
-        <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
-      </div>
-      <div className="mt-2 text-sm text-white/70 leading-relaxed">{desc}</div>
-    </div>
-  );
-}
-
 /* ---------- KEYFRAMES ---------- */
 
 const globalKeyframes = `
@@ -861,12 +971,20 @@ const globalKeyframes = `
   100% { transform: translate3d(0px, 0px, 0) scale(1); }
 }
 @keyframes shine {
-  0% { transform: translateX(-160px) rotate(12deg); opacity: 0.12; }
-  45% { opacity: 0.28; }
-  100% { transform: translateX(720px) rotate(12deg); opacity: 0.08; }
+  0% { transform: translateX(-160px) rotate(12deg); opacity: 0.10; }
+  45% { opacity: 0.22; }
+  100% { transform: translateX(780px) rotate(12deg); opacity: 0.06; }
 }
 @keyframes noiseMove {
   0% { transform: translate3d(0,0,0); }
   100% { transform: translate3d(90px,60px,0); }
+}
+@keyframes flapTop {
+  0%   { transform: rotateX(0deg); filter: brightness(1); }
+  100% { transform: rotateX(-90deg); filter: brightness(0.85); }
+}
+@keyframes flapBottom {
+  0%   { transform: rotateX(90deg); filter: brightness(0.85); }
+  100% { transform: rotateX(0deg); filter: brightness(1); }
 }
 `;
