@@ -2,7 +2,20 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Sparkles, CheckCircle2, Play, Wand2, Monitor, Film, BookOpen, Mail, ExternalLink } from 'lucide-react';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
+import {
+  ArrowRight,
+  Sparkles,
+  CheckCircle2,
+  Play,
+  Wand2,
+  Monitor,
+  Film,
+  BookOpen,
+  Mail,
+  ExternalLink,
+} from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 /* ---------- CONFIG ---------- */
@@ -263,7 +276,7 @@ function GlobalLightLeaks({ activeId }) {
   );
 }
 
-/* ---------- HIGH-ENERGY UI ADDONS ---------- */
+/* ---------- UI ADDONS ---------- */
 
 function ScrollProgressBar() {
   const p = useScrollProgress();
@@ -279,7 +292,7 @@ function ScrollProgressBar() {
   );
 }
 
-/* softer cursor halo (kept as-is) */
+/* softer cursor halo */
 function CursorHalo() {
   const { x, y } = useMousePos();
 
@@ -455,7 +468,7 @@ function GhostCTA({ href, children }) {
   );
 }
 
-/* ---------- NUMBER ANIMATION (NON-FLIP) ---------- */
+/* ---------- NUMBER ANIMATION ---------- */
 
 function useCountUp({ target, durationMs = 900 }) {
   const [value, setValue] = useState(0);
@@ -514,7 +527,6 @@ function ProofStat({ sceneId, label, target, suffix = '', durationMs = 900 }) {
   return (
     <TiltCard className="rounded-3xl">
       <div ref={ref} className="relative overflow-hidden rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8">
-        {/* SOFTER, NON-LINEAR LIGHT LEAK */}
         <div
           className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.08]"
           style={{
@@ -540,21 +552,44 @@ function ProofStat({ sceneId, label, target, suffix = '', durationMs = 900 }) {
   );
 }
 
-/* ---------- SMALL COMPONENTS ---------- */
+/* ---------- HERO RECTANGLES (UNIFIED) ---------- */
 
 function MiniTile({ icon, title, sub }) {
   return (
-    <TiltCard className="rounded-2xl">
-      <div className="rounded-2xl border border-white/15 bg-black/15 backdrop-blur-md p-4 text-left">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">{icon}</div>
-          <div>
-            <div className="text-sm font-semibold text-white/90">{title}</div>
-            <div className="text-xs text-white/60">{sub}</div>
-          </div>
+    <div className="h-full">
+      <div
+        className={cx(
+          'group h-full min-h-[78px] md:min-h-[86px]',
+          'rounded-2xl border border-white/15',
+          'bg-black/18 backdrop-blur-md',
+          'px-4 py-4 md:px-5 md:py-4',
+          'flex items-center gap-3',
+          'transition-[border-color,background-color,transform] duration-300',
+          'hover:border-white/25 hover:bg-black/24 hover:-translate-y-[1px]'
+        )}
+      >
+        <div
+          className={cx(
+            'shrink-0',
+            'w-10 h-10 md:w-11 md:h-11',
+            'rounded-xl',
+            'border border-white/15',
+            'bg-white/10',
+            'flex items-center justify-center',
+            'text-white/90',
+            'transition-colors duration-300',
+            'group-hover:bg-white/14 group-hover:border-white/22'
+          )}
+        >
+          {icon}
+        </div>
+
+        <div className="min-w-0">
+          <div className="text-sm md:text-[15px] font-semibold text-white/92 leading-tight truncate">{title}</div>
+          <div className="mt-1 text-xs md:text-sm text-white/60 leading-tight truncate">{sub}</div>
         </div>
       </div>
-    </TiltCard>
+    </div>
   );
 }
 
@@ -575,7 +610,6 @@ function BigService({ sceneId, icon, kicker, title, desc }) {
     <Reveal>
       <TiltCard className="rounded-3xl">
         <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8 overflow-hidden relative">
-          {/* SOFTER, NON-LINEAR LIGHT LEAK */}
           <div
             className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.07]"
             style={{
@@ -654,8 +688,7 @@ export default function Home() {
       <ScrollProgressBar />
       <CursorHalo />
 
-      {/* Navbar bleibt wie bei dir importiert */}
-      {/ <Navbar /> /}
+      <Navbar />
 
       <main className="md:snap-y md:snap-mandatory">
         {/* 01 */}
@@ -691,7 +724,7 @@ export default function Home() {
             </Reveal>
 
             <Reveal delayMs={310}>
-              <div className="mt-2 grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-3xl">
+              <div className="mt-2 grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-3xl items-stretch">
                 <MiniTile icon={<BookOpen size={18} />} title="Brandbook" sub="Guidelines & System" />
                 <MiniTile icon={<Play size={18} />} title="Motion" sub="Hooks & Templates" />
                 <MiniTile icon={<Monitor size={18} />} title="Web" sub="Funnel & UX" />
@@ -977,7 +1010,7 @@ export default function Home() {
                   <div className="mt-8 flex flex-wrap gap-2">
                     <Magnetic>
                       <a
-                        href="mailto:info@paveconsultings.com?subject=Projektanfrage&body=Ziel:%0D%0ADeadline:%0D%0AStand:%0D%0A"
+                        href="mailto:leonseitz25@icloud.com?subject=Projektanfrage&body=Ziel:%0D%0ADeadline:%0D%0AStand:%0D%0A"
                         className="px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center gap-2"
                       >
                         <Mail size={18} /> Per Mail
@@ -1011,8 +1044,7 @@ Link/Beispiele (optional):`}
         </Scene>
       </main>
 
-      {/* Footer bleibt wie bei dir importiert */}
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }
