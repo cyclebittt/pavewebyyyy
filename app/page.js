@@ -655,7 +655,7 @@ export default function Home() {
       <CursorHalo />
 
       {/* Navbar bleibt wie bei dir importiert */}
-      {/* <Navbar /> */}
+      {/ <Navbar /> /}
 
       <main className="md:snap-y md:snap-mandatory">
         {/* 01 */}
