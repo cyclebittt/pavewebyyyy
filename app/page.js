@@ -157,45 +157,6 @@ function useReveal(ref) {
   return shown;
 }
 
-/**
- * Taktet die Werte, damit Split-Flaps nicht "überfahren" werden.
- * stepsMs ~ 70–120ms wirkt wie Airport-Board.
- */
-function useSteppedCountUp({ target, durationMs = 900, stepsMs = 90 }) {
-  const [value, setValue] = useState(0);
-  const runningRef = useRef(false);
-
-  const start = useCallback(() => {
-    if (runningRef.current) return;
-    runningRef.current = true;
-
-    const startValue = 0;
-    const endValue = Math.max(0, target);
-    const steps = Math.max(1, Math.round(durationMs / stepsMs));
-    let i = 0;
-
-    const timer = setInterval(() => {
-      i += 1;
-      const p = Math.min(1, i / steps);
-      const eased = 1 - Math.pow(1 - p, 3);
-      const next = Math.round(startValue + (endValue - startValue) * eased);
-      setValue(next);
-
-      if (p >= 1) {
-        clearInterval(timer);
-        runningRef.current = false;
-      }
-    }, stepsMs);
-
-    return () => {
-      clearInterval(timer);
-      runningRef.current = false;
-    };
-  }, [target, durationMs, stepsMs]);
-
-  return { value, start };
-}
-
 function useScrollProgress() {
   const [p, setP] = useState(0);
 
@@ -213,7 +174,7 @@ function useScrollProgress() {
   return p;
 }
 
-function useMouseHalo() {
+function useMousePos() {
   const [pos, setPos] = useState({ x: -9999, y: -9999 });
   const raf = useRef(null);
 
@@ -332,17 +293,39 @@ function ScrollProgressBar() {
   );
 }
 
+/**
+ * Subtiler Halo:
+ * - sehr groß (kein Kreis)
+ * - stark geblurt
+ * - extrem geringe Opacity
+ * - 2 Layer: innen minimal stärker + außen ultra weich (großer Übergang in "normal")
+ */
 function CursorHalo() {
-  const { x, y } = useMouseHalo();
+  const { x, y } = useMousePos();
+
   return (
-    <div
-      className="hidden md:block fixed inset-0 z-[5] pointer-events-none"
-      style={{
-        background: `radial-gradient(300px 300px at ${x}px ${y}px, rgba(255,255,255,0.10), transparent 25%)`,
-        mixBlendMode: 'screen',
-        transition: 'background 60ms linear',
-      }}
-    />
+    <div className="hidden md:block fixed inset-0 z-[6] pointer-events-none">
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(800px 600px at ${x}px ${y}px, rgba(255,255,255,0.045), transparent 70%)`,
+          filter: 'blur(18px)',
+          opacity: 0.6,
+          mixBlendMode: 'screen',
+          transition: 'background 80ms linear',
+        }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(1400px 1050px at ${x}px ${y}px, rgba(99,102,241,0.035), transparent 78%)`,
+          filter: 'blur(34px)',
+          opacity: 0.55,
+          mixBlendMode: 'screen',
+          transition: 'background 80ms linear',
+        }}
+      />
+    </div>
   );
 }
 
@@ -392,8 +375,8 @@ function TiltCard({ children, className = '' }) {
 
     const onMove = (e) => {
       const r = el.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width; // 0..1
-      const py = (e.clientY - r.top) / r.height; // 0..1
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top) / r.height;
       const rx = (0.5 - py) * 10;
       const ry = (px - 0.5) * 12;
 
@@ -419,20 +402,16 @@ function TiltCard({ children, className = '' }) {
   return (
     <div
       ref={ref}
-      className={cx(
-        'relative will-change-transform [transform-style:preserve-3d]',
-        className
-      )}
+      className={cx('relative will-change-transform [transform-style:preserve-3d]', className)}
       style={{
         transform: 'perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))',
         transition: 'transform 180ms ease-out',
       }}
     >
-      {/* specular highlight */}
       <div
         className="pointer-events-none absolute inset-0 rounded-inherit opacity-0 md:opacity-100"
         style={{
-          background: 'radial-gradient(420px 320px at var(--hx, 50%) var(--hy, 30%), rgba(255,255,255,0.12), transparent 60%)',
+          background: 'radial-gradient(520px 380px at var(--hx, 50%) var(--hy, 30%), rgba(255,255,255,0.11), transparent 62%)',
           mixBlendMode: 'screen',
         }}
       />
@@ -445,10 +424,7 @@ function TiltCard({ children, className = '' }) {
 
 function Scene({ id, children }) {
   return (
-    <section
-      id={id}
-      className="relative min-h-screen flex items-center px-5 md:px-16 py-16 md:snap-start scroll-mt-24"
-    >
+    <section id={id} className="relative min-h-screen flex items-center px-5 md:px-16 py-16 md:snap-start scroll-mt-24">
       <div className="relative max-w-6xl mx-auto w-full">{children}</div>
     </section>
   );
@@ -461,10 +437,7 @@ function Reveal({ children, delayMs = 0 }) {
   return (
     <div
       ref={ref}
-      className={cx(
-        'transition-all duration-700 will-change-transform',
-        shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-      )}
+      className={cx('transition-all duration-700 will-change-transform', shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6')}
       style={{ transitionDelay: `${delayMs}ms` }}
     >
       {children}
@@ -485,14 +458,10 @@ function ProgressRail({ activeIndex }) {
               <span
                 className={cx(
                   'w-2.5 h-2.5 rounded-full border transition-all',
-                  i === activeIndex
-                    ? 'bg-white border-white scale-110'
-                    : 'bg-white/10 border-white/25 group-hover:border-white/50'
+                  i === activeIndex ? 'bg-white border-white scale-110' : 'bg-white/10 border-white/25 group-hover:border-white/50'
                 )}
               />
-              <span className={cx('text-xs', i === activeIndex ? 'text-white/85' : 'text-white/45')}>
-                {s.label}
-              </span>
+              <span className={cx('text-xs', i === activeIndex ? 'text-white/85' : 'text-white/45')}>{s.label}</span>
             </a>
           ))}
         </div>
@@ -528,111 +497,57 @@ function GhostCTA({ href, children }) {
   );
 }
 
-/* ---------- SPLIT-FLAP (ROBUST) ---------- */
+/* ---------- NUMBER ANIMATION (NON-FLIP) ---------- */
 
-function FlipNumber({ value, pad = 2 }) {
-  const str = Math.max(0, value).toString().padStart(pad, '0');
-  return (
-    <div className="flex items-center gap-1">
-      {str.split('').map((ch, i) => (
-        <FlipDigit key={i} digit={ch} />
-      ))}
-    </div>
-  );
+function useCountUp({ target, durationMs = 900 }) {
+  const [value, setValue] = useState(0);
+  const raf = useRef(null);
+
+  const start = useCallback(() => {
+    if (raf.current) cancelAnimationFrame(raf.current);
+    const t0 = performance.now();
+    const from = 0;
+    const to = Math.max(0, target);
+
+    const tick = (t) => {
+      const p = Math.min(1, (t - t0) / durationMs);
+      const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+      setValue(Math.round(from + (to - from) * eased));
+      if (p < 1) raf.current = requestAnimationFrame(tick);
+    };
+
+    raf.current = requestAnimationFrame(tick);
+  }, [target, durationMs]);
+
+  useEffect(() => () => raf.current && cancelAnimationFrame(raf.current), []);
+  return { value, start };
 }
 
-function FlipDigit({ digit }) {
-  const [current, setCurrent] = useState(digit);
-  const [next, setNext] = useState(digit);
-  const [flipping, setFlipping] = useState(false);
-  const queueRef = useRef([]);
-
-  useEffect(() => {
-    if (digit === next) return;
-    queueRef.current.push(digit);
-    if (!flipping) {
-      const d = queueRef.current.shift();
-      if (d != null) triggerFlip(d);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [digit]);
-
-  const triggerFlip = (to) => {
-    setNext(to);
-    setFlipping(true);
-
-    const t1 = setTimeout(() => {
-      setCurrent(to);
-    }, 190);
-
-    const t2 = setTimeout(() => {
-      setFlipping(false);
-      const d = queueRef.current.shift();
-      if (d != null && d !== to) triggerFlip(d);
-    }, 380);
-
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
-  };
-
-  const topText = current;
-  const bottomText = next;
-
+function AnimatedNumber({ value, sceneId, className = '' }) {
   return (
-    <div className="relative w-[0.80em] md:w-[0.88em] h-[1.14em] md:h-[1.20em] [perspective:900px]">
-      <div className="absolute inset-0 rounded-[0.18em] border border-white/20 bg-black/40 backdrop-blur-md" />
-
-      <div className="absolute left-0 right-0 top-0 h-1/2 overflow-hidden rounded-t-[0.18em]">
-        <div className="h-full flex items-center justify-center text-4xl md:text-5xl font-extrabold tracking-tight text-white/95 leading-none translate-y-[0.06em]">
-          {topText}
-        </div>
-        <div className="absolute inset-x-0 bottom-0 h-px bg-white/12" />
-      </div>
-
-      <div className="absolute left-0 right-0 bottom-0 h-1/2 overflow-hidden rounded-b-[0.18em]">
-        <div className="h-full flex items-center justify-center text-4xl md:text-5xl font-extrabold tracking-tight text-white/95 leading-none -translate-y-[0.46em]">
-          {bottomText}
-        </div>
-      </div>
-
-      <div
-        className={cx(
-          'absolute left-0 right-0 top-0 h-1/2 overflow-hidden rounded-t-[0.18em] origin-bottom',
-          flipping ? 'animate-[flapTop_380ms_ease-in-out_forwards]' : ''
-        )}
-        style={{ transformStyle: 'preserve-3d' }}
-      >
-        <div className="h-full flex items-center justify-center text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-none translate-y-[0.06em]">
-          {topText}
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-black/45" />
-        <div className="absolute inset-x-0 bottom-0 h-px bg-white/12" />
-      </div>
-
-      <div
-        className={cx(
-          'absolute left-0 right-0 bottom-0 h-1/2 overflow-hidden rounded-b-[0.18em] origin-top',
-          flipping ? 'animate-[flapBottom_380ms_ease-in-out_forwards]' : ''
-        )}
-        style={{ transformStyle: 'preserve-3d' }}
-      >
-        <div className="h-full flex items-center justify-center text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-none -translate-y-[0.46em]">
-          {bottomText}
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-white/5 to-black/45" />
-      </div>
-    </div>
+    <span className={cx('relative inline-flex items-baseline', className)}>
+      <span className={cx('text-5xl md:text-6xl font-extrabold tracking-tight leading-none')}>
+        <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', (SCENES[sceneId] ?? SCENES.s1).accent)}>
+          {value}
+        </span>
+      </span>
+      <span
+        className="pointer-events-none absolute -inset-x-4 -inset-y-4 blur-2xl opacity-35"
+        style={{
+          background: 'radial-gradient(220px 120px at 40% 55%, rgba(255,255,255,0.18), transparent 65%)',
+          mixBlendMode: 'screen',
+        }}
+      />
+    </span>
   );
 }
 
 /* ---------- PROOF STAT ---------- */
 
-function ProofStat({ sceneId, label, target, suffix = '', pad = 2, durationMs = 900 }) {
+function ProofStat({ sceneId, label, target, suffix = '', durationMs = 900 }) {
   const ref = useRef(null);
   const shown = useReveal(ref);
-  const { value, start } = useSteppedCountUp({ target, durationMs, stepsMs: 95 });
+  const { value, start } = useCountUp({ target, durationMs });
 
   useEffect(() => {
     if (shown) start();
@@ -640,17 +555,14 @@ function ProofStat({ sceneId, label, target, suffix = '', pad = 2, durationMs = 
 
   return (
     <TiltCard className="rounded-3xl">
-      <div
-        ref={ref}
-        className="relative overflow-hidden rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8"
-      >
-        <div className="absolute -left-24 top-0 h-full w-56 rotate-12 bg-white/15 blur-2xl opacity-18 animate-[shine_3.2s_ease-in-out_infinite]" />
+      <div ref={ref} className="relative overflow-hidden rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8">
+        <div className="absolute -left-24 top-0 h-full w-56 rotate-12 bg-white/15 blur-2xl opacity-16 animate-[shine_3.2s_ease-in-out_infinite]" />
         <div className="text-xs uppercase tracking-wide text-white/55">Proof</div>
 
-        <div className="mt-3 flex items-end gap-3 flex-wrap">
-          <FlipNumber value={value} pad={pad} />
+        <div className="mt-3 flex items-end gap-2 flex-wrap">
+          <AnimatedNumber value={value} sceneId={sceneId} />
           {suffix ? (
-            <span className="text-white/75 text-xl md:text-2xl font-semibold">
+            <span className="text-white/75 text-xl md:text-2xl font-semibold leading-none pb-[2px]">
               <TitleGradient sceneId={sceneId}>{suffix}</TitleGradient>
             </span>
           ) : null}
@@ -697,7 +609,7 @@ function BigService({ sceneId, icon, kicker, title, desc }) {
     <Reveal>
       <TiltCard className="rounded-3xl">
         <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8 overflow-hidden relative">
-          <div className="absolute -left-24 top-0 h-full w-56 rotate-12 bg-white/15 blur-2xl opacity-16 animate-[shine_3.2s_ease-in-out_infinite]" />
+          <div className="absolute -left-24 top-0 h-full w-56 rotate-12 bg-white/15 blur-2xl opacity-14 animate-[shine_3.2s_ease-in-out_infinite]" />
           <div className="flex items-center justify-between gap-4">
             <div className="inline-flex items-center gap-2 text-xs uppercase tracking-wide text-white/60">
               <span className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center">{icon}</span>
@@ -716,10 +628,7 @@ function BigService({ sceneId, icon, kicker, title, desc }) {
           <p className="mt-4 text-sm md:text-base text-white/70 leading-relaxed max-w-2xl">{desc}</p>
 
           <div className="mt-6">
-            <Link
-              href="/#request"
-              className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors font-semibold"
-            >
+            <Link href="/#request" className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors font-semibold">
               Kurz anfragen <ArrowRight size={16} />
             </Link>
           </div>
@@ -734,9 +643,7 @@ function Step({ n, title, desc }) {
     <TiltCard className="rounded-2xl">
       <div className="rounded-2xl border border-white/15 bg-black/20 backdrop-blur-md p-4 md:p-5">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center font-extrabold">
-            {n}
-          </div>
+          <div className="w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center font-extrabold">{n}</div>
           <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
         </div>
         <div className="mt-2 text-sm text-white/70 leading-relaxed">{desc}</div>
@@ -770,7 +677,6 @@ export default function Home() {
       <GlobalBackground activeId={activeId} />
       <GlobalLightLeaks activeId={activeId} />
 
-      {/* Santana-feel boosters */}
       <ScrollProgressBar />
       <CursorHalo />
 
@@ -848,16 +754,14 @@ export default function Home() {
 
               <Reveal delayMs={240}>
                 <div className="mt-6 space-y-3">
-                  {[
-                    'Branding, das sofort einzuordnen ist',
-                    'Content, der auffällt und hängen bleibt',
-                    'Website/Funnel, der Menschen führt',
-                  ].map((t) => (
-                    <div key={t} className="flex items-start gap-2">
-                      <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                      <span className="text-sm md:text-base text-white/80">{t}</span>
-                    </div>
-                  ))}
+                  {['Branding, das sofort einzuordnen ist', 'Content, der auffällt und hängen bleibt', 'Website/Funnel, der Menschen führt'].map(
+                    (t) => (
+                      <div key={t} className="flex items-start gap-2">
+                        <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+                        <span className="text-sm md:text-base text-white/80">{t}</span>
+                      </div>
+                    )
+                  )}
                 </div>
               </Reveal>
 
@@ -1003,9 +907,9 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-              <ProofStat sceneId="s4" label="Likes generiert" target={15} suffix="+ Mio" pad={2} durationMs={900} />
-              <ProofStat sceneId="s4" label="Klicks auf Social Media erzielt" target={10} suffix="+ Mio" pad={2} durationMs={900} />
-              <ProofStat sceneId="s4" label="Abgeschlossene Projekte" target={100} suffix="+" pad={3} durationMs={900} />
+              <ProofStat sceneId="s4" label="Likes generiert" target={15} suffix="+ Mio" durationMs={900} />
+              <ProofStat sceneId="s4" label="Klicks auf Social Media erzielt" target={10} suffix="+ Mio" durationMs={900} />
+              <ProofStat sceneId="s4" label="Abgeschlossene Projekte" target={100} suffix="+" durationMs={950} />
             </div>
           </div>
         </Scene>
@@ -1053,9 +957,7 @@ export default function Home() {
               <TiltCard className="rounded-3xl">
                 <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8">
                   <div className="text-xs uppercase tracking-wide text-white/55">Shortcut</div>
-                  <div className="mt-3 text-xl md:text-3xl font-bold text-white/90">
-                    Ein Satz reicht fürs erste.
-                  </div>
+                  <div className="mt-3 text-xl md:text-3xl font-bold text-white/90">Ein Satz reicht fürs erste.</div>
                   <p className="mt-3 text-sm md:text-base text-white/70 leading-relaxed">
                     “Wir wollen X bis Datum Y und haben gerade Z.” Danach klären wir den Rest.
                   </p>
@@ -1081,9 +983,7 @@ export default function Home() {
                 </Reveal>
 
                 <Reveal delayMs={90}>
-                  <h3 className="mt-2 text-2xl md:text-5xl font-extrabold leading-tight">
-                    Schick mir kurz dein Vorhaben
-                  </h3>
+                  <h3 className="mt-2 text-2xl md:text-5xl font-extrabold leading-tight">Schick mir kurz dein Vorhaben</h3>
                 </Reveal>
 
                 <Reveal delayMs={160}>
@@ -1132,9 +1032,7 @@ Stand:
 Budgetrahmen (optional):
 Link/Beispiele (optional):`}
                     </div>
-                    <div className="mt-4 text-sm text-white/60">
-                      Das reicht komplett für eine erste Einschätzung.
-                    </div>
+                    <div className="mt-4 text-sm text-white/60">Das reicht komplett für eine erste Einschätzung.</div>
                   </div>
                 </TiltCard>
               </Reveal>
@@ -1170,20 +1068,12 @@ const globalKeyframes = `
   100% { transform: translate3d(0px, 0px, 0) scale(1); }
 }
 @keyframes shine {
-  0% { transform: translateX(-160px) rotate(12deg); opacity: 0.10; }
-  45% { opacity: 0.22; }
-  100% { transform: translateX(820px) rotate(12deg); opacity: 0.06; }
+  0% { transform: translateX(-160px) rotate(12deg); opacity: 0.08; }
+  45% { opacity: 0.18; }
+  100% { transform: translateX(820px) rotate(12deg); opacity: 0.05; }
 }
 @keyframes noiseMove {
   0% { transform: translate3d(0,0,0); }
   100% { transform: translate3d(90px,60px,0); }
-}
-@keyframes flapTop {
-  0%   { transform: rotateX(0deg); filter: brightness(1); }
-  100% { transform: rotateX(-90deg); filter: brightness(0.82); }
-}
-@keyframes flapBottom {
-  0%   { transform: rotateX(90deg); filter: brightness(0.82); }
-  100% { transform: rotateX(0deg); filter: brightness(1); }
 }
 `;
