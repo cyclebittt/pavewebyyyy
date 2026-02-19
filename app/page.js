@@ -338,7 +338,7 @@ function CursorHalo() {
     <div
       className="hidden md:block fixed inset-0 z-[5] pointer-events-none"
       style={{
-        background: `radial-gradient(480px 480px at ${x}px ${y}px, rgba(255,255,255,0.10), transparent 55%)`,
+        background: `radial-gradient(300px 300px at ${x}px ${y}px, rgba(255,255,255,0.10), transparent 25%)`,
         mixBlendMode: 'screen',
         transition: 'background 60ms linear',
       }}
