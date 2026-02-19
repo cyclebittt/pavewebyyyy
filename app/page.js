@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import Image from 'next/image';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import {
@@ -17,14 +18,6 @@ import {
   ExternalLink,
 } from 'lucide-react';
 
-/**
- * Santana-Style: Onepager als Scroll-Funnel
- * - Jede Sektion ist ein „Screen“ (min-h-screen)
- * - Jede Sektion hat eine drastisch andere Farbwelt (INLINE styles -> kein Tailwind purge)
- * - Over-the-top Animationen: moving gradients, blobs, reveal, countup
- * - Copy: kurz, direkt, nicht technisch
- */
-
 const SECTIONS = [
   { id: 's1', label: 'Start' },
   { id: 's2', label: 'Was du bekommst' },
@@ -36,70 +29,46 @@ const SECTIONS = [
 
 const SCENES = {
   s1: {
-    bg: `radial-gradient(1200px 700px at 15% 15%, rgba(168,85,247,0.55), transparent 60%),
-         radial-gradient(900px 700px at 85% 25%, rgba(56,189,248,0.28), transparent 55%),
+    bg: `radial-gradient(1200px 700px at 15% 15%, rgba(168,85,247,0.60), transparent 60%),
+         radial-gradient(900px 700px at 85% 25%, rgba(56,189,248,0.30), transparent 55%),
          linear-gradient(135deg, #070312 0%, #0b0b1a 45%, #02040f 100%)`,
     accent: 'from-violet-200 via-indigo-200 to-cyan-200',
-    blobs: [
-      'bg-violet-500/30',
-      'bg-cyan-500/25',
-      'bg-fuchsia-500/20',
-    ],
+    blobs: ['bg-violet-500/35', 'bg-cyan-500/25', 'bg-fuchsia-500/20'],
   },
   s2: {
-    bg: `radial-gradient(1000px 700px at 20% 20%, rgba(34,211,238,0.45), transparent 60%),
-         radial-gradient(900px 700px at 90% 10%, rgba(99,102,241,0.35), transparent 55%),
+    bg: `radial-gradient(1000px 700px at 20% 20%, rgba(34,211,238,0.50), transparent 60%),
+         radial-gradient(900px 700px at 90% 10%, rgba(99,102,241,0.38), transparent 55%),
          linear-gradient(135deg, #021019 0%, #07102a 55%, #05010b 100%)`,
     accent: 'from-cyan-200 via-indigo-200 to-violet-200',
-    blobs: [
-      'bg-cyan-500/30',
-      'bg-indigo-500/25',
-      'bg-emerald-500/15',
-    ],
+    blobs: ['bg-cyan-500/35', 'bg-indigo-500/25', 'bg-emerald-500/15'],
   },
   s3: {
-    bg: `radial-gradient(1200px 700px at 15% 10%, rgba(244,114,182,0.40), transparent 60%),
-         radial-gradient(900px 700px at 85% 30%, rgba(168,85,247,0.40), transparent 55%),
+    bg: `radial-gradient(1200px 700px at 15% 10%, rgba(244,114,182,0.45), transparent 60%),
+         radial-gradient(900px 700px at 85% 30%, rgba(168,85,247,0.45), transparent 55%),
          linear-gradient(135deg, #120316 0%, #1a0714 55%, #040312 100%)`,
     accent: 'from-pink-200 via-fuchsia-200 to-indigo-200',
-    blobs: [
-      'bg-pink-500/25',
-      'bg-violet-500/25',
-      'bg-cyan-500/15',
-    ],
+    blobs: ['bg-pink-500/28', 'bg-violet-500/28', 'bg-cyan-500/18'],
   },
   s4: {
-    bg: `radial-gradient(1100px 700px at 20% 10%, rgba(16,185,129,0.28), transparent 60%),
-         radial-gradient(900px 700px at 85% 20%, rgba(59,130,246,0.30), transparent 55%),
+    bg: `radial-gradient(1100px 700px at 20% 10%, rgba(16,185,129,0.30), transparent 60%),
+         radial-gradient(900px 700px at 85% 20%, rgba(59,130,246,0.34), transparent 55%),
          linear-gradient(135deg, #03110a 0%, #0a1020 55%, #04060d 100%)`,
     accent: 'from-emerald-200 via-cyan-200 to-indigo-200',
-    blobs: [
-      'bg-emerald-500/20',
-      'bg-cyan-500/20',
-      'bg-indigo-500/20',
-    ],
+    blobs: ['bg-emerald-500/22', 'bg-cyan-500/22', 'bg-indigo-500/22'],
   },
   s5: {
-    bg: `radial-gradient(1100px 700px at 10% 10%, rgba(250,204,21,0.18), transparent 60%),
-         radial-gradient(900px 700px at 90% 25%, rgba(236,72,153,0.26), transparent 55%),
+    bg: `radial-gradient(1100px 700px at 10% 10%, rgba(250,204,21,0.22), transparent 60%),
+         radial-gradient(900px 700px at 90% 25%, rgba(236,72,153,0.30), transparent 55%),
          linear-gradient(135deg, #120b02 0%, #1b0713 55%, #05020a 100%)`,
     accent: 'from-amber-200 via-pink-200 to-violet-200',
-    blobs: [
-      'bg-amber-400/15',
-      'bg-pink-500/20',
-      'bg-violet-500/20',
-    ],
+    blobs: ['bg-amber-400/18', 'bg-pink-500/22', 'bg-violet-500/22'],
   },
   request: {
-    bg: `radial-gradient(1200px 700px at 15% 0%, rgba(99,102,241,0.35), transparent 60%),
-         radial-gradient(900px 700px at 90% 15%, rgba(56,189,248,0.22), transparent 55%),
+    bg: `radial-gradient(1200px 700px at 15% 0%, rgba(99,102,241,0.40), transparent 60%),
+         radial-gradient(900px 700px at 90% 15%, rgba(56,189,248,0.25), transparent 55%),
          linear-gradient(135deg, #04040a 0%, #07071a 55%, #04030a 100%)`,
     accent: 'from-indigo-200 via-violet-200 to-cyan-200',
-    blobs: [
-      'bg-indigo-500/20',
-      'bg-cyan-500/15',
-      'bg-violet-500/15',
-    ],
+    blobs: ['bg-indigo-500/22', 'bg-cyan-500/18', 'bg-violet-500/18'],
   },
 };
 
@@ -107,7 +76,12 @@ function cx(...xs) {
   return xs.filter(Boolean).join(' ');
 }
 
-function PrimaryCTA({ label = 'Kurz anfragen' }) {
+function TitleGradient({ sceneId, children }) {
+  const scene = SCENES[sceneId] ?? SCENES.s1;
+  return <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', scene.accent)}>{children}</span>;
+}
+
+function PrimaryCTA({ label = 'Projekt anfragen' }) {
   return (
     <Link
       href="/#request"
@@ -143,17 +117,12 @@ function useActiveSection(sectionIds) {
         const best = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0))[0];
-
         if (best?.target?.id) {
           setActiveId(best.target.id);
           setActiveIndex(sectionIds.indexOf(best.target.id));
         }
       },
-      {
-        root: null,
-        rootMargin: '-30% 0px -55% 0px',
-        threshold: [0.12, 0.25, 0.4, 0.55, 0.7],
-      }
+      { root: null, rootMargin: '-30% 0px -55% 0px', threshold: [0.12, 0.25, 0.4, 0.55, 0.7] }
     );
 
     els.forEach((el) => obs.observe(el));
@@ -168,17 +137,12 @@ function useReveal(ref) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) setShown(true);
-      },
-      { threshold: 0.2 }
-    );
+    const obs = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) setShown(true);
+    }, { threshold: 0.2 });
     obs.observe(el);
     return () => obs.disconnect();
   }, [ref]);
-
   return shown;
 }
 
@@ -186,19 +150,17 @@ function useCountUp({ target, durationMs = 1200 }) {
   const [value, setValue] = useState(0);
   const rafRef = useRef(null);
 
-  const start = () => {
+  const start = useCallback(() => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     const t0 = performance.now();
-
     const tick = (t) => {
       const p = Math.min(1, (t - t0) / durationMs);
       const eased = 1 - Math.pow(1 - p, 3);
       setValue(Math.round(target * eased));
       if (p < 1) rafRef.current = requestAnimationFrame(tick);
     };
-
     rafRef.current = requestAnimationFrame(tick);
-  };
+  }, [target, durationMs]);
 
   useEffect(() => () => rafRef.current && cancelAnimationFrame(rafRef.current), []);
   return { value, start };
@@ -235,17 +197,11 @@ function ProgressRail({ activeIndex }) {
 
 function Scene({ id, children }) {
   const scene = SCENES[id] ?? SCENES.s1;
-
   return (
     <section
       id={id}
-      className={cx(
-        'relative min-h-screen flex items-center px-5 md:px-16 py-16',
-        'md:snap-start scroll-mt-24 overflow-hidden'
-      )}
-      style={{
-        backgroundImage: scene.bg,
-      }}
+      className="relative min-h-screen flex items-center px-5 md:px-16 py-16 md:snap-start scroll-mt-24 overflow-hidden"
+      style={{ backgroundImage: scene.bg }}
     >
       <AnimatedNoise />
       <AnimatedBlobs sceneId={id} />
@@ -254,7 +210,6 @@ function Scene({ id, children }) {
   );
 }
 
-/** Over-the-top animated noise overlay */
 function AnimatedNoise() {
   return (
     <div
@@ -269,7 +224,6 @@ function AnimatedNoise() {
   );
 }
 
-/** Big floating blobs per scene */
 function AnimatedBlobs({ sceneId }) {
   const scene = SCENES[sceneId] ?? SCENES.s1;
   const [b1, b2, b3] = scene.blobs;
@@ -280,15 +234,6 @@ function AnimatedBlobs({ sceneId }) {
       <div className={cx('pointer-events-none absolute top-1/3 -right-28 h-[34rem] w-[54rem] rounded-full blur-[120px] animate-[blob2_12s_ease-in-out_infinite]', b2)} />
       <div className={cx('pointer-events-none absolute bottom-[-10rem] left-1/4 h-[28rem] w-[48rem] rounded-full blur-[120px] animate-[blob3_14s_ease-in-out_infinite]', b3)} />
     </>
-  );
-}
-
-function TitleGradient({ sceneId, children }) {
-  const scene = SCENES[sceneId] ?? SCENES.s1;
-  return (
-    <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', scene.accent)}>
-      {children}
-    </span>
   );
 }
 
@@ -320,10 +265,7 @@ function ProofStat({ sceneId, label, target, display, durationMs = 1200 }) {
   }, [shown, start]);
 
   return (
-    <div
-      ref={ref}
-      className="relative overflow-hidden rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8"
-    >
+    <div ref={ref} className="relative overflow-hidden rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8">
       <div className="absolute -left-24 top-0 h-full w-56 rotate-12 bg-white/15 blur-2xl opacity-30 animate-[shine_2.6s_ease-in-out_infinite]" />
       <div className="text-xs uppercase tracking-wide text-white/55">Proof</div>
       <div className="mt-3 text-4xl md:text-6xl font-extrabold tracking-tight">
@@ -336,7 +278,7 @@ function ProofStat({ sceneId, label, target, display, durationMs = 1200 }) {
 
 export default function Home() {
   const sectionIds = useMemo(() => SECTIONS.map((s) => s.id), []);
-  const { activeId, activeIndex } = useActiveSection(sectionIds);
+  const { activeIndex } = useActiveSection(sectionIds);
 
   useEffect(() => {
     const handle = () => {
@@ -357,7 +299,7 @@ export default function Home() {
       <ProgressRail activeIndex={activeIndex} />
 
       <main className="md:snap-y md:snap-mandatory">
-        {/* 01: HERO */}
+        {/* 01 */}
         <Scene id="s1">
           <div className="flex flex-col items-center text-center gap-6">
             <Reveal>
@@ -366,43 +308,44 @@ export default function Home() {
               </span>
             </Reveal>
 
-            <Reveal delayMs={80}>
+            <Reveal delayMs={90}>
               <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight leading-[1.03]">
-                Ich baue digitale Projekte,
+                Ich setze digitale Projekte um,
                 <span className="block">
-                  <TitleGradient sceneId="s1">die sofort funktionieren.</TitleGradient>
+                  <TitleGradient sceneId="s1">die sichtbar performen.</TitleGradient>
                 </span>
               </h1>
             </Reveal>
 
-            <Reveal delayMs={140}>
+            <Reveal delayMs={160}>
               <p className="max-w-2xl text-base md:text-xl text-white/80 leading-relaxed">
-                Brandbooks, Motiondesign, Webdevelopment und Videoediting – so, dass du am Ende ein Setup hast,
-                das du wirklich einsetzen kannst.
+                Brandbooks, Motiondesign, Webdevelopment und Videoediting – als System, damit Kampagnen nicht nur „gut aussehen“,
+                sondern auch funktionieren.
               </p>
             </Reveal>
 
-            <Reveal delayMs={220}>
+            <Reveal delayMs={240}>
               <div className="flex flex-col items-center gap-3">
                 <PrimaryCTA label="Projekt anfragen" />
                 <p className="text-sm md:text-base text-white/65 max-w-xl">
-                  Schreib Ziel, Deadline und Stand. Dann bekommst du eine klare Einschätzung.
+                  Ziel, Deadline, Stand. Dann bekommst du eine klare Einschätzung.
                 </p>
               </div>
             </Reveal>
 
-            <Reveal delayMs={280}>
-              <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
-                <Pill icon={<BookOpen size={14} />}>Brandbook</Pill>
-                <Pill icon={<Play size={14} />}>Motion</Pill>
-                <Pill icon={<Monitor size={14} />}>Web</Pill>
-                <Pill icon={<Film size={14} />}>Video</Pill>
+            {/* Optional: kleine Bild-Logos/Thumbnails – ersetzt durch Image, damit kein ESLint img Warning */}
+            <Reveal delayMs={310}>
+              <div className="mt-2 grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-3xl">
+                <MiniTile icon={<BookOpen size={18} />} title="Brandbook" sub="Guidelines & System" />
+                <MiniTile icon={<Play size={18} />} title="Motion" sub="Hooks & Templates" />
+                <MiniTile icon={<Monitor size={18} />} title="Web" sub="Funnel & UX" />
+                <MiniTile icon={<Film size={18} />} title="Video" sub="Cut & Rhythmus" />
               </div>
             </Reveal>
           </div>
         </Scene>
 
-        {/* 02: VALUE / WAS DU BEKOMMST */}
+        {/* 02 */}
         <Scene id="s2">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
@@ -410,7 +353,7 @@ export default function Home() {
                 <div className="text-xs uppercase tracking-wide text-white/55">02 — Was du bekommst</div>
               </Reveal>
 
-              <Reveal delayMs={80}>
+              <Reveal delayMs={90}>
                 <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
                   Klarer Look.
                   <span className="block">
@@ -419,19 +362,18 @@ export default function Home() {
                 </h2>
               </Reveal>
 
-              <Reveal delayMs={140}>
+              <Reveal delayMs={160}>
                 <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
-                  Ich helfe dir dabei, dass deine Kampagne nicht „nice“ ist, sondern verstanden wird – und dass das Setup
-                  in der Praxis läuft.
+                  Du bekommst ein Setup, das du wiederholen kannst: Branding → Content → Funnel.
                 </p>
               </Reveal>
 
-              <Reveal delayMs={220}>
+              <Reveal delayMs={240}>
                 <div className="mt-6 space-y-3">
                   {[
-                    'Branding, das man sofort einordnen kann',
-                    'Content/Motion, der im Feed auffällt',
-                    'Website/Funnel, der aus Klicks Anfragen macht',
+                    'Branding, das sofort einzuordnen ist',
+                    'Content, der auffällt und hängen bleibt',
+                    'Website/Funnel, der Menschen führt',
                   ].map((t) => (
                     <div key={t} className="flex items-start gap-2">
                       <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
@@ -441,7 +383,7 @@ export default function Home() {
                 </div>
               </Reveal>
 
-              <Reveal delayMs={300}>
+              <Reveal delayMs={320}>
                 <div className="mt-8 flex flex-wrap gap-2">
                   <PrimaryCTA label="Kurz anfragen" />
                   <GhostCTA href="/portfolio">
@@ -451,22 +393,35 @@ export default function Home() {
               </Reveal>
             </div>
 
-            {/* Catchy visual panel */}
-            <Reveal delayMs={120}>
+            <Reveal delayMs={140}>
               <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md overflow-hidden">
                 <div className="p-6 md:p-8">
-                  <div className="text-xs uppercase tracking-wide text-white/55">Was du hier siehst</div>
-                  <div className="mt-3 text-xl md:text-3xl font-bold text-white/90">
-                    Jede Sektion ist ein Argument.
-                  </div>
-                  <p className="mt-3 text-sm md:text-base text-white/70 leading-relaxed">
-                    Statt Textwänden bekommst du Screens, die dich Schritt für Schritt überzeugen.
-                  </p>
+                  <div className="text-xs uppercase tracking-wide text-white/55">So sieht das als System aus</div>
 
-                  <div className="mt-6 grid grid-cols-1 gap-3">
-                    <Stripe title="Brandbook" desc="Regeln, Tone, Look – ein System, kein Moodboard." icon={<BookOpen size={18} />} />
-                    <Stripe title="Motion & Video" desc="Hook, Tempo, Stil – damit es hängen bleibt." icon={<Play size={18} />} />
-                    <Stripe title="Web & Funnel" desc="Klarer Weg bis zur Anfrage." icon={<Monitor size={18} />} />
+                  <div className="mt-5 space-y-3">
+                    <Stripe title="1) Brandbook" desc="Regeln, Look, Tone. Damit alles gleich wirkt." icon={<BookOpen size={18} />} />
+                    <Stripe title="2) Motion & Video" desc="Hook, Tempo, Stil. Damit es hängen bleibt." icon={<Play size={18} />} />
+                    <Stripe title="3) Web & Funnel" desc="Ein klarer Weg bis zur Anfrage." icon={<Monitor size={18} />} />
+                  </div>
+
+                  {/* Beispielbild: du kannst später deine eigenen Thumbs einbauen */}
+                  <div className="mt-6 relative rounded-2xl border border-white/15 overflow-hidden h-40 md:h-48">
+                    <Image
+                      src="/img/home/preview-system.jpg"
+                      alt="Preview – Branding, Content, Funnel"
+                      fill
+                      className="object-cover opacity-80"
+                      sizes="(max-width: 768px) 100vw, 520px"
+                      priority={false}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+                    <div className="absolute bottom-3 left-3 text-sm font-semibold text-white/90">
+                      Preview-Image (ersetzen)
+                    </div>
+                  </div>
+
+                  <div className="mt-3 text-xs text-white/55">
+                    Bildpfad: <span className="text-white/70">/public/img/home/preview-system.jpg</span>
                   </div>
                 </div>
               </div>
@@ -474,7 +429,7 @@ export default function Home() {
           </div>
         </Scene>
 
-        {/* 03: LEISTUNGEN – wie Santana: groß, plakativ */}
+        {/* 03 */}
         <Scene id="s3">
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 items-start">
             <div className="lg:sticky lg:top-24">
@@ -482,24 +437,24 @@ export default function Home() {
                 <div className="text-xs uppercase tracking-wide text-white/55">03 — Leistungen</div>
               </Reveal>
 
-              <Reveal delayMs={80}>
+              <Reveal delayMs={90}>
                 <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                  Vier Bausteine,
+                  Vier Bausteine.
                   <span className="block">
-                    <TitleGradient sceneId="s3">ein sauberes Ergebnis.</TitleGradient>
+                    <TitleGradient sceneId="s3">Ein Ergebnis.</TitleGradient>
                   </span>
                 </h2>
               </Reveal>
 
-              <Reveal delayMs={140}>
+              <Reveal delayMs={160}>
                 <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed">
-                  Du kannst einzelne Bausteine buchen – oder das Ganze als System.
+                  Einzelne Bausteine oder als Komplett-Setup – je nachdem, was du brauchst.
                 </p>
               </Reveal>
 
-              <Reveal delayMs={240}>
+              <Reveal delayMs={260}>
                 <div className="mt-8">
-                  <PrimaryCTA label="Passt das zu dir?" />
+                  <PrimaryCTA label="Passt das?" />
                 </div>
               </Reveal>
             </div>
@@ -509,8 +464,8 @@ export default function Home() {
                 sceneId="s3"
                 icon={<BookOpen size={18} />}
                 kicker="Brandbook"
-                title="Brand Guidelines, die man nutzen kann."
-                desc="Farben, Typo, Layoutregeln, Tone of Voice, Beispiele. Damit jeder Content gleich aussieht – und du skalieren kannst."
+                title="Guidelines, die man wirklich nutzt."
+                desc="Farben, Typo, Layoutregeln, Tone of Voice, Beispiele. Damit du konsistent bleibst und skalieren kannst."
               />
               <BigService
                 sceneId="s3"
@@ -524,20 +479,20 @@ export default function Home() {
                 icon={<Monitor size={18} />}
                 kicker="Webdevelopment"
                 title="Websites/Funnels, die führen."
-                desc="Eine klare Nutzerführung, wenig Ablenkung, klare CTA – damit Klicks zu Anfragen werden."
+                desc="Klarer Aufbau, klare CTA, wenig Ablenkung. Damit Klicks zu Anfragen werden."
               />
               <BigService
                 sceneId="s3"
                 icon={<Film size={18} />}
                 kicker="Videoediting"
                 title="Schnitt mit Rhythmus."
-                desc="Storyline, Timing, Sound, Pace. So, dass ein Video nicht nur „fertig“, sondern gut ist."
+                desc="Storyline, Timing, Sound, Pace. Damit ein Video nicht nur fertig ist, sondern gut."
               />
             </div>
           </div>
         </Scene>
 
-        {/* 04: PROOF – animierte Zahlen */}
+        {/* 04 */}
         <Scene id="s4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
@@ -545,23 +500,22 @@ export default function Home() {
                 <div className="text-xs uppercase tracking-wide text-white/55">04 — Proof</div>
               </Reveal>
 
-              <Reveal delayMs={80}>
+              <Reveal delayMs={90}>
                 <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                  Reichweite ist kein Ziel.
+                  Zahlen,
                   <span className="block">
-                    <TitleGradient sceneId="s4">Aber ein Beleg.</TitleGradient>
+                    <TitleGradient sceneId="s4">die man einordnen kann.</TitleGradient>
                   </span>
                 </h2>
               </Reveal>
 
-              <Reveal delayMs={140}>
+              <Reveal delayMs={160}>
                 <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
-                  Wenn du willst, dass es “clean” aussieht und gleichzeitig performt, brauchst du ein System aus Branding,
-                  Content und einem klaren Flow.
+                  Wenn du sauberes Branding + Content + Funnel als Einheit denkst, sieht man das am Ergebnis.
                 </p>
               </Reveal>
 
-              <Reveal delayMs={240}>
+              <Reveal delayMs={260}>
                 <div className="mt-8 flex flex-wrap gap-2">
                   <GhostCTA href="/portfolio">
                     <ExternalLink size={18} /> Portfolio ansehen
@@ -579,7 +533,7 @@ export default function Home() {
           </div>
         </Scene>
 
-        {/* 05: ABLAUF – groß, klar, “funnel” */}
+        {/* 05 */}
         <Scene id="s5">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
@@ -587,38 +541,38 @@ export default function Home() {
                 <div className="text-xs uppercase tracking-wide text-white/55">05 — Ablauf</div>
               </Reveal>
 
-              <Reveal delayMs={80}>
+              <Reveal delayMs={90}>
                 <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
                   Kurzer Start.
                   <span className="block">
-                    <TitleGradient sceneId="s5">Schnelle Umsetzung.</TitleGradient>
+                    <TitleGradient sceneId="s5">Schnelles Ergebnis.</TitleGradient>
                   </span>
                 </h2>
               </Reveal>
 
-              <Reveal delayMs={140}>
+              <Reveal delayMs={160}>
                 <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
-                  Du musst nicht alles perfekt vorbereiten. Wir starten schlank – und machen es dann sauber.
+                  Du musst nicht alles perfekt vorbereiten. Wir machen es strukturiert – und liefern sauber.
                 </p>
               </Reveal>
 
-              <Reveal delayMs={240}>
+              <Reveal delayMs={260}>
                 <div className="mt-6 space-y-3">
                   <Step n="1" title="Anfrage" desc="Ziel, Deadline, Stand. (3 Infos reichen)" />
-                  <Step n="2" title="Konzept & Look" desc="Brandbook/Storyline, damit alles konsistent ist." />
-                  <Step n="3" title="Produktion" desc="Motion, Editing, Web – je nachdem, was du brauchst." />
+                  <Step n="2" title="Branding & Plan" desc="Brandbook/Storyline, damit alles konsistent ist." />
+                  <Step n="3" title="Produktion" desc="Motion, Editing, Web – je nach Paket." />
                   <Step n="4" title="Übergabe" desc="Assets/Files/Setup so, dass du weitermachen kannst." />
                 </div>
               </Reveal>
 
-              <Reveal delayMs={320}>
+              <Reveal delayMs={340}>
                 <div className="mt-8">
                   <PrimaryCTA label="Okay, lass starten" />
                 </div>
               </Reveal>
             </div>
 
-            <Reveal delayMs={160}>
+            <Reveal delayMs={140}>
               <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8">
                 <div className="text-xs uppercase tracking-wide text-white/55">Shortcut</div>
                 <div className="mt-3 text-xl md:text-3xl font-bold text-white/90">
@@ -638,7 +592,7 @@ export default function Home() {
           </div>
         </Scene>
 
-        {/* 06: REQUEST */}
+        {/* 06 */}
         <Scene id="request">
           <div className="rounded-3xl border border-white/15 bg-black/25 backdrop-blur-md p-6 md:p-12">
             <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
@@ -647,19 +601,19 @@ export default function Home() {
                   <div className="text-xs uppercase tracking-wide text-white/55">Anfrage</div>
                 </Reveal>
 
-                <Reveal delayMs={80}>
+                <Reveal delayMs={90}>
                   <h3 className="mt-2 text-2xl md:text-5xl font-extrabold leading-tight">
                     Schick mir kurz dein Vorhaben
                   </h3>
                 </Reveal>
 
-                <Reveal delayMs={140}>
+                <Reveal delayMs={160}>
                   <p className="mt-4 text-white/80 leading-relaxed max-w-2xl">
                     Ziel, Deadline, Stand. Danach sage ich dir, ob es passt – und was sinnvoll ist.
                   </p>
                 </Reveal>
 
-                <Reveal delayMs={220}>
+                <Reveal delayMs={240}>
                   <div className="mt-6 space-y-3">
                     {[
                       'Ziel (was soll passieren?)',
@@ -674,7 +628,7 @@ export default function Home() {
                   </div>
                 </Reveal>
 
-                <Reveal delayMs={320}>
+                <Reveal delayMs={340}>
                   <div className="mt-8 flex flex-wrap gap-2">
                     <a
                       href="mailto:info@paveconsultings.com?subject=Projektanfrage&body=Ziel:%0D%0ADeadline:%0D%0AStand:%0D%0A"
@@ -715,6 +669,20 @@ Link/Beispiele (optional):`}
   );
 }
 
+function MiniTile({ icon, title, sub }) {
+  return (
+    <div className="rounded-2xl border border-white/15 bg-black/15 backdrop-blur-md p-4 text-left">
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">{icon}</div>
+        <div>
+          <div className="text-sm font-semibold text-white/90">{title}</div>
+          <div className="text-xs text-white/60">{sub}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Stripe({ title, desc, icon }) {
   return (
     <div className="rounded-2xl border border-white/15 bg-white/10 p-4 md:p-5 flex items-start gap-3">
@@ -741,9 +709,9 @@ function BigService({ sceneId, icon, kicker, title, desc }) {
         </div>
 
         <div className="mt-4 text-2xl md:text-4xl font-extrabold leading-tight text-white">
-          {title.split('. ')[0]}.
-          <span className="block">
-            <TitleGradient sceneId={sceneId}>{title.includes('.') ? title.split('. ').slice(1).join('. ') : ''}</TitleGradient>
+          {title}
+          <span className="block text-base md:text-lg mt-2">
+            <TitleGradient sceneId={sceneId}>Als System gedacht, nicht als Einzelteil.</TitleGradient>
           </span>
         </div>
 
@@ -773,30 +741,29 @@ function Step({ n, title, desc }) {
   );
 }
 
-/** CSS keyframes (keine extra libs nötig) */
 const globalKeyframes = `
 @keyframes blob {
   0% { transform: translate3d(0px, 0px, 0) scale(1); }
-  35% { transform: translate3d(40px, -30px, 0) scale(1.08); }
-  70% { transform: translate3d(-30px, 20px, 0) scale(0.98); }
+  35% { transform: translate3d(40px, -30px, 0) scale(1.10); }
+  70% { transform: translate3d(-30px, 20px, 0) scale(0.96); }
   100% { transform: translate3d(0px, 0px, 0) scale(1); }
 }
 @keyframes blob2 {
   0% { transform: translate3d(0px, 0px, 0) scale(1); }
-  40% { transform: translate3d(-45px, 35px, 0) scale(1.06); }
-  80% { transform: translate3d(25px, -20px, 0) scale(0.98); }
+  40% { transform: translate3d(-45px, 35px, 0) scale(1.08); }
+  80% { transform: translate3d(25px, -20px, 0) scale(0.96); }
   100% { transform: translate3d(0px, 0px, 0) scale(1); }
 }
 @keyframes blob3 {
   0% { transform: translate3d(0px, 0px, 0) scale(1); }
-  45% { transform: translate3d(35px, 25px, 0) scale(1.10); }
-  85% { transform: translate3d(-30px, -18px, 0) scale(0.96); }
+  45% { transform: translate3d(35px, 25px, 0) scale(1.12); }
+  85% { transform: translate3d(-30px, -18px, 0) scale(0.94); }
   100% { transform: translate3d(0px, 0px, 0) scale(1); }
 }
 @keyframes shine {
-  0% { transform: translateX(-120px) rotate(12deg); opacity: 0.18; }
-  45% { opacity: 0.35; }
-  100% { transform: translateX(520px) rotate(12deg); opacity: 0.12; }
+  0% { transform: translateX(-140px) rotate(12deg); opacity: 0.16; }
+  45% { opacity: 0.34; }
+  100% { transform: translateX(620px) rotate(12deg); opacity: 0.10; }
 }
 @keyframes noiseMove {
   0% { transform: translate3d(0,0,0); }
