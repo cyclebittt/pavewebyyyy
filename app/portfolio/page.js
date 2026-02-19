@@ -18,6 +18,16 @@ const projects = [
     featured: true,
   },
   {
+  type: 'case',
+  slug: 'brandbook',
+  title: 'Brandbook & Brand Guidelines',
+  description: 'Logo-Regeln, Typo, Farben, Layoutsystem und echte Beispiele – als Brandbook, das Teams wirklich nutzen.',
+  tags: ['Brand', 'Guidelines', 'PDF', 'System'],
+  image: '/img/portfolio/brandbook-cover.jpg',
+  cta: 'Brandbook ansehen',
+  },
+
+  {
     type: 'motion',
     slug: 'motion-design',
     title: 'Motion Design und Video Editing',
