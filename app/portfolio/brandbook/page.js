@@ -29,7 +29,7 @@ const samples = [
     tags: ['Brandbook', 'PDF', 'System'],
   },
   {
-    title: 'MISSION Brandguidelines 2025',
+    title: 'Paveo Brandguidelines 2025',
     subtitle: 'Logo-Regeln, Farbwelt, Typo, Anwendung im Alltag',
     poster: '/img/brandbooks/mission-preview.jpg',
     pdf: '/brandbooks/mission-brandguidelines-2025.pdf',
