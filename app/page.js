@@ -18,6 +18,8 @@ import {
   ExternalLink,
 } from 'lucide-react';
 
+/* ---------- CONFIG ---------- */
+
 const SECTIONS = [
   { id: 's1', label: 'Start' },
   { id: 's2', label: 'Was du bekommst' },
@@ -27,50 +29,86 @@ const SECTIONS = [
   { id: 'request', label: 'Anfrage' },
 ];
 
+/**
+ * Scenes: deutlich, aber ohne brutalen "Hero neon overload".
+ * Wir nutzen 2 Gradient-Layer + 3 Lightleak-Blobs. Beim Übergang wird weich gecrossfaded.
+ */
 const SCENES = {
   s1: {
-    bg: `radial-gradient(1200px 700px at 15% 15%, rgba(168,85,247,0.60), transparent 60%),
-         radial-gradient(900px 700px at 85% 25%, rgba(56,189,248,0.30), transparent 55%),
-         linear-gradient(135deg, #070312 0%, #0b0b1a 45%, #02040f 100%)`,
+    base: '#070312',
+    g1: `radial-gradient(1200px 700px at 18% 18%, rgba(168,85,247,0.38), transparent 60%),
+         radial-gradient(900px 700px at 82% 25%, rgba(56,189,248,0.18), transparent 55%)`,
+    g2: `linear-gradient(135deg, #070312 0%, #0b0b1a 50%, #03040e 100%)`,
+    blobs: [
+      { cls: 'bg-violet-500/22', x: '-20%', y: '-18%', s: '56rem', blur: 140 },
+      { cls: 'bg-cyan-500/14', x: '70%', y: '10%', s: '54rem', blur: 150 },
+      { cls: 'bg-fuchsia-500/10', x: '20%', y: '80%', s: '46rem', blur: 150 },
+    ],
     accent: 'from-violet-200 via-indigo-200 to-cyan-200',
-    blobs: ['bg-violet-500/35', 'bg-cyan-500/25', 'bg-fuchsia-500/20'],
   },
   s2: {
-    bg: `radial-gradient(1000px 700px at 20% 20%, rgba(34,211,238,0.50), transparent 60%),
-         radial-gradient(900px 700px at 90% 10%, rgba(99,102,241,0.38), transparent 55%),
-         linear-gradient(135deg, #021019 0%, #07102a 55%, #05010b 100%)`,
+    base: '#021019',
+    g1: `radial-gradient(1100px 750px at 22% 20%, rgba(34,211,238,0.30), transparent 60%),
+         radial-gradient(900px 700px at 88% 15%, rgba(99,102,241,0.22), transparent 55%)`,
+    g2: `linear-gradient(135deg, #021019 0%, #07102a 55%, #05010b 100%)`,
+    blobs: [
+      { cls: 'bg-cyan-500/20', x: '-10%', y: '-10%', s: '58rem', blur: 150 },
+      { cls: 'bg-indigo-500/18', x: '72%', y: '0%', s: '54rem', blur: 150 },
+      { cls: 'bg-emerald-500/10', x: '10%', y: '75%', s: '46rem', blur: 160 },
+    ],
     accent: 'from-cyan-200 via-indigo-200 to-violet-200',
-    blobs: ['bg-cyan-500/35', 'bg-indigo-500/25', 'bg-emerald-500/15'],
   },
   s3: {
-    bg: `radial-gradient(1200px 700px at 15% 10%, rgba(244,114,182,0.45), transparent 60%),
-         radial-gradient(900px 700px at 85% 30%, rgba(168,85,247,0.45), transparent 55%),
-         linear-gradient(135deg, #120316 0%, #1a0714 55%, #040312 100%)`,
+    base: '#120316',
+    g1: `radial-gradient(1200px 750px at 20% 10%, rgba(244,114,182,0.22), transparent 60%),
+         radial-gradient(950px 750px at 84% 30%, rgba(168,85,247,0.26), transparent 55%)`,
+    g2: `linear-gradient(135deg, #120316 0%, #1a0714 55%, #040312 100%)`,
+    blobs: [
+      { cls: 'bg-pink-500/16', x: '-18%', y: '-12%', s: '56rem', blur: 160 },
+      { cls: 'bg-violet-500/20', x: '68%', y: '12%', s: '56rem', blur: 150 },
+      { cls: 'bg-cyan-500/10', x: '10%', y: '80%', s: '46rem', blur: 170 },
+    ],
     accent: 'from-pink-200 via-fuchsia-200 to-indigo-200',
-    blobs: ['bg-pink-500/28', 'bg-violet-500/28', 'bg-cyan-500/18'],
   },
   s4: {
-    bg: `radial-gradient(1100px 700px at 20% 10%, rgba(16,185,129,0.30), transparent 60%),
-         radial-gradient(900px 700px at 85% 20%, rgba(59,130,246,0.34), transparent 55%),
-         linear-gradient(135deg, #03110a 0%, #0a1020 55%, #04060d 100%)`,
+    base: '#03110a',
+    g1: `radial-gradient(1200px 750px at 18% 10%, rgba(16,185,129,0.16), transparent 60%),
+         radial-gradient(900px 700px at 85% 20%, rgba(59,130,246,0.20), transparent 55%)`,
+    g2: `linear-gradient(135deg, #03110a 0%, #0a1020 55%, #04060d 100%)`,
+    blobs: [
+      { cls: 'bg-emerald-500/14', x: '-12%', y: '-16%', s: '54rem', blur: 170 },
+      { cls: 'bg-cyan-500/14', x: '75%', y: '8%', s: '56rem', blur: 160 },
+      { cls: 'bg-indigo-500/14', x: '18%', y: '82%', s: '48rem', blur: 170 },
+    ],
     accent: 'from-emerald-200 via-cyan-200 to-indigo-200',
-    blobs: ['bg-emerald-500/22', 'bg-cyan-500/22', 'bg-indigo-500/22'],
   },
   s5: {
-    bg: `radial-gradient(1100px 700px at 10% 10%, rgba(250,204,21,0.22), transparent 60%),
-         radial-gradient(900px 700px at 90% 25%, rgba(236,72,153,0.30), transparent 55%),
-         linear-gradient(135deg, #120b02 0%, #1b0713 55%, #05020a 100%)`,
+    base: '#120b02',
+    g1: `radial-gradient(1200px 750px at 15% 10%, rgba(250,204,21,0.12), transparent 60%),
+         radial-gradient(900px 700px at 88% 25%, rgba(236,72,153,0.20), transparent 55%)`,
+    g2: `linear-gradient(135deg, #120b02 0%, #1b0713 55%, #05020a 100%)`,
+    blobs: [
+      { cls: 'bg-amber-400/10', x: '-10%', y: '-14%', s: '56rem', blur: 170 },
+      { cls: 'bg-pink-500/14', x: '74%', y: '10%', s: '56rem', blur: 160 },
+      { cls: 'bg-violet-500/14', x: '18%', y: '82%', s: '48rem', blur: 170 },
+    ],
     accent: 'from-amber-200 via-pink-200 to-violet-200',
-    blobs: ['bg-amber-400/18', 'bg-pink-500/22', 'bg-violet-500/22'],
   },
   request: {
-    bg: `radial-gradient(1200px 700px at 15% 0%, rgba(99,102,241,0.40), transparent 60%),
-         radial-gradient(900px 700px at 90% 15%, rgba(56,189,248,0.25), transparent 55%),
-         linear-gradient(135deg, #04040a 0%, #07071a 55%, #04030a 100%)`,
+    base: '#04040a',
+    g1: `radial-gradient(1200px 750px at 15% 0%, rgba(99,102,241,0.22), transparent 60%),
+         radial-gradient(900px 700px at 90% 15%, rgba(56,189,248,0.14), transparent 55%)`,
+    g2: `linear-gradient(135deg, #04040a 0%, #07071a 55%, #04030a 100%)`,
+    blobs: [
+      { cls: 'bg-indigo-500/14', x: '-12%', y: '-18%', s: '56rem', blur: 170 },
+      { cls: 'bg-cyan-500/10', x: '76%', y: '8%', s: '56rem', blur: 170 },
+      { cls: 'bg-violet-500/12', x: '18%', y: '82%', s: '48rem', blur: 170 },
+    ],
     accent: 'from-indigo-200 via-violet-200 to-cyan-200',
-    blobs: ['bg-indigo-500/22', 'bg-cyan-500/18', 'bg-violet-500/18'],
   },
 };
+
+/* ---------- UTIL ---------- */
 
 function cx(...xs) {
   return xs.filter(Boolean).join(' ');
@@ -79,29 +117,6 @@ function cx(...xs) {
 function TitleGradient({ sceneId, children }) {
   const scene = SCENES[sceneId] ?? SCENES.s1;
   return <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', scene.accent)}>{children}</span>;
-}
-
-function PrimaryCTA({ label = 'Projekt anfragen' }) {
-  return (
-    <Link
-      href="/#request"
-      className="group px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center justify-center gap-2"
-    >
-      {label}
-      <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
-    </Link>
-  );
-}
-
-function GhostCTA({ href, children }) {
-  return (
-    <Link
-      href={href}
-      className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
-    >
-      {children}
-    </Link>
-  );
 }
 
 function useActiveSection(sectionIds) {
@@ -122,7 +137,7 @@ function useActiveSection(sectionIds) {
           setActiveIndex(sectionIds.indexOf(best.target.id));
         }
       },
-      { root: null, rootMargin: '-30% 0px -55% 0px', threshold: [0.12, 0.25, 0.4, 0.55, 0.7] }
+      { root: null, rootMargin: '-35% 0px -55% 0px', threshold: [0.12, 0.25, 0.4, 0.55, 0.7] }
     );
 
     els.forEach((el) => obs.observe(el));
@@ -166,6 +181,8 @@ function useCountUp({ target, durationMs = 1200 }) {
   return { value, start };
 }
 
+/* ---------- UI ---------- */
+
 function ProgressRail({ activeIndex }) {
   return (
     <div className="hidden md:block fixed left-6 top-1/2 -translate-y-1/2 z-50">
@@ -195,45 +212,102 @@ function ProgressRail({ activeIndex }) {
   );
 }
 
+/**
+ * GlobalBackground:
+ * Wir rendern ALLE Scenes gleichzeitig als Layer und blenden weich um (opacity + blur + slight scale).
+ * Dadurch kein harter Cut, obwohl Szene wechselt.
+ */
+function GlobalBackground({ activeId }) {
+  return (
+    <div className="fixed inset-0 -z-10">
+      {Object.keys(SCENES).map((key) => {
+        const s = SCENES[key];
+        const on = key === activeId;
+
+        return (
+          <div
+            key={key}
+            className={cx(
+              'absolute inset-0 transition-[opacity,filter,transform] duration-[900ms] ease-out will-change-[opacity,filter,transform]',
+              on ? 'opacity-100 blur-0 scale-100' : 'opacity-0 blur-[10px] scale-[1.02]'
+            )}
+            style={{
+              backgroundColor: s.base,
+              backgroundImage: `${s.g1}, ${s.g2}`,
+            }}
+          />
+        );
+      })}
+
+      {/* Noise + Grain immer on */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.10] mix-blend-overlay"
+        style={{
+          backgroundImage:
+            'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27320%27 viewBox=%270 0 320 320%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.8%27 numOctaves=%273%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27320%27 height=%27320%27 filter=%27url(%23n)%27 opacity=%270.35%27/%3E%3C/svg%3E")',
+          backgroundSize: '220px 220px',
+          animation: 'noiseMove 7s linear infinite',
+        }}
+      />
+
+      {/* Soft vignette damit Text immer lesbar bleibt */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_35%,transparent_0%,rgba(0,0,0,0.40)_65%,rgba(0,0,0,0.70)_100%)]" />
+    </div>
+  );
+}
+
+/**
+ * GlobalLightLeaks:
+ * Blobs werden ebenfalls pro Scene als Layer gerendert, weich gecrossfaded.
+ * Dadurch passt sich das „Lightleak Gefühl“ fließend an.
+ */
+function GlobalLightLeaks({ activeId }) {
+  return (
+    <div className="fixed inset-0 -z-10 pointer-events-none">
+      {Object.keys(SCENES).map((key) => {
+        const scene = SCENES[key];
+        const on = key === activeId;
+
+        return (
+          <div
+            key={key}
+            className={cx(
+              'absolute inset-0 transition-[opacity,filter] duration-[900ms] ease-out will-change-[opacity,filter]',
+              on ? 'opacity-100 blur-0' : 'opacity-0 blur-[18px]'
+            )}
+          >
+            {scene.blobs.map((b, i) => (
+              <div
+                key={i}
+                className={cx(
+                  'absolute rounded-full',
+                  b.cls,
+                  i === 0 ? 'animate-[blob_10s_ease-in-out_infinite]' : i === 1 ? 'animate-[blob2_12s_ease-in-out_infinite]' : 'animate-[blob3_14s_ease-in-out_infinite]'
+                )}
+                style={{
+                  left: b.x,
+                  top: b.y,
+                  width: b.s,
+                  height: b.s,
+                  filter: `blur(${b.blur}px)`,
+                }}
+              />
+            ))}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function Scene({ id, children }) {
-  const scene = SCENES[id] ?? SCENES.s1;
   return (
     <section
       id={id}
-      className="relative min-h-screen flex items-center px-5 md:px-16 py-16 md:snap-start scroll-mt-24 overflow-hidden"
-      style={{ backgroundImage: scene.bg }}
+      className="relative min-h-screen flex items-center px-5 md:px-16 py-16 md:snap-start scroll-mt-24"
     >
-      <AnimatedNoise />
-      <AnimatedBlobs sceneId={id} />
       <div className="relative max-w-6xl mx-auto w-full">{children}</div>
     </section>
-  );
-}
-
-function AnimatedNoise() {
-  return (
-    <div
-      className="pointer-events-none absolute inset-0 opacity-[0.10] mix-blend-overlay"
-      style={{
-        backgroundImage:
-          'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27320%27 viewBox=%270 0 320 320%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.8%27 numOctaves=%273%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27320%27 height=%27320%27 filter=%27url(%23n)%27 opacity=%270.35%27/%3E%3C/svg%3E")',
-        backgroundSize: '220px 220px',
-        animation: 'noiseMove 7s linear infinite',
-      }}
-    />
-  );
-}
-
-function AnimatedBlobs({ sceneId }) {
-  const scene = SCENES[sceneId] ?? SCENES.s1;
-  const [b1, b2, b3] = scene.blobs;
-
-  return (
-    <>
-      <div className={cx('pointer-events-none absolute -top-24 -left-28 h-[34rem] w-[54rem] rounded-full blur-[120px] animate-[blob_10s_ease-in-out_infinite]', b1)} />
-      <div className={cx('pointer-events-none absolute top-1/3 -right-28 h-[34rem] w-[54rem] rounded-full blur-[120px] animate-[blob2_12s_ease-in-out_infinite]', b2)} />
-      <div className={cx('pointer-events-none absolute bottom-[-10rem] left-1/4 h-[28rem] w-[48rem] rounded-full blur-[120px] animate-[blob3_14s_ease-in-out_infinite]', b3)} />
-    </>
   );
 }
 
@@ -255,6 +329,29 @@ function Reveal({ children, delayMs = 0 }) {
   );
 }
 
+function PrimaryCTA({ label = 'Projekt anfragen' }) {
+  return (
+    <Link
+      href="/#request"
+      className="group px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center justify-center gap-2"
+    >
+      {label}
+      <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
+    </Link>
+  );
+}
+
+function GhostCTA({ href, children }) {
+  return (
+    <Link
+      href={href}
+      className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
+    >
+      {children}
+    </Link>
+  );
+}
+
 function ProofStat({ sceneId, label, target, display, durationMs = 1200 }) {
   const ref = useRef(null);
   const shown = useReveal(ref);
@@ -266,7 +363,7 @@ function ProofStat({ sceneId, label, target, display, durationMs = 1200 }) {
 
   return (
     <div ref={ref} className="relative overflow-hidden rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8">
-      <div className="absolute -left-24 top-0 h-full w-56 rotate-12 bg-white/15 blur-2xl opacity-30 animate-[shine_2.6s_ease-in-out_infinite]" />
+      <div className="absolute -left-24 top-0 h-full w-56 rotate-12 bg-white/15 blur-2xl opacity-25 animate-[shine_2.8s_ease-in-out_infinite]" />
       <div className="text-xs uppercase tracking-wide text-white/55">Proof</div>
       <div className="mt-3 text-4xl md:text-6xl font-extrabold tracking-tight">
         <TitleGradient sceneId={sceneId}>{display ?? value.toLocaleString('de-DE')}</TitleGradient>
@@ -276,9 +373,11 @@ function ProofStat({ sceneId, label, target, display, durationMs = 1200 }) {
   );
 }
 
+/* ---------- PAGE ---------- */
+
 export default function Home() {
   const sectionIds = useMemo(() => SECTIONS.map((s) => s.id), []);
-  const { activeIndex } = useActiveSection(sectionIds);
+  const { activeId, activeIndex } = useActiveSection(sectionIds);
 
   useEffect(() => {
     const handle = () => {
@@ -295,11 +394,15 @@ export default function Home() {
   return (
     <div className="font-proxima text-white">
       <style>{globalKeyframes}</style>
+
+      {/* Global background morph */}
+      <GlobalBackground activeId={activeId} />
+      <GlobalLightLeaks activeId={activeId} />
+
       <Navbar />
       <ProgressRail activeIndex={activeIndex} />
 
       <main className="md:snap-y md:snap-mandatory">
-        {/* 01 */}
         <Scene id="s1">
           <div className="flex flex-col items-center text-center gap-6">
             <Reveal>
@@ -312,15 +415,15 @@ export default function Home() {
               <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight leading-[1.03]">
                 Ich setze digitale Projekte um,
                 <span className="block">
-                  <TitleGradient sceneId="s1">die sichtbar performen.</TitleGradient>
+                  <TitleGradient sceneId="s1">die sauber wirken und performen.</TitleGradient>
                 </span>
               </h1>
             </Reveal>
 
             <Reveal delayMs={160}>
               <p className="max-w-2xl text-base md:text-xl text-white/80 leading-relaxed">
-                Brandbooks, Motiondesign, Webdevelopment und Videoediting – als System, damit Kampagnen nicht nur „gut aussehen“,
-                sondern auch funktionieren.
+                Brandbooks, Motiondesign, Webdevelopment und Videoediting – als System, damit Kampagnen nicht nur “nice”
+                sind, sondern Ergebnisse liefern.
               </p>
             </Reveal>
 
@@ -333,7 +436,6 @@ export default function Home() {
               </div>
             </Reveal>
 
-            {/* Optional: kleine Bild-Logos/Thumbnails – ersetzt durch Image, damit kein ESLint img Warning */}
             <Reveal delayMs={310}>
               <div className="mt-2 grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-3xl">
                 <MiniTile icon={<BookOpen size={18} />} title="Brandbook" sub="Guidelines & System" />
@@ -345,7 +447,6 @@ export default function Home() {
           </div>
         </Scene>
 
-        {/* 02 */}
         <Scene id="s2">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
@@ -404,13 +505,12 @@ export default function Home() {
                     <Stripe title="3) Web & Funnel" desc="Ein klarer Weg bis zur Anfrage." icon={<Monitor size={18} />} />
                   </div>
 
-                  {/* Beispielbild: du kannst später deine eigenen Thumbs einbauen */}
                   <div className="mt-6 relative rounded-2xl border border-white/15 overflow-hidden h-40 md:h-48">
                     <Image
                       src="/img/home/preview-system.jpg"
                       alt="Preview – Branding, Content, Funnel"
                       fill
-                      className="object-cover opacity-80"
+                      className="object-cover opacity-75"
                       sizes="(max-width: 768px) 100vw, 520px"
                       priority={false}
                     />
@@ -429,7 +529,6 @@ export default function Home() {
           </div>
         </Scene>
 
-        {/* 03 */}
         <Scene id="s3">
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 items-start">
             <div className="lg:sticky lg:top-24">
@@ -492,7 +591,6 @@ export default function Home() {
           </div>
         </Scene>
 
-        {/* 04 */}
         <Scene id="s4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
@@ -511,7 +609,7 @@ export default function Home() {
 
               <Reveal delayMs={160}>
                 <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
-                  Wenn du sauberes Branding + Content + Funnel als Einheit denkst, sieht man das am Ergebnis.
+                  Wenn du Branding + Content + Funnel als Einheit denkst, sieht man das am Ergebnis.
                 </p>
               </Reveal>
 
@@ -533,7 +631,6 @@ export default function Home() {
           </div>
         </Scene>
 
-        {/* 05 */}
         <Scene id="s5">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
@@ -592,7 +689,6 @@ export default function Home() {
           </div>
         </Scene>
 
-        {/* 06 */}
         <Scene id="request">
           <div className="rounded-3xl border border-white/15 bg-black/25 backdrop-blur-md p-6 md:p-12">
             <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
@@ -669,6 +765,8 @@ Link/Beispiele (optional):`}
   );
 }
 
+/* ---------- SMALL COMPONENTS ---------- */
+
 function MiniTile({ icon, title, sub }) {
   return (
     <div className="rounded-2xl border border-white/15 bg-black/15 backdrop-blur-md p-4 text-left">
@@ -699,7 +797,7 @@ function BigService({ sceneId, icon, kicker, title, desc }) {
   return (
     <Reveal>
       <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8 overflow-hidden relative">
-        <div className="absolute -left-24 top-0 h-full w-56 rotate-12 bg-white/15 blur-2xl opacity-25 animate-[shine_2.6s_ease-in-out_infinite]" />
+        <div className="absolute -left-24 top-0 h-full w-56 rotate-12 bg-white/15 blur-2xl opacity-20 animate-[shine_3.0s_ease-in-out_infinite]" />
         <div className="flex items-center justify-between gap-4">
           <div className="inline-flex items-center gap-2 text-xs uppercase tracking-wide text-white/60">
             <span className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center">{icon}</span>
@@ -741,29 +839,31 @@ function Step({ n, title, desc }) {
   );
 }
 
+/* ---------- KEYFRAMES ---------- */
+
 const globalKeyframes = `
 @keyframes blob {
   0% { transform: translate3d(0px, 0px, 0) scale(1); }
-  35% { transform: translate3d(40px, -30px, 0) scale(1.10); }
+  35% { transform: translate3d(40px, -30px, 0) scale(1.08); }
   70% { transform: translate3d(-30px, 20px, 0) scale(0.96); }
   100% { transform: translate3d(0px, 0px, 0) scale(1); }
 }
 @keyframes blob2 {
   0% { transform: translate3d(0px, 0px, 0) scale(1); }
-  40% { transform: translate3d(-45px, 35px, 0) scale(1.08); }
+  40% { transform: translate3d(-45px, 35px, 0) scale(1.06); }
   80% { transform: translate3d(25px, -20px, 0) scale(0.96); }
   100% { transform: translate3d(0px, 0px, 0) scale(1); }
 }
 @keyframes blob3 {
   0% { transform: translate3d(0px, 0px, 0) scale(1); }
-  45% { transform: translate3d(35px, 25px, 0) scale(1.12); }
+  45% { transform: translate3d(35px, 25px, 0) scale(1.10); }
   85% { transform: translate3d(-30px, -18px, 0) scale(0.94); }
   100% { transform: translate3d(0px, 0px, 0) scale(1); }
 }
 @keyframes shine {
-  0% { transform: translateX(-140px) rotate(12deg); opacity: 0.16; }
-  45% { opacity: 0.34; }
-  100% { transform: translateX(620px) rotate(12deg); opacity: 0.10; }
+  0% { transform: translateX(-160px) rotate(12deg); opacity: 0.12; }
+  45% { opacity: 0.28; }
+  100% { transform: translateX(720px) rotate(12deg); opacity: 0.08; }
 }
 @keyframes noiseMove {
   0% { transform: translate3d(0,0,0); }
