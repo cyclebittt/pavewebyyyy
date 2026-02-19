@@ -331,10 +331,10 @@ Link/Beispiele (optional):`}
                 </div>
 
                 {/* Optional: WhatsApp Button, falls du das willst */}
-                {/
+                {/* 
                 <div className="mt-4">
                   <a
-                    href="https://wa.me/4916095757167?text=Ziel:%0ADeadline:%0AStand:%0A"
+                    href="https://wa.me/49123456789?text=Ziel:%0ADeadline:%0AStand:%0A"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex w-full items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 hover:border-white/20 transition-colors font-semibold text-sm md:text-base text-neutral-100"
