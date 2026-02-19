@@ -29,18 +29,14 @@ const SECTIONS = [
   { id: 'request', label: 'Anfrage' },
 ];
 
-/**
- * Scenes: weiche, aber klar unterschiedliche Farbräume.
- * Hintergrund wird global gemorpht (Crossfade + blur + scale), keine harten Cuts.
- */
 const SCENES = {
   s1: {
     base: '#070312',
-    g1: `radial-gradient(1200px 700px at 18% 18%, rgba(168,85,247,0.36), transparent 60%),
+    g1: `radial-gradient(1200px 700px at 18% 18%, rgba(168,85,247,0.34), transparent 60%),
          radial-gradient(900px 700px at 82% 25%, rgba(56,189,248,0.16), transparent 55%)`,
     g2: `linear-gradient(135deg, #070312 0%, #0b0b1a 50%, #03040e 100%)`,
     blobs: [
-      { cls: 'bg-violet-500/20', x: '-20%', y: '-18%', s: '56rem', blur: 140 },
+      { cls: 'bg-violet-500/18', x: '-20%', y: '-18%', s: '56rem', blur: 140 },
       { cls: 'bg-cyan-500/12', x: '70%', y: '10%', s: '54rem', blur: 150 },
       { cls: 'bg-fuchsia-500/10', x: '20%', y: '80%', s: '46rem', blur: 150 },
     ],
@@ -48,59 +44,59 @@ const SCENES = {
   },
   s2: {
     base: '#021019',
-    g1: `radial-gradient(1100px 750px at 22% 20%, rgba(34,211,238,0.28), transparent 60%),
+    g1: `radial-gradient(1100px 750px at 22% 20%, rgba(34,211,238,0.26), transparent 60%),
          radial-gradient(900px 700px at 88% 15%, rgba(99,102,241,0.20), transparent 55%)`,
     g2: `linear-gradient(135deg, #021019 0%, #07102a 55%, #05010b 100%)`,
     blobs: [
-      { cls: 'bg-cyan-500/18', x: '-10%', y: '-10%', s: '58rem', blur: 150 },
-      { cls: 'bg-indigo-500/16', x: '72%', y: '0%', s: '54rem', blur: 150 },
+      { cls: 'bg-cyan-500/16', x: '-10%', y: '-10%', s: '58rem', blur: 150 },
+      { cls: 'bg-indigo-500/14', x: '72%', y: '0%', s: '54rem', blur: 150 },
       { cls: 'bg-emerald-500/10', x: '10%', y: '75%', s: '46rem', blur: 160 },
     ],
     accent: 'from-cyan-200 via-indigo-200 to-violet-200',
   },
   s3: {
     base: '#120316',
-    g1: `radial-gradient(1200px 750px at 20% 10%, rgba(244,114,182,0.20), transparent 60%),
-         radial-gradient(950px 750px at 84% 30%, rgba(168,85,247,0.24), transparent 55%)`,
+    g1: `radial-gradient(1200px 750px at 20% 10%, rgba(244,114,182,0.18), transparent 60%),
+         radial-gradient(950px 750px at 84% 30%, rgba(168,85,247,0.22), transparent 55%)`,
     g2: `linear-gradient(135deg, #120316 0%, #1a0714 55%, #040312 100%)`,
     blobs: [
-      { cls: 'bg-pink-500/14', x: '-18%', y: '-12%', s: '56rem', blur: 160 },
-      { cls: 'bg-violet-500/18', x: '68%', y: '12%', s: '56rem', blur: 150 },
+      { cls: 'bg-pink-500/12', x: '-18%', y: '-12%', s: '56rem', blur: 160 },
+      { cls: 'bg-violet-500/16', x: '68%', y: '12%', s: '56rem', blur: 150 },
       { cls: 'bg-cyan-500/10', x: '10%', y: '80%', s: '46rem', blur: 170 },
     ],
     accent: 'from-pink-200 via-fuchsia-200 to-indigo-200',
   },
   s4: {
     base: '#03110a',
-    g1: `radial-gradient(1200px 750px at 18% 10%, rgba(16,185,129,0.14), transparent 60%),
+    g1: `radial-gradient(1200px 750px at 18% 10%, rgba(16,185,129,0.13), transparent 60%),
          radial-gradient(900px 700px at 85% 20%, rgba(59,130,246,0.18), transparent 55%)`,
     g2: `linear-gradient(135deg, #03110a 0%, #0a1020 55%, #04060d 100%)`,
     blobs: [
-      { cls: 'bg-emerald-500/12', x: '-12%', y: '-16%', s: '54rem', blur: 170 },
-      { cls: 'bg-cyan-500/12', x: '75%', y: '8%', s: '56rem', blur: 160 },
-      { cls: 'bg-indigo-500/12', x: '18%', y: '82%', s: '48rem', blur: 170 },
+      { cls: 'bg-emerald-500/11', x: '-12%', y: '-16%', s: '54rem', blur: 170 },
+      { cls: 'bg-cyan-500/11', x: '75%', y: '8%', s: '56rem', blur: 160 },
+      { cls: 'bg-indigo-500/11', x: '18%', y: '82%', s: '48rem', blur: 170 },
     ],
     accent: 'from-emerald-200 via-cyan-200 to-indigo-200',
   },
   s5: {
     base: '#120b02',
     g1: `radial-gradient(1200px 750px at 15% 10%, rgba(250,204,21,0.10), transparent 60%),
-         radial-gradient(900px 700px at 88% 25%, rgba(236,72,153,0.18), transparent 55%)`,
+         radial-gradient(900px 700px at 88% 25%, rgba(236,72,153,0.16), transparent 55%)`,
     g2: `linear-gradient(135deg, #120b02 0%, #1b0713 55%, #05020a 100%)`,
     blobs: [
       { cls: 'bg-amber-400/10', x: '-10%', y: '-14%', s: '56rem', blur: 170 },
-      { cls: 'bg-pink-500/12', x: '74%', y: '10%', s: '56rem', blur: 160 },
-      { cls: 'bg-violet-500/12', x: '18%', y: '82%', s: '48rem', blur: 170 },
+      { cls: 'bg-pink-500/11', x: '74%', y: '10%', s: '56rem', blur: 160 },
+      { cls: 'bg-violet-500/11', x: '18%', y: '82%', s: '48rem', blur: 170 },
     ],
     accent: 'from-amber-200 via-pink-200 to-violet-200',
   },
   request: {
     base: '#04040a',
-    g1: `radial-gradient(1200px 750px at 15% 0%, rgba(99,102,241,0.20), transparent 60%),
-         radial-gradient(900px 700px at 90% 15%, rgba(56,189,248,0.12), transparent 55%)`,
+    g1: `radial-gradient(1200px 750px at 15% 0%, rgba(99,102,241,0.18), transparent 60%),
+         radial-gradient(900px 700px at 90% 15%, rgba(56,189,248,0.11), transparent 55%)`,
     g2: `linear-gradient(135deg, #04040a 0%, #07071a 55%, #04030a 100%)`,
     blobs: [
-      { cls: 'bg-indigo-500/12', x: '-12%', y: '-18%', s: '56rem', blur: 170 },
+      { cls: 'bg-indigo-500/11', x: '-12%', y: '-18%', s: '56rem', blur: 170 },
       { cls: 'bg-cyan-500/10', x: '76%', y: '8%', s: '56rem', blur: 170 },
       { cls: 'bg-violet-500/10', x: '18%', y: '82%', s: '48rem', blur: 170 },
     ],
@@ -161,28 +157,84 @@ function useReveal(ref) {
   return shown;
 }
 
-/** rAF based numeric tween for "live" feeling */
-function useCountUp({ target, durationMs = 1200 }) {
+/**
+ * Taktet die Werte, damit Split-Flaps nicht "überfahren" werden.
+ * stepsMs ~ 70–120ms wirkt wie Airport-Board.
+ */
+function useSteppedCountUp({ target, durationMs = 900, stepsMs = 90 }) {
   const [value, setValue] = useState(0);
-  const rafRef = useRef(null);
+  const runningRef = useRef(false);
 
   const start = useCallback(() => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    const t0 = performance.now();
-    const tick = (t) => {
-      const p = Math.min(1, (t - t0) / durationMs);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setValue(Math.round(target * eased));
-      if (p < 1) rafRef.current = requestAnimationFrame(tick);
-    };
-    rafRef.current = requestAnimationFrame(tick);
-  }, [target, durationMs]);
+    if (runningRef.current) return;
+    runningRef.current = true;
 
-  useEffect(() => () => rafRef.current && cancelAnimationFrame(rafRef.current), []);
+    const startValue = 0;
+    const endValue = Math.max(0, target);
+    const steps = Math.max(1, Math.round(durationMs / stepsMs));
+    let i = 0;
+
+    const timer = setInterval(() => {
+      i += 1;
+      const p = Math.min(1, i / steps);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const next = Math.round(startValue + (endValue - startValue) * eased);
+      setValue(next);
+
+      if (p >= 1) {
+        clearInterval(timer);
+        runningRef.current = false;
+      }
+    }, stepsMs);
+
+    return () => {
+      clearInterval(timer);
+      runningRef.current = false;
+    };
+  }, [target, durationMs, stepsMs]);
+
   return { value, start };
 }
 
-/* ---------- GLOBAL BACKGROUND (SMOOTH MORPH) ---------- */
+function useScrollProgress() {
+  const [p, setP] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const doc = document.documentElement;
+      const max = Math.max(1, doc.scrollHeight - doc.clientHeight);
+      setP(doc.scrollTop / max);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  return p;
+}
+
+function useMouseHalo() {
+  const [pos, setPos] = useState({ x: -9999, y: -9999 });
+  const raf = useRef(null);
+
+  useEffect(() => {
+    const onMove = (e) => {
+      const x = e.clientX;
+      const y = e.clientY;
+      if (raf.current) cancelAnimationFrame(raf.current);
+      raf.current = requestAnimationFrame(() => setPos({ x, y }));
+    };
+    window.addEventListener('mousemove', onMove, { passive: true });
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      if (raf.current) cancelAnimationFrame(raf.current);
+    };
+  }, []);
+
+  return pos;
+}
+
+/* ---------- GLOBAL BACKGROUND ---------- */
 
 function GlobalBackground({ activeId }) {
   return (
@@ -195,8 +247,8 @@ function GlobalBackground({ activeId }) {
           <div
             key={key}
             className={cx(
-              'absolute inset-0 transition-[opacity,filter,transform] duration-[1100ms] ease-out will-change-[opacity,filter,transform]',
-              on ? 'opacity-100 blur-0 scale-100' : 'opacity-0 blur-[12px] scale-[1.02]'
+              'absolute inset-0 transition-[opacity,filter,transform] duration-[1200ms] ease-out will-change-[opacity,filter,transform]',
+              on ? 'opacity-100 blur-0 scale-100' : 'opacity-0 blur-[14px] scale-[1.025]'
             )}
             style={{
               backgroundColor: s.base,
@@ -216,7 +268,7 @@ function GlobalBackground({ activeId }) {
         }}
       />
 
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_35%,transparent_0%,rgba(0,0,0,0.40)_65%,rgba(0,0,0,0.70)_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_35%,transparent_0%,rgba(0,0,0,0.40)_65%,rgba(0,0,0,0.72)_100%)]" />
     </div>
   );
 }
@@ -232,8 +284,8 @@ function GlobalLightLeaks({ activeId }) {
           <div
             key={key}
             className={cx(
-              'absolute inset-0 transition-[opacity,filter] duration-[1100ms] ease-out will-change-[opacity,filter]',
-              on ? 'opacity-100 blur-0' : 'opacity-0 blur-[18px]'
+              'absolute inset-0 transition-[opacity,filter] duration-[1200ms] ease-out will-change-[opacity,filter]',
+              on ? 'opacity-100 blur-0' : 'opacity-0 blur-[20px]'
             )}
           >
             {scene.blobs.map((b, i) => (
@@ -264,7 +316,132 @@ function GlobalLightLeaks({ activeId }) {
   );
 }
 
-/* ---------- LAYOUT ---------- */
+/* ---------- HIGH-ENERGY UI ADDONS ---------- */
+
+function ScrollProgressBar() {
+  const p = useScrollProgress();
+  return (
+    <div className="fixed top-0 left-0 right-0 z-[60] pointer-events-none">
+      <div className="h-[2px] bg-white/10">
+        <div
+          className="h-full bg-gradient-to-r from-violet-300 via-cyan-300 to-emerald-300"
+          style={{ width: `${Math.round(p * 100)}%`, transition: 'width 80ms linear' }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function CursorHalo() {
+  const { x, y } = useMouseHalo();
+  return (
+    <div
+      className="hidden md:block fixed inset-0 z-[5] pointer-events-none"
+      style={{
+        background: `radial-gradient(480px 480px at ${x}px ${y}px, rgba(255,255,255,0.10), transparent 55%)`,
+        mixBlendMode: 'screen',
+        transition: 'background 60ms linear',
+      }}
+    />
+  );
+}
+
+function Magnetic({ children, strength = 14, className = '' }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const onMove = (e) => {
+      const r = el.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
+      const dx = e.clientX - cx;
+      const dy = e.clientY - cy;
+      const mx = (dx / r.width) * strength;
+      const my = (dy / r.height) * strength;
+      el.style.transform = `translate3d(${mx}px, ${my}px, 0)`;
+    };
+
+    const onLeave = () => {
+      el.style.transform = 'translate3d(0,0,0)';
+    };
+
+    el.addEventListener('mousemove', onMove);
+    el.addEventListener('mouseleave', onLeave);
+    return () => {
+      el.removeEventListener('mousemove', onMove);
+      el.removeEventListener('mouseleave', onLeave);
+    };
+  }, [strength]);
+
+  return (
+    <span ref={ref} className={cx('inline-flex transition-transform duration-200 ease-out will-change-transform', className)}>
+      {children}
+    </span>
+  );
+}
+
+function TiltCard({ children, className = '' }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const onMove = (e) => {
+      const r = el.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width; // 0..1
+      const py = (e.clientY - r.top) / r.height; // 0..1
+      const rx = (0.5 - py) * 10;
+      const ry = (px - 0.5) * 12;
+
+      el.style.setProperty('--rx', `${rx}deg`);
+      el.style.setProperty('--ry', `${ry}deg`);
+      el.style.setProperty('--hx', `${px * 100}%`);
+      el.style.setProperty('--hy', `${py * 100}%`);
+    };
+
+    const onLeave = () => {
+      el.style.setProperty('--rx', `0deg`);
+      el.style.setProperty('--ry', `0deg`);
+    };
+
+    el.addEventListener('mousemove', onMove);
+    el.addEventListener('mouseleave', onLeave);
+    return () => {
+      el.removeEventListener('mousemove', onMove);
+      el.removeEventListener('mouseleave', onLeave);
+    };
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={cx(
+        'relative will-change-transform [transform-style:preserve-3d]',
+        className
+      )}
+      style={{
+        transform: 'perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))',
+        transition: 'transform 180ms ease-out',
+      }}
+    >
+      {/* specular highlight */}
+      <div
+        className="pointer-events-none absolute inset-0 rounded-inherit opacity-0 md:opacity-100"
+        style={{
+          background: 'radial-gradient(420px 320px at var(--hx, 50%) var(--hy, 30%), rgba(255,255,255,0.12), transparent 60%)',
+          mixBlendMode: 'screen',
+        }}
+      />
+      {children}
+    </div>
+  );
+}
+
+/* ---------- STRUCTURE ---------- */
 
 function Scene({ id, children }) {
   return (
@@ -326,78 +503,96 @@ function ProgressRail({ activeIndex }) {
 
 function PrimaryCTA({ label = 'Projekt anfragen' }) {
   return (
-    <Link
-      href="/#request"
-      className="group px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center justify-center gap-2"
-    >
-      {label}
-      <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
-    </Link>
+    <Magnetic>
+      <Link
+        href="/#request"
+        className="group px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center justify-center gap-2"
+      >
+        {label}
+        <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
+      </Link>
+    </Magnetic>
   );
 }
 
 function GhostCTA({ href, children }) {
   return (
-    <Link
-      href={href}
-      className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
-    >
-      {children}
-    </Link>
+    <Magnetic strength={10}>
+      <Link
+        href={href}
+        className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
+      >
+        {children}
+      </Link>
+    </Magnetic>
   );
 }
 
-/* ---------- SPLIT-FLAP (AIRPORT BOARD) ---------- */
+/* ---------- SPLIT-FLAP (ROBUST) ---------- */
 
 function FlipNumber({ value, pad = 2 }) {
   const str = Math.max(0, value).toString().padStart(pad, '0');
   return (
     <div className="flex items-center gap-1">
       {str.split('').map((ch, i) => (
-        <FlipDigit key={`${i}-${ch}`} digit={ch} />
+        <FlipDigit key={i} digit={ch} />
       ))}
     </div>
   );
 }
 
 function FlipDigit({ digit }) {
-  const [prev, setPrev] = useState(digit);
+  const [current, setCurrent] = useState(digit);
+  const [next, setNext] = useState(digit);
   const [flipping, setFlipping] = useState(false);
+  const queueRef = useRef([]);
 
   useEffect(() => {
-    if (digit === prev) return;
+    if (digit === next) return;
+    queueRef.current.push(digit);
+    if (!flipping) {
+      const d = queueRef.current.shift();
+      if (d != null) triggerFlip(d);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [digit]);
 
+  const triggerFlip = (to) => {
+    setNext(to);
     setFlipping(true);
+
     const t1 = setTimeout(() => {
-      setPrev(digit);
-    }, 180);
+      setCurrent(to);
+    }, 190);
 
     const t2 = setTimeout(() => {
       setFlipping(false);
-    }, 360);
+      const d = queueRef.current.shift();
+      if (d != null && d !== to) triggerFlip(d);
+    }, 380);
 
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
     };
-  }, [digit, prev]);
+  };
 
-  const topText = prev;
-  const bottomText = digit;
+  const topText = current;
+  const bottomText = next;
 
   return (
-    <div className="relative w-[0.78em] md:w-[0.86em] h-[1.12em] md:h-[1.18em] [perspective:900px]">
-      <div className="absolute inset-0 rounded-[0.18em] border border-white/20 bg-black/35 backdrop-blur-md" />
+    <div className="relative w-[0.80em] md:w-[0.88em] h-[1.14em] md:h-[1.20em] [perspective:900px]">
+      <div className="absolute inset-0 rounded-[0.18em] border border-white/20 bg-black/40 backdrop-blur-md" />
 
       <div className="absolute left-0 right-0 top-0 h-1/2 overflow-hidden rounded-t-[0.18em]">
-        <div className="h-full flex items-center justify-center text-4xl md:text-5xl font-extrabold tracking-tight text-white/90 leading-none translate-y-[0.06em]">
+        <div className="h-full flex items-center justify-center text-4xl md:text-5xl font-extrabold tracking-tight text-white/95 leading-none translate-y-[0.06em]">
           {topText}
         </div>
         <div className="absolute inset-x-0 bottom-0 h-px bg-white/12" />
       </div>
 
       <div className="absolute left-0 right-0 bottom-0 h-1/2 overflow-hidden rounded-b-[0.18em]">
-        <div className="h-full flex items-center justify-center text-4xl md:text-5xl font-extrabold tracking-tight text-white/90 leading-none -translate-y-[0.46em]">
+        <div className="h-full flex items-center justify-center text-4xl md:text-5xl font-extrabold tracking-tight text-white/95 leading-none -translate-y-[0.46em]">
           {bottomText}
         </div>
       </div>
@@ -405,63 +600,65 @@ function FlipDigit({ digit }) {
       <div
         className={cx(
           'absolute left-0 right-0 top-0 h-1/2 overflow-hidden rounded-t-[0.18em] origin-bottom',
-          flipping ? 'animate-[flapTop_360ms_ease-in-out_forwards]' : ''
+          flipping ? 'animate-[flapTop_380ms_ease-in-out_forwards]' : ''
         )}
         style={{ transformStyle: 'preserve-3d' }}
       >
-        <div className="h-full flex items-center justify-center text-4xl md:text-5xl font-extrabold tracking-tight text-white/95 leading-none translate-y-[0.06em]">
+        <div className="h-full flex items-center justify-center text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-none translate-y-[0.06em]">
           {topText}
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-black/35" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-black/45" />
         <div className="absolute inset-x-0 bottom-0 h-px bg-white/12" />
       </div>
 
       <div
         className={cx(
           'absolute left-0 right-0 bottom-0 h-1/2 overflow-hidden rounded-b-[0.18em] origin-top',
-          flipping ? 'animate-[flapBottom_360ms_ease-in-out_forwards]' : ''
+          flipping ? 'animate-[flapBottom_380ms_ease-in-out_forwards]' : ''
         )}
         style={{ transformStyle: 'preserve-3d' }}
       >
-        <div className="h-full flex items-center justify-center text-4xl md:text-5xl font-extrabold tracking-tight text-white/95 leading-none -translate-y-[0.46em]">
+        <div className="h-full flex items-center justify-center text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-none -translate-y-[0.46em]">
           {bottomText}
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-white/5 to-black/35" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white/5 to-black/45" />
       </div>
     </div>
   );
 }
 
-/* ---------- PROOF STAT (COUNTUP + FLIP DISPLAY) ---------- */
+/* ---------- PROOF STAT ---------- */
 
 function ProofStat({ sceneId, label, target, suffix = '', pad = 2, durationMs = 900 }) {
   const ref = useRef(null);
   const shown = useReveal(ref);
-  const { value, start } = useCountUp({ target, durationMs });
+  const { value, start } = useSteppedCountUp({ target, durationMs, stepsMs: 95 });
 
   useEffect(() => {
     if (shown) start();
   }, [shown, start]);
 
   return (
-    <div
-      ref={ref}
-      className="relative overflow-hidden rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8"
-    >
-      <div className="absolute -left-24 top-0 h-full w-56 rotate-12 bg-white/15 blur-2xl opacity-20 animate-[shine_3.0s_ease-in-out_infinite]" />
-      <div className="text-xs uppercase tracking-wide text-white/55">Proof</div>
+    <TiltCard className="rounded-3xl">
+      <div
+        ref={ref}
+        className="relative overflow-hidden rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8"
+      >
+        <div className="absolute -left-24 top-0 h-full w-56 rotate-12 bg-white/15 blur-2xl opacity-18 animate-[shine_3.2s_ease-in-out_infinite]" />
+        <div className="text-xs uppercase tracking-wide text-white/55">Proof</div>
 
-      <div className="mt-3 flex items-end gap-3 flex-wrap">
-        <FlipNumber value={value} pad={pad} />
-        {suffix ? (
-          <span className="text-white/75 text-xl md:text-2xl font-semibold">
-            <TitleGradient sceneId={sceneId}>{suffix}</TitleGradient>
-          </span>
-        ) : null}
+        <div className="mt-3 flex items-end gap-3 flex-wrap">
+          <FlipNumber value={value} pad={pad} />
+          {suffix ? (
+            <span className="text-white/75 text-xl md:text-2xl font-semibold">
+              <TitleGradient sceneId={sceneId}>{suffix}</TitleGradient>
+            </span>
+          ) : null}
+        </div>
+
+        <div className="mt-2 text-sm md:text-base text-white/80">{label}</div>
       </div>
-
-      <div className="mt-2 text-sm md:text-base text-white/80">{label}</div>
-    </div>
+    </TiltCard>
   );
 }
 
@@ -469,15 +666,17 @@ function ProofStat({ sceneId, label, target, suffix = '', pad = 2, durationMs = 
 
 function MiniTile({ icon, title, sub }) {
   return (
-    <div className="rounded-2xl border border-white/15 bg-black/15 backdrop-blur-md p-4 text-left">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">{icon}</div>
-        <div>
-          <div className="text-sm font-semibold text-white/90">{title}</div>
-          <div className="text-xs text-white/60">{sub}</div>
+    <TiltCard className="rounded-2xl">
+      <div className="rounded-2xl border border-white/15 bg-black/15 backdrop-blur-md p-4 text-left">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">{icon}</div>
+          <div>
+            <div className="text-sm font-semibold text-white/90">{title}</div>
+            <div className="text-xs text-white/60">{sub}</div>
+          </div>
         </div>
       </div>
-    </div>
+    </TiltCard>
   );
 }
 
@@ -496,49 +695,53 @@ function Stripe({ title, desc, icon }) {
 function BigService({ sceneId, icon, kicker, title, desc }) {
   return (
     <Reveal>
-      <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8 overflow-hidden relative">
-        <div className="absolute -left-24 top-0 h-full w-56 rotate-12 bg-white/15 blur-2xl opacity-18 animate-[shine_3.2s_ease-in-out_infinite]" />
-        <div className="flex items-center justify-between gap-4">
-          <div className="inline-flex items-center gap-2 text-xs uppercase tracking-wide text-white/60">
-            <span className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center">{icon}</span>
-            {kicker}
+      <TiltCard className="rounded-3xl">
+        <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8 overflow-hidden relative">
+          <div className="absolute -left-24 top-0 h-full w-56 rotate-12 bg-white/15 blur-2xl opacity-16 animate-[shine_3.2s_ease-in-out_infinite]" />
+          <div className="flex items-center justify-between gap-4">
+            <div className="inline-flex items-center gap-2 text-xs uppercase tracking-wide text-white/60">
+              <span className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center">{icon}</span>
+              {kicker}
+            </div>
+            <Wand2 size={18} className="text-white/55" />
           </div>
-          <Wand2 size={18} className="text-white/55" />
-        </div>
 
-        <div className="mt-4 text-2xl md:text-4xl font-extrabold leading-tight text-white">
-          {title}
-          <span className="block text-base md:text-lg mt-2">
-            <TitleGradient sceneId={sceneId}>Als System gedacht, nicht als Einzelteil.</TitleGradient>
-          </span>
-        </div>
+          <div className="mt-4 text-2xl md:text-4xl font-extrabold leading-tight text-white">
+            {title}
+            <span className="block text-base md:text-lg mt-2">
+              <TitleGradient sceneId={sceneId}>Als System gedacht, nicht als Einzelteil.</TitleGradient>
+            </span>
+          </div>
 
-        <p className="mt-4 text-sm md:text-base text-white/70 leading-relaxed max-w-2xl">{desc}</p>
+          <p className="mt-4 text-sm md:text-base text-white/70 leading-relaxed max-w-2xl">{desc}</p>
 
-        <div className="mt-6">
-          <Link
-            href="/#request"
-            className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors font-semibold"
-          >
-            Kurz anfragen <ArrowRight size={16} />
-          </Link>
+          <div className="mt-6">
+            <Link
+              href="/#request"
+              className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors font-semibold"
+            >
+              Kurz anfragen <ArrowRight size={16} />
+            </Link>
+          </div>
         </div>
-      </div>
+      </TiltCard>
     </Reveal>
   );
 }
 
 function Step({ n, title, desc }) {
   return (
-    <div className="rounded-2xl border border-white/15 bg-black/20 backdrop-blur-md p-4 md:p-5">
-      <div className="flex items-center gap-3">
-        <div className="w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center font-extrabold">
-          {n}
+    <TiltCard className="rounded-2xl">
+      <div className="rounded-2xl border border-white/15 bg-black/20 backdrop-blur-md p-4 md:p-5">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center font-extrabold">
+            {n}
+          </div>
+          <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
         </div>
-        <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
+        <div className="mt-2 text-sm text-white/70 leading-relaxed">{desc}</div>
       </div>
-      <div className="mt-2 text-sm text-white/70 leading-relaxed">{desc}</div>
-    </div>
+    </TiltCard>
   );
 }
 
@@ -566,6 +769,10 @@ export default function Home() {
 
       <GlobalBackground activeId={activeId} />
       <GlobalLightLeaks activeId={activeId} />
+
+      {/* Santana-feel boosters */}
+      <ScrollProgressBar />
+      <CursorHalo />
 
       <Navbar />
       <ProgressRail activeIndex={activeIndex} />
@@ -670,24 +877,11 @@ export default function Home() {
                   <div className="text-xs uppercase tracking-wide text-white/55">So sieht das als System aus</div>
 
                   <div className="mt-5 space-y-3">
-                    <Stripe
-                      title="1) Brandbook"
-                      desc="Regeln, Look, Tone. Damit alles gleich wirkt."
-                      icon={<BookOpen size={18} />}
-                    />
-                    <Stripe
-                      title="2) Motion & Video"
-                      desc="Hook, Tempo, Stil. Damit es hängen bleibt."
-                      icon={<Play size={18} />}
-                    />
-                    <Stripe
-                      title="3) Web & Funnel"
-                      desc="Ein klarer Weg bis zur Anfrage."
-                      icon={<Monitor size={18} />}
-                    />
+                    <Stripe title="1) Brandbook" desc="Regeln, Look, Tone. Damit alles gleich wirkt." icon={<BookOpen size={18} />} />
+                    <Stripe title="2) Motion & Video" desc="Hook, Tempo, Stil. Damit es hängen bleibt." icon={<Play size={18} />} />
+                    <Stripe title="3) Web & Funnel" desc="Ein klarer Weg bis zur Anfrage." icon={<Monitor size={18} />} />
                   </div>
 
-                  {/* optional: preview image */}
                   <div className="mt-6 relative rounded-2xl border border-white/15 overflow-hidden h-40 md:h-48">
                     <Image
                       src="/img/home/preview-system.jpg"
@@ -809,7 +1003,6 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-              {/* Airport-board style: wir flippen hier die "Mio"-Zahl (15 / 10), suffix bleibt statisch */}
               <ProofStat sceneId="s4" label="Likes generiert" target={15} suffix="+ Mio" pad={2} durationMs={900} />
               <ProofStat sceneId="s4" label="Klicks auf Social Media erzielt" target={10} suffix="+ Mio" pad={2} durationMs={900} />
               <ProofStat sceneId="s4" label="Abgeschlossene Projekte" target={100} suffix="+" pad={3} durationMs={900} />
@@ -857,21 +1050,23 @@ export default function Home() {
             </div>
 
             <Reveal delayMs={140}>
-              <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8">
-                <div className="text-xs uppercase tracking-wide text-white/55">Shortcut</div>
-                <div className="mt-3 text-xl md:text-3xl font-bold text-white/90">
-                  Ein Satz reicht fürs erste.
+              <TiltCard className="rounded-3xl">
+                <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8">
+                  <div className="text-xs uppercase tracking-wide text-white/55">Shortcut</div>
+                  <div className="mt-3 text-xl md:text-3xl font-bold text-white/90">
+                    Ein Satz reicht fürs erste.
+                  </div>
+                  <p className="mt-3 text-sm md:text-base text-white/70 leading-relaxed">
+                    “Wir wollen X bis Datum Y und haben gerade Z.” Danach klären wir den Rest.
+                  </p>
+                  <div className="mt-6 flex gap-2 flex-wrap">
+                    <GhostCTA href="/portfolio">
+                      <ExternalLink size={18} /> Beispiele
+                    </GhostCTA>
+                    <PrimaryCTA label="Anfrage" />
+                  </div>
                 </div>
-                <p className="mt-3 text-sm md:text-base text-white/70 leading-relaxed">
-                  “Wir wollen X bis Datum Y und haben gerade Z.” Danach klären wir den Rest.
-                </p>
-                <div className="mt-6 flex gap-2 flex-wrap">
-                  <GhostCTA href="/portfolio">
-                    <ExternalLink size={18} /> Beispiele
-                  </GhostCTA>
-                  <PrimaryCTA label="Anfrage" />
-                </div>
-              </div>
+              </TiltCard>
             </Reveal>
           </div>
         </Scene>
@@ -910,12 +1105,14 @@ export default function Home() {
 
                 <Reveal delayMs={340}>
                   <div className="mt-8 flex flex-wrap gap-2">
-                    <a
-                      href="mailto:info@paveconsultings.com?subject=Projektanfrage&body=Ziel:%0D%0ADeadline:%0D%0AStand:%0D%0A"
-                      className="px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center gap-2"
-                    >
-                      <Mail size={18} /> Per Mail
-                    </a>
+                    <Magnetic>
+                      <a
+                        href="mailto:info@paveconsultings.com?subject=Projektanfrage&body=Ziel:%0D%0ADeadline:%0D%0AStand:%0D%0A"
+                        className="px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center gap-2"
+                      >
+                        <Mail size={18} /> Per Mail
+                      </a>
+                    </Magnetic>
 
                     <GhostCTA href="/portfolio">
                       <ExternalLink size={18} /> Erst Portfolio
@@ -925,19 +1122,21 @@ export default function Home() {
               </div>
 
               <Reveal delayMs={200}>
-                <div className="rounded-3xl border border-white/15 bg-black/25 p-6">
-                  <div className="text-sm md:text-base font-semibold text-white/90">Copy/Paste</div>
-                  <div className="mt-3 rounded-2xl border border-white/10 bg-black/30 p-4 text-sm text-white/85 whitespace-pre-wrap leading-relaxed">
+                <TiltCard className="rounded-3xl">
+                  <div className="rounded-3xl border border-white/15 bg-black/25 p-6">
+                    <div className="text-sm md:text-base font-semibold text-white/90">Copy/Paste</div>
+                    <div className="mt-3 rounded-2xl border border-white/10 bg-black/30 p-4 text-sm text-white/85 whitespace-pre-wrap leading-relaxed">
 {`Ziel:
 Deadline:
 Stand:
 Budgetrahmen (optional):
 Link/Beispiele (optional):`}
+                    </div>
+                    <div className="mt-4 text-sm text-white/60">
+                      Das reicht komplett für eine erste Einschätzung.
+                    </div>
                   </div>
-                  <div className="mt-4 text-sm text-white/60">
-                    Das reicht komplett für eine erste Einschätzung.
-                  </div>
-                </div>
+                </TiltCard>
               </Reveal>
             </div>
           </div>
@@ -973,7 +1172,7 @@ const globalKeyframes = `
 @keyframes shine {
   0% { transform: translateX(-160px) rotate(12deg); opacity: 0.10; }
   45% { opacity: 0.22; }
-  100% { transform: translateX(780px) rotate(12deg); opacity: 0.06; }
+  100% { transform: translateX(820px) rotate(12deg); opacity: 0.06; }
 }
 @keyframes noiseMove {
   0% { transform: translate3d(0,0,0); }
@@ -981,10 +1180,10 @@ const globalKeyframes = `
 }
 @keyframes flapTop {
   0%   { transform: rotateX(0deg); filter: brightness(1); }
-  100% { transform: rotateX(-90deg); filter: brightness(0.85); }
+  100% { transform: rotateX(-90deg); filter: brightness(0.82); }
 }
 @keyframes flapBottom {
-  0%   { transform: rotateX(90deg); filter: brightness(0.85); }
+  0%   { transform: rotateX(90deg); filter: brightness(0.82); }
   100% { transform: rotateX(0deg); filter: brightness(1); }
 }
 `;
