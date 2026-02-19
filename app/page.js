@@ -17,14 +17,14 @@ import {
 } from 'lucide-react';
 
 const SECTIONS = [
-  { id: 's1', label: 'Outcome', title: 'Ein klares Ergebnis.' },
-  { id: 's2', label: 'Problem', title: 'Warum es oft scheitert.' },
-  { id: 's3', label: 'System', title: 'Wie ich arbeite.' },
-  { id: 's4', label: 'Proof', title: 'Zahlen & Beispiele.' },
-  { id: 'request', label: 'Request', title: 'Anfrage.' },
+  { id: 's1', label: 'Start' },
+  { id: 's2', label: 'Prinzip' },
+  { id: 's3', label: 'Ablauf' },
+  { id: 's4', label: 'Proof' },
+  { id: 'request', label: 'Anfrage' },
 ];
 
-function classNames(...xs) {
+function cx(...xs) {
   return xs.filter(Boolean).join(' ');
 }
 
@@ -48,23 +48,12 @@ function Pill({ icon, children }) {
   );
 }
 
-function BigStat({ value, label }) {
-  return (
-    <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 md:p-8">
-      <div className="text-4xl md:text-6xl font-extrabold tracking-tight text-indigo-200">{value}</div>
-      <div className="mt-2 text-sm md:text-base text-neutral-300">{label}</div>
-    </div>
-  );
-}
-
 function SceneShell({ id, children, className }) {
   return (
     <section
       id={id}
-      data-section={id}
-      className={classNames(
+      className={cx(
         'min-h-screen flex items-center px-5 md:px-16 py-16',
-        // Snap nur ab Desktop-ish, damit Mobile nicht „klebt“
         'md:snap-start',
         className
       )}
@@ -84,19 +73,16 @@ function ProgressRail({ activeIndex }) {
 
         <div className="mt-3 flex flex-col gap-2">
           {SECTIONS.map((s, i) => (
-            <a
-              key={s.id}
-              href={`/#${s.id}`}
-              className="group flex items-center gap-2"
-              aria-label={`Zu ${s.label} springen`}
-            >
+            <a key={s.id} href={`/#${s.id}`} className="group flex items-center gap-2">
               <span
-                className={classNames(
+                className={cx(
                   'w-2.5 h-2.5 rounded-full border transition-colors',
-                  i === activeIndex ? 'bg-indigo-300 border-indigo-200' : 'bg-white/10 border-white/20 group-hover:border-white/40'
+                  i === activeIndex
+                    ? 'bg-indigo-300 border-indigo-200'
+                    : 'bg-white/10 border-white/20 group-hover:border-white/40'
                 )}
               />
-              <span className={classNames('text-xs', i === activeIndex ? 'text-neutral-200' : 'text-neutral-500')}>
+              <span className={cx('text-xs', i === activeIndex ? 'text-neutral-200' : 'text-neutral-500')}>
                 {s.label}
               </span>
             </a>
@@ -107,30 +93,12 @@ function ProgressRail({ activeIndex }) {
   );
 }
 
-export default function Home() {
-  const sectionIds = useMemo(() => SECTIONS.map((s) => s.id), []);
-  const [activeId, setActiveId] = useState('s1');
+function useActiveSection(sectionIds) {
+  const [activeId, setActiveId] = useState(sectionIds[0] ?? 's1');
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Background scenes (weich, aber klar unterscheidbar)
-  const bgBySection = useMemo(
-    () => ({
-      s1: 'bg-[radial-gradient(1200px_600px_at_10%_10%,rgba(129,51,241,.38),transparent_60%),radial-gradient(900px_650px_at_95%_15%,rgba(56,189,248,.16),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#0E0E15_55%,#0B0B0F_100%)]',
-      s2: 'bg-[radial-gradient(1200px_600px_at_20%_20%,rgba(56,189,248,.18),transparent_60%),radial-gradient(900px_650px_at_85%_0%,rgba(129,51,241,.28),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#0C0F18_55%,#0B0B0F_100%)]',
-      s3: 'bg-[radial-gradient(1200px_700px_at_15%_15%,rgba(129,51,241,.22),transparent_60%),radial-gradient(1100px_650px_at_85%_25%,rgba(34,211,238,.14),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#0F0B14_55%,#0B0B0F_100%)]',
-      s4: 'bg-[radial-gradient(1200px_650px_at_20%_10%,rgba(16,185,129,.14),transparent_60%),radial-gradient(900px_650px_at_90%_25%,rgba(129,51,241,.22),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#101018_55%,#0B0B0F_100%)]',
-      request:
-        'bg-[radial-gradient(1200px_700px_at_10%_0%,rgba(129,51,241,.20),transparent_60%),radial-gradient(900px_650px_at_95%_15%,rgba(56,189,248,.12),transparent_55%),linear-gradient(120deg,#07070B_0%,#0B0B10_55%,#07070B_100%)]',
-    }),
-    []
-  );
-
-  // Active section detection
   useEffect(() => {
-    const els = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter(Boolean);
-
+    const els = sectionIds.map((id) => document.getElementById(id)).filter(Boolean);
     if (!els.length) return;
 
     const obs = new IntersectionObserver(
@@ -145,16 +113,106 @@ export default function Home() {
           setActiveIndex(Math.max(0, sectionIds.indexOf(id)));
         }
       },
-      {
-        // „Center bias“: section gilt aktiv, wenn sie gut im Viewport steht
-        root: null,
-        threshold: [0.25, 0.4, 0.55, 0.7],
-      }
+      { threshold: [0.25, 0.4, 0.55, 0.7] }
     );
 
     els.forEach((el) => obs.observe(el));
     return () => obs.disconnect();
   }, [sectionIds]);
+
+  return { activeId, activeIndex };
+}
+
+function useCountUp({ target, start, durationMs }) {
+  const [value, setValue] = useState(start);
+  const rafRef = useRef(null);
+
+  const startAnim = () => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+
+    const t0 = performance.now();
+    const from = start;
+    const to = target;
+
+    const tick = (t) => {
+      const p = Math.min(1, (t - t0) / durationMs);
+      // easeOutCubic
+      const eased = 1 - Math.pow(1 - p, 3);
+      const next = Math.round(from + (to - from) * eased);
+      setValue(next);
+      if (p < 1) rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  return { value, startAnim };
+}
+
+function AnimatedStat({ label, target, suffix, accent = 'indigo' }) {
+  const { value, startAnim } = useCountUp({ target, start: 0, durationMs: 1100 });
+  const ref = useRef(null);
+  const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const v = entries.some((e) => e.isIntersecting);
+        if (v && !started) {
+          setStarted(true);
+          startAnim();
+        }
+      },
+      { threshold: 0.35 }
+    );
+
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [startAnim, started]);
+
+  const accentClass =
+    accent === 'emerald'
+      ? 'from-emerald-200 via-emerald-300 to-indigo-200'
+      : accent === 'cyan'
+      ? 'from-cyan-200 via-indigo-200 to-violet-200'
+      : 'from-indigo-200 via-violet-200 to-cyan-200';
+
+  return (
+    <div ref={ref} className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 md:p-8">
+      <div className={cx('text-4xl md:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r', accentClass)}>
+        {value.toLocaleString('de-DE')}
+        {suffix ? <span className="ml-1">{suffix}</span> : null}
+      </div>
+      <div className="mt-2 text-sm md:text-base text-neutral-300">{label}</div>
+    </div>
+  );
+}
+
+export default function Home() {
+  const sectionIds = useMemo(() => SECTIONS.map((s) => s.id), []);
+  const { activeId, activeIndex } = useActiveSection(sectionIds);
+
+  // 5 Background-Layer, Opacity wechselt (saubere Animation)
+  const bgLayers = useMemo(
+    () => ({
+      s1: 'bg-[radial-gradient(1200px_600px_at_10%_10%,rgba(129,51,241,.40),transparent_60%),radial-gradient(900px_650px_at_95%_15%,rgba(56,189,248,.16),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#0E0E15_55%,#0B0B0F_100%)]',
+      s2: 'bg-[radial-gradient(1200px_600px_at_20%_20%,rgba(56,189,248,.18),transparent_60%),radial-gradient(900px_650px_at_85%_0%,rgba(129,51,241,.26),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#0C0F18_55%,#0B0B0F_100%)]',
+      s3: 'bg-[radial-gradient(1200px_700px_at_15%_15%,rgba(129,51,241,.22),transparent_60%),radial-gradient(1100px_650px_at_85%_25%,rgba(34,211,238,.14),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#0F0B14_55%,#0B0B0F_100%)]',
+      s4: 'bg-[radial-gradient(1200px_650px_at_20%_10%,rgba(16,185,129,.14),transparent_60%),radial-gradient(900px_650px_at_90%_25%,rgba(129,51,241,.22),transparent_55%),linear-gradient(120deg,#0B0B0F_0%,#101018_55%,#0B0B0F_100%)]',
+      request:
+        'bg-[radial-gradient(1200px_700px_at_10%_0%,rgba(129,51,241,.20),transparent_60%),radial-gradient(900px_650px_at_95%_15%,rgba(56,189,248,.12),transparent_55%),linear-gradient(120deg,#07070B_0%,#0B0B10_55%,#07070B_100%)]',
+    }),
+    []
+  );
 
   // Smooth hash scrolling
   useEffect(() => {
@@ -174,75 +232,70 @@ export default function Home() {
       <Navbar />
       <ProgressRail activeIndex={activeIndex} />
 
-      {/* Global background layer with soft transitions */}
+      {/* Background: 5 Layers, Opacity transition */}
       <div className="fixed inset-0 -z-10">
-        <div
-          className={classNames(
-            'absolute inset-0 transition-opacity duration-700',
-            bgBySection[activeId] ?? bgBySection.s1
-          )}
-        />
-        {/* subtle glow blobs to keep “premium” depth */}
+        {Object.entries(bgLayers).map(([key, cls]) => (
+          <div
+            key={key}
+            className={cx('absolute inset-0 transition-opacity duration-700', cls, activeId === key ? 'opacity-100' : 'opacity-0')}
+          />
+        ))}
         <div className="pointer-events-none absolute -top-32 -left-28 h-[28rem] w-[44rem] rounded-full bg-violet-600/12 blur-[130px]" />
         <div className="pointer-events-none absolute top-1/3 -right-28 h-[28rem] w-[44rem] rounded-full bg-blue-500/10 blur-[130px]" />
       </div>
 
-      {/* Scroll container: snap on md+ */}
       <main className="md:snap-y md:snap-mandatory">
-        {/* 01 OUTCOME */}
+        {/* 01 */}
         <SceneShell id="s1">
           <div className="flex flex-col items-center text-center gap-6">
             <span className="inline-flex items-center gap-2 text-xs md:text-sm text-indigo-300/80 bg-white/5 ring-1 ring-white/10 px-3 py-1 rounded-full">
-              <Sparkles size={16} /> Planbare digitale Umsetzung
+              <Sparkles size={16} /> Klar strukturierte digitale Projekte
             </span>
 
             <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight leading-[1.03]">
-              Ein klares Ergebnis.
-              <span className="block text-indigo-300">Keine Endlosschleifen.</span>
+              <span className="block">Digitale Umsetzung,</span>
+              <span className="block text-indigo-300">auf die du dich verlassen kannst.</span>
             </h1>
 
             <p className="max-w-2xl text-base md:text-xl text-neutral-300 leading-relaxed">
-              Websites, Funnels und Social-Assets, die schnell verständlich sind und sauber übergeben werden.
+              Wenig Gelaber, klare Schritte, saubere Übergabe. Am Ende steht etwas, das wirklich genutzt wird.
             </p>
 
             <div className="w-full flex flex-col items-center gap-3">
               <PrimaryCTA />
               <p className="text-sm md:text-base text-neutral-400 max-w-xl">
-                Ziel, Deadline, Stand. Mehr brauche ich für die erste Einschätzung nicht.
+                Ziel, Deadline, Stand. Dann sage ich dir, ob es passt und wie wir starten.
               </p>
             </div>
 
             <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
               <Pill icon={<Timer size={14} />}>Klare Schritte</Pill>
               <Pill icon={<ShieldCheck size={14} />}>Saubere Übergabe</Pill>
-              <Pill icon={<LineChart size={14} />}>Fokus auf Wirkung</Pill>
+              <Pill icon={<LineChart size={14} />}>Übersichtlich</Pill>
             </div>
 
-            <div className="mt-6 text-xs uppercase tracking-wide text-neutral-500">
-              Scroll
-            </div>
+            <div className="mt-6 text-xs uppercase tracking-wide text-neutral-500">Scroll</div>
           </div>
         </SceneShell>
 
-        {/* 02 PROBLEM */}
+        {/* 02 */}
         <SceneShell id="s2">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
-              <div className="text-xs uppercase tracking-wide text-neutral-400">02 — Warum das oft ausufert</div>
+              <div className="text-xs uppercase tracking-wide text-neutral-400">02 — Prinzip</div>
               <h2 className="mt-3 text-3xl md:text-5xl font-extrabold leading-tight">
-                Nicht das Design ist das Problem.
-                <span className="block text-indigo-300">Der Ablauf ist es.</span>
+                Eine Seite.
+                <span className="block text-indigo-300">Ein Ziel.</span>
               </h2>
               <p className="mt-5 text-neutral-300 text-base md:text-xl leading-relaxed max-w-xl">
-                Viele Projekte verlieren Tempo, weil niemand entscheidet, was „fertig“ bedeutet.
-                Ich arbeite so, dass du planbar ans Ziel kommst.
+                Wenn Besucher zehn Optionen haben, entscheiden sie oft gar nicht. Deshalb führe ich Schritt für Schritt.
               </p>
 
               <div className="mt-6 space-y-3">
                 {[
-                  'Ein Ziel pro Seite / pro Flow',
-                  'Klare Runden statt Dauer-Feedback',
-                  'Übergabe als Deliverable, nicht als „Bonus“',
+                  'Weniger Text, mehr Fokus',
+                  'Jede Sektion beantwortet eine Frage',
+                  'Am Ende ein klarer nächster Schritt',
                 ].map((t) => (
                   <div key={t} className="flex items-start gap-2">
                     <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-emerald-400" />
@@ -252,88 +305,75 @@ export default function Home() {
               </div>
 
               <div className="mt-8">
-                <PrimaryCTA label="Wenn das zu dir passt" />
+                <PrimaryCTA label="Wenn du so arbeiten willst" />
               </div>
             </div>
 
-            {/* Visual split: chaos vs system (kein Kachel-Look) */}
             <div className="rounded-3xl border border-white/10 bg-white/[0.04] overflow-hidden">
-              <div className="grid grid-cols-2">
-                <div className="p-6 md:p-8 border-r border-white/10">
-                  <div className="text-xs uppercase tracking-wide text-neutral-500">Chaos</div>
-                  <div className="mt-3 text-lg md:text-2xl font-bold text-neutral-200">Zu viele Optionen</div>
-                  <div className="mt-2 text-sm md:text-base text-neutral-400 leading-relaxed">
-                    Mehr Text, mehr Unterseiten, mehr Ablenkung. Klingt informativ, konvertiert aber oft schlechter.
-                  </div>
-                  <div className="mt-6 h-px bg-white/10" />
-                  <div className="mt-6 text-sm text-neutral-500">Symptom: keiner liest es wirklich.</div>
+              <div className="p-6 md:p-8">
+                <div className="text-xs uppercase tracking-wide text-neutral-500">Was du hier siehst</div>
+                <div className="mt-3 text-xl md:text-2xl font-bold text-neutral-200">
+                  Jeder Screen ein Argument.
                 </div>
+                <p className="mt-3 text-sm md:text-base text-neutral-400 leading-relaxed">
+                  Keine “Unterseiten-Rallye”. Du scrollst und bekommst Punkt für Punkt die Infos, die man wirklich braucht.
+                </p>
 
-                <div className="p-6 md:p-8">
-                  <div className="text-xs uppercase tracking-wide text-neutral-500">System</div>
-                  <div className="mt-3 text-lg md:text-2xl font-bold text-neutral-200">Ein Scroll-Funnel</div>
-                  <div className="mt-2 text-sm md:text-base text-neutral-400 leading-relaxed">
-                    Ein Punkt pro Screen. Eine Botschaft. Ein nächster Schritt. Der Nutzer wird geführt, nicht verloren.
+                <div className="mt-6 grid grid-cols-1 gap-3">
+                  <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                    <div className="text-sm font-semibold text-neutral-200">1) Verstehen</div>
+                    <div className="text-sm text-neutral-400">Worum geht’s und was soll passieren?</div>
                   </div>
-                  <div className="mt-6 h-px bg-white/10" />
-                  <div className="mt-6 text-sm text-neutral-500">Ergebnis: mehr Fokus, mehr Entscheidung.</div>
+                  <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                    <div className="text-sm font-semibold text-neutral-200">2) Vertrauen</div>
+                    <div className="text-sm text-neutral-400">Warum du mir das geben kannst.</div>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                    <div className="text-sm font-semibold text-neutral-200">3) Handeln</div>
+                    <div className="text-sm text-neutral-400">Ein klarer nächster Schritt.</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </SceneShell>
 
-        {/* 03 SYSTEM (Sticky Stepper feeling without heavy JS) */}
+        {/* 03 */}
         <SceneShell id="s3">
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 items-start">
             <div className="lg:sticky lg:top-24">
-              <div className="text-xs uppercase tracking-wide text-neutral-400">03 — System</div>
+              <div className="text-xs uppercase tracking-wide text-neutral-400">03 — Ablauf</div>
               <h2 className="mt-3 text-3xl md:text-5xl font-extrabold leading-tight">
-                Klarheit zuerst.
-                <span className="block text-indigo-300">Dann Umsetzung.</span>
+                Schnell starten,
+                <span className="block text-indigo-300">sauber abschließen.</span>
               </h2>
               <p className="mt-5 text-neutral-300 text-base md:text-xl leading-relaxed">
-                Keine Buzzwords. Ein Framework, das Projekte schnell macht und sauber abschließt.
+                Drei klare Schritte. Keine Endlosschleifen.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-2">
-                <Pill icon={<Zap size={14} />}>Scope fix</Pill>
+                <Pill icon={<Zap size={14} />}>Klarer Umfang</Pill>
                 <Pill icon={<Timer size={14} />}>Tempo</Pill>
                 <Pill icon={<ShieldCheck size={14} />}>Übergabe</Pill>
               </div>
 
               <div className="mt-8">
-                <PrimaryCTA label="So würde ich starten" />
+                <PrimaryCTA label="Kurz checken lassen" />
               </div>
             </div>
 
             <div className="space-y-4">
               {[
-                {
-                  title: '1) Define',
-                  desc: 'Ziel, Nutzerweg, Inhalte, Constraints. Was ist “fertig”? Was ist optional? Das fixieren wir.',
-                },
-                {
-                  title: '2) Build',
-                  desc: 'Design und Umsetzung als ein System. Große, klare Sektionen. Keine Textwände.',
-                },
-                {
-                  title: '3) Polish',
-                  desc: 'Feinschliff in 1–2 klaren Runden. Danach ist es nicht „in Arbeit“, sondern live.',
-                },
-                {
-                  title: '4) Handover',
-                  desc: 'Zugänge, Assets, kurze Doku. Du kannst weiterarbeiten, ohne dass du mich brauchst.',
-                },
+                { k: '1', t: 'Kurz schildern', d: 'Ziel, Deadline, Stand. Mehr brauche ich am Anfang nicht.' },
+                { k: '2', t: 'Umsetzen', d: 'Struktur, Design, Umsetzung. So, dass man es sofort versteht.' },
+                { k: '3', t: 'Übergeben', d: 'Zugänge, Assets, kurze Doku. Damit du weiterarbeiten kannst.' },
               ].map((s) => (
-                <div key={s.title} className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 md:p-8">
-                  <div className="text-xs uppercase tracking-wide text-neutral-500">{s.title}</div>
-                  <div className="mt-3 text-xl md:text-2xl font-bold text-neutral-200">
-                    {s.desc.split('. ')[0]}.
+                <div key={s.k} className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 md:p-8">
+                  <div className="text-xs uppercase tracking-wide text-neutral-500">
+                    Schritt {s.k}
                   </div>
-                  <p className="mt-3 text-sm md:text-base text-neutral-400 leading-relaxed">
-                    {s.desc}
-                  </p>
+                  <div className="mt-3 text-2xl md:text-3xl font-bold text-neutral-200">{s.t}</div>
+                  <p className="mt-3 text-sm md:text-base text-neutral-400 leading-relaxed">{s.d}</p>
                 </div>
               ))}
             </div>
@@ -346,11 +386,11 @@ export default function Home() {
             <div>
               <div className="text-xs uppercase tracking-wide text-neutral-400">04 — Proof</div>
               <h2 className="mt-3 text-3xl md:text-5xl font-extrabold leading-tight">
-                Reichweite ist kein Ziel.
-                <span className="block text-indigo-300">Aber ein Beleg.</span>
+                Ergebnisse,
+                <span className="block text-indigo-300">die man einordnen kann.</span>
               </h2>
               <p className="mt-5 text-neutral-300 text-base md:text-xl leading-relaxed max-w-xl">
-                Ich baue Dinge, die im Feed funktionieren und im Ergebnis halten: klare Hooks, klare Struktur, klare Übergabe.
+                Ich mache Content und digitale Umsetzung so, dass es funktioniert. Und so, dass du am Ende ein sauberes Setup hast.
               </p>
 
               <div className="mt-8 flex gap-3 flex-wrap">
@@ -360,18 +400,18 @@ export default function Home() {
                 >
                   <ExternalLink size={18} /> Portfolio ansehen
                 </Link>
-                <PrimaryCTA label="Anfrage (2 Minuten)" />
+                <PrimaryCTA label="Jetzt anfragen" />
               </div>
 
               <p className="mt-4 text-sm text-neutral-500">
-                Portfolio ist bewusst separat: Proof im Detail, ohne den Onepager zu überladen.
+                Details und Projekte findest du im Portfolio. Die Startseite bleibt bewusst fokussiert.
               </p>
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-              <BigStat value="15+ Mio" label="Likes generiert" />
-              <BigStat value="10+ Mio" label="Klicks auf Social Media erzielt" />
-              <BigStat value="100+" label="Abgeschlossene Projekte" />
+              <AnimatedStat target={15_000_000} suffix="+" label="Likes generiert" accent="indigo" />
+              <AnimatedStat target={10_000_000} suffix="+" label="Klicks auf Social Media erzielt" accent="cyan" />
+              <AnimatedStat target={100} suffix="+" label="Abgeschlossene Projekte" accent="emerald" />
             </div>
           </div>
         </SceneShell>
@@ -386,7 +426,7 @@ export default function Home() {
                   Schick mir kurz dein Vorhaben
                 </h3>
                 <p className="mt-4 text-neutral-300 leading-relaxed max-w-2xl">
-                  Drei Infos reichen für eine klare Einschätzung. Wenn es passt, kommt der Termin danach.
+                  Drei Infos reichen für eine klare Einschätzung.
                 </p>
 
                 <div className="mt-6 space-y-3">
@@ -419,7 +459,7 @@ export default function Home() {
                 </div>
 
                 <p className="mt-4 text-sm text-neutral-500">
-                  Du bekommst von mir eine ehrliche Einschätzung (passt / passt nicht) und einen klaren nächsten Schritt.
+                  Wenn es passt, kommt der Termin danach. Nicht vorher.
                 </p>
               </div>
 
@@ -433,7 +473,7 @@ Budgetrahmen (optional):
 Link/Beispiele (optional):`}
                 </div>
                 <div className="mt-4 text-sm text-neutral-400">
-                  Wenn du nur das schickst, kann ich schon sauber einschätzen.
+                  Damit kann ich schon sauber einschätzen.
                 </div>
               </div>
             </div>
