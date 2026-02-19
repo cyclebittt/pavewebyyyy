@@ -134,7 +134,6 @@ export default function Footer() {
 
         {/* tiny footer note */}
         <div className="mt-6 text-xs text-white/35 text-center">
-          Built with Next.js · Design system aligned to the homepage glass + lightleaks aesthetic.
         </div>
       </div>
     </footer>
