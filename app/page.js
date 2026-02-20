@@ -970,17 +970,17 @@ export default function Home() {
 
                   <div className="mt-5 space-y-3">
                     <Stripe
-                      title="1) Brandbook"
+                      title="Brandbook"
                       desc="Klare Regeln für Farben, Typo, Layout und Tonalität – damit dein Auftritt konsistent bleibt und sich sauber skalieren lässt."
                       icon={<BookOpen size={18} />}
                     />
                     <Stripe
-                      title="2) Motion & Video"
+                      title="Motion & Video"
                       desc="Wiedererkennbare Assets und Motion-Patterns – damit Content schneller produziert wird und sofort „deins“ wirkt."
                       icon={<Play size={18} />}
                     />
                     <Stripe
-                      title="3) Webdevelopment"
+                      title="Webdevelopment"
                       desc="Ein Aufbau, der führt: Problem → Lösung → Proof → CTA. Wenig Ablenkung, klare Struktur."
                       icon={<Monitor size={18} />}
                     />
