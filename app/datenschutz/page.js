@@ -19,7 +19,7 @@ export default function DatenschutzPage() {
         <section className="space-y-2">
           <h2 className="text-2xl font-semibold">Verantwortlicher</h2>
           <p className="text-neutral-300">
-            Paveo, Am Streitberg 28, 63906 Erlenbach am Main, Deutschland<br />
+            Leon Seitz, Am Streitberg 28, 63906 Erlenbach am Main, Deutschland<br />
             E-Mail: info@paveconsultings.com, Tel.: +49 160 95757167
           </p>
         </section>
