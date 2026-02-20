@@ -1,3 +1,4 @@
+// /app/page.js
 'use client';
 
 import Link from 'next/link';
@@ -16,10 +17,69 @@ import {
   Mail,
   ExternalLink,
   X,
+  MessageCircle,
+  Image as ImageIcon,
+  FileText,
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 /* ---------- CONFIG ---------- */
+
+const CONTACT_EMAIL = 'hello@leonseitz.com';
+
+// WhatsApp: ersetze die Nummer (international, ohne +, ohne Leerzeichen)
+// Beispiel DE: 491701234567
+const WHATSAPP_NUMBER = '49XXXXXXXXXXX';
+const WHATSAPP_TEXT = encodeURIComponent(
+  `Hi Leon — kurze Projektanfrage.\n\nZiel:\nDeadline:\nStand:\nBudgetrahmen (optional):\nLink/Beispiele (optional):`
+);
+const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_TEXT}`;
+
+// Externer Web-Case-Link (wie gewünscht)
+const WEB_CASE_HREF = 'https://thankful-anything-310042.framer.app/';
+
+// PDF Sneak Peek (Brandbook)
+const BRANDBOOK_PDF_SRC = '/docs/kfa-brandbook.pdf'; // -> /public/docs/kfa-brandbook.pdf ablegen
+
+// Preview Images (Platzhalter) – du fügst die Files später in /public/img/previews/... ein
+const SERVICE_PREVIEWS = {
+  brandbook: {
+    thumbs: [
+      '/img/previews/brandbook-1.jpg',
+      '/img/previews/brandbook-2.jpg',
+      '/img/previews/brandbook-3.jpg',
+    ],
+  },
+  motion: {
+    thumbs: [
+      '/img/previews/motion-1.jpg',
+      '/img/previews/motion-2.jpg',
+      '/img/previews/motion-3.jpg',
+    ],
+    gallery: [
+      '/img/previews/motion-1.jpg',
+      '/img/previews/motion-2.jpg',
+      '/img/previews/motion-3.jpg',
+      '/img/previews/motion-4.jpg',
+    ],
+  },
+  web: {
+    thumbs: [
+      '/img/previews/web-1.jpg',
+      '/img/previews/web-2.jpg',
+      '/img/previews/web-3.jpg',
+    ],
+  },
+  video: {
+    // Videoediting: direkt weiterleiten
+    href: 'https://www.youtube.com/watch?v=VIDEO_ID_HIER', // <- ersetze VIDEO_ID_HIER
+    thumbs: [
+      '/img/previews/video-1.jpg',
+      '/img/previews/video-2.jpg',
+      '/img/previews/video-3.jpg',
+    ],
+  },
+};
 
 const SECTIONS = [
   { id: 's1', label: 'Start' },
@@ -103,17 +163,6 @@ const SCENES = {
     ],
     accent: 'from-indigo-200 via-violet-200 to-cyan-200',
   },
-};
-
-/* ---------- SNEAK CONFIG (EDIT HIER) ---------- */
-
-const BRAND_BOOK_PDF = '/brandbooks/kfa-brandbook-2026.pdf'; // anpassen wenn du willst
-const VIDEOEDITING_YT = 'https://www.youtube.com/YOUR_VIDEO_LINK'; // anpassen
-
-// Platzhalter: du kannst diese drei Bilder pro Service jederzeit austauschen.
-const PREVIEWS = {
-  web: ['/img/portfolio/web1.jpg', '/img/portfolio/web2.jpg', '/img/portfolio/web3.jpg'],
-  motion: ['/img/portfolio/motion1.jpg', '/img/portfolio/motion2.jpg', '/img/portfolio/motion3.jpg'],
 };
 
 /* ---------- UTIL ---------- */
@@ -424,6 +473,88 @@ function TiltCard({ children, className = '' }) {
   );
 }
 
+/* ---------- MODALS ---------- */
+
+function ModalShell({ open, onClose, title, children }) {
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') onClose?.();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-[200]">
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 flex items-center justify-center p-4">
+        <div className="relative w-full max-w-5xl rounded-3xl border border-white/15 bg-black/35 backdrop-blur-2xl shadow-[0_30px_120px_-60px_rgba(0,0,0,0.9)] overflow-hidden">
+          <div className="flex items-center justify-between gap-4 px-5 md:px-7 py-4 border-b border-white/10">
+            <div className="min-w-0">
+              <div className="text-xs uppercase tracking-wide text-white/55">Sneak Peek</div>
+              <div className="text-base md:text-lg font-semibold text-white/90 truncate">{title}</div>
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-white/10 border border-white/12 text-white/80 hover:text-white hover:bg-white/12 transition-colors"
+              aria-label="Schließen"
+            >
+              <X size={18} />
+            </button>
+          </div>
+          <div className="p-4 md:p-6">{children}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PdfPreviewModal({ open, onClose, src, title }) {
+  return (
+    <ModalShell open={open} onClose={onClose} title={title}>
+      <div className="rounded-2xl border border-white/10 bg-black/30 overflow-hidden">
+        <iframe
+          title={title}
+          src={src}
+          className="w-full h-[70vh]"
+          style={{ border: 'none' }}
+        />
+      </div>
+      <div className="mt-3 text-xs text-white/55">
+        Hinweis: Lege die Datei unter <span className="text-white/75">/public/docs/</span> ab.
+      </div>
+    </ModalShell>
+  );
+}
+
+function GalleryModal({ open, onClose, images = [], title = 'Galerie' }) {
+  return (
+    <ModalShell open={open} onClose={onClose} title={title}>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        {images.map((src) => (
+          <div key={src} className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-white/5">
+            <Image src={src} alt="Preview" fill className="object-cover" sizes="(max-width: 768px) 50vw, 33vw" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+          </div>
+        ))}
+      </div>
+    </ModalShell>
+  );
+}
+
 /* ---------- STRUCTURE ---------- */
 
 function Scene({ id, children }) {
@@ -466,15 +597,21 @@ function PrimaryCTA({ label = 'Projekt anfragen' }) {
   );
 }
 
-function GhostCTA({ href, children }) {
+function GhostCTA({ href, children, external = false }) {
+  const cls =
+    'px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2';
+
   return (
     <Magnetic strength={10}>
-      <Link
-        href={href}
-        className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
-      >
-        {children}
-      </Link>
+      {external ? (
+        <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
+          {children}
+        </a>
+      ) : (
+        <Link href={href} className={cls}>
+          {children}
+        </Link>
+      )}
     </Magnetic>
   );
 }
@@ -579,34 +716,36 @@ function Stripe({ title, desc, icon }) {
   );
 }
 
-function ServicePreviewStack({ images = [] }) {
-  if (!images?.length) return null;
-
+function PreviewStack({ thumbs = [] }) {
+  const safe = thumbs.slice(0, 3);
   return (
-    <div className="relative mt-6 h-28 md:h-32">
-      {images.slice(0, 3).map((src, i) => (
-        <div
-          key={i}
-          className="absolute rounded-xl overflow-hidden border border-white/15 shadow-2xl bg-black/40"
-          style={{
-            width: '62%',
-            height: '100%',
-            left: `${i * 18}%`,
-            zIndex: 10 - i,
-            transform: `rotate(${i === 1 ? '-3deg' : i === 2 ? '4deg' : '0deg'})`,
-          }}
-        >
-          <Image
-            src={src}
-            alt="Preview"
-            fill
-            sizes="(max-width: 768px) 100vw, 520px"
-            className="object-cover opacity-90"
-            priority={false}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
-        </div>
-      ))}
+    <div className="relative h-16 md:h-20 w-full">
+      <div className="absolute inset-0">
+        {safe.map((src, i) => (
+          <div
+            key={src}
+            className={cx(
+              'absolute top-0 rounded-2xl overflow-hidden border border-white/12 bg-white/5',
+              'shadow-[0_20px_60px_-45px_rgba(0,0,0,0.9)]',
+              i === 0 ? 'left-0 w-[58%] h-full' : i === 1 ? 'left-[42%] w-[46%] h-[82%] top-[10%]' : 'left-[18%] w-[48%] h-[64%] top-[18%]'
+            )}
+            style={{
+              transform: i === 0 ? 'rotate(-2deg)' : i === 1 ? 'rotate(2.5deg)' : 'rotate(-1deg)',
+            }}
+          >
+            <Image
+              src={src}
+              alt="Preview"
+              fill
+              className="object-cover opacity-85"
+              sizes="(max-width: 768px) 70vw, 40vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+          </div>
+        ))}
+      </div>
+
+      <div className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(60%_80%_at_30%_0%,rgba(255,255,255,0.10),transparent_55%)] opacity-60" />
     </div>
   );
 }
@@ -617,11 +756,8 @@ function BigService({
   kicker,
   title,
   desc,
-  previewImages = [],
-  actionLabel,
-  actionHref,
-  onActionClick,
-  actionExternal = false,
+  previews,
+  actions,
 }) {
   return (
     <Reveal>
@@ -652,43 +788,44 @@ function BigService({
 
           <p className="mt-4 text-sm md:text-base text-white/70 leading-relaxed max-w-2xl">{desc}</p>
 
-          {previewImages?.length ? <ServicePreviewStack images={previewImages} /> : null}
+          {/* Sneak peak (visuell, ohne Content-Overload) */}
+          {previews?.thumbs?.length ? (
+            <div className="mt-6">
+              <div className="text-xs uppercase tracking-wide text-white/55 mb-2">Sneak Peek</div>
+              <PreviewStack thumbs={previews.thumbs} />
+            </div>
+          ) : null}
 
-          <div className="mt-6 flex flex-wrap items-center gap-2">
-            <Link
-              href="/#request"
-              className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors font-semibold"
-            >
+          {/* Actions: gezielt, nicht zu viele */}
+          <div className="mt-6 flex flex-wrap gap-2">
+            <Link href="/#request" className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors font-semibold">
               Kurz anfragen <ArrowRight size={16} />
             </Link>
 
-            {actionLabel ? (
-              actionExternal ? (
+            {actions?.map((a) =>
+              a.kind === 'button' ? (
+                <button
+                  key={a.label}
+                  type="button"
+                  onClick={a.onClick}
+                  className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors font-semibold"
+                >
+                  {a.icon}
+                  {a.label}
+                </button>
+              ) : (
                 <a
-                  href={actionHref}
+                  key={a.label}
+                  href={a.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black hover:bg-white/90 transition-colors text-sm font-semibold"
+                  className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors font-semibold"
                 >
-                  {actionLabel} <ExternalLink size={16} />
+                  {a.icon}
+                  {a.label}
                 </a>
-              ) : actionHref ? (
-                <Link
-                  href={actionHref}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors text-sm font-semibold text-white/90"
-                >
-                  {actionLabel} <ExternalLink size={16} />
-                </Link>
-              ) : (
-                <button
-                  type="button"
-                  onClick={onActionClick}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors text-sm font-semibold text-white/90"
-                >
-                  {actionLabel} <ExternalLink size={16} />
-                </button>
               )
-            ) : null}
+            )}
           </div>
         </div>
       </TiltCard>
@@ -710,71 +847,14 @@ function Step({ n, title, desc }) {
   );
 }
 
-function PdfPreviewModal({ open, onClose, title, pdf }) {
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e) => {
-      if (e.key === 'Escape') onClose?.();
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [open, onClose]);
-
-  if (!open) return null;
-
-  return (
-    <div className="fixed inset-0 z-[80]">
-      <button
-        type="button"
-        onClick={onClose}
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-        aria-label="Modal schließen"
-      />
-      <div className="absolute left-1/2 top-1/2 w-[min(980px,92vw)] -translate-x-1/2 -translate-y-1/2">
-        <TiltCard className="rounded-3xl">
-          <div className="rounded-3xl border border-white/15 bg-black/30 backdrop-blur-md overflow-hidden">
-            <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-white/10">
-              <div className="min-w-0">
-                <div className="text-sm font-semibold text-white/90 truncate">{title}</div>
-                <div className="text-xs text-white/55">Preview (PDF) – wird nur bei Bedarf geladen</div>
-              </div>
-              <div className="flex items-center gap-2">
-                <a
-                  href={pdf}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-3 py-2 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors text-xs font-semibold text-white/90 inline-flex items-center gap-2"
-                >
-                  Öffnen <ExternalLink size={14} />
-                </a>
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="p-2 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors"
-                  aria-label="Schließen"
-                >
-                  <X size={16} className="text-white/85" />
-                </button>
-              </div>
-            </div>
-
-            <div className="relative w-full h-[58vh] bg-black/30">
-              <iframe className="absolute inset-0 w-full h-full" src={`${pdf}#view=FitH`} title={title} />
-            </div>
-          </div>
-        </TiltCard>
-      </div>
-    </div>
-  );
-}
-
 /* ---------- PAGE ---------- */
 
 export default function Home() {
   const sectionIds = useMemo(() => SECTIONS.map((s) => s.id), []);
   const { activeId } = useActiveSection(sectionIds);
 
-  const [brandbookOpen, setBrandbookOpen] = useState(false);
+  const [openBrandbook, setOpenBrandbook] = useState(false);
+  const [openMotionGallery, setOpenMotionGallery] = useState(false);
 
   useEffect(() => {
     const handle = () => {
@@ -786,6 +866,12 @@ export default function Home() {
     handle();
     window.addEventListener('hashchange', handle);
     return () => window.removeEventListener('hashchange', handle);
+  }, []);
+
+  const mailHref = useMemo(() => {
+    const subject = encodeURIComponent('Projektanfrage');
+    const body = encodeURIComponent(`Ziel:\nDeadline:\nStand:\nBudgetrahmen (optional):\nLink/Beispiele (optional):\n`);
+    return `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
   }, []);
 
   return (
@@ -800,11 +886,18 @@ export default function Home() {
 
       <Navbar />
 
+      {/* Modals */}
       <PdfPreviewModal
-        open={brandbookOpen}
-        onClose={() => setBrandbookOpen(false)}
-        title="KfA Brandbook – Preview"
-        pdf={BRAND_BOOK_PDF}
+        open={openBrandbook}
+        onClose={() => setOpenBrandbook(false)}
+        src={BRANDBOOK_PDF_SRC}
+        title="Brandbook – Preview"
+      />
+      <GalleryModal
+        open={openMotionGallery}
+        onClose={() => setOpenMotionGallery(false)}
+        images={SERVICE_PREVIEWS.motion.gallery}
+        title="Motion – Preview Galerie"
       />
 
       <main className="md:snap-y md:snap-mandatory">
@@ -834,8 +927,31 @@ export default function Home() {
 
             <Reveal delayMs={240}>
               <div className="flex flex-col items-center gap-3">
-                <PrimaryCTA label="Projekt anfragen" />
-                <p className="text-sm md:text-base text-white/65 max-w-xl">Dann bekommst du eine klare Einschätzung und den nächsten Schritt.</p>
+                <div className="flex flex-col sm:flex-row items-center gap-2">
+                  <PrimaryCTA label="Projekt anfragen" />
+
+                  {/* WhatsApp Schnellkontakt (Startseite) */}
+                  <Magnetic strength={12}>
+                    <a
+                      href={WHATSAPP_HREF}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group px-6 py-3.5 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center justify-center gap-2"
+                    >
+                      <MessageCircle size={18} className="text-white/85" />
+                      WhatsApp
+                      <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
+                    </a>
+                  </Magnetic>
+                </div>
+
+                <p className="text-sm md:text-base text-white/65 max-w-xl">
+                  Dann bekommst du eine klare Einschätzung und den nächsten Schritt.
+                </p>
+
+                <p className="text-xs text-white/45 max-w-xl">
+                  WhatsApp-Hinweis: Ersetze im Code die Nummer <span className="text-white/65">{WHATSAPP_NUMBER}</span>.
+                </p>
               </div>
             </Reveal>
           </div>
@@ -897,17 +1013,17 @@ export default function Home() {
                   <div className="mt-5 space-y-3">
                     <Stripe
                       title="1) Brandbook"
-                      desc="Wir definieren gemeinsam klare Regeln für Farben, Typo, Layout und Tonalität, damit dein Auftritt konsistent wirkt und nicht bei jedem Post neu entschieden werden muss."
+                      desc="Wir definieren klare Regeln für Farben, Typo, Layout und Tonalität – damit dein Auftritt konsistent wirkt."
                       icon={<BookOpen size={18} />}
                     />
                     <Stripe
                       title="2) Motion & Video"
-                      desc="Mit Motiondesigns und Assets sorge ich dafür, dass deine Inhalte sofort als „deins“ erkennbar sind und schneller produziert werden können."
+                      desc="Motiondesigns und Assets, damit Inhalte erkennbar sind und schneller produziert werden können."
                       icon={<Play size={18} />}
                     />
                     <Stripe
                       title="3) Webdevelopment"
-                      desc="Lasse deinen Kunden durch klare Führung und ohne Umwege verstehen, was du anbietest."
+                      desc="Klare Führung und saubere Umsetzung – damit Kunden in Sekunden verstehen, was du anbietest."
                       icon={<Monitor size={18} />}
                     />
                   </div>
@@ -922,10 +1038,9 @@ export default function Home() {
                       priority={false}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
-                    <div className="absolute bottom-3 left-3 text-sm font-semibold text-white/90"></div>
                   </div>
 
-                  <div className="mt-3 text-xs text-white/55">: <span className="text-white/70"></span></div>
+                  <div className="mt-3 text-xs text-white/55"> </div>
                 </div>
               </div>
             </Reveal>
@@ -969,8 +1084,15 @@ export default function Home() {
                 kicker="Brandbook"
                 title="Guidelines, die im Alltag helfen."
                 desc="Farben, Typo, Layoutregeln, Tonalität, Beispiele. So bleibt alles konsistent – auch wenn später mehr dazukommt."
-                actionLabel="Brandbook preview"
-                onActionClick={() => setBrandbookOpen(true)}
+                previews={SERVICE_PREVIEWS.brandbook}
+                actions={[
+                  {
+                    kind: 'button',
+                    label: 'PDF ansehen',
+                    icon: <FileText size={16} />,
+                    onClick: () => setOpenBrandbook(true),
+                  },
+                ]}
               />
 
               <BigService
@@ -979,9 +1101,15 @@ export default function Home() {
                 kicker="Motiondesign"
                 title="Bewegung mit Wiedererkennung."
                 desc="Motion Graphics, Vorlagen, Varianten für Einstiege. Damit Inhalte nicht beliebig wirken und du nicht jedes Mal neu anfängst."
-                previewImages={PREVIEWS.motion}
-                actionLabel="Motion Cases"
-                actionHref="/portfolio/motion-design"
+                previews={SERVICE_PREVIEWS.motion}
+                actions={[
+                  {
+                    kind: 'button',
+                    label: 'Galerie öffnen',
+                    icon: <ImageIcon size={16} />,
+                    onClick: () => setOpenMotionGallery(true),
+                  },
+                ]}
               />
 
               <BigService
@@ -990,9 +1118,15 @@ export default function Home() {
                 kicker="Webdevelopment"
                 title="Websites mit klarer Führung."
                 desc="Aufbau, der schnell verständlich ist: Problem, Lösung, Proof, CTA. Wenig Ablenkung, saubere Umsetzung."
-                previewImages={PREVIEWS.web}
-                actionLabel="Web Case"
-                actionHref="/portfolio/kirche-fundraising"
+                previews={SERVICE_PREVIEWS.web}
+                actions={[
+                  {
+                    kind: 'link',
+                    label: 'Web-Case ansehen',
+                    icon: <ExternalLink size={16} />,
+                    href: WEB_CASE_HREF,
+                  },
+                ]}
               />
 
               <BigService
@@ -1001,9 +1135,15 @@ export default function Home() {
                 kicker="Videoediting"
                 title="Schnitt, der ruhig wirkt – und sitzt."
                 desc="Rhythmus, Timing, Sound, Struktur. Damit ein Video nicht nur fertig ist, sondern gut funktioniert."
-                actionLabel="YouTube Video"
-                actionHref={VIDEOEDITING_YT}
-                actionExternal
+                previews={SERVICE_PREVIEWS.video}
+                actions={[
+                  {
+                    kind: 'link',
+                    label: 'YouTube öffnen',
+                    icon: <ExternalLink size={16} />,
+                    href: SERVICE_PREVIEWS.video.href,
+                  },
+                ]}
               />
             </div>
           </div>
@@ -1143,16 +1283,31 @@ export default function Home() {
                   <div className="mt-8 flex flex-wrap gap-2">
                     <Magnetic>
                       <a
-                        href="mailto:leonseitz25@icloud.com?subject=Projektanfrage&body=Ziel:%0D%0ADeadline:%0D%0AStand:%0D%0A"
+                        href={mailHref}
                         className="px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center gap-2"
                       >
                         <Mail size={18} /> Per Mail
                       </a>
                     </Magnetic>
 
+                    <Magnetic strength={12}>
+                      <a
+                        href={WHATSAPP_HREF}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-7 py-3.5 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
+                      >
+                        <MessageCircle size={18} className="text-white/85" /> WhatsApp
+                      </a>
+                    </Magnetic>
+
                     <GhostCTA href="/portfolio">
                       <ExternalLink size={18} /> Erst Portfolio
                     </GhostCTA>
+                  </div>
+
+                  <div className="mt-3 text-xs text-white/45">
+                    WhatsApp: ersetze im Code die Nummer <span className="text-white/65">{WHATSAPP_NUMBER}</span>.
                   </div>
                 </Reveal>
               </div>
