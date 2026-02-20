@@ -27,57 +27,30 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 const CONTACT_EMAIL = 'hello@leonseitz.com';
 
-// WhatsApp: ersetze die Nummer (international, ohne +, ohne Leerzeichen)
-// Beispiel DE: 491701234567
-const WHATSAPP_NUMBER = '49XXXXXXXXXXX';
+// WhatsApp (international, ohne +, ohne Leerzeichen): 0160... => 49 + 160...
+const WHATSAPP_NUMBER = '4916095757167';
 const WHATSAPP_TEXT = encodeURIComponent(
   `Hi Leon — kurze Projektanfrage.\n\nZiel:\nDeadline:\nStand:\nBudgetrahmen (optional):\nLink/Beispiele (optional):`
 );
 const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_TEXT}`;
 
-// Externer Web-Case-Link (wie gewünscht)
+// Externer Web-Case-Link
 const WEB_CASE_HREF = 'https://thankful-anything-310042.framer.app/';
 
 // PDF Sneak Peek (Brandbook)
-const BRANDBOOK_PDF_SRC = '/docs/kfa-brandbook.pdf'; // -> /public/docs/kfa-brandbook.pdf ablegen
+const BRANDBOOK_PDF_SRC = '/docs/kfa-brandbook.pdf'; // -> /public/docs/kfa-brandbook.pdf
 
-// Preview Images (Platzhalter) – du fügst die Files später in /public/img/previews/... ein
+// Previews: NUR für Motion + Web (du hast sie in public/img/portfolio)
 const SERVICE_PREVIEWS = {
-  brandbook: {
-    thumbs: [
-      '/img/previews/brandbook-1.jpg',
-      '/img/previews/brandbook-2.jpg',
-      '/img/previews/brandbook-3.jpg',
-    ],
-  },
   motion: {
-    thumbs: [
-      '/img/previews/motion-1.jpg',
-      '/img/previews/motion-2.jpg',
-      '/img/previews/motion-3.jpg',
-    ],
-    gallery: [
-      '/img/previews/motion-1.jpg',
-      '/img/previews/motion-2.jpg',
-      '/img/previews/motion-3.jpg',
-      '/img/previews/motion-4.jpg',
-    ],
+    thumbs: ['/img/portfolio/motion-1.jpg', '/img/portfolio/motion-2.jpg', '/img/portfolio/motion-3.jpg'],
+    gallery: ['/img/portfolio/motion-1.jpg', '/img/portfolio/motion-2.jpg', '/img/portfolio/motion-3.jpg', '/img/portfolio/motion-4.jpg'],
   },
   web: {
-    thumbs: [
-      '/img/previews/web-1.jpg',
-      '/img/previews/web-2.jpg',
-      '/img/previews/web-3.jpg',
-    ],
+    thumbs: ['/img/portfolio/web-1.jpg', '/img/portfolio/web-2.jpg', '/img/portfolio/web-3.jpg'],
   },
   video: {
-    // Videoediting: direkt weiterleiten
-    href: 'https://www.youtube.com/watch?v=VIDEO_ID_HIER', // <- ersetze VIDEO_ID_HIER
-    thumbs: [
-      '/img/previews/video-1.jpg',
-      '/img/previews/video-2.jpg',
-      '/img/previews/video-3.jpg',
-    ],
+    href: 'https://www.youtube.com/watch?v=Xt9Rm2pDoiE&t=23s',
   },
 };
 
@@ -526,15 +499,10 @@ function PdfPreviewModal({ open, onClose, src, title }) {
   return (
     <ModalShell open={open} onClose={onClose} title={title}>
       <div className="rounded-2xl border border-white/10 bg-black/30 overflow-hidden">
-        <iframe
-          title={title}
-          src={src}
-          className="w-full h-[70vh]"
-          style={{ border: 'none' }}
-        />
+        <iframe title={title} src={src} className="w-full h-[70vh]" style={{ border: 'none' }} />
       </div>
       <div className="mt-3 text-xs text-white/55">
-        Hinweis: Lege die Datei unter <span className="text-white/75">/public/docs/</span> ab.
+        Dateiablage: <span className="text-white/75">/public/docs/kfa-brandbook.pdf</span>
       </div>
     </ModalShell>
   );
@@ -555,7 +523,107 @@ function GalleryModal({ open, onClose, images = [], title = 'Galerie' }) {
   );
 }
 
-/* ---------- STRUCTURE ---------- */
+/* ---------- CONTENT BLOCKS ---------- */
+
+function PreviewStack({ thumbs = [] }) {
+  const safe = thumbs.slice(0, 3);
+  return (
+    <div className="relative h-16 md:h-20 w-full">
+      <div className="absolute inset-0">
+        {safe.map((src, i) => (
+          <div
+            key={src}
+            className={cx(
+              'absolute top-0 rounded-2xl overflow-hidden border border-white/12 bg-white/5',
+              'shadow-[0_20px_60px_-45px_rgba(0,0,0,0.9)]',
+              i === 0 ? 'left-0 w-[58%] h-full' : i === 1 ? 'left-[42%] w-[46%] h-[82%] top-[10%]' : 'left-[18%] w-[48%] h-[64%] top-[18%]'
+            )}
+            style={{ transform: i === 0 ? 'rotate(-2deg)' : i === 1 ? 'rotate(2.5deg)' : 'rotate(-1deg)' }}
+          >
+            <Image src={src} alt="Preview" fill className="object-cover opacity-85" sizes="(max-width: 768px) 70vw, 40vw" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+          </div>
+        ))}
+      </div>
+
+      <div className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(60%_80%_at_30%_0%,rgba(255,255,255,0.10),transparent_55%)] opacity-60" />
+    </div>
+  );
+}
+
+function BigService({ sceneId, icon, kicker, title, desc, previews, actions }) {
+  return (
+    <Reveal>
+      <TiltCard className="rounded-3xl">
+        <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8 overflow-hidden relative">
+          <div
+            className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.07]"
+            style={{
+              filter: 'blur(50px)',
+              animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite',
+            }}
+          />
+
+          <div className="flex items-center justify-between gap-4">
+            <div className="inline-flex items-center gap-2 text-xs uppercase tracking-wide text-white/60">
+              <span className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center">{icon}</span>
+              {kicker}
+            </div>
+            <Wand2 size={18} className="text-white/55" />
+          </div>
+
+          <div className="mt-4 text-2xl md:text-4xl font-extrabold leading-tight text-white">
+            {title}
+            <span className="block text-base md:text-lg mt-2">
+              <TitleGradient sceneId={sceneId}>Als Einheit geplant, nicht als Einzelteil.</TitleGradient>
+            </span>
+          </div>
+
+          <p className="mt-4 text-sm md:text-base text-white/70 leading-relaxed max-w-2xl">{desc}</p>
+
+          {/* Previews nur wenn vorhanden */}
+          {previews?.thumbs?.length ? (
+            <div className="mt-6">
+              <div className="text-xs uppercase tracking-wide text-white/55 mb-2">Sneak Peek</div>
+              <PreviewStack thumbs={previews.thumbs} />
+            </div>
+          ) : null}
+
+          <div className="mt-6 flex flex-wrap gap-2">
+            <Link href="/#request" className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors font-semibold">
+              Kurz anfragen <ArrowRight size={16} />
+            </Link>
+
+            {actions?.map((a) =>
+              a.kind === 'button' ? (
+                <button
+                  key={a.label}
+                  type="button"
+                  onClick={a.onClick}
+                  className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors font-semibold"
+                >
+                  {a.icon}
+                  {a.label}
+                </button>
+              ) : (
+                <a
+                  key={a.label}
+                  href={a.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors font-semibold"
+                >
+                  {a.icon}
+                  {a.label}
+                </a>
+              )
+            )}
+          </div>
+        </div>
+      </TiltCard>
+    </Reveal>
+  );
+}
 
 function Scene({ id, children }) {
   return (
@@ -572,10 +640,7 @@ function Reveal({ children, delayMs = 0 }) {
   return (
     <div
       ref={ref}
-      className={cx(
-        'transition-all duration-700 will-change-transform',
-        shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-      )}
+      className={cx('transition-all duration-700 will-change-transform', shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6')}
       style={{ transitionDelay: `${delayMs}ms` }}
     >
       {children}
@@ -600,7 +665,6 @@ function PrimaryCTA({ label = 'Projekt anfragen' }) {
 function GhostCTA({ href, children, external = false }) {
   const cls =
     'px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2';
-
   return (
     <Magnetic strength={10}>
       {external ? (
@@ -646,9 +710,7 @@ function AnimatedNumber({ value, sceneId, className = '' }) {
   return (
     <span className={cx('relative inline-flex items-baseline', className)}>
       <span className="text-5xl md:text-6xl font-extrabold tracking-tight leading-none">
-        <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', (SCENES[sceneId] ?? SCENES.s1).accent)}>
-          {value}
-        </span>
+        <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', (SCENES[sceneId] ?? SCENES.s1).accent)}>{value}</span>
       </span>
       <span
         className="pointer-events-none absolute -inset-x-4 -inset-y-4 blur-2xl opacity-35"
@@ -660,8 +722,6 @@ function AnimatedNumber({ value, sceneId, className = '' }) {
     </span>
   );
 }
-
-/* ---------- PROOF STAT ---------- */
 
 function ProofStat({ sceneId, label, target, suffix = '', durationMs = 900 }) {
   const ref = useRef(null);
@@ -677,32 +737,22 @@ function ProofStat({ sceneId, label, target, suffix = '', durationMs = 900 }) {
       <div ref={ref} className="relative overflow-hidden rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8">
         <div
           className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.08]"
-          style={{
-            filter: 'blur(46px)',
-            animation: 'shineSoft 5.6s cubic-bezier(.2,.9,.2,1) infinite',
-          }}
+          style={{ filter: 'blur(46px)', animation: 'shineSoft 5.6s cubic-bezier(.2,.9,.2,1) infinite' }}
         />
-
         <div className="text-xs uppercase tracking-wide text-white/55">Proof</div>
-
         <div className="mt-3 flex items-end gap-2 flex-wrap">
           <AnimatedNumber value={value} sceneId={sceneId} />
           {suffix ? (
             <span className="text-white/75 text-xl md:text-2xl font-semibold leading-none pb-[2px]">
-              <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', (SCENES[sceneId] ?? SCENES.s1).accent)}>
-                {suffix}
-              </span>
+              <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', (SCENES[sceneId] ?? SCENES.s1).accent)}>{suffix}</span>
             </span>
           ) : null}
         </div>
-
         <div className="mt-2 text-sm md:text-base text-white/80">{label}</div>
       </div>
     </TiltCard>
   );
 }
-
-/* ---------- CONTENT BLOCKS ---------- */
 
 function Stripe({ title, desc, icon }) {
   return (
@@ -713,123 +763,6 @@ function Stripe({ title, desc, icon }) {
         <div className="mt-1 text-sm text-white/65 leading-relaxed">{desc}</div>
       </div>
     </div>
-  );
-}
-
-function PreviewStack({ thumbs = [] }) {
-  const safe = thumbs.slice(0, 3);
-  return (
-    <div className="relative h-16 md:h-20 w-full">
-      <div className="absolute inset-0">
-        {safe.map((src, i) => (
-          <div
-            key={src}
-            className={cx(
-              'absolute top-0 rounded-2xl overflow-hidden border border-white/12 bg-white/5',
-              'shadow-[0_20px_60px_-45px_rgba(0,0,0,0.9)]',
-              i === 0 ? 'left-0 w-[58%] h-full' : i === 1 ? 'left-[42%] w-[46%] h-[82%] top-[10%]' : 'left-[18%] w-[48%] h-[64%] top-[18%]'
-            )}
-            style={{
-              transform: i === 0 ? 'rotate(-2deg)' : i === 1 ? 'rotate(2.5deg)' : 'rotate(-1deg)',
-            }}
-          >
-            <Image
-              src={src}
-              alt="Preview"
-              fill
-              className="object-cover opacity-85"
-              sizes="(max-width: 768px) 70vw, 40vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
-          </div>
-        ))}
-      </div>
-
-      <div className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(60%_80%_at_30%_0%,rgba(255,255,255,0.10),transparent_55%)] opacity-60" />
-    </div>
-  );
-}
-
-function BigService({
-  sceneId,
-  icon,
-  kicker,
-  title,
-  desc,
-  previews,
-  actions,
-}) {
-  return (
-    <Reveal>
-      <TiltCard className="rounded-3xl">
-        <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8 overflow-hidden relative">
-          <div
-            className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.07]"
-            style={{
-              filter: 'blur(50px)',
-              animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite',
-            }}
-          />
-
-          <div className="flex items-center justify-between gap-4">
-            <div className="inline-flex items-center gap-2 text-xs uppercase tracking-wide text-white/60">
-              <span className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center">{icon}</span>
-              {kicker}
-            </div>
-            <Wand2 size={18} className="text-white/55" />
-          </div>
-
-          <div className="mt-4 text-2xl md:text-4xl font-extrabold leading-tight text-white">
-            {title}
-            <span className="block text-base md:text-lg mt-2">
-              <TitleGradient sceneId={sceneId}>Als Einheit geplant, nicht als Einzelteil.</TitleGradient>
-            </span>
-          </div>
-
-          <p className="mt-4 text-sm md:text-base text-white/70 leading-relaxed max-w-2xl">{desc}</p>
-
-          {/* Sneak peak (visuell, ohne Content-Overload) */}
-          {previews?.thumbs?.length ? (
-            <div className="mt-6">
-              <div className="text-xs uppercase tracking-wide text-white/55 mb-2">Sneak Peek</div>
-              <PreviewStack thumbs={previews.thumbs} />
-            </div>
-          ) : null}
-
-          {/* Actions: gezielt, nicht zu viele */}
-          <div className="mt-6 flex flex-wrap gap-2">
-            <Link href="/#request" className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors font-semibold">
-              Kurz anfragen <ArrowRight size={16} />
-            </Link>
-
-            {actions?.map((a) =>
-              a.kind === 'button' ? (
-                <button
-                  key={a.label}
-                  type="button"
-                  onClick={a.onClick}
-                  className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors font-semibold"
-                >
-                  {a.icon}
-                  {a.label}
-                </button>
-              ) : (
-                <a
-                  key={a.label}
-                  href={a.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors font-semibold"
-                >
-                  {a.icon}
-                  {a.label}
-                </a>
-              )
-            )}
-          </div>
-        </div>
-      </TiltCard>
-    </Reveal>
   );
 }
 
@@ -887,18 +820,8 @@ export default function Home() {
       <Navbar />
 
       {/* Modals */}
-      <PdfPreviewModal
-        open={openBrandbook}
-        onClose={() => setOpenBrandbook(false)}
-        src={BRANDBOOK_PDF_SRC}
-        title="Brandbook – Preview"
-      />
-      <GalleryModal
-        open={openMotionGallery}
-        onClose={() => setOpenMotionGallery(false)}
-        images={SERVICE_PREVIEWS.motion.gallery}
-        title="Motion – Preview Galerie"
-      />
+      <PdfPreviewModal open={openBrandbook} onClose={() => setOpenBrandbook(false)} src={BRANDBOOK_PDF_SRC} title="Brandbook – Preview" />
+      <GalleryModal open={openMotionGallery} onClose={() => setOpenMotionGallery(false)} images={SERVICE_PREVIEWS.motion.gallery} title="Motion – Preview Galerie" />
 
       <main className="md:snap-y md:snap-mandatory">
         {/* 01 */}
@@ -930,7 +853,6 @@ export default function Home() {
                 <div className="flex flex-col sm:flex-row items-center gap-2">
                   <PrimaryCTA label="Projekt anfragen" />
 
-                  {/* WhatsApp Schnellkontakt (Startseite) */}
                   <Magnetic strength={12}>
                     <a
                       href={WHATSAPP_HREF}
@@ -947,10 +869,6 @@ export default function Home() {
 
                 <p className="text-sm md:text-base text-white/65 max-w-xl">
                   Dann bekommst du eine klare Einschätzung und den nächsten Schritt.
-                </p>
-
-                <p className="text-xs text-white/45 max-w-xl">
-                  WhatsApp-Hinweis: Ersetze im Code die Nummer <span className="text-white/65">{WHATSAPP_NUMBER}</span>.
                 </p>
               </div>
             </Reveal>
@@ -1011,21 +929,9 @@ export default function Home() {
                   <div className="text-xs uppercase tracking-wide text-white/55">So sieht das als System aus</div>
 
                   <div className="mt-5 space-y-3">
-                    <Stripe
-                      title="1) Brandbook"
-                      desc="Wir definieren klare Regeln für Farben, Typo, Layout und Tonalität – damit dein Auftritt konsistent wirkt."
-                      icon={<BookOpen size={18} />}
-                    />
-                    <Stripe
-                      title="2) Motion & Video"
-                      desc="Motiondesigns und Assets, damit Inhalte erkennbar sind und schneller produziert werden können."
-                      icon={<Play size={18} />}
-                    />
-                    <Stripe
-                      title="3) Webdevelopment"
-                      desc="Klare Führung und saubere Umsetzung – damit Kunden in Sekunden verstehen, was du anbietest."
-                      icon={<Monitor size={18} />}
-                    />
+                    <Stripe title="1) Brandbook" desc="Klare Regeln für Farben, Typo, Layout und Tonalität – damit dein Auftritt konsistent wirkt." icon={<BookOpen size={18} />} />
+                    <Stripe title="2) Motion & Video" desc="Motiondesigns und Assets, damit Inhalte erkennbar sind und schneller produziert werden können." icon={<Play size={18} />} />
+                    <Stripe title="3) Webdevelopment" desc="Klare Führung und saubere Umsetzung – damit Kunden schnell verstehen, was du anbietest." icon={<Monitor size={18} />} />
                   </div>
 
                   <div className="mt-6 relative rounded-2xl border border-white/15 overflow-hidden h-40 md:h-48">
@@ -1039,8 +945,6 @@ export default function Home() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
                   </div>
-
-                  <div className="mt-3 text-xs text-white/55"> </div>
                 </div>
               </div>
             </Reveal>
@@ -1084,14 +988,8 @@ export default function Home() {
                 kicker="Brandbook"
                 title="Guidelines, die im Alltag helfen."
                 desc="Farben, Typo, Layoutregeln, Tonalität, Beispiele. So bleibt alles konsistent – auch wenn später mehr dazukommt."
-                previews={SERVICE_PREVIEWS.brandbook}
                 actions={[
-                  {
-                    kind: 'button',
-                    label: 'PDF ansehen',
-                    icon: <FileText size={16} />,
-                    onClick: () => setOpenBrandbook(true),
-                  },
+                  { kind: 'button', label: 'PDF ansehen', icon: <FileText size={16} />, onClick: () => setOpenBrandbook(true) },
                 ]}
               />
 
@@ -1103,12 +1001,7 @@ export default function Home() {
                 desc="Motion Graphics, Vorlagen, Varianten für Einstiege. Damit Inhalte nicht beliebig wirken und du nicht jedes Mal neu anfängst."
                 previews={SERVICE_PREVIEWS.motion}
                 actions={[
-                  {
-                    kind: 'button',
-                    label: 'Galerie öffnen',
-                    icon: <ImageIcon size={16} />,
-                    onClick: () => setOpenMotionGallery(true),
-                  },
+                  { kind: 'button', label: 'Galerie öffnen', icon: <ImageIcon size={16} />, onClick: () => setOpenMotionGallery(true) },
                 ]}
               />
 
@@ -1120,12 +1013,7 @@ export default function Home() {
                 desc="Aufbau, der schnell verständlich ist: Problem, Lösung, Proof, CTA. Wenig Ablenkung, saubere Umsetzung."
                 previews={SERVICE_PREVIEWS.web}
                 actions={[
-                  {
-                    kind: 'link',
-                    label: 'Web-Case ansehen',
-                    icon: <ExternalLink size={16} />,
-                    href: WEB_CASE_HREF,
-                  },
+                  { kind: 'link', label: 'Web-Case ansehen', icon: <ExternalLink size={16} />, href: WEB_CASE_HREF },
                 ]}
               />
 
@@ -1135,14 +1023,8 @@ export default function Home() {
                 kicker="Videoediting"
                 title="Schnitt, der ruhig wirkt – und sitzt."
                 desc="Rhythmus, Timing, Sound, Struktur. Damit ein Video nicht nur fertig ist, sondern gut funktioniert."
-                previews={SERVICE_PREVIEWS.video}
                 actions={[
-                  {
-                    kind: 'link',
-                    label: 'YouTube öffnen',
-                    icon: <ExternalLink size={16} />,
-                    href: SERVICE_PREVIEWS.video.href,
-                  },
+                  { kind: 'link', label: 'YouTube öffnen', icon: <ExternalLink size={16} />, href: SERVICE_PREVIEWS.video.href },
                 ]}
               />
             </div>
@@ -1304,10 +1186,6 @@ export default function Home() {
                     <GhostCTA href="/portfolio">
                       <ExternalLink size={18} /> Erst Portfolio
                     </GhostCTA>
-                  </div>
-
-                  <div className="mt-3 text-xs text-white/45">
-                    WhatsApp: ersetze im Code die Nummer <span className="text-white/65">{WHATSAPP_NUMBER}</span>.
                   </div>
                 </Reveal>
               </div>
