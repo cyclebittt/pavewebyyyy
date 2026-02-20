@@ -1183,7 +1183,7 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-              <ProofStat sceneId="s4" label="Interaktionen erzielt" target={15} suffix="+ Mio" durationMs={900} />
+              <ProofStat sceneId="s4" label="Likes erzielt" target={5} suffix="+ Mio" durationMs={900} />
               <ProofStat sceneId="s4" label="Klicks auf Inhalte" target={10} suffix="+ Mio" durationMs={900} />
               <ProofStat sceneId="s4" label="Umgesetzte Projekte" target={100} suffix="+" durationMs={950} />
             </div>
