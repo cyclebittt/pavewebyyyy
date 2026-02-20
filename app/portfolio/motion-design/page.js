@@ -16,7 +16,7 @@ import {
   LineChart,
 } from 'lucide-react';
 
-/* ---------- CASE SCENE (match homepage look) ---------- */
+/* ---------- SCENE ---------- */
 
 const CASE_SCENE = {
   base: '#070312',
@@ -31,17 +31,15 @@ const CASE_SCENE = {
   accent: 'from-violet-200 via-indigo-200 to-cyan-200',
 };
 
-function cx(...xs: Array<string | false | null | undefined>) {
-  return xs.filter(Boolean).join(' ');
+function cx() {
+  return Array.from(arguments).filter(Boolean).join(' ');
 }
 
-function TitleGradient({ children }: { children: React.ReactNode }) {
+function TitleGradient({ children }) {
   return <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', CASE_SCENE.accent)}>{children}</span>;
 }
 
-/* ---------- REVEAL ---------- */
-
-function useReveal<T extends HTMLElement>(ref: React.RefObject<T>) {
+function useReveal(ref) {
   const [shown, setShown] = useState(false);
   useEffect(() => {
     const el = ref.current;
@@ -58,8 +56,8 @@ function useReveal<T extends HTMLElement>(ref: React.RefObject<T>) {
   return shown;
 }
 
-function Reveal({ children, delayMs = 0 }: { children: React.ReactNode; delayMs?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
+function Reveal({ children, delayMs = 0 }) {
+  const ref = useRef(null);
   const shown = useReveal(ref);
 
   return (
@@ -76,7 +74,7 @@ function Reveal({ children, delayMs = 0 }: { children: React.ReactNode; delayMs?
   );
 }
 
-/* ---------- PROGRESS + HALO (same as homepage) ---------- */
+/* ---------- PROGRESS + HALO ---------- */
 
 function useScrollProgress() {
   const [p, setP] = useState(0);
@@ -111,10 +109,10 @@ function ScrollProgressBar() {
 
 function useMousePos() {
   const [pos, setPos] = useState({ x: -9999, y: -9999 });
-  const raf = useRef<number | null>(null);
+  const raf = useRef(null);
 
   useEffect(() => {
-    const onMove = (e: MouseEvent) => {
+    const onMove = (e) => {
       const x = e.clientX;
       const y = e.clientY;
       if (raf.current) cancelAnimationFrame(raf.current);
@@ -159,7 +157,7 @@ function CursorHalo() {
   );
 }
 
-/* ---------- GLOBAL BACKGROUND ---------- */
+/* ---------- GLOBAL BG ---------- */
 
 function GlobalBackground() {
   return (
@@ -217,22 +215,14 @@ function GlobalLightLeaks() {
 
 /* ---------- INTERACTIONS ---------- */
 
-function Magnetic({
-  children,
-  strength = 14,
-  className = '',
-}: {
-  children: React.ReactNode;
-  strength?: number;
-  className?: string;
-}) {
-  const ref = useRef<HTMLSpanElement>(null);
+function Magnetic({ children, strength = 14, className = '' }) {
+  const ref = useRef(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    const onMove = (e: MouseEvent) => {
+    const onMove = (e) => {
       const r = el.getBoundingClientRect();
       const cx0 = r.left + r.width / 2;
       const cy0 = r.top + r.height / 2;
@@ -262,14 +252,14 @@ function Magnetic({
   );
 }
 
-function TiltCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
+function TiltCard({ children, className = '' }) {
+  const ref = useRef(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    const onMove = (e: MouseEvent) => {
+    const onMove = (e) => {
       const r = el.getBoundingClientRect();
       const px = (e.clientX - r.left) / r.width;
       const py = (e.clientY - r.top) / r.height;
@@ -316,9 +306,9 @@ function TiltCard({ children, className = '' }: { children: React.ReactNode; cla
   );
 }
 
-/* ---------- CTAs ---------- */
+/* ---------- UI ---------- */
 
-function PrimaryCTA({ href, label }: { href: string; label: string }) {
+function PrimaryCTA({ href, label }) {
   return (
     <Magnetic>
       <Link
@@ -332,7 +322,7 @@ function PrimaryCTA({ href, label }: { href: string; label: string }) {
   );
 }
 
-function GhostCTA({ href, children }: { href: string; children: React.ReactNode }) {
+function GhostCTA({ href, children }) {
   return (
     <Magnetic strength={10}>
       <Link
@@ -345,9 +335,16 @@ function GhostCTA({ href, children }: { href: string; children: React.ReactNode 
   );
 }
 
-/* ---------- STRUCTURE ---------- */
+function Pill({ icon, children }) {
+  return (
+    <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs md:text-sm text-white/80">
+      <span className="text-white/80">{icon}</span>
+      {children}
+    </span>
+  );
+}
 
-function SectionShell({ children }: { children: React.ReactNode }) {
+function SectionShell({ children }) {
   return (
     <section className="relative px-5 md:px-16 py-12 md:py-16">
       <div className="relative max-w-6xl mx-auto">{children}</div>
@@ -397,8 +394,7 @@ export default function MotionDesignPage() {
 
               <Reveal delayMs={160}>
                 <p className="mt-4 text-white/80 leading-relaxed max-w-xl">
-                  Keine Alarmismus-Zahlen, keine Buzzwords. Nur saubere Cuts, klare Dramaturgie und Motion, die den Punkt
-                  schneller rüberbringt als Text.
+                  Keine Alarmismus-Zahlen, keine Buzzwords. Nur saubere Cuts, klare Dramaturgie und Motion, die den Punkt schneller rüberbringt als Text.
                 </p>
               </Reveal>
 
@@ -429,14 +425,10 @@ export default function MotionDesignPage() {
                 <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-7 overflow-hidden relative">
                   <div
                     className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.07]"
-                    style={{
-                      filter: 'blur(50px)',
-                      animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite',
-                    }}
+                    style={{ filter: 'blur(50px)', animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite' }}
                   />
 
                   <div className="text-xs uppercase tracking-wide text-white/55">Typischer Ablauf</div>
-
                   <ul className="mt-4 space-y-2 text-sm md:text-base text-white/80">
                     <li className="flex items-start gap-2">
                       <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
@@ -525,16 +517,12 @@ export default function MotionDesignPage() {
             <div className="mt-10 rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-10 text-center overflow-hidden relative">
               <div
                 className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.07]"
-                style={{
-                  filter: 'blur(50px)',
-                  animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite',
-                }}
+                style={{ filter: 'blur(50px)', animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite' }}
               />
 
               <h3 className="text-2xl md:text-3xl font-bold text-white/90">Wenn du so etwas brauchst</h3>
               <p className="mt-3 text-white/70 max-w-2xl mx-auto">
-                Schreib mir kurz Ziel, Plattform und welches Material du schon hast. Dann bekommst du eine klare Einschätzung,
-                was sinnvoll ist.
+                Schreib mir kurz Ziel, Plattform und welches Material du schon hast. Dann bekommst du eine klare Einschätzung, was sinnvoll ist.
               </p>
 
               <div className="mt-6 flex justify-center gap-2 flex-wrap">
@@ -551,27 +539,8 @@ export default function MotionDesignPage() {
   );
 }
 
-function Pill({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
-  return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs md:text-sm text-white/80">
-      <span className="text-white/80">{icon}</span>
-      {children}
-    </span>
-  );
-}
-
 /** Loads the big video only after click */
-function LazyVideo({
-  title,
-  subtitle,
-  poster,
-  src,
-}: {
-  title: string;
-  subtitle: string;
-  poster: string;
-  src: string;
-}) {
+function LazyVideo({ title, subtitle, poster, src }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -611,7 +580,7 @@ function LazyVideo({
   );
 }
 
-/* ---------- KEYFRAMES (same as homepage) ---------- */
+/* ---------- KEYFRAMES ---------- */
 
 const globalKeyframes = `
 @keyframes blob {
