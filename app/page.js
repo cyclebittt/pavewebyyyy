@@ -1109,7 +1109,7 @@ export default function Home() {
                   <GradientPillButton
                     gradient="from-emerald-200 via-cyan-200 to-indigo-200"
                     icon={<ArrowRight size={16} />}
-                    href="/portfolio/web"
+                    href="/portfolio/kirche-fundraising"
                     external={false}
                   >
                     Web im Portfolio
