@@ -15,15 +15,33 @@ import {
   BookOpen,
   Mail,
   ExternalLink,
-  Images,
+  FileText,
   X,
-  ChevronLeft,
-  ChevronRight,
-  MessageCircle,
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 /* ---------- CONFIG ---------- */
+
+const EMAIL = 'hello@leonseitz.com';
+const WHATSAPP_E164 = '4916095757167';
+const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_E164}?text=${encodeURIComponent(
+  `Hi Leon,\n\nZiel:\nDeadline:\nStand:\n\nKurzer Kontext:`
+)}`;
+
+const MAIL_HREF = `mailto:${EMAIL}?subject=${encodeURIComponent('Projektanfrage')}&body=${encodeURIComponent(
+  `Hi Leon,\n\nZiel:\nDeadline:\nStand:\n\nKurzer Kontext:`
+)}`;
+
+const YOUTUBE_EDITING_URL = 'https://www.youtube.com/watch?v=Xt9Rm2pDoiE&t=23s';
+const WEB_CASE_URL = 'https://thankful-anything-310042.framer.app/';
+
+const BRAND_PDF = '/pdf/kfa-brandbook.pdf'; // Lege deine PDF unter /public/pdf/kfa-brandbook.pdf ab
+
+// Preview Images: lege sie unter /public/img/previews/ ab
+const PREVIEWS = {
+  motion: ['/img/previews/motion-1.jpg', '/img/previews/motion-2.jpg', '/img/previews/motion-3.jpg'],
+  web: ['/img/previews/web-1.jpg', '/img/previews/web-2.jpg', '/img/previews/web-3.jpg'],
+};
 
 const SECTIONS = [
   { id: 's1', label: 'Start' },
@@ -33,24 +51,6 @@ const SECTIONS = [
   { id: 's5', label: 'Ablauf' },
   { id: 'request', label: 'Anfrage' },
 ];
-
-const CONTACT = {
-  email: 'hello@leonseitz.com',
-  whatsappNumberE164: '4916095757167',
-  whatsappText:
-    'Hi Leon,%0A%0AZiel:%0ADeadline:%0AStand:%0A%0AKurzer Kontext:',
-  youtubeEditUrl: 'https://www.youtube.com/watch?v=Xt9Rm2pDoiE&t=23s',
-  webCaseUrl: 'https://thankful-anything-310042.framer.app/',
-};
-
-const PREVIEWS = {
-  motion: [
-    '/img/previews/motion-1.jpg',
-    '/img/previews/motion-2.jpg',
-    '/img/previews/motion-3.jpg',
-  ],
-  web: ['/img/previews/web-1.jpg', '/img/previews/web-2.jpg', '/img/previews/web-3.jpg'],
-};
 
 const SCENES = {
   s1: {
@@ -452,7 +452,10 @@ function Reveal({ children, delayMs = 0 }) {
   return (
     <div
       ref={ref}
-      className={cx('transition-all duration-700 will-change-transform', shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6')}
+      className={cx(
+        'transition-all duration-700 will-change-transform',
+        shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+      )}
       style={{ transitionDelay: `${delayMs}ms` }}
     >
       {children}
@@ -474,13 +477,11 @@ function PrimaryCTA({ label = 'Projekt anfragen' }) {
   );
 }
 
-function GhostCTA({ href, children, target, rel }) {
+function GhostCTA({ href, children }) {
   return (
     <Magnetic strength={10}>
       <Link
         href={href}
-        target={target}
-        rel={rel}
         className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
       >
         {children}
@@ -489,22 +490,135 @@ function GhostCTA({ href, children, target, rel }) {
   );
 }
 
-/* ---------- GALLERY ---------- */
+/* ---------- DRAG / SWIPE PREVIEW ---------- */
 
-function Lightbox({ open, onClose, images, title = 'Sneak Peek', startIndex = 0 }) {
-  const [idx, setIdx] = useState(startIndex);
-
+function useDragScroll(ref) {
   useEffect(() => {
-    if (!open) return;
-    setIdx(startIndex);
-  }, [open, startIndex]);
+    const el = ref.current;
+    if (!el) return;
 
+    let isDown = false;
+    let startX = 0;
+    let startLeft = 0;
+
+    const down = (e) => {
+      isDown = true;
+      el.classList.add('cursor-grabbing');
+      startX = 'touches' in e ? e.touches[0].pageX : e.pageX;
+      startLeft = el.scrollLeft;
+    };
+
+    const move = (e) => {
+      if (!isDown) return;
+      const x = 'touches' in e ? e.touches[0].pageX : e.pageX;
+      const dx = x - startX;
+      el.scrollLeft = startLeft - dx;
+    };
+
+    const up = () => {
+      isDown = false;
+      el.classList.remove('cursor-grabbing');
+    };
+
+    el.addEventListener('mousedown', down);
+    el.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+
+    el.addEventListener('touchstart', down, { passive: true });
+    el.addEventListener('touchmove', move, { passive: true });
+    el.addEventListener('touchend', up);
+
+    return () => {
+      el.removeEventListener('mousedown', down);
+      el.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+
+      el.removeEventListener('touchstart', down);
+      el.removeEventListener('touchmove', move);
+      el.removeEventListener('touchend', up);
+    };
+  }, [ref]);
+}
+
+function PreviewRail({ images = [], accent = 'from-violet-200 via-indigo-200 to-cyan-200', label = 'Preview' }) {
+  const railRef = useRef(null);
+  useDragScroll(railRef);
+
+  return (
+    <div className="mt-6">
+      <div className="flex items-center justify-between gap-3">
+        <div className="text-xs uppercase tracking-wide text-white/55">{label}</div>
+        <div className={cx('text-xs font-semibold bg-clip-text text-transparent bg-gradient-to-r', accent)}>
+          Drag / Swipe
+        </div>
+      </div>
+
+      <div className="relative mt-3">
+        {/* glow frame */}
+        <div className="pointer-events-none absolute -inset-2 rounded-3xl opacity-60 blur-2xl bg-[radial-gradient(70%_85%_at_20%_10%,rgba(255,255,255,0.10),transparent_55%),radial-gradient(65%_80%_at_90%_0%,rgba(99,102,241,0.10),transparent_60%),radial-gradient(70%_90%_at_50%_120%,rgba(56,189,248,0.08),transparent_60%)]" />
+        <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/12" />
+
+        <div
+          ref={railRef}
+          className={cx(
+            'relative rounded-3xl border border-white/12 bg-black/15 backdrop-blur-md',
+            'overflow-x-auto overflow-y-hidden',
+            'cursor-grab select-none',
+            '[scrollbar-width:none]',
+            'snap-x snap-mandatory',
+            'px-4 py-4'
+          )}
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
+          <div className="flex gap-4 min-w-max pr-6">
+            {images.map((src, i) => (
+              <div
+                key={src + i}
+                className={cx(
+                  'snap-start',
+                  'relative',
+                  'w-[280px] md:w-[360px]',
+                  'h-[170px] md:h-[210px]',
+                  'rounded-2xl overflow-hidden',
+                  'border border-white/12',
+                  'bg-black/25'
+                )}
+              >
+                <Image
+                  src={src}
+                  alt={`Preview ${i + 1}`}
+                  fill
+                  sizes="(max-width: 768px) 280px, 360px"
+                  className="object-cover opacity-[0.92]"
+                  priority={false}
+                />
+                {/* filmic top gloss */}
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_70%_at_30%_0%,rgba(255,255,255,0.18),transparent_55%)] mix-blend-screen opacity-60" />
+                {/* bottom vignette */}
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+
+                {/* subtle depth border */}
+                <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* fade edges */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-10 rounded-l-3xl bg-gradient-to-r from-black/40 to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-10 rounded-r-3xl bg-gradient-to-l from-black/40 to-transparent" />
+      </div>
+    </div>
+  );
+}
+
+/* ---------- PDF MODAL (Brandbook) ---------- */
+
+function Modal({ open, onClose, title, children }) {
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowLeft') setIdx((v) => (v - 1 + images.length) % images.length);
-      if (e.key === 'ArrowRight') setIdx((v) => (v + 1) % images.length);
+      if (e.key === 'Escape') onClose?.();
     };
     document.addEventListener('keydown', onKey);
     const prev = document.body.style.overflow;
@@ -513,147 +627,72 @@ function Lightbox({ open, onClose, images, title = 'Sneak Peek', startIndex = 0 
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = prev;
     };
-  }, [open, images.length, onClose]);
+  }, [open, onClose]);
 
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-[120]">
-      <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-        onMouseDown={(e) => {
-          if (e.target === e.currentTarget) onClose();
-        }}
-      />
-      <div className="absolute inset-0 flex items-center justify-center p-4 md:p-10">
-        <div className="relative w-full max-w-5xl rounded-3xl border border-white/12 bg-black/40 backdrop-blur-xl overflow-hidden shadow-[0_24px_80px_-50px_rgba(0,0,0,0.9)]">
-          <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10" />
-          <div className="pointer-events-none absolute -inset-px opacity-70 blur-2xl bg-[radial-gradient(60%_80%_at_25%_10%,rgba(99,102,241,0.14),transparent_60%),radial-gradient(60%_80%_at_80%_0%,rgba(56,189,248,0.12),transparent_60%),radial-gradient(55%_80%_at_50%_110%,rgba(16,185,129,0.07),transparent_60%)]" />
-
-          <div className="relative flex items-center justify-between gap-3 px-4 md:px-6 py-4 border-b border-white/10">
-            <div className="min-w-0">
-              <div className="text-xs uppercase tracking-wide text-white/55">{title}</div>
-              <div className="text-sm md:text-base font-semibold text-white/90 truncate">
-                {idx + 1} / {images.length}
-              </div>
-            </div>
-
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 flex items-center justify-center p-4 md:p-8">
+        <div className="relative w-full max-w-5xl rounded-3xl border border-white/14 bg-black/35 backdrop-blur-2xl shadow-[0_30px_90px_-60px_rgba(0,0,0,0.95)] overflow-hidden">
+          <div className="pointer-events-none absolute -inset-px opacity-70 blur-2xl bg-[radial-gradient(60%_80%_at_25%_10%,rgba(99,102,241,0.12),transparent_60%),radial-gradient(60%_80%_at_85%_0%,rgba(56,189,248,0.10),transparent_60%),radial-gradient(55%_80%_at_50%_115%,rgba(168,85,247,0.08),transparent_60%)]" />
+          <div className="relative p-4 md:p-5 flex items-center justify-between gap-3 border-b border-white/10">
+            <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
             <button
-              type="button"
               onClick={onClose}
-              className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/10 border border-white/12 hover:bg-white/12 hover:border-white/20 transition-colors"
+              className="inline-flex items-center justify-center w-10 h-10 rounded-2xl border border-white/12 bg-white/5 hover:bg-white/10 transition-colors"
               aria-label="Schließen"
+              type="button"
             >
               <X size={18} className="text-white/80" />
             </button>
           </div>
-
-          <div className="relative aspect-[16/9] bg-black/40">
-            <Image
-              src={images[idx]}
-              alt={`${title} ${idx + 1}`}
-              fill
-              className="object-contain"
-              sizes="(max-width: 768px) 100vw, 1000px"
-              priority={false}
-            />
-          </div>
-
-          <div className="relative flex items-center justify-between gap-3 px-4 md:px-6 py-4 border-t border-white/10">
-            <button
-              type="button"
-              onClick={() => setIdx((v) => (v - 1 + images.length) % images.length)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/12 hover:bg-white/12 hover:border-white/20 transition-colors text-sm font-semibold text-white/85"
-            >
-              <ChevronLeft size={18} /> Zurück
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setIdx((v) => (v + 1) % images.length)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/12 hover:bg-white/12 hover:border-white/20 transition-colors text-sm font-semibold text-white/85"
-            >
-              Weiter <ChevronRight size={18} />
-            </button>
-          </div>
+          <div className="relative p-4 md:p-5">{children}</div>
         </div>
       </div>
     </div>
   );
 }
 
-function PreviewCluster({ images, onOpen, label = 'Sneak Peek' }) {
-  // Ästhetik: 3 überlappende “Cards” mit leichter Rotation + Tiefe.
-  const items = (images ?? []).slice(0, 3);
+function GradientPillButton({ href, icon, children, gradient, external = false, onClick }) {
+  const classes =
+    'inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold border border-white/12 bg-white/[0.06] backdrop-blur-xl hover:bg-white/[0.10] transition-colors';
+
+  const inner = (
+    <>
+      <span
+        className={cx(
+          'inline-flex items-center justify-center w-8 h-8 rounded-full',
+          'bg-gradient-to-r',
+          gradient,
+          'text-black'
+        )}
+      >
+        {icon}
+      </span>
+      <span className="text-white/90">{children}</span>
+      {external ? <ExternalLink size={14} className="text-white/60" /> : null}
+    </>
+  );
+
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} className={classes}>
+        {inner}
+      </button>
+    );
+  }
 
   return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className={cx(
-        'group w-full text-left',
-        'rounded-2xl border border-white/12 bg-white/5 hover:bg-white/7',
-        'transition-colors overflow-hidden'
-      )}
-      aria-label="Sneak Peek öffnen"
+    <a
+      href={href}
+      target={external ? '_blank' : undefined}
+      rel={external ? 'noopener noreferrer' : undefined}
+      className={classes}
     >
-      <div className="p-4 md:p-5">
-        <div className="flex items-center justify-between gap-3">
-          <div className="text-xs uppercase tracking-wide text-white/55">{label}</div>
-          <div className="inline-flex items-center gap-2 text-xs font-semibold text-white/70">
-            <Images size={14} />
-            Galerie öffnen
-          </div>
-        </div>
-
-        <div className="mt-4 relative h-[118px] md:h-[132px]">
-          {/* glow bed */}
-          <div className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(55%_90%_at_35%_35%,rgba(99,102,241,0.20),transparent_60%),radial-gradient(55%_90%_at_70%_60%,rgba(56,189,248,0.14),transparent_60%)] opacity-70 blur-xl" />
-
-          {/* stack */}
-          {items.map((src, i) => {
-            const transforms = [
-              'translate-x-0 rotate-[-4deg] scale-[0.98]',
-              'translate-x-6 md:translate-x-10 rotate-[2deg] scale-[1.00]',
-              'translate-x-12 md:translate-x-20 rotate-[6deg] scale-[1.02]',
-            ];
-            const z = [20, 30, 40][i] ?? 20;
-            const shadow =
-              i === 1
-                ? 'shadow-[0_24px_70px_-45px_rgba(0,0,0,0.95)]'
-                : 'shadow-[0_18px_60px_-45px_rgba(0,0,0,0.90)]';
-
-            return (
-              <div
-                key={src}
-                className={cx(
-                  'absolute top-1/2 -translate-y-1/2 left-0',
-                  'w-[70%] md:w-[62%] h-[110px] md:h-[124px]',
-                  'rounded-2xl overflow-hidden',
-                  'border border-white/12 bg-black/30',
-                  shadow,
-                  'transition-transform duration-300 ease-out',
-                  transforms[i] ?? transforms[0],
-                  'group-hover:translate-y-[-52%] group-hover:scale-[1.02]'
-                )}
-                style={{ zIndex: z }}
-              >
-                <div className="absolute inset-0">
-                  <Image src={src} alt={`Preview ${i + 1}`} fill className="object-cover opacity-95" sizes="520px" />
-                </div>
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10" />
-              </div>
-            );
-          })}
-
-          {/* subtle label chip */}
-          <div className="pointer-events-none absolute bottom-2 right-2 inline-flex items-center gap-2 rounded-full border border-white/12 bg-black/35 px-3 py-1 text-xs text-white/75 backdrop-blur-md">
-            Klick für Details <ArrowRight size={14} className="opacity-80" />
-          </div>
-        </div>
-      </div>
-    </button>
+      {inner}
+    </a>
   );
 }
 
@@ -757,10 +796,7 @@ function Stripe({ title, desc, icon }) {
   );
 }
 
-function BigService({ sceneId, icon, kicker, title, desc, previewKind, onOpenGallery }) {
-  const showPreview = previewKind === 'motion' || previewKind === 'web';
-  const previewImages = previewKind ? PREVIEWS[previewKind] : null;
-
+function ServiceCard({ sceneId, icon, kicker, title, desc, children }) {
   return (
     <Reveal>
       <TiltCard className="rounded-3xl">
@@ -790,51 +826,7 @@ function BigService({ sceneId, icon, kicker, title, desc, previewKind, onOpenGal
 
           <p className="mt-4 text-sm md:text-base text-white/70 leading-relaxed max-w-2xl">{desc}</p>
 
-          {/* Sneak Peek (nur Motion + Web) */}
-          {showPreview ? (
-            <div className="mt-6">
-              <PreviewCluster images={previewImages} onOpen={onOpenGallery} />
-            </div>
-          ) : null}
-
-          <div className="mt-6 flex items-center gap-4 flex-wrap">
-            <Link href="/#request" className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors font-semibold">
-              Kurz anfragen <ArrowRight size={16} />
-            </Link>
-
-            {/* Kontextlink je Service */}
-            {previewKind === 'web' ? (
-              <a
-                href={CONTACT.webCaseUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-white/75 hover:text-white transition-colors font-semibold"
-              >
-                Web-Case ansehen <ExternalLink size={16} className="opacity-80" />
-              </a>
-            ) : null}
-
-            {previewKind === 'motion' ? (
-              <button
-                type="button"
-                onClick={onOpenGallery}
-                className="inline-flex items-center gap-2 text-white/75 hover:text-white transition-colors font-semibold"
-              >
-                Galerie öffnen <Images size={16} className="opacity-80" />
-              </button>
-            ) : null}
-
-            {previewKind === 'video' ? (
-              <a
-                href={CONTACT.youtubeEditUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-white/75 hover:text-white transition-colors font-semibold"
-              >
-                Video ansehen <ExternalLink size={16} className="opacity-80" />
-              </a>
-            ) : null}
-          </div>
+          {children}
         </div>
       </TiltCard>
     </Reveal>
@@ -861,30 +853,7 @@ export default function Home() {
   const sectionIds = useMemo(() => SECTIONS.map((s) => s.id), []);
   const { activeId } = useActiveSection(sectionIds);
 
-  const mailHref = useMemo(() => {
-    const subject = encodeURIComponent('Projektanfrage');
-    const body = `Hi Leon,%0A%0AZiel:%0ADeadline:%0AStand:%0A%0A`;
-    return `mailto:${CONTACT.email}?subject=${subject}&body=${body}`;
-  }, []);
-
-  const whatsappHref = useMemo(() => {
-    return `https://wa.me/${CONTACT.whatsappNumberE164}?text=${CONTACT.whatsappText}`;
-  }, []);
-
-  // Lightbox state
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [lightboxImages, setLightboxImages] = useState([]);
-  const [lightboxTitle, setLightboxTitle] = useState('Sneak Peek');
-  const [lightboxStart, setLightboxStart] = useState(0);
-
-  const openGallery = useCallback((kind, startIndex = 0) => {
-    const imgs = PREVIEWS[kind] ?? [];
-    if (!imgs.length) return;
-    setLightboxImages(imgs);
-    setLightboxTitle(kind === 'web' ? 'Web Sneak Peek' : 'Motion Sneak Peek');
-    setLightboxStart(startIndex);
-    setLightboxOpen(true);
-  }, []);
+  const [openBrandPdf, setOpenBrandPdf] = useState(false);
 
   useEffect(() => {
     const handle = () => {
@@ -909,14 +878,6 @@ export default function Home() {
       <CursorHalo />
 
       <Navbar />
-
-      <Lightbox
-        open={lightboxOpen}
-        onClose={() => setLightboxOpen(false)}
-        images={lightboxImages}
-        title={lightboxTitle}
-        startIndex={lightboxStart}
-      />
 
       <main className="md:snap-y md:snap-mandatory">
         {/* 01 */}
@@ -946,23 +907,6 @@ export default function Home() {
             <Reveal delayMs={240}>
               <div className="flex flex-col items-center gap-3">
                 <PrimaryCTA label="Projekt anfragen" />
-                <div className="flex flex-wrap justify-center gap-2">
-                  <a
-                    href={whatsappHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
-                  >
-                    <MessageCircle size={18} /> WhatsApp
-                    <ExternalLink size={16} className="opacity-80" />
-                  </a>
-                  <a
-                    href={mailHref}
-                    className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
-                  >
-                    <Mail size={18} /> Mail
-                  </a>
-                </div>
                 <p className="text-sm md:text-base text-white/65 max-w-xl">
                   Dann bekommst du eine klare Einschätzung und den nächsten Schritt.
                 </p>
@@ -1027,17 +971,17 @@ export default function Home() {
                   <div className="mt-5 space-y-3">
                     <Stripe
                       title="1) Brandbook"
-                      desc="Wir definieren gemeinsam klare Regeln für Farben, Typo, Layout und Tonalität, damit dein Auftritt konsistent wirkt und nicht bei jedem Post neu entschieden werden muss."
+                      desc="Klare Regeln für Farben, Typo, Layout und Tonalität – damit dein Auftritt konsistent bleibt und sich sauber skalieren lässt."
                       icon={<BookOpen size={18} />}
                     />
                     <Stripe
                       title="2) Motion & Video"
-                      desc="Mit Motiondesigns und Assets sorge ich dafür, dass deine Inhalte sofort als „deins“ erkennbar sind und schneller produziert werden können."
+                      desc="Wiedererkennbare Assets und Motion-Patterns – damit Content schneller produziert wird und sofort „deins“ wirkt."
                       icon={<Play size={18} />}
                     />
                     <Stripe
                       title="3) Webdevelopment"
-                      desc="Lasse deinen Kunden durch klare Führung und ohne Umwege verstehen, was du anbietest."
+                      desc="Ein Aufbau, der führt: Problem → Lösung → Proof → CTA. Wenig Ablenkung, klare Struktur."
                       icon={<Monitor size={18} />}
                     />
                   </div>
@@ -1052,7 +996,6 @@ export default function Home() {
                       priority={false}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
-                    <div className="absolute bottom-3 left-3 text-sm font-semibold text-white/90"></div>
                   </div>
 
                   <div className="mt-3 text-xs text-white/55"> </div>
@@ -1093,43 +1036,115 @@ export default function Home() {
             </div>
 
             <div className="space-y-4">
-              <BigService
+              {/* Brandbook (PDF Preview) */}
+              <ServiceCard
                 sceneId="s3"
                 icon={<BookOpen size={18} />}
                 kicker="Brandbook"
                 title="Guidelines, die im Alltag helfen."
                 desc="Farben, Typo, Layoutregeln, Tonalität, Beispiele. So bleibt alles konsistent – auch wenn später mehr dazukommt."
-                previewKind={null}
-              />
+              >
+                <div className="mt-6 flex flex-wrap gap-2">
+                  <GradientPillButton
+                    gradient="from-violet-200 via-indigo-200 to-cyan-200"
+                    icon={<FileText size={16} />}
+                    onClick={() => setOpenBrandPdf(true)}
+                  >
+                    Brandbook-PDF ansehen
+                  </GradientPillButton>
 
-              <BigService
+                  <GradientPillButton
+                    gradient="from-indigo-200 via-violet-200 to-fuchsia-200"
+                    icon={<ArrowRight size={16} />}
+                    href="/portfolio/brandbook"
+                    external={false}
+                  >
+                    Brandbook im Portfolio
+                  </GradientPillButton>
+                </div>
+              </ServiceCard>
+
+              {/* Motion (Drag/Swipe Preview) */}
+              <ServiceCard
                 sceneId="s3"
                 icon={<Play size={18} />}
                 kicker="Motiondesign"
                 title="Bewegung mit Wiedererkennung."
                 desc="Motion Graphics, Vorlagen, Varianten für Einstiege. Damit Inhalte nicht beliebig wirken und du nicht jedes Mal neu anfängst."
-                previewKind="motion"
-                onOpenGallery={() => openGallery('motion', 0)}
-              />
+              >
+                <PreviewRail images={PREVIEWS.motion} accent="from-pink-200 via-fuchsia-200 to-indigo-200" label="Sneak Peek" />
 
-              <BigService
+                <div className="mt-6 flex flex-wrap gap-2">
+                  <GradientPillButton
+                    gradient="from-pink-200 via-fuchsia-200 to-indigo-200"
+                    icon={<ExternalLink size={16} />}
+                    href="/portfolio/motion"
+                    external={false}
+                  >
+                    Motion im Portfolio
+                  </GradientPillButton>
+                </div>
+              </ServiceCard>
+
+              {/* Web (Drag/Swipe Preview + Case Link) */}
+              <ServiceCard
                 sceneId="s3"
                 icon={<Monitor size={18} />}
                 kicker="Webdevelopment"
                 title="Websites mit klarer Führung."
                 desc="Aufbau, der schnell verständlich ist: Problem, Lösung, Proof, CTA. Wenig Ablenkung, saubere Umsetzung."
-                previewKind="web"
-                onOpenGallery={() => openGallery('web', 0)}
-              />
+              >
+                <PreviewRail images={PREVIEWS.web} accent="from-cyan-200 via-indigo-200 to-violet-200" label="Sneak Peek" />
 
-              <BigService
+                <div className="mt-6 flex flex-wrap gap-2">
+                  <GradientPillButton
+                    gradient="from-cyan-200 via-indigo-200 to-violet-200"
+                    icon={<ExternalLink size={16} />}
+                    href={WEB_CASE_URL}
+                    external={true}
+                  >
+                    Web-Case öffnen
+                  </GradientPillButton>
+
+                  <GradientPillButton
+                    gradient="from-emerald-200 via-cyan-200 to-indigo-200"
+                    icon={<ArrowRight size={16} />}
+                    href="/portfolio/web"
+                    external={false}
+                  >
+                    Web im Portfolio
+                  </GradientPillButton>
+                </div>
+              </ServiceCard>
+
+              {/* Videoediting (YouTube direct) */}
+              <ServiceCard
                 sceneId="s3"
                 icon={<Film size={18} />}
                 kicker="Videoediting"
                 title="Schnitt, der ruhig wirkt – und sitzt."
                 desc="Rhythmus, Timing, Sound, Struktur. Damit ein Video nicht nur fertig ist, sondern gut funktioniert."
-                previewKind="video"
-              />
+              >
+                <div className="mt-6 flex flex-wrap gap-2">
+                  <GradientPillButton
+                    gradient="from-amber-200 via-pink-200 to-violet-200"
+                    icon={<Play size={16} />}
+                    href={YOUTUBE_EDITING_URL}
+                    external={true}
+                  >
+                    YouTube ansehen
+                  </GradientPillButton>
+
+                  <GradientPillButton
+                    gradient="from-violet-200 via-indigo-200 to-cyan-200"
+                    icon={<ArrowRight size={16} />}
+                    href="/portfolio/video"
+                    external={false}
+                  >
+                    Video im Portfolio
+                  </GradientPillButton>
+                </div>
+              </ServiceCard>
             </div>
           </div>
         </Scene>
@@ -1222,12 +1237,6 @@ export default function Home() {
                   <p className="mt-3 text-sm md:text-base text-white/70 leading-relaxed">
                     „Wir wollen X bis Datum Y und sind gerade bei Z.“ Danach klären wir den Rest.
                   </p>
-                  <div className="mt-6 flex gap-2 flex-wrap">
-                    <GhostCTA href="/portfolio">
-                      <ExternalLink size={18} /> Beispiele
-                    </GhostCTA>
-                    <PrimaryCTA label="Anfrage" />
-                  </div>
                 </div>
               </TiltCard>
             </Reveal>
@@ -1268,22 +1277,21 @@ export default function Home() {
                   <div className="mt-8 flex flex-wrap gap-2">
                     <Magnetic>
                       <a
-                        href={whatsappHref}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        href={MAIL_HREF}
                         className="px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center gap-2"
                       >
-                        <MessageCircle size={18} /> WhatsApp
-                        <ExternalLink size={16} className="opacity-80" />
+                        <Mail size={18} /> Per Mail
                       </a>
                     </Magnetic>
 
-                    <Magnetic>
+                    <Magnetic strength={10}>
                       <a
-                        href={mailHref}
-                        className="px-7 py-3.5 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
+                        href={WHATSAPP_HREF}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
                       >
-                        <Mail size={18} /> Per Mail
+                        <ExternalLink size={18} /> WhatsApp
                       </a>
                     </Magnetic>
 
@@ -1315,6 +1323,38 @@ Link/Beispiele (optional):`}
       </main>
 
       <Footer />
+
+      {/* Brandbook PDF Modal */}
+      <Modal open={openBrandPdf} onClose={() => setOpenBrandPdf(false)} title="Brandbook – PDF Preview">
+        <div className="grid grid-cols-1 gap-3">
+          <div className="text-sm text-white/70">
+            Preview im Embed. Wenn du willst, kannst du die PDF auch im neuen Tab öffnen.
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <a
+              href={BRAND_PDF}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold border border-white/12 bg-white/[0.06] hover:bg-white/[0.10] transition-colors"
+            >
+              <FileText size={16} className="text-white/80" />
+              PDF in neuem Tab
+              <ExternalLink size={14} className="text-white/60" />
+            </a>
+          </div>
+
+          <div className="relative w-full overflow-hidden rounded-2xl border border-white/12 bg-black/20">
+            <div className="aspect-[16/10] md:aspect-[16/9]">
+              <iframe
+                title="Brandbook PDF"
+                src={`${BRAND_PDF}#view=FitH`}
+                className="w-full h-full"
+              />
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
@@ -1354,3 +1394,8 @@ const globalKeyframes = `
   100% { transform: translate3d(90px,60px,0); }
 }
 `;
+
+/* NOTE:
+   - Preview Images: /public/img/previews/web-1.jpg ... web-3.jpg und motion-1.jpg ... motion-3.jpg
+   - Brandbook PDF: /public/pdf/kfa-brandbook.pdf
+*/
