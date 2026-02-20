@@ -21,7 +21,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 /* ---------- UTIL ---------- */
 
-function cx(...xs: Array<string | false | null | undefined>) {
+function cx(...xs) {
   return xs.filter(Boolean).join(' ');
 }
 
