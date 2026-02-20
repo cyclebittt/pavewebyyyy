@@ -10,11 +10,11 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 const CONTACT_EMAIL = 'hello@leonseitz.com';
 
 // WhatsApp: ersetze die Nummer (international, ohne +)
-const WHATSAPP_NUMBER = '49XXXXXXXXXXX';
+const WHATSAPP_NUMBER = '4916095757167';
 const WHATSAPP_TEXT = encodeURIComponent(
   `Hi Leon — kurze Projektanfrage.\n\nZiel:\nDeadline:\nStand:\nBudgetrahmen (optional):\nLink/Beispiele (optional):`
 );
-const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_TEXT}`;
+const WHATSAPP_HREF = `https://wa.me/${016095757167}?text=${Hi Leon — kurze Projektanfrage.}`;
 
 const LINKS = [
   { href: '/', label: 'Start', key: '' },
