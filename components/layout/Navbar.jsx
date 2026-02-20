@@ -1,4 +1,4 @@
-// /components/layout/Navbar.js
+// /components/layout/Navbar.jsx (oder .js)
 'use client';
 
 import { AlignRight, X, ArrowRight, MessageCircle } from 'lucide-react';
@@ -6,15 +6,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-
-const CONTACT_EMAIL = 'hello@leonseitz.com';
-
-// WhatsApp: ersetze die Nummer (international, ohne +)
-const WHATSAPP_NUMBER = '4916095757167';
-const WHATSAPP_TEXT = encodeURIComponent(
-  `Hi Leon — kurze Projektanfrage.\n\nZiel:\nDeadline:\nStand:\nBudgetrahmen (optional):\nLink/Beispiele (optional):`
-);
-const WHATSAPP_HREF = `https://wa.me/${016095757167}?text=${Hi Leon — kurze Projektanfrage.}`;
 
 const LINKS = [
   { href: '/', label: 'Start', key: '' },
@@ -37,6 +28,11 @@ export default function Navbar() {
 
   const isHome = pathnameFull === '/' || pathnameFull === '';
   const contactHref = useMemo(() => (isHome ? '/#request' : '/#request'), [isHome]);
+
+  const whatsappHref = useMemo(() => {
+    // 0160... => international already set here
+    return 'https://wa.me/4916095757167?text=Hi%20Leon%20—%20kurze%20Projektanfrage.%0A%0AZiel:%0ADeadline:%0AStand:%0ABudgetrahmen%20(optional):%0ALink/Beispiele%20(optional):';
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -84,17 +80,11 @@ export default function Navbar() {
 
   const isActive = (key) => pathnameKey === key;
 
-  // (optional) falls du irgendwann Mail-Link in Navbar brauchst:
-  const mailHref = useMemo(() => {
-    const subject = encodeURIComponent('Projektanfrage');
-    const body = encodeURIComponent(`Ziel:\nDeadline:\nStand:\nBudgetrahmen (optional):\nLink/Beispiele (optional):\n`);
-    return `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-  }, []);
-
   return (
     <header className="fixed top-0 left-0 right-0 z-[80]">
       <style>{navKeyframes}</style>
 
+      {/* subtle top glow / separator */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-[radial-gradient(60%_90%_at_50%_0%,rgba(255,255,255,0.10),transparent_70%)] opacity-70" />
 
       <nav className="px-4 md:px-10 pt-4">
@@ -134,11 +124,13 @@ export default function Navbar() {
           />
 
           <div className="relative flex items-center justify-between gap-6 px-4 md:px-6 py-3">
+            {/* Left: Brand */}
             <Link href="/" aria-label="Zur Startseite" className="flex items-center gap-3">
               <Image src="/img/logo-paveo.png" alt="paveo Logo" width={120} height={40} className="h-9 w-auto" priority />
               <span className="hidden sm:inline font-semibold text-white/90">Leon Seitz</span>
             </Link>
 
+            {/* Center: Desktop Links */}
             <ul className="hidden md:flex items-center gap-2">
               {LINKS.map(({ href, label, key }) => {
                 const active = isActive(key);
@@ -167,28 +159,28 @@ export default function Navbar() {
               })}
             </ul>
 
+            {/* Right: Desktop CTAs */}
             <div className="hidden md:flex items-center gap-2">
-              {/* WhatsApp (klein, neben CTA) */}
+              {/* WhatsApp */}
               <a
-                href={WHATSAPP_HREF}
+                href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cx(
                   'group relative inline-flex items-center gap-2',
-                  'px-4 py-2.5 rounded-full font-semibold text-sm',
-                  'text-white/85 hover:text-white',
-                  'bg-white/[0.06] border border-white/12 backdrop-blur-2xl',
-                  'transition-[transform,background-color,border-color] duration-300 ease-out',
-                  'hover:bg-white/[0.08] hover:border-white/18',
+                  'px-5 py-2.5 rounded-full font-semibold text-sm',
+                  'text-white/90',
+                  'bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12',
+                  'transition-[transform,filter] duration-300 ease-out',
+                  scrolled ? 'scale-[0.98]' : 'scale-100',
                   'outline-none focus-visible:ring-2 focus-visible:ring-violet-400/70'
                 )}
-                title="WhatsApp"
               >
-                <MessageCircle size={16} />
-                <span className="hidden lg:inline">WhatsApp</span>
+                <MessageCircle size={16} className="opacity-90" />
+                <span className="relative">WhatsApp</span>
               </a>
 
-              {/* Main CTA */}
+              {/* Projekt anfragen */}
               <Link
                 href={contactHref}
                 className={cx(
@@ -221,6 +213,7 @@ export default function Navbar() {
               </Link>
             </div>
 
+            {/* Mobile button */}
             <button
               ref={buttonRef}
               type="button"
@@ -236,6 +229,7 @@ export default function Navbar() {
             </button>
           </div>
 
+          {/* Mobile sheet */}
           <div
             ref={menuRef}
             className={cx(
@@ -269,7 +263,26 @@ export default function Navbar() {
                   );
                 })}
 
-                <li className="pt-1 grid grid-cols-1 gap-2">
+                {/* WhatsApp mobile */}
+                <li className="pt-1">
+                  <a
+                    href={whatsappHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cx(
+                      'group relative inline-flex w-full items-center justify-center gap-2',
+                      'px-5 py-3 rounded-2xl font-semibold',
+                      'text-white/90',
+                      'bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12'
+                    )}
+                  >
+                    <MessageCircle size={16} className="opacity-90" />
+                    <span className="relative">WhatsApp</span>
+                  </a>
+                </li>
+
+                {/* Anfrage mobile */}
+                <li className="pt-1">
                   <Link
                     href={contactHref}
                     className={cx(
@@ -284,27 +297,6 @@ export default function Navbar() {
                     <span className="relative">Projekt anfragen</span>
                     <ArrowRight size={16} className="relative" />
                   </Link>
-
-                  <a
-                    href={WHATSAPP_HREF}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cx(
-                      'inline-flex w-full items-center justify-center gap-2',
-                      'px-5 py-3 rounded-2xl font-semibold',
-                      'text-white/90',
-                      'bg-white/[0.06] border border-white/12 backdrop-blur-xl'
-                    )}
-                  >
-                    <MessageCircle size={16} />
-                    WhatsApp
-                  </a>
-                </li>
-
-                <li className="pt-1">
-                  <div className="text-xs text-white/45 px-1">
-                    Kontakt: <span className="text-white/65">{CONTACT_EMAIL}</span>
-                  </div>
                 </li>
               </ul>
             </div>
