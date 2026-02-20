@@ -673,7 +673,7 @@ export default function Home() {
 
             <Reveal delayMs={160}>
               <p className="max-w-2xl text-base md:text-xl text-white/80 leading-relaxed">
-                Branding, Content und Website als zusammenhängendes Setup. Klar geplant, sauber umgesetzt – damit es nicht bei Einzelteilen bleibt.
+                Branding, Content und Website für deine Idee. Maßgeschneidert an deine Bedürfnisse.
               </p>
             </Reveal>
 
@@ -681,7 +681,7 @@ export default function Home() {
               <div className="flex flex-col items-center gap-3">
                 <PrimaryCTA label="Projekt anfragen" />
                 <p className="text-sm md:text-base text-white/65 max-w-xl">
-                  Ziel, Deadline, Stand. Dann bekommst du eine klare Einschätzung – und den nächsten Schritt.
+                 Dann bekommst du eine klare Einschätzung und den nächsten Schritt.
                 </p>
               </div>
             </Reveal>
@@ -744,9 +744,9 @@ export default function Home() {
                   <div className="text-xs uppercase tracking-wide text-white/55">So sieht das als System aus</div>
 
                   <div className="mt-5 space-y-3">
-                    <Stripe title="1) Brandbook" desc="Regeln, Look, Ton. Damit alles konsistent wirkt." icon={<BookOpen size={18} />} />
-                    <Stripe title="2) Motion & Video" desc="Einstieg, Tempo, Wiedererkennung. Damit Inhalte hängen bleiben." icon={<Play size={18} />} />
-                    <Stripe title="3) Web & Funnel" desc="Ein klarer Weg bis zur Anfrage – ohne Ablenkung." icon={<Monitor size={18} />} />
+                    <Stripe title="1) Brandbook" desc="Wir definieren gemeinsam klare Regeln für Farben, Typo, Layout und Tonalität, damit dein Auftritt konsistent wirkt und nicht bei jedem Post neu entschieden werden muss." icon={<BookOpen size={18} />} />
+                    <Stripe title="2) Motion & Video" desc="Mit Motiondesigns und Assets sorge ich dafür, dass deine Inhalte sofort als „deins“ erkennbar sind und schneller produziert werden können." icon={<Play size={18} />} />
+                    <Stripe title="3) Webdevelopment" desc="Lasse deinen Kunden durch klare Führung und ohne Umwege verstehen, was du anbietest." icon={<Monitor size={18} />} />
                   </div>
 
                   <div className="mt-6 relative rounded-2xl border border-white/15 overflow-hidden h-40 md:h-48">
@@ -759,11 +759,11 @@ export default function Home() {
                       priority={false}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
-                    <div className="absolute bottom-3 left-3 text-sm font-semibold text-white/90">Preview-Image (ersetzen)</div>
+                    <div className="absolute bottom-3 left-3 text-sm font-semibold text-white/90"></div>
                   </div>
 
                   <div className="mt-3 text-xs text-white/55">
-                    Bildpfad: <span className="text-white/70">/public/img/home/preview-system.jpg</span>
+                    : <span className="text-white/70"></span>
                   </div>
                 </div>
               </div>
@@ -790,7 +790,7 @@ export default function Home() {
 
               <Reveal delayMs={160}>
                 <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed">
-                  Einzelne Bausteine oder als Komplett-Setup – je nach Ziel und Deadline.
+                  Als Gesamtpaket oder einzelne Services – so wie du es brauchst.
                 </p>
               </Reveal>
 
@@ -820,7 +820,7 @@ export default function Home() {
                 sceneId="s3"
                 icon={<Monitor size={18} />}
                 kicker="Webdevelopment"
-                title="Websites/Funnels mit klarer Führung."
+                title="Websites mit klarer Führung."
                 desc="Aufbau, der schnell verständlich ist: Problem, Lösung, Proof, CTA. Wenig Ablenkung, saubere Umsetzung."
               />
               <BigService
@@ -844,16 +844,16 @@ export default function Home() {
 
               <Reveal delayMs={90}>
                 <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                  Werte,
+                  Was wir,
                   <span className="block">
-                    <TitleGradient sceneId="s4">die man einordnen kann.</TitleGradient>
+                    <TitleGradient sceneId="s4">in einer Zusammenarbeit erreichen können.</TitleGradient>
                   </span>
                 </h2>
               </Reveal>
 
               <Reveal delayMs={160}>
                 <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
-                  Wenn Branding, Content und Anfrageweg zusammenpassen, sieht man das in der Wirkung – nicht in Floskeln.
+                  Schwarz auf Weiß: Harte Fakten aus meiner bisherigen Arbeit.
                 </p>
               </Reveal>
 
