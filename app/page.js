@@ -908,7 +908,7 @@ export default function Home() {
               <div className="flex flex-col items-center gap-3">
                 <PrimaryCTA label="Projekt anfragen" />
                 <p className="text-sm md:text-base text-white/65 max-w-xl">
-                  Dann bekommst du eine klare Einschätzung und den nächsten Schritt.
+        
                 </p>
               </div>
             </Reveal>
