@@ -844,7 +844,7 @@ export default function Home() {
 
               <Reveal delayMs={90}>
                 <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                  Was wir,
+                  Was wir
                   <span className="block">
                     <TitleGradient sceneId="s4">in einer Zusammenarbeit erreichen können.</TitleGradient>
                   </span>
