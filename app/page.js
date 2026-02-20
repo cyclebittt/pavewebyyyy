@@ -292,7 +292,6 @@ function ScrollProgressBar() {
   );
 }
 
-/* softer cursor halo */
 function CursorHalo() {
   const { x, y } = useMousePos();
 
@@ -541,7 +540,9 @@ function ProofStat({ sceneId, label, target, suffix = '', durationMs = 900 }) {
           <AnimatedNumber value={value} sceneId={sceneId} />
           {suffix ? (
             <span className="text-white/75 text-xl md:text-2xl font-semibold leading-none pb-[2px]">
-              <TitleGradient sceneId={sceneId}>{suffix}</TitleGradient>
+              <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', (SCENES[sceneId] ?? SCENES.s1).accent)}>
+                {suffix}
+              </span>
             </span>
           ) : null}
         </div>
@@ -552,46 +553,7 @@ function ProofStat({ sceneId, label, target, suffix = '', durationMs = 900 }) {
   );
 }
 
-/* ---------- HERO RECTANGLES (UNIFIED) ---------- */
-
-function MiniTile({ icon, title, sub }) {
-  return (
-    <div className="h-full">
-      <div
-        className={cx(
-          'group h-full min-h-[78px] md:min-h-[86px]',
-          'rounded-2xl border border-white/15',
-          'bg-black/18 backdrop-blur-md',
-          'px-4 py-4 md:px-5 md:py-4',
-          'flex items-center gap-3',
-          'transition-[border-color,background-color,transform] duration-300',
-          'hover:border-white/25 hover:bg-black/24 hover:-translate-y-[1px]'
-        )}
-      >
-        <div
-          className={cx(
-            'shrink-0',
-            'w-10 h-10 md:w-11 md:h-11',
-            'rounded-xl',
-            'border border-white/15',
-            'bg-white/10',
-            'flex items-center justify-center',
-            'text-white/90',
-            'transition-colors duration-300',
-            'group-hover:bg-white/14 group-hover:border-white/22'
-          )}
-        >
-          {icon}
-        </div>
-
-        <div className="min-w-0">
-          <div className="text-sm md:text-[15px] font-semibold text-white/92 leading-tight truncate">{title}</div>
-          <div className="mt-1 text-xs md:text-sm text-white/60 leading-tight truncate">{sub}</div>
-        </div>
-      </div>
-    </div>
-  );
-}
+/* ---------- CONTENT BLOCKS ---------- */
 
 function Stripe({ title, desc, icon }) {
   return (
@@ -629,7 +591,7 @@ function BigService({ sceneId, icon, kicker, title, desc }) {
           <div className="mt-4 text-2xl md:text-4xl font-extrabold leading-tight text-white">
             {title}
             <span className="block text-base md:text-lg mt-2">
-              <TitleGradient sceneId={sceneId}>Als System gedacht, nicht als Einzelteil.</TitleGradient>
+              <TitleGradient sceneId={sceneId}>Als Einheit geplant, nicht als Einzelteil.</TitleGradient>
             </span>
           </div>
 
@@ -696,41 +658,35 @@ export default function Home() {
           <div className="flex flex-col items-center text-center gap-6">
             <Reveal>
               <span className="inline-flex items-center gap-2 text-xs md:text-sm text-white/85 bg-white/10 ring-1 ring-white/15 px-3 py-1 rounded-full">
-                <Sparkles size={16} /> Digital Projects · Campaigns · Content
+                <Sparkles size={16} /> Klar begrenzte digitale Projekte – ohne Umwege
               </span>
             </Reveal>
 
             <Reveal delayMs={90}>
               <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight leading-[1.03]">
-                Ich setze digitale Projekte um,
+                Ich setze digitale Projekte so um,
                 <span className="block">
-                  <TitleGradient sceneId="s1">die sauber wirken und performen.</TitleGradient>
+                  <TitleGradient sceneId="s1">dass am Ende etwas steht.</TitleGradient>
                 </span>
               </h1>
             </Reveal>
 
             <Reveal delayMs={160}>
               <p className="max-w-2xl text-base md:text-xl text-white/80 leading-relaxed">
-                Brandbooks, Motiondesign, Webdevelopment und Videoediting – als System, damit Kampagnen nicht nur „nice“
-                aussehen, sondern Ergebnisse liefern.
+                Branding, Content und Website als zusammenhängendes Setup. Klar geplant, sauber umgesetzt – damit es nicht bei Einzelteilen bleibt.
               </p>
             </Reveal>
 
             <Reveal delayMs={240}>
               <div className="flex flex-col items-center gap-3">
                 <PrimaryCTA label="Projekt anfragen" />
-                <p className="text-sm md:text-base text-white/65 max-w-xl">Ziel, Deadline, Stand. Dann bekommst du eine klare Einschätzung.</p>
+                <p className="text-sm md:text-base text-white/65 max-w-xl">
+                  Ziel, Deadline, Stand. Dann bekommst du eine klare Einschätzung – und den nächsten Schritt.
+                </p>
               </div>
             </Reveal>
 
-            <Reveal delayMs={310}>
-              <div className="mt-2 grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-3xl items-stretch">
-                <MiniTile icon={<BookOpen size={18} />} title="Brandbook" sub="Guidelines & System" />
-                <MiniTile icon={<Play size={18} />} title="Motion" sub="Hooks & Templates" />
-                <MiniTile icon={<Monitor size={18} />} title="Web" sub="Funnel & UX" />
-                <MiniTile icon={<Film size={18} />} title="Video" sub="Cut & Rhythmus" />
-              </div>
-            </Reveal>
+            {/* Die 4 Rechtecke/Minikarten wurden bewusst entfernt (wirkt sonst wie „Feature-Liste“ ohne Nutzenbezug). */}
           </div>
         </Scene>
 
@@ -744,29 +700,31 @@ export default function Home() {
 
               <Reveal delayMs={90}>
                 <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                  Klarer Look.
+                  Ein klarer Look.
                   <span className="block">
-                    <TitleGradient sceneId="s2">Klare Message.</TitleGradient>
+                    <TitleGradient sceneId="s2">Eine klare Linie.</TitleGradient>
                   </span>
                 </h2>
               </Reveal>
 
               <Reveal delayMs={160}>
                 <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
-                  Du bekommst ein Setup, das du wiederholen kannst: Branding → Content → Funnel.
+                  Du bekommst ein Setup, das wiederholbar ist: Branding → Content → Anfrage.
                 </p>
               </Reveal>
 
               <Reveal delayMs={240}>
                 <div className="mt-6 space-y-3">
-                  {['Branding, das sofort einzuordnen ist', 'Content, der auffällt und hängen bleibt', 'Website/Funnel, der Menschen führt'].map(
-                    (t) => (
-                      <div key={t} className="flex items-start gap-2">
-                        <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                        <span className="text-sm md:text-base text-white/80">{t}</span>
-                      </div>
-                    )
-                  )}
+                  {[
+                    'Branding, das man sofort einordnen kann',
+                    'Content, der nicht austauschbar wirkt',
+                    'Website/Funnel als klarer Weg zur Anfrage',
+                  ].map((t) => (
+                    <div key={t} className="flex items-start gap-2">
+                      <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+                      <span className="text-sm md:text-base text-white/80">{t}</span>
+                    </div>
+                  ))}
                 </div>
               </Reveal>
 
@@ -786,15 +744,15 @@ export default function Home() {
                   <div className="text-xs uppercase tracking-wide text-white/55">So sieht das als System aus</div>
 
                   <div className="mt-5 space-y-3">
-                    <Stripe title="1) Brandbook" desc="Regeln, Look, Tone. Damit alles gleich wirkt." icon={<BookOpen size={18} />} />
-                    <Stripe title="2) Motion & Video" desc="Hook, Tempo, Stil. Damit es hängen bleibt." icon={<Play size={18} />} />
-                    <Stripe title="3) Web & Funnel" desc="Ein klarer Weg bis zur Anfrage." icon={<Monitor size={18} />} />
+                    <Stripe title="1) Brandbook" desc="Regeln, Look, Ton. Damit alles konsistent wirkt." icon={<BookOpen size={18} />} />
+                    <Stripe title="2) Motion & Video" desc="Einstieg, Tempo, Wiedererkennung. Damit Inhalte hängen bleiben." icon={<Play size={18} />} />
+                    <Stripe title="3) Web & Funnel" desc="Ein klarer Weg bis zur Anfrage – ohne Ablenkung." icon={<Monitor size={18} />} />
                   </div>
 
                   <div className="mt-6 relative rounded-2xl border border-white/15 overflow-hidden h-40 md:h-48">
                     <Image
                       src="/img/home/preview-system.jpg"
-                      alt="Preview – Branding, Content, Funnel"
+                      alt="Preview – Branding, Content, Anfrageweg"
                       fill
                       className="object-cover opacity-75"
                       sizes="(max-width: 768px) 100vw, 520px"
@@ -823,16 +781,16 @@ export default function Home() {
 
               <Reveal delayMs={90}>
                 <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                  Vier Bausteine.
+                  Bausteine,
                   <span className="block">
-                    <TitleGradient sceneId="s3">Ein Ergebnis.</TitleGradient>
+                    <TitleGradient sceneId="s3">die zusammenpassen.</TitleGradient>
                   </span>
                 </h2>
               </Reveal>
 
               <Reveal delayMs={160}>
                 <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed">
-                  Einzelne Bausteine oder als Komplett-Setup – je nachdem, was du brauchst.
+                  Einzelne Bausteine oder als Komplett-Setup – je nach Ziel und Deadline.
                 </p>
               </Reveal>
 
@@ -848,29 +806,29 @@ export default function Home() {
                 sceneId="s3"
                 icon={<BookOpen size={18} />}
                 kicker="Brandbook"
-                title="Guidelines, die man wirklich nutzt."
-                desc="Farben, Typo, Layoutregeln, Tone of Voice, Beispiele. Damit du konsistent bleibst und skalieren kannst."
+                title="Guidelines, die im Alltag helfen."
+                desc="Farben, Typo, Layoutregeln, Tonalität, Beispiele. So bleibt alles konsistent – auch wenn später mehr dazukommt."
               />
               <BigService
                 sceneId="s3"
                 icon={<Play size={18} />}
                 kicker="Motiondesign"
-                title="Motion, das im Feed auffällt."
-                desc="Kurzformate, Motion Graphics, Hook-Varianten, Templates. Damit du nicht jedes Mal bei Null anfängst."
+                title="Bewegung mit Wiedererkennung."
+                desc="Motion Graphics, Vorlagen, Varianten für Einstiege. Damit Inhalte nicht beliebig wirken und du nicht jedes Mal neu anfängst."
               />
               <BigService
                 sceneId="s3"
                 icon={<Monitor size={18} />}
                 kicker="Webdevelopment"
-                title="Websites/Funnels, die führen."
-                desc="Klarer Aufbau, klare CTA, wenig Ablenkung. Damit Klicks zu Anfragen werden."
+                title="Websites/Funnels mit klarer Führung."
+                desc="Aufbau, der schnell verständlich ist: Problem, Lösung, Proof, CTA. Wenig Ablenkung, saubere Umsetzung."
               />
               <BigService
                 sceneId="s3"
                 icon={<Film size={18} />}
                 kicker="Videoediting"
-                title="Schnitt mit Rhythmus."
-                desc="Storyline, Timing, Sound, Pace. Damit ein Video nicht nur fertig ist, sondern gut."
+                title="Schnitt, der ruhig wirkt – und sitzt."
+                desc="Rhythmus, Timing, Sound, Struktur. Damit ein Video nicht nur fertig ist, sondern gut funktioniert."
               />
             </div>
           </div>
@@ -886,7 +844,7 @@ export default function Home() {
 
               <Reveal delayMs={90}>
                 <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                  Zahlen,
+                  Werte,
                   <span className="block">
                     <TitleGradient sceneId="s4">die man einordnen kann.</TitleGradient>
                   </span>
@@ -895,7 +853,7 @@ export default function Home() {
 
               <Reveal delayMs={160}>
                 <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
-                  Wenn du Branding + Content + Funnel als Einheit denkst, sieht man das am Ergebnis.
+                  Wenn Branding, Content und Anfrageweg zusammenpassen, sieht man das in der Wirkung – nicht in Floskeln.
                 </p>
               </Reveal>
 
@@ -910,9 +868,9 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-              <ProofStat sceneId="s4" label="Likes generiert" target={15} suffix="+ Mio" durationMs={900} />
-              <ProofStat sceneId="s4" label="Klicks auf Social Media erzielt" target={10} suffix="+ Mio" durationMs={900} />
-              <ProofStat sceneId="s4" label="Abgeschlossene Projekte" target={100} suffix="+" durationMs={950} />
+              <ProofStat sceneId="s4" label="Interaktionen erzielt" target={15} suffix="+ Mio" durationMs={900} />
+              <ProofStat sceneId="s4" label="Klicks auf Inhalte" target={10} suffix="+ Mio" durationMs={900} />
+              <ProofStat sceneId="s4" label="Umgesetzte Projekte" target={100} suffix="+" durationMs={950} />
             </div>
           </div>
         </Scene>
@@ -929,29 +887,29 @@ export default function Home() {
                 <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
                   Kurzer Start.
                   <span className="block">
-                    <TitleGradient sceneId="s5">Schnelles Ergebnis.</TitleGradient>
+                    <TitleGradient sceneId="s5">Klarer Ablauf.</TitleGradient>
                   </span>
                 </h2>
               </Reveal>
 
               <Reveal delayMs={160}>
                 <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
-                  Du musst nicht alles perfekt vorbereiten. Wir machen es strukturiert – und liefern sauber.
+                  Du musst nichts „perfekt“ vorbereiten. Wir klären die Eckdaten, legen den Ablauf fest – dann setze ich um.
                 </p>
               </Reveal>
 
               <Reveal delayMs={260}>
                 <div className="mt-6 space-y-3">
-                  <Step n="1" title="Anfrage" desc="Ziel, Deadline, Stand. (3 Infos reichen)" />
-                  <Step n="2" title="Branding & Plan" desc="Brandbook/Storyline, damit alles konsistent ist." />
-                  <Step n="3" title="Produktion" desc="Motion, Editing, Web – je nach Paket." />
-                  <Step n="4" title="Übergabe" desc="Assets/Files/Setup so, dass du weitermachen kannst." />
+                  <Step n="1" title="Anfrage" desc="Ziel, Deadline, Stand. Drei Infos reichen für eine erste Einschätzung." />
+                  <Step n="2" title="Struktur & Stil" desc="Branding/Storyline und klare Regeln, damit alles zusammenpasst." />
+                  <Step n="3" title="Umsetzung" desc="Content, Motion, Web – je nach Umfang. Mit klaren Feedback-Runden." />
+                  <Step n="4" title="Übergabe" desc="Assets/Files/Setup so, dass du damit weiterarbeiten kannst." />
                 </div>
               </Reveal>
 
               <Reveal delayMs={340}>
                 <div className="mt-8">
-                  <PrimaryCTA label="Okay, lass starten" />
+                  <PrimaryCTA label="Anfrage senden" />
                 </div>
               </Reveal>
             </div>
@@ -959,10 +917,10 @@ export default function Home() {
             <Reveal delayMs={140}>
               <TiltCard className="rounded-3xl">
                 <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8">
-                  <div className="text-xs uppercase tracking-wide text-white/55">Shortcut</div>
-                  <div className="mt-3 text-xl md:text-3xl font-bold text-white/90">Ein Satz reicht fürs erste.</div>
+                  <div className="text-xs uppercase tracking-wide text-white/55">Kurzfassung</div>
+                  <div className="mt-3 text-xl md:text-3xl font-bold text-white/90">Ein Satz reicht fürs Erste.</div>
                   <p className="mt-3 text-sm md:text-base text-white/70 leading-relaxed">
-                    “Wir wollen X bis Datum Y und haben gerade Z.” Danach klären wir den Rest.
+                    „Wir wollen X bis Datum Y und sind gerade bei Z.“ Danach klären wir den Rest.
                   </p>
                   <div className="mt-6 flex gap-2 flex-wrap">
                     <GhostCTA href="/portfolio">
@@ -991,13 +949,13 @@ export default function Home() {
 
                 <Reveal delayMs={160}>
                   <p className="mt-4 text-white/80 leading-relaxed max-w-2xl">
-                    Ziel, Deadline, Stand. Danach sage ich dir, ob es passt – und was sinnvoll ist.
+                    Ziel, Deadline, Stand. Danach sage ich dir, ob es passt – und was der sinnvollste nächste Schritt ist.
                   </p>
                 </Reveal>
 
                 <Reveal delayMs={240}>
                   <div className="mt-6 space-y-3">
-                    {['Ziel (was soll passieren?)', 'Deadline (bis wann?)', 'Stand (Branding/Material/Beispiele?)'].map((t) => (
+                    {['Ziel (was soll passieren?)', 'Deadline (bis wann?)', 'Stand (Material, Beispiele, bestehende Assets?)'].map((t) => (
                       <div key={t} className="flex items-start gap-2">
                         <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
                         <span className="text-sm md:text-base text-white/80">{t}</span>
