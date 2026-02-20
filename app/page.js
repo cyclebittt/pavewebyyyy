@@ -844,16 +844,16 @@ export default function Home() {
 
               <Reveal delayMs={90}>
                 <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                  Was wir
+                  Schwarz
                   <span className="block">
-                    <TitleGradient sceneId="s4">in einer Zusammenarbeit erreichen können.</TitleGradient>
+                    <TitleGradient sceneId="s4">auf weiß</TitleGradient>
                   </span>
                 </h2>
               </Reveal>
 
               <Reveal delayMs={160}>
                 <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
-                  Schwarz auf Weiß: Harte Fakten aus meiner bisherigen Arbeit.
+                  Harte Fakten aus meiner bisherigen Arbeit.
                 </p>
               </Reveal>
 
