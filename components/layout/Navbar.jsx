@@ -1,10 +1,20 @@
+// /components/layout/Navbar.js
 'use client';
 
-import { AlignRight, X, ArrowRight } from 'lucide-react';
+import { AlignRight, X, ArrowRight, MessageCircle } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+
+const CONTACT_EMAIL = 'hello@leonseitz.com';
+
+// WhatsApp: ersetze die Nummer (international, ohne +)
+const WHATSAPP_NUMBER = '49XXXXXXXXXXX';
+const WHATSAPP_TEXT = encodeURIComponent(
+  `Hi Leon — kurze Projektanfrage.\n\nZiel:\nDeadline:\nStand:\nBudgetrahmen (optional):\nLink/Beispiele (optional):`
+);
+const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_TEXT}`;
 
 const LINKS = [
   { href: '/', label: 'Start', key: '' },
@@ -74,33 +84,34 @@ export default function Navbar() {
 
   const isActive = (key) => pathnameKey === key;
 
+  // (optional) falls du irgendwann Mail-Link in Navbar brauchst:
+  const mailHref = useMemo(() => {
+    const subject = encodeURIComponent('Projektanfrage');
+    const body = encodeURIComponent(`Ziel:\nDeadline:\nStand:\nBudgetrahmen (optional):\nLink/Beispiele (optional):\n`);
+    return `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+  }, []);
+
   return (
     <header className="fixed top-0 left-0 right-0 z-[80]">
       <style>{navKeyframes}</style>
 
-      {/* subtle top glow / separator */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-[radial-gradient(60%_90%_at_50%_0%,rgba(255,255,255,0.10),transparent_70%)] opacity-70" />
 
       <nav className="px-4 md:px-10 pt-4">
         <div
           className={cx(
             'relative mx-auto max-w-6xl rounded-2xl',
-            // Glass base
             'border border-white/12',
             'bg-white/[0.06]',
             'backdrop-blur-2xl',
-            // Apple-ish depth
             'shadow-[0_18px_60px_-40px_rgba(0,0,0,0.85)]',
             'transition-[transform,background-color,border-color,box-shadow] duration-300 ease-out',
-            // Scroll state: slightly smaller + tighter + less “blocking”
             scrolled ? 'bg-white/[0.05] border-white/16 shadow-[0_10px_40px_-35px_rgba(0,0,0,0.85)]' : '',
             scrolled ? 'translate-y-[-2px] scale-[0.985]' : 'translate-y-0 scale-100'
           )}
         >
-          {/* subtle inner hairline */}
           <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10" />
 
-          {/* “shiny” moving sheen (very subtle) */}
           <div
             aria-hidden="true"
             className={cx(
@@ -112,7 +123,6 @@ export default function Navbar() {
             )}
           />
 
-          {/* specular highlight line */}
           <div
             aria-hidden="true"
             className={cx(
@@ -124,13 +134,11 @@ export default function Navbar() {
           />
 
           <div className="relative flex items-center justify-between gap-6 px-4 md:px-6 py-3">
-            {/* Left: Brand */}
             <Link href="/" aria-label="Zur Startseite" className="flex items-center gap-3">
               <Image src="/img/logo-paveo.png" alt="paveo Logo" width={120} height={40} className="h-9 w-auto" priority />
               <span className="hidden sm:inline font-semibold text-white/90">Leon Seitz</span>
             </Link>
 
-            {/* Center: Desktop Links */}
             <ul className="hidden md:flex items-center gap-2">
               {LINKS.map(({ href, label, key }) => {
                 const active = isActive(key);
@@ -144,7 +152,6 @@ export default function Navbar() {
                         active ? 'text-white' : 'text-white/70 hover:text-white/90'
                       )}
                     >
-                      {/* active pill */}
                       <span
                         aria-hidden="true"
                         className={cx(
@@ -160,17 +167,35 @@ export default function Navbar() {
               })}
             </ul>
 
-            {/* Right: Desktop CTA (gradient, “glass” + sheen) */}
             <div className="hidden md:flex items-center gap-2">
+              {/* WhatsApp (klein, neben CTA) */}
+              <a
+                href={WHATSAPP_HREF}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cx(
+                  'group relative inline-flex items-center gap-2',
+                  'px-4 py-2.5 rounded-full font-semibold text-sm',
+                  'text-white/85 hover:text-white',
+                  'bg-white/[0.06] border border-white/12 backdrop-blur-2xl',
+                  'transition-[transform,background-color,border-color] duration-300 ease-out',
+                  'hover:bg-white/[0.08] hover:border-white/18',
+                  'outline-none focus-visible:ring-2 focus-visible:ring-violet-400/70'
+                )}
+                title="WhatsApp"
+              >
+                <MessageCircle size={16} />
+                <span className="hidden lg:inline">WhatsApp</span>
+              </a>
+
+              {/* Main CTA */}
               <Link
                 href={contactHref}
                 className={cx(
                   'group relative inline-flex items-center gap-2',
                   'px-5 py-2.5 rounded-full font-semibold text-sm',
                   'text-black',
-                  // Gradient base (match site)
                   'bg-gradient-to-r from-violet-200 via-indigo-200 to-cyan-200',
-                  // Glass polish
                   'shadow-[0_22px_55px_-35px_rgba(99,102,241,0.55)]',
                   'transition-[transform,filter,box-shadow] duration-300 ease-out',
                   'hover:brightness-[1.03] hover:shadow-[0_26px_70px_-40px_rgba(56,189,248,0.60)]',
@@ -179,7 +204,6 @@ export default function Navbar() {
                 )}
                 role="button"
               >
-                {/* sheen sweep */}
                 <span
                   aria-hidden="true"
                   className={cx(
@@ -191,17 +215,12 @@ export default function Navbar() {
                     'before:animate-[ctaSheen_3.6s_ease-in-out_infinite]'
                   )}
                 />
-                {/* inner top highlight */}
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-0 rounded-full ring-1 ring-inset ring-white/35"
-                />
+                <span aria-hidden="true" className="absolute inset-0 rounded-full ring-1 ring-inset ring-white/35" />
                 <span className="relative">Projekt anfragen</span>
                 <ArrowRight size={16} className="relative transition-transform group-hover:translate-x-0.5" />
               </Link>
             </div>
 
-            {/* Mobile button */}
             <button
               ref={buttonRef}
               type="button"
@@ -217,13 +236,12 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Mobile sheet */}
           <div
             ref={menuRef}
             className={cx(
               'md:hidden overflow-hidden',
               'transition-[max-height,opacity] duration-300 ease-out',
-              openMobileMenu ? 'max-h-[420px] opacity-100' : 'max-h-0 opacity-0'
+              openMobileMenu ? 'max-h-[520px] opacity-100' : 'max-h-0 opacity-0'
             )}
           >
             <div className="px-4 pb-4">
@@ -251,7 +269,7 @@ export default function Navbar() {
                   );
                 })}
 
-                <li className="pt-1">
+                <li className="pt-1 grid grid-cols-1 gap-2">
                   <Link
                     href={contactHref}
                     className={cx(
@@ -262,13 +280,31 @@ export default function Navbar() {
                       'shadow-[0_22px_55px_-35px_rgba(99,102,241,0.55)]'
                     )}
                   >
-                    <span
-                      aria-hidden="true"
-                      className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/35"
-                    />
+                    <span aria-hidden="true" className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/35" />
                     <span className="relative">Projekt anfragen</span>
                     <ArrowRight size={16} className="relative" />
                   </Link>
+
+                  <a
+                    href={WHATSAPP_HREF}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cx(
+                      'inline-flex w-full items-center justify-center gap-2',
+                      'px-5 py-3 rounded-2xl font-semibold',
+                      'text-white/90',
+                      'bg-white/[0.06] border border-white/12 backdrop-blur-xl'
+                    )}
+                  >
+                    <MessageCircle size={16} />
+                    WhatsApp
+                  </a>
+                </li>
+
+                <li className="pt-1">
+                  <div className="text-xs text-white/45 px-1">
+                    Kontakt: <span className="text-white/65">{CONTACT_EMAIL}</span>
+                  </div>
                 </li>
               </ul>
             </div>
@@ -276,7 +312,6 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* spacer so content doesn't sit under fixed nav */}
       <div className="h-[84px] md:h-[92px]" />
     </header>
   );
