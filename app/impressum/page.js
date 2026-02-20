@@ -18,7 +18,7 @@ export default function ImpressumPage() {
         <section className="space-y-2">
           <h2 className="text-2xl font-semibold">Diensteanbieter</h2>
           <p className="text-neutral-300">
-            <strong>Paveo</strong><br />
+            <strong>Leon Seitz</strong><br />
             Am Streitberg 28<br />
             63906 Erlenbach am Main<br />
             Deutschland
