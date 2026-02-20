@@ -4,14 +4,14 @@ import "./globals.css";
 export const metadata = {
   title: "Leon Seitz - Webdesign & digitale Lösungen",
   description: "Design, Content & Strategie – Wir machen Marken sichtbar, professionell & psychologisch wirkungsvoll.",
-  keywords: "Paveo, Branding, Webdesign, Content Creation, Social Media, Lead Generation",
+  keywords: "Branding, Webdesign, Motion Design, Social Media & Videoediting für dein digitales Projekt",
   openGraph: {
     type: 'website',
     locale: 'de_DE',
-    url: 'https://www.paveo.de/',
-    title: 'Paveo',
-    description: 'Design, Content & Strategie – Wir machen Marken sichtbar, professionell & psychologisch wirkungsvoll.',
-    site_name: 'Paveo',
+    url: 'https://www.leonseitz.com/',
+    title: 'Leon Seitz',
+    description: 'Branding, Content und Website für deine Idee. Maßgeschneidert an deine Bedürfnisse.',
+    site_name: 'Leon Seitz - Webdesign & digitale Lösungen',
     images: [
       {
         url: '/logo-paveo.ico', // dein neues Logo als Vorschau
@@ -51,7 +51,7 @@ export default function RootLayout({ children }) {
         <meta name="twitter:site" content="@Paveo" />
 
         {/* Canonical */}
-        <link rel="canonical" href="https://www.paveo.de/" />
+        <link rel="canonical" href="https://www.leonseitz.com/" />
 
         {/* Neues Favicon */}
         <link rel="icon" href="/logo-paveo.ico" sizes="any" />
