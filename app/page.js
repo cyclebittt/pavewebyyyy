@@ -104,6 +104,51 @@ const SCENES = {
   },
 };
 
+/* ---------- NEW: SERVICE SNEAK-PEEKS (lightweight, optional) ---------- */
+
+const SERVICE_SNEAKS = {
+  brandbook: {
+    key: 'brandbook',
+    label: 'Brandbook',
+    mode: 'pdf',
+    title: 'KfA Brandbook – Preview',
+    subtitle: 'PDF als kurzer Einblick (öffnet ohne die Seite zu verlassen).',
+    pdf: '/brandbooks/kfa-brandbook-2026.pdf',
+    fallbackHref: '/portfolio/brandbook',
+    button: 'PDF kurz ansehen',
+  },
+  motion: {
+    key: 'motion',
+    label: 'Motion',
+    mode: 'image',
+    title: 'Motion – Stil & Pace',
+    subtitle: 'Ein schneller Eindruck, dann bei Bedarf ins Portfolio.',
+    image: '/img/portfolio/motion-poster.jpg',
+    href: '/portfolio/motion-design',
+    button: 'Sneak Peek',
+  },
+  web: {
+    key: 'web',
+    label: 'Web',
+    mode: 'image',
+    title: 'Case – Fundraising',
+    subtitle: 'Struktur, Proof, CTA. Ein Beispiel zum Einordnen.',
+    image: '/img/portfolio/FUNDRAISING.png',
+    href: '/portfolio/kirche-fundraising',
+    button: 'Sneak Peek',
+  },
+  edit: {
+    key: 'edit',
+    label: 'Editing',
+    mode: 'image',
+    title: 'Editing – Rhythmus & Klarheit',
+    subtitle: 'Ein Eindruck, dann die Projekte ansehen.',
+    image: '/img/portfolio/thyssenkrupp.png',
+    href: '/portfolio',
+    button: 'Sneak Peek',
+  },
+};
+
 /* ---------- UTIL ---------- */
 
 function cx(...xs) {
@@ -412,6 +457,142 @@ function TiltCard({ children, className = '' }) {
   );
 }
 
+/* ---------- NEW: SNEAK MODAL (minimal, not overfilling) ---------- */
+
+function SneakModal({ open, onClose, payload }) {
+  const overlayRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') onClose?.();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, onClose]);
+
+  if (!open || !payload) return null;
+
+  const isPdf = payload.mode === 'pdf';
+
+  return (
+    <div className="fixed inset-0 z-[80]">
+      <div
+        ref={overlayRef}
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        onMouseDown={(e) => {
+          if (e.target === overlayRef.current) onClose?.();
+        }}
+      />
+
+      <div className="absolute inset-x-0 bottom-0 md:inset-0 md:flex md:items-center md:justify-center p-3 md:p-6">
+        <div className="w-full md:max-w-5xl rounded-3xl border border-white/15 bg-black/30 backdrop-blur-md overflow-hidden">
+          <div className="p-4 md:p-5 border-b border-white/10 flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <div className="text-xs uppercase tracking-wide text-white/55">Sneak Peek</div>
+              <div className="mt-1 text-base md:text-lg font-semibold text-white/90 truncate">{payload.title}</div>
+              <div className="mt-1 text-sm text-white/60">{payload.subtitle}</div>
+            </div>
+
+            <div className="shrink-0 flex gap-2">
+              {payload.fallbackHref ? (
+                <Link
+                  href={payload.fallbackHref}
+                  className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors text-sm font-semibold text-white/90"
+                >
+                  Projekt <ExternalLink size={16} />
+                </Link>
+              ) : null}
+
+              <button
+                type="button"
+                onClick={onClose}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black hover:bg-white/90 transition-colors text-sm font-semibold"
+              >
+                Schließen
+              </button>
+            </div>
+          </div>
+
+          <div className="bg-black/20">
+            {isPdf ? (
+              <div className="relative w-full h-[60vh] md:h-[72vh]">
+                <iframe
+                  className="absolute inset-0 w-full h-full"
+                  src={`${payload.pdf}#view=FitH`}
+                  title={`${payload.title} – PDF`}
+                />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-[1fr_0.95fr]">
+                <div className="relative h-56 md:h-[60vh] bg-white/5">
+                  <Image
+                    src={payload.image}
+                    alt={payload.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover opacity-[0.92]"
+                    priority={false}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/18 to-transparent" />
+                </div>
+
+                <div className="p-4 md:p-6 border-t md:border-t-0 md:border-l border-white/10">
+                  <div className="text-xs uppercase tracking-wide text-white/55">Nächster Schritt</div>
+                  <div className="mt-2 text-sm md:text-base text-white/75 leading-relaxed">
+                    Wenn das in Stil/Qualität passt, geh ins Portfolio oder schick direkt eine kurze Anfrage.
+                  </div>
+
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {payload.href ? (
+                      <Link
+                        href={payload.href}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black hover:bg-white/90 transition-colors text-sm font-semibold"
+                      >
+                        Projekt öffnen <ArrowRight size={16} />
+                      </Link>
+                    ) : null}
+
+                    <Link
+                      href="/portfolio"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors text-sm font-semibold text-white/90"
+                    >
+                      Portfolio <ExternalLink size={16} />
+                    </Link>
+
+                    <Link
+                      href="/#request"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors text-sm font-semibold text-white/90"
+                    >
+                      Kurz anfragen <ArrowRight size={16} />
+                    </Link>
+                  </div>
+
+                  <div className="mt-4 text-xs text-white/55">
+                    Hinweis: Sneak Peek ist bewusst kurz. Details sind im jeweiligen Projekt.
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="p-4 md:p-5 border-t border-white/10 flex items-center justify-between gap-3 flex-wrap">
+            <div className="text-sm text-white/60">
+              Oder direkt: <span className="text-white/80">Ziel · Deadline · Stand</span>
+            </div>
+            <Link
+              href="/#request"
+              className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors font-semibold"
+            >
+              Anfrage starten <ArrowRight size={16} />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ---------- STRUCTURE ---------- */
 
 function Scene({ id, children }) {
@@ -567,7 +748,9 @@ function Stripe({ title, desc, icon }) {
   );
 }
 
-function BigService({ sceneId, icon, kicker, title, desc }) {
+function BigService({ sceneId, icon, kicker, title, desc, onSneak, sneakKey }) {
+  const sneak = sneakKey ? SERVICE_SNEAKS[sneakKey] : null;
+
   return (
     <Reveal>
       <TiltCard className="rounded-3xl">
@@ -597,8 +780,29 @@ function BigService({ sceneId, icon, kicker, title, desc }) {
 
           <p className="mt-4 text-sm md:text-base text-white/70 leading-relaxed max-w-2xl">{desc}</p>
 
-          <div className="mt-6">
-            <Link href="/#request" className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors font-semibold">
+          {/* NEW: small, optional sneak peek CTA (doesn't add content until clicked) */}
+          <div className="mt-6 flex flex-wrap gap-2">
+            {sneak ? (
+              <button
+                type="button"
+                onClick={() => onSneak?.(sneak)}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors text-sm font-semibold text-white/90"
+              >
+                {sneak.button} <ExternalLink size={16} />
+              </button>
+            ) : null}
+
+            <Link
+              href="/portfolio"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors text-sm font-semibold text-white/90"
+            >
+              Portfolio <ExternalLink size={16} />
+            </Link>
+
+            <Link
+              href="/#request"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black hover:bg-white/90 transition-colors text-sm font-semibold"
+            >
               Kurz anfragen <ArrowRight size={16} />
             </Link>
           </div>
@@ -628,6 +832,21 @@ export default function Home() {
   const sectionIds = useMemo(() => SECTIONS.map((s) => s.id), []);
   const { activeId } = useActiveSection(sectionIds);
 
+  // NEW: modal state for sneak peek
+  const [sneakOpen, setSneakOpen] = useState(false);
+  const [sneakPayload, setSneakPayload] = useState(null);
+
+  const openSneak = useCallback((payload) => {
+    setSneakPayload(payload);
+    setSneakOpen(true);
+  }, []);
+
+  const closeSneak = useCallback(() => {
+    setSneakOpen(false);
+    // keep payload briefly to avoid flash during close; optional:
+    setTimeout(() => setSneakPayload(null), 120);
+  }, []);
+
   useEffect(() => {
     const handle = () => {
       const hash = window.location.hash;
@@ -651,6 +870,9 @@ export default function Home() {
       <CursorHalo />
 
       <Navbar />
+
+      {/* NEW: Sneak Peek Modal */}
+      <SneakModal open={sneakOpen} onClose={closeSneak} payload={sneakPayload} />
 
       <main className="md:snap-y md:snap-mandatory">
         {/* 01 */}
@@ -681,7 +903,7 @@ export default function Home() {
               <div className="flex flex-col items-center gap-3">
                 <PrimaryCTA label="Projekt anfragen" />
                 <p className="text-sm md:text-base text-white/65 max-w-xl">
-                 Dann bekommst du eine klare Einschätzung und den nächsten Schritt.
+                  Dann bekommst du eine klare Einschätzung und den nächsten Schritt.
                 </p>
               </div>
             </Reveal>
@@ -744,9 +966,21 @@ export default function Home() {
                   <div className="text-xs uppercase tracking-wide text-white/55">So sieht das als System aus</div>
 
                   <div className="mt-5 space-y-3">
-                    <Stripe title="1) Brandbook" desc="Wir definieren gemeinsam klare Regeln für Farben, Typo, Layout und Tonalität, damit dein Auftritt konsistent wirkt und nicht bei jedem Post neu entschieden werden muss." icon={<BookOpen size={18} />} />
-                    <Stripe title="2) Motion & Video" desc="Mit Motiondesigns und Assets sorge ich dafür, dass deine Inhalte sofort als „deins“ erkennbar sind und schneller produziert werden können." icon={<Play size={18} />} />
-                    <Stripe title="3) Webdevelopment" desc="Lasse deinen Kunden durch klare Führung und ohne Umwege verstehen, was du anbietest." icon={<Monitor size={18} />} />
+                    <Stripe
+                      title="1) Brandbook"
+                      desc="Wir definieren gemeinsam klare Regeln für Farben, Typo, Layout und Tonalität, damit dein Auftritt konsistent wirkt und nicht bei jedem Post neu entschieden werden muss."
+                      icon={<BookOpen size={18} />}
+                    />
+                    <Stripe
+                      title="2) Motion & Video"
+                      desc="Mit Motiondesigns und Assets sorge ich dafür, dass deine Inhalte sofort als „deins“ erkennbar sind und schneller produziert werden können."
+                      icon={<Play size={18} />}
+                    />
+                    <Stripe
+                      title="3) Webdevelopment"
+                      desc="Lasse deinen Kunden durch klare Führung und ohne Umwege verstehen, was du anbietest."
+                      icon={<Monitor size={18} />}
+                    />
                   </div>
 
                   <div className="mt-6 relative rounded-2xl border border-white/15 overflow-hidden h-40 md:h-48">
@@ -808,6 +1042,8 @@ export default function Home() {
                 kicker="Brandbook"
                 title="Guidelines, die im Alltag helfen."
                 desc="Farben, Typo, Layoutregeln, Tonalität, Beispiele. So bleibt alles konsistent – auch wenn später mehr dazukommt."
+                onSneak={openSneak}
+                sneakKey="brandbook"
               />
               <BigService
                 sceneId="s3"
@@ -815,6 +1051,8 @@ export default function Home() {
                 kicker="Motiondesign"
                 title="Bewegung mit Wiedererkennung."
                 desc="Motion Graphics, Vorlagen, Varianten für Einstiege. Damit Inhalte nicht beliebig wirken und du nicht jedes Mal neu anfängst."
+                onSneak={openSneak}
+                sneakKey="motion"
               />
               <BigService
                 sceneId="s3"
@@ -822,6 +1060,8 @@ export default function Home() {
                 kicker="Webdevelopment"
                 title="Websites mit klarer Führung."
                 desc="Aufbau, der schnell verständlich ist: Problem, Lösung, Proof, CTA. Wenig Ablenkung, saubere Umsetzung."
+                onSneak={openSneak}
+                sneakKey="web"
               />
               <BigService
                 sceneId="s3"
@@ -829,6 +1069,8 @@ export default function Home() {
                 kicker="Videoediting"
                 title="Schnitt, der ruhig wirkt – und sitzt."
                 desc="Rhythmus, Timing, Sound, Struktur. Damit ein Video nicht nur fertig ist, sondern gut funktioniert."
+                onSneak={openSneak}
+                sneakKey="edit"
               />
             </div>
           </div>
