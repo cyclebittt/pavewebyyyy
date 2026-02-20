@@ -1078,7 +1078,7 @@ export default function Home() {
                   <GradientPillButton
                     gradient="from-pink-200 via-fuchsia-200 to-indigo-200"
                     icon={<ExternalLink size={16} />}
-                    href="/portfolio/motion"
+                    href="/portfolio/motion-design"
                     external={false}
                   >
                     Motion im Portfolio
