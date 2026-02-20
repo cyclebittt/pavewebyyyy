@@ -3,7 +3,6 @@
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Link from 'next/link';
-import Image from 'next/image';
 import {
   ArrowLeft,
   ArrowRight,
@@ -16,16 +15,36 @@ import {
   Video,
   CheckCircle2,
   ExternalLink,
+  Wand2,
 } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+/* ---------- SCENE (match homepage vibe) ---------- */
+
+const CASE_SCENE = {
+  base: '#070312',
+  g1: `radial-gradient(1200px 700px at 18% 18%, rgba(168,85,247,0.30), transparent 60%),
+       radial-gradient(900px 700px at 82% 25%, rgba(56,189,248,0.14), transparent 55%)`,
+  g2: `linear-gradient(135deg, #070312 0%, #0b0b1a 50%, #03040e 100%)`,
+  blobs: [
+    { cls: 'bg-violet-500/16', x: '-20%', y: '-18%', s: '56rem', blur: 140 },
+    { cls: 'bg-cyan-500/10', x: '70%', y: '10%', s: '54rem', blur: 150 },
+    { cls: 'bg-fuchsia-500/9', x: '20%', y: '80%', s: '46rem', blur: 150 },
+  ],
+  accent: 'from-violet-200 via-indigo-200 to-cyan-200',
+};
 
 /* ---------- UTIL ---------- */
 
-function cx(...xs) {
-  return xs.filter(Boolean).join(' ');
+function cx() {
+  return Array.from(arguments).filter(Boolean).join(' ');
 }
 
-function useReveal<T extends HTMLElement>(ref: React.RefObject<T>) {
+function TitleGradient({ children }) {
+  return <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', CASE_SCENE.accent)}>{children}</span>;
+}
+
+function useReveal(ref) {
   const [shown, setShown] = useState(false);
   useEffect(() => {
     const el = ref.current;
@@ -42,8 +61,8 @@ function useReveal<T extends HTMLElement>(ref: React.RefObject<T>) {
   return shown;
 }
 
-function Reveal({ children, delayMs = 0 }: { children: React.ReactNode; delayMs?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
+function Reveal({ children, delayMs = 0 }) {
+  const ref = useRef(null);
   const shown = useReveal(ref);
 
   return (
@@ -59,6 +78,8 @@ function Reveal({ children, delayMs = 0 }: { children: React.ReactNode; delayMs?
     </div>
   );
 }
+
+/* ---------- PROGRESS + HALO ---------- */
 
 function useScrollProgress() {
   const [p, setP] = useState(0);
@@ -77,12 +98,26 @@ function useScrollProgress() {
   return p;
 }
 
+function ScrollProgressBar() {
+  const p = useScrollProgress();
+  return (
+    <div className="fixed top-0 left-0 right-0 z-[60] pointer-events-none">
+      <div className="h-[2px] bg-white/10">
+        <div
+          className="h-full bg-gradient-to-r from-violet-300 via-cyan-300 to-emerald-300"
+          style={{ width: `${Math.round(p * 100)}%`, transition: 'width 80ms linear' }}
+        />
+      </div>
+    </div>
+  );
+}
+
 function useMousePos() {
   const [pos, setPos] = useState({ x: -9999, y: -9999 });
-  const raf = useRef<number | null>(null);
+  const raf = useRef(null);
 
   useEffect(() => {
-    const onMove = (e: MouseEvent) => {
+    const onMove = (e) => {
       const x = e.clientX;
       const y = e.clientY;
       if (raf.current) cancelAnimationFrame(raf.current);
@@ -98,26 +133,36 @@ function useMousePos() {
   return pos;
 }
 
-/* ---------- CASE SCENE (matches homepage style system) ---------- */
+function CursorHalo() {
+  const { x, y } = useMousePos();
 
-const CASE_SCENE = {
-  base: '#070312',
-  g1: `radial-gradient(1200px 700px at 18% 18%, rgba(168,85,247,0.30), transparent 60%),
-       radial-gradient(900px 700px at 82% 25%, rgba(56,189,248,0.14), transparent 55%)`,
-  g2: `linear-gradient(135deg, #070312 0%, #0b0b1a 50%, #03040e 100%)`,
-  blobs: [
-    { cls: 'bg-violet-500/16', x: '-20%', y: '-18%', s: '56rem', blur: 140 },
-    { cls: 'bg-cyan-500/10', x: '70%', y: '10%', s: '54rem', blur: 150 },
-    { cls: 'bg-fuchsia-500/9', x: '20%', y: '80%', s: '46rem', blur: 150 },
-  ],
-  accent: 'from-violet-200 via-indigo-200 to-cyan-200',
-};
-
-function TitleGradient({ children }: { children: React.ReactNode }) {
-  return <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', CASE_SCENE.accent)}>{children}</span>;
+  return (
+    <div className="hidden md:block fixed inset-0 z-[6] pointer-events-none">
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(800px 600px at ${x}px ${y}px, rgba(255,255,255,0.045), transparent 70%)`,
+          filter: 'blur(18px)',
+          opacity: 0.6,
+          mixBlendMode: 'screen',
+          transition: 'background 80ms linear',
+        }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(1400px 1050px at ${x}px ${y}px, rgba(99,102,241,0.035), transparent 78%)`,
+          filter: 'blur(34px)',
+          opacity: 0.55,
+          mixBlendMode: 'screen',
+          transition: 'background 80ms linear',
+        }}
+      />
+    </div>
+  );
 }
 
-/* ---------- GLOBAL BACKGROUND (single-scene like homepage) ---------- */
+/* ---------- GLOBAL BG ---------- */
 
 function GlobalBackground() {
   return (
@@ -130,7 +175,8 @@ function GlobalBackground() {
         }}
       />
 
-      <div className="pointer-events-none absolute inset-0 opacity-[0.10] mix-blend-overlay"
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.10] mix-blend-overlay"
         style={{
           backgroundImage:
             'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27320%27 viewBox=%270 0 320 320%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.8%27 numOctaves=%273%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27320%27 height=%27320%27 filter=%27url(%23n)%27 opacity=%270.35%27/%3E%3C/svg%3E")',
@@ -172,67 +218,16 @@ function GlobalLightLeaks() {
   );
 }
 
-function ScrollProgressBar() {
-  const p = useScrollProgress();
-  return (
-    <div className="fixed top-0 left-0 right-0 z-[60] pointer-events-none">
-      <div className="h-[2px] bg-white/10">
-        <div
-          className="h-full bg-gradient-to-r from-violet-300 via-cyan-300 to-emerald-300"
-          style={{ width: `${Math.round(p * 100)}%`, transition: 'width 80ms linear' }}
-        />
-      </div>
-    </div>
-  );
-}
-
-function CursorHalo() {
-  const { x, y } = useMousePos();
-
-  return (
-    <div className="hidden md:block fixed inset-0 z-[6] pointer-events-none">
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(800px 600px at ${x}px ${y}px, rgba(255,255,255,0.045), transparent 70%)`,
-          filter: 'blur(18px)',
-          opacity: 0.6,
-          mixBlendMode: 'screen',
-          transition: 'background 80ms linear',
-        }}
-      />
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(1400px 1050px at ${x}px ${y}px, rgba(99,102,241,0.035), transparent 78%)`,
-          filter: 'blur(34px)',
-          opacity: 0.55,
-          mixBlendMode: 'screen',
-          transition: 'background 80ms linear',
-        }}
-      />
-    </div>
-  );
-}
-
 /* ---------- INTERACTIONS ---------- */
 
-function Magnetic({
-  children,
-  strength = 14,
-  className = '',
-}: {
-  children: React.ReactNode;
-  strength?: number;
-  className?: string;
-}) {
-  const ref = useRef<HTMLSpanElement>(null);
+function Magnetic({ children, strength = 14, className = '' }) {
+  const ref = useRef(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    const onMove = (e: MouseEvent) => {
+    const onMove = (e) => {
       const r = el.getBoundingClientRect();
       const cx0 = r.left + r.width / 2;
       const cy0 = r.top + r.height / 2;
@@ -262,14 +257,14 @@ function Magnetic({
   );
 }
 
-function TiltCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
+function TiltCard({ children, className = '' }) {
+  const ref = useRef(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    const onMove = (e: MouseEvent) => {
+    const onMove = (e) => {
       const r = el.getBoundingClientRect();
       const px = (e.clientX - r.left) / r.width;
       const py = (e.clientY - r.top) / r.height;
@@ -316,18 +311,20 @@ function TiltCard({ children, className = '' }: { children: React.ReactNode; cla
   );
 }
 
-/* ---------- SHARED UI ---------- */
+/* ---------- PAGE STRUCTURE ---------- */
 
-function PrimaryCTA({
-  href,
-  label,
-  external = false,
-}: {
-  href: string;
-  label: string;
-  external?: boolean;
-}) {
-  const Inner = (
+function SectionShell({ children }) {
+  return (
+    <section className="relative px-5 md:px-16 py-12 md:py-16">
+      <div className="relative max-w-6xl mx-auto">{children}</div>
+    </section>
+  );
+}
+
+/* ---------- UI ---------- */
+
+function PrimaryCTA({ href, label, external = false }) {
+  const inner = (
     <span className="group px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center justify-center gap-2">
       {label}
       <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
@@ -338,16 +335,16 @@ function PrimaryCTA({
     <Magnetic>
       {external ? (
         <a href={href} target="_blank" rel="noopener noreferrer">
-          {Inner}
+          {inner}
         </a>
       ) : (
-        <Link href={href}>{Inner}</Link>
+        <Link href={href}>{inner}</Link>
       )}
     </Magnetic>
   );
 }
 
-function GhostCTA({ href, children, external = false }: { href: string; children: React.ReactNode; external?: boolean }) {
+function GhostCTA({ href, children, external = false }) {
   return (
     <Magnetic strength={10}>
       {external ? (
@@ -371,7 +368,7 @@ function GhostCTA({ href, children, external = false }: { href: string; children
   );
 }
 
-function Badge({ children }: { children: React.ReactNode }) {
+function Badge({ children }) {
   return (
     <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs md:text-[13px] text-white/85 border border-white/15">
       {children}
@@ -379,7 +376,7 @@ function Badge({ children }: { children: React.ReactNode }) {
   );
 }
 
-function MetaCard({ label, value, icon }: { label: string; value: string; icon?: React.ReactNode }) {
+function MetaCard({ label, value, icon }) {
   return (
     <TiltCard className="rounded-2xl">
       <div className="rounded-2xl border border-white/15 bg-black/20 backdrop-blur-md p-4">
@@ -393,15 +390,7 @@ function MetaCard({ label, value, icon }: { label: string; value: string; icon?:
   );
 }
 
-function MiniCard({
-  icon,
-  title,
-  bullets,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  bullets: string[];
-}) {
+function MiniCard({ icon, title, bullets }) {
   return (
     <Reveal>
       <TiltCard className="rounded-3xl">
@@ -413,11 +402,12 @@ function MiniCard({
               animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite',
             }}
           />
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-white/90">
-              {icon}
+          <div className="flex items-center justify-between gap-4">
+            <div className="inline-flex items-center gap-2 text-xs uppercase tracking-wide text-white/60">
+              <span className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center">{icon}</span>
+              {title}
             </div>
-            <h3 className="text-sm md:text-base font-semibold text-white/90">{title}</h3>
+            <Wand2 size={18} className="text-white/55" />
           </div>
 
           <ul className="mt-4 space-y-2 text-sm text-white/80">
@@ -434,27 +424,13 @@ function MiniCard({
   );
 }
 
-function ImpactItem({ text }: { text: string }) {
+function ImpactItem({ text }) {
   return (
     <TiltCard className="rounded-2xl">
       <div className="rounded-2xl border border-white/15 bg-black/20 backdrop-blur-md p-4 text-sm md:text-base text-white/80">
         {text}
       </div>
     </TiltCard>
-  );
-}
-
-function SectionShell({
-  children,
-  id,
-}: {
-  children: React.ReactNode;
-  id?: string;
-}) {
-  return (
-    <section id={id} className="relative px-5 md:px-16 py-12 md:py-16">
-      <div className="relative max-w-6xl mx-auto">{children}</div>
-    </section>
   );
 }
 
@@ -485,19 +461,15 @@ export default function KircheFundraisingPage() {
       <Navbar />
 
       {/* HERO */}
-      <SectionShell id="top">
+      <SectionShell>
         <div className="flex flex-col gap-8">
           <Reveal>
-            <Link
-              href="/portfolio"
-              className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors"
-            >
+            <Link href="/portfolio" className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors">
               <ArrowLeft size={16} /> Zurück zum Portfolio
             </Link>
           </Reveal>
 
           <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-6 md:gap-8 items-start">
-            {/* LEFT */}
             <div>
               <Reveal>
                 <span className="inline-flex items-center gap-2 text-xs md:text-sm text-white/85 bg-white/10 ring-1 ring-white/15 px-3 py-1 rounded-full">
@@ -535,20 +507,11 @@ export default function KircheFundraisingPage() {
               <Reveal delayMs={320}>
                 <div className="mt-8 flex flex-wrap gap-2">
                   <PrimaryCTA href="https://kircheab.de/spenden" label="Zur Spenden-Seite" external />
-                  <GhostCTA href="/#request">
-                    Ähnliches Projekt anfragen <ArrowRight size={16} />
-                  </GhostCTA>
-                </div>
-              </Reveal>
-
-              <Reveal delayMs={380}>
-                <div className="mt-4 text-sm text-white/60">
-                  Kurzformat: <span className="text-white/70">Ziel, Deadline, Stand</span>. Dann bekommst du eine klare Einschätzung.
+                  <GhostCTA href="/#request">Ähnliches Projekt anfragen</GhostCTA>
                 </div>
               </Reveal>
             </div>
 
-            {/* RIGHT */}
             <Reveal delayMs={140}>
               <TiltCard className="rounded-3xl">
                 <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-4 md:p-5 overflow-hidden relative">
@@ -596,9 +559,7 @@ export default function KircheFundraisingPage() {
                     <GhostCTA href="https://kircheab.de/spenden" external>
                       Landingpage ansehen <ExternalLink size={16} />
                     </GhostCTA>
-                    <GhostCTA href="/portfolio">
-                      Mehr Cases <ArrowRight size={16} />
-                    </GhostCTA>
+                    <GhostCTA href="/portfolio">Mehr Cases <ArrowRight size={16} /></GhostCTA>
                   </div>
                 </div>
               </TiltCard>
@@ -704,7 +665,7 @@ export default function KircheFundraisingPage() {
   );
 }
 
-/* ---------- KEYFRAMES (same as homepage) ---------- */
+/* ---------- KEYFRAMES ---------- */
 
 const globalKeyframes = `
 @keyframes blob {
