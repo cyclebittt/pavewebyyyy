@@ -19,7 +19,7 @@ export default function AGBPage() {
         <section className="space-y-4">
           <h2 className="text-2xl font-semibold">1. Geltungsbereich</h2>
           <p className="text-neutral-300">
-            Diese AGB gelten für alle Verträge zwischen <strong>Paveo</strong> (nachfolgend „Anbieter“) und seinen Kund:innen
+            Diese AGB gelten für alle Verträge zwischen <strong>Leon Seitz</strong> (nachfolgend „Anbieter“) und seinen Kund:innen
             über Dienstleistungen in den Bereichen Branding, Webdesign, Content, Social Media und Leadgenerierung.
           </p>
         </section>
