@@ -1138,7 +1138,7 @@ export default function Home() {
                   <GradientPillButton
                     gradient="from-violet-200 via-indigo-200 to-cyan-200"
                     icon={<ArrowRight size={16} />}
-                    href="/portfolio/video"
+                    href="/portfolio/motion-design"
                     external={false}
                   >
                     Video im Portfolio
