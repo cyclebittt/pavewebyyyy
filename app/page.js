@@ -15,6 +15,7 @@ import {
   BookOpen,
   Mail,
   ExternalLink,
+  X,
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -104,49 +105,15 @@ const SCENES = {
   },
 };
 
-/* ---------- NEW: SERVICE SNEAK-PEEKS (lightweight, optional) ---------- */
+/* ---------- SNEAK CONFIG (EDIT HIER) ---------- */
 
-const SERVICE_SNEAKS = {
-  brandbook: {
-    key: 'brandbook',
-    label: 'Brandbook',
-    mode: 'pdf',
-    title: 'KfA Brandbook – Preview',
-    subtitle: 'PDF als kurzer Einblick (öffnet ohne die Seite zu verlassen).',
-    pdf: '/brandbooks/kfa-brandbook-2026.pdf',
-    fallbackHref: '/portfolio/brandbook',
-    button: 'PDF kurz ansehen',
-  },
-  motion: {
-    key: 'motion',
-    label: 'Motion',
-    mode: 'image',
-    title: 'Motion – Stil & Pace',
-    subtitle: 'Ein schneller Eindruck, dann bei Bedarf ins Portfolio.',
-    image: '/img/portfolio/motion-poster.jpg',
-    href: '/portfolio/motion-design',
-    button: 'Sneak Peek',
-  },
-  web: {
-    key: 'web',
-    label: 'Web',
-    mode: 'image',
-    title: 'Case – Fundraising',
-    subtitle: 'Struktur, Proof, CTA. Ein Beispiel zum Einordnen.',
-    image: '/img/portfolio/FUNDRAISING.png',
-    href: '/portfolio/kirche-fundraising',
-    button: 'Sneak Peek',
-  },
-  edit: {
-    key: 'edit',
-    label: 'Editing',
-    mode: 'image',
-    title: 'Editing – Rhythmus & Klarheit',
-    subtitle: 'Ein Eindruck, dann die Projekte ansehen.',
-    image: '/img/portfolio/thyssenkrupp.png',
-    href: '/portfolio',
-    button: 'Sneak Peek',
-  },
+const BRAND_BOOK_PDF = '/brandbooks/kfa-brandbook-2026.pdf'; // anpassen wenn du willst
+const VIDEOEDITING_YT = 'https://www.youtube.com/YOUR_VIDEO_LINK'; // anpassen
+
+// Platzhalter: du kannst diese drei Bilder pro Service jederzeit austauschen.
+const PREVIEWS = {
+  web: ['/img/portfolio/web1.jpg', '/img/portfolio/web2.jpg', '/img/portfolio/web3.jpg'],
+  motion: ['/img/portfolio/motion1.jpg', '/img/portfolio/motion2.jpg', '/img/portfolio/motion3.jpg'],
 };
 
 /* ---------- UTIL ---------- */
@@ -457,142 +424,6 @@ function TiltCard({ children, className = '' }) {
   );
 }
 
-/* ---------- NEW: SNEAK MODAL (minimal, not overfilling) ---------- */
-
-function SneakModal({ open, onClose, payload }) {
-  const overlayRef = useRef(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e) => {
-      if (e.key === 'Escape') onClose?.();
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [open, onClose]);
-
-  if (!open || !payload) return null;
-
-  const isPdf = payload.mode === 'pdf';
-
-  return (
-    <div className="fixed inset-0 z-[80]">
-      <div
-        ref={overlayRef}
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-        onMouseDown={(e) => {
-          if (e.target === overlayRef.current) onClose?.();
-        }}
-      />
-
-      <div className="absolute inset-x-0 bottom-0 md:inset-0 md:flex md:items-center md:justify-center p-3 md:p-6">
-        <div className="w-full md:max-w-5xl rounded-3xl border border-white/15 bg-black/30 backdrop-blur-md overflow-hidden">
-          <div className="p-4 md:p-5 border-b border-white/10 flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <div className="text-xs uppercase tracking-wide text-white/55">Sneak Peek</div>
-              <div className="mt-1 text-base md:text-lg font-semibold text-white/90 truncate">{payload.title}</div>
-              <div className="mt-1 text-sm text-white/60">{payload.subtitle}</div>
-            </div>
-
-            <div className="shrink-0 flex gap-2">
-              {payload.fallbackHref ? (
-                <Link
-                  href={payload.fallbackHref}
-                  className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors text-sm font-semibold text-white/90"
-                >
-                  Projekt <ExternalLink size={16} />
-                </Link>
-              ) : null}
-
-              <button
-                type="button"
-                onClick={onClose}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black hover:bg-white/90 transition-colors text-sm font-semibold"
-              >
-                Schließen
-              </button>
-            </div>
-          </div>
-
-          <div className="bg-black/20">
-            {isPdf ? (
-              <div className="relative w-full h-[60vh] md:h-[72vh]">
-                <iframe
-                  className="absolute inset-0 w-full h-full"
-                  src={`${payload.pdf}#view=FitH`}
-                  title={`${payload.title} – PDF`}
-                />
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-[1fr_0.95fr]">
-                <div className="relative h-56 md:h-[60vh] bg-white/5">
-                  <Image
-                    src={payload.image}
-                    alt={payload.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover opacity-[0.92]"
-                    priority={false}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/18 to-transparent" />
-                </div>
-
-                <div className="p-4 md:p-6 border-t md:border-t-0 md:border-l border-white/10">
-                  <div className="text-xs uppercase tracking-wide text-white/55">Nächster Schritt</div>
-                  <div className="mt-2 text-sm md:text-base text-white/75 leading-relaxed">
-                    Wenn das in Stil/Qualität passt, geh ins Portfolio oder schick direkt eine kurze Anfrage.
-                  </div>
-
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {payload.href ? (
-                      <Link
-                        href={payload.href}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black hover:bg-white/90 transition-colors text-sm font-semibold"
-                      >
-                        Projekt öffnen <ArrowRight size={16} />
-                      </Link>
-                    ) : null}
-
-                    <Link
-                      href="/portfolio"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors text-sm font-semibold text-white/90"
-                    >
-                      Portfolio <ExternalLink size={16} />
-                    </Link>
-
-                    <Link
-                      href="/#request"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors text-sm font-semibold text-white/90"
-                    >
-                      Kurz anfragen <ArrowRight size={16} />
-                    </Link>
-                  </div>
-
-                  <div className="mt-4 text-xs text-white/55">
-                    Hinweis: Sneak Peek ist bewusst kurz. Details sind im jeweiligen Projekt.
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="p-4 md:p-5 border-t border-white/10 flex items-center justify-between gap-3 flex-wrap">
-            <div className="text-sm text-white/60">
-              Oder direkt: <span className="text-white/80">Ziel · Deadline · Stand</span>
-            </div>
-            <Link
-              href="/#request"
-              className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors font-semibold"
-            >
-              Anfrage starten <ArrowRight size={16} />
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /* ---------- STRUCTURE ---------- */
 
 function Scene({ id, children }) {
@@ -748,9 +579,50 @@ function Stripe({ title, desc, icon }) {
   );
 }
 
-function BigService({ sceneId, icon, kicker, title, desc, onSneak, sneakKey }) {
-  const sneak = sneakKey ? SERVICE_SNEAKS[sneakKey] : null;
+function ServicePreviewStack({ images = [] }) {
+  if (!images?.length) return null;
 
+  return (
+    <div className="relative mt-6 h-28 md:h-32">
+      {images.slice(0, 3).map((src, i) => (
+        <div
+          key={i}
+          className="absolute rounded-xl overflow-hidden border border-white/15 shadow-2xl bg-black/40"
+          style={{
+            width: '62%',
+            height: '100%',
+            left: `${i * 18}%`,
+            zIndex: 10 - i,
+            transform: `rotate(${i === 1 ? '-3deg' : i === 2 ? '4deg' : '0deg'})`,
+          }}
+        >
+          <Image
+            src={src}
+            alt="Preview"
+            fill
+            sizes="(max-width: 768px) 100vw, 520px"
+            className="object-cover opacity-90"
+            priority={false}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function BigService({
+  sceneId,
+  icon,
+  kicker,
+  title,
+  desc,
+  previewImages = [],
+  actionLabel,
+  actionHref,
+  onActionClick,
+  actionExternal = false,
+}) {
   return (
     <Reveal>
       <TiltCard className="rounded-3xl">
@@ -780,31 +652,43 @@ function BigService({ sceneId, icon, kicker, title, desc, onSneak, sneakKey }) {
 
           <p className="mt-4 text-sm md:text-base text-white/70 leading-relaxed max-w-2xl">{desc}</p>
 
-          {/* NEW: small, optional sneak peek CTA (doesn't add content until clicked) */}
-          <div className="mt-6 flex flex-wrap gap-2">
-            {sneak ? (
-              <button
-                type="button"
-                onClick={() => onSneak?.(sneak)}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors text-sm font-semibold text-white/90"
-              >
-                {sneak.button} <ExternalLink size={16} />
-              </button>
-            ) : null}
+          {previewImages?.length ? <ServicePreviewStack images={previewImages} /> : null}
 
-            <Link
-              href="/portfolio"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors text-sm font-semibold text-white/90"
-            >
-              Portfolio <ExternalLink size={16} />
-            </Link>
-
+          <div className="mt-6 flex flex-wrap items-center gap-2">
             <Link
               href="/#request"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black hover:bg-white/90 transition-colors text-sm font-semibold"
+              className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors font-semibold"
             >
               Kurz anfragen <ArrowRight size={16} />
             </Link>
+
+            {actionLabel ? (
+              actionExternal ? (
+                <a
+                  href={actionHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black hover:bg-white/90 transition-colors text-sm font-semibold"
+                >
+                  {actionLabel} <ExternalLink size={16} />
+                </a>
+              ) : actionHref ? (
+                <Link
+                  href={actionHref}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors text-sm font-semibold text-white/90"
+                >
+                  {actionLabel} <ExternalLink size={16} />
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  onClick={onActionClick}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors text-sm font-semibold text-white/90"
+                >
+                  {actionLabel} <ExternalLink size={16} />
+                </button>
+              )
+            ) : null}
           </div>
         </div>
       </TiltCard>
@@ -826,26 +710,71 @@ function Step({ n, title, desc }) {
   );
 }
 
+function PdfPreviewModal({ open, onClose, title, pdf }) {
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') onClose?.();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-[80]">
+      <button
+        type="button"
+        onClick={onClose}
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        aria-label="Modal schließen"
+      />
+      <div className="absolute left-1/2 top-1/2 w-[min(980px,92vw)] -translate-x-1/2 -translate-y-1/2">
+        <TiltCard className="rounded-3xl">
+          <div className="rounded-3xl border border-white/15 bg-black/30 backdrop-blur-md overflow-hidden">
+            <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-white/10">
+              <div className="min-w-0">
+                <div className="text-sm font-semibold text-white/90 truncate">{title}</div>
+                <div className="text-xs text-white/55">Preview (PDF) – wird nur bei Bedarf geladen</div>
+              </div>
+              <div className="flex items-center gap-2">
+                <a
+                  href={pdf}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-2 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors text-xs font-semibold text-white/90 inline-flex items-center gap-2"
+                >
+                  Öffnen <ExternalLink size={14} />
+                </a>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="p-2 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors"
+                  aria-label="Schließen"
+                >
+                  <X size={16} className="text-white/85" />
+                </button>
+              </div>
+            </div>
+
+            <div className="relative w-full h-[58vh] bg-black/30">
+              <iframe className="absolute inset-0 w-full h-full" src={`${pdf}#view=FitH`} title={title} />
+            </div>
+          </div>
+        </TiltCard>
+      </div>
+    </div>
+  );
+}
+
 /* ---------- PAGE ---------- */
 
 export default function Home() {
   const sectionIds = useMemo(() => SECTIONS.map((s) => s.id), []);
   const { activeId } = useActiveSection(sectionIds);
 
-  // NEW: modal state for sneak peek
-  const [sneakOpen, setSneakOpen] = useState(false);
-  const [sneakPayload, setSneakPayload] = useState(null);
-
-  const openSneak = useCallback((payload) => {
-    setSneakPayload(payload);
-    setSneakOpen(true);
-  }, []);
-
-  const closeSneak = useCallback(() => {
-    setSneakOpen(false);
-    // keep payload briefly to avoid flash during close; optional:
-    setTimeout(() => setSneakPayload(null), 120);
-  }, []);
+  const [brandbookOpen, setBrandbookOpen] = useState(false);
 
   useEffect(() => {
     const handle = () => {
@@ -871,8 +800,12 @@ export default function Home() {
 
       <Navbar />
 
-      {/* NEW: Sneak Peek Modal */}
-      <SneakModal open={sneakOpen} onClose={closeSneak} payload={sneakPayload} />
+      <PdfPreviewModal
+        open={brandbookOpen}
+        onClose={() => setBrandbookOpen(false)}
+        title="KfA Brandbook – Preview"
+        pdf={BRAND_BOOK_PDF}
+      />
 
       <main className="md:snap-y md:snap-mandatory">
         {/* 01 */}
@@ -902,13 +835,9 @@ export default function Home() {
             <Reveal delayMs={240}>
               <div className="flex flex-col items-center gap-3">
                 <PrimaryCTA label="Projekt anfragen" />
-                <p className="text-sm md:text-base text-white/65 max-w-xl">
-                  Dann bekommst du eine klare Einschätzung und den nächsten Schritt.
-                </p>
+                <p className="text-sm md:text-base text-white/65 max-w-xl">Dann bekommst du eine klare Einschätzung und den nächsten Schritt.</p>
               </div>
             </Reveal>
-
-            {/* Die 4 Rechtecke/Minikarten wurden bewusst entfernt (wirkt sonst wie „Feature-Liste“ ohne Nutzenbezug). */}
           </div>
         </Scene>
 
@@ -996,9 +925,7 @@ export default function Home() {
                     <div className="absolute bottom-3 left-3 text-sm font-semibold text-white/90"></div>
                   </div>
 
-                  <div className="mt-3 text-xs text-white/55">
-                    : <span className="text-white/70"></span>
-                  </div>
+                  <div className="mt-3 text-xs text-white/55">: <span className="text-white/70"></span></div>
                 </div>
               </div>
             </Reveal>
@@ -1042,35 +969,41 @@ export default function Home() {
                 kicker="Brandbook"
                 title="Guidelines, die im Alltag helfen."
                 desc="Farben, Typo, Layoutregeln, Tonalität, Beispiele. So bleibt alles konsistent – auch wenn später mehr dazukommt."
-                onSneak={openSneak}
-                sneakKey="brandbook"
+                actionLabel="Brandbook preview"
+                onActionClick={() => setBrandbookOpen(true)}
               />
+
               <BigService
                 sceneId="s3"
                 icon={<Play size={18} />}
                 kicker="Motiondesign"
                 title="Bewegung mit Wiedererkennung."
                 desc="Motion Graphics, Vorlagen, Varianten für Einstiege. Damit Inhalte nicht beliebig wirken und du nicht jedes Mal neu anfängst."
-                onSneak={openSneak}
-                sneakKey="motion"
+                previewImages={PREVIEWS.motion}
+                actionLabel="Motion Cases"
+                actionHref="/portfolio/motion-design"
               />
+
               <BigService
                 sceneId="s3"
                 icon={<Monitor size={18} />}
                 kicker="Webdevelopment"
                 title="Websites mit klarer Führung."
                 desc="Aufbau, der schnell verständlich ist: Problem, Lösung, Proof, CTA. Wenig Ablenkung, saubere Umsetzung."
-                onSneak={openSneak}
-                sneakKey="web"
+                previewImages={PREVIEWS.web}
+                actionLabel="Web Case"
+                actionHref="/portfolio/kirche-fundraising"
               />
+
               <BigService
                 sceneId="s3"
                 icon={<Film size={18} />}
                 kicker="Videoediting"
                 title="Schnitt, der ruhig wirkt – und sitzt."
                 desc="Rhythmus, Timing, Sound, Struktur. Damit ein Video nicht nur fertig ist, sondern gut funktioniert."
-                onSneak={openSneak}
-                sneakKey="edit"
+                actionLabel="YouTube Video"
+                actionHref={VIDEOEDITING_YT}
+                actionExternal
               />
             </div>
           </div>
