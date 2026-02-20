@@ -1,8 +1,6 @@
-// /components/layout/Navbar.jsx (oder .js)
 'use client';
 
 import { AlignRight, X, ArrowRight, MessageCircle } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -12,8 +10,36 @@ const LINKS = [
   { href: '/portfolio', label: 'Portfolio', key: 'portfolio' },
 ];
 
+const EMAIL = 'hello@leonseitz.com';
+const WHATSAPP_E164 = '4916095757167';
+const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_E164}?text=${encodeURIComponent(
+  `Hi Leon,\n\nZiel:\nDeadline:\nStand:\n\nKurzer Kontext:`
+)}`;
+const MAIL_HREF = `mailto:${EMAIL}?subject=${encodeURIComponent('Projektanfrage')}&body=${encodeURIComponent(
+  `Hi Leon,\n\nZiel:\nDeadline:\nStand:\n\nKurzer Kontext:`
+)}`;
+
 function cx(...xs) {
   return xs.filter(Boolean).join(' ');
+}
+
+function BrandMark() {
+  // Clean text mark (symmetrischer als ein Bild-Logo)
+  return (
+    <div className="flex items-center gap-3">
+      <span className="relative inline-flex items-center justify-center w-9 h-9 rounded-2xl border border-white/12 bg-white/[0.06] backdrop-blur-xl">
+        <span className="absolute inset-0 rounded-2xl opacity-70 bg-[radial-gradient(60%_80%_at_30%_20%,rgba(255,255,255,0.14),transparent_55%),radial-gradient(60%_80%_at_90%_0%,rgba(99,102,241,0.14),transparent_60%),radial-gradient(60%_90%_at_50%_120%,rgba(56,189,248,0.10),transparent_65%)]" />
+        <span className="relative font-extrabold text-white/90 text-sm tracking-tight">LS</span>
+      </span>
+      <span className="hidden sm:inline font-semibold text-white/90">Leon Seitz</span>
+    </div>
+  );
+}
+
+function NavPill({ children }) {
+  return (
+    <div className="pointer-events-none absolute inset-0 rounded-full bg-white/10 border border-white/12" aria-hidden="true" />
+  );
 }
 
 export default function Navbar() {
@@ -28,11 +54,6 @@ export default function Navbar() {
 
   const isHome = pathnameFull === '/' || pathnameFull === '';
   const contactHref = useMemo(() => (isHome ? '/#request' : '/#request'), [isHome]);
-
-  const whatsappHref = useMemo(() => {
-    // 0160... => international already set here
-    return 'https://wa.me/4916095757167?text=Hi%20Leon%20—%20kurze%20Projektanfrage.%0A%0AZiel:%0ADeadline:%0AStand:%0ABudgetrahmen%20(optional):%0ALink/Beispiele%20(optional):';
-  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -84,16 +105,13 @@ export default function Navbar() {
     <header className="fixed top-0 left-0 right-0 z-[80]">
       <style>{navKeyframes}</style>
 
-      {/* subtle top glow / separator */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-[radial-gradient(60%_90%_at_50%_0%,rgba(255,255,255,0.10),transparent_70%)] opacity-70" />
 
       <nav className="px-4 md:px-10 pt-4">
         <div
           className={cx(
             'relative mx-auto max-w-6xl rounded-2xl',
-            'border border-white/12',
-            'bg-white/[0.06]',
-            'backdrop-blur-2xl',
+            'border border-white/12 bg-white/[0.06] backdrop-blur-2xl',
             'shadow-[0_18px_60px_-40px_rgba(0,0,0,0.85)]',
             'transition-[transform,background-color,border-color,box-shadow] duration-300 ease-out',
             scrolled ? 'bg-white/[0.05] border-white/16 shadow-[0_10px_40px_-35px_rgba(0,0,0,0.85)]' : '',
@@ -106,8 +124,7 @@ export default function Navbar() {
             aria-hidden="true"
             className={cx(
               'pointer-events-none absolute -inset-px rounded-2xl',
-              'opacity-70',
-              'blur-xl',
+              'opacity-70 blur-xl',
               'bg-[radial-gradient(70%_80%_at_20%_10%,rgba(255,255,255,0.12),transparent_55%),radial-gradient(60%_70%_at_85%_0%,rgba(99,102,241,0.12),transparent_60%),radial-gradient(60%_70%_at_70%_120%,rgba(56,189,248,0.10),transparent_60%)]',
               'animate-[navSheen_10s_ease-in-out_infinite]'
             )}
@@ -123,15 +140,17 @@ export default function Navbar() {
             )}
           />
 
-          <div className="relative flex items-center justify-between gap-6 px-4 md:px-6 py-3">
-            {/* Left: Brand */}
-            <Link href="/" aria-label="Zur Startseite" className="flex items-center gap-3">
-              <Image src="/img/logo-paveo.png" alt="paveo Logo" width={120} height={40} className="h-9 w-auto" priority />
-              <span className="hidden sm:inline font-semibold text-white/90">Leon Seitz</span>
-            </Link>
+          {/* KEY: symmetrisches Grid (Left / Center / Right) */}
+          <div className="relative grid grid-cols-[1fr_auto_1fr] items-center px-4 md:px-6 py-3">
+            {/* Left */}
+            <div className="justify-self-start">
+              <Link href="/" aria-label="Zur Startseite" className="inline-flex items-center">
+                <BrandMark />
+              </Link>
+            </div>
 
-            {/* Center: Desktop Links */}
-            <ul className="hidden md:flex items-center gap-2">
+            {/* Center */}
+            <ul className="hidden md:flex items-center gap-2 justify-self-center">
               {LINKS.map(({ href, label, key }) => {
                 const active = isActive(key);
                 return (
@@ -148,10 +167,11 @@ export default function Navbar() {
                         aria-hidden="true"
                         className={cx(
                           'absolute inset-0 rounded-full transition-opacity',
-                          active ? 'opacity-100' : 'opacity-0 hover:opacity-40',
-                          'bg-white/10 border border-white/12'
+                          active ? 'opacity-100' : 'opacity-0 hover:opacity-40'
                         )}
-                      />
+                      >
+                        <NavPill />
+                      </span>
                       <span className="relative">{label}</span>
                     </Link>
                   </li>
@@ -159,28 +179,25 @@ export default function Navbar() {
               })}
             </ul>
 
-            {/* Right: Desktop CTAs */}
-            <div className="hidden md:flex items-center gap-2">
-              {/* WhatsApp */}
+            {/* Right */}
+            <div className="hidden md:flex items-center gap-2 justify-self-end">
               <a
-                href={whatsappHref}
+                href={WHATSAPP_HREF}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cx(
                   'group relative inline-flex items-center gap-2',
-                  'px-5 py-2.5 rounded-full font-semibold text-sm',
+                  'px-4 py-2.5 rounded-full font-semibold text-sm',
                   'text-white/90',
-                  'bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12',
-                  'transition-[transform,filter] duration-300 ease-out',
-                  scrolled ? 'scale-[0.98]' : 'scale-100',
-                  'outline-none focus-visible:ring-2 focus-visible:ring-violet-400/70'
+                  'bg-white/[0.06] border border-white/12 backdrop-blur-xl',
+                  'hover:bg-white/[0.10] transition-colors',
+                  'outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/60'
                 )}
               >
-                <MessageCircle size={16} className="opacity-90" />
-                <span className="relative">WhatsApp</span>
+                <MessageCircle size={16} className="text-white/80" />
+                WhatsApp
               </a>
 
-              {/* Projekt anfragen */}
               <Link
                 href={contactHref}
                 className={cx(
@@ -213,20 +230,28 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* Mobile button */}
-            <button
-              ref={buttonRef}
-              type="button"
-              className={cx(
-                'md:hidden inline-flex items-center justify-center p-2 rounded-xl',
-                'text-white/85 hover:text-white transition-colors',
-                'bg-white/[0.06] border border-white/12 backdrop-blur-xl'
-              )}
-              aria-label={openMobileMenu ? 'Menü schließen' : 'Menü öffnen'}
-              onClick={() => setOpenMobileMenu((v) => !v)}
-            >
-              {openMobileMenu ? <X size={22} /> : <AlignRight size={22} />}
-            </button>
+            {/* Mobile */}
+            <div className="md:hidden justify-self-end flex items-center gap-2">
+              <Link
+                href={contactHref}
+                className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-white text-black font-semibold"
+              >
+                Anfrage
+              </Link>
+              <button
+                ref={buttonRef}
+                type="button"
+                className={cx(
+                  'inline-flex items-center justify-center p-2 rounded-xl',
+                  'text-white/85 hover:text-white transition-colors',
+                  'bg-white/[0.06] border border-white/12 backdrop-blur-xl'
+                )}
+                aria-label={openMobileMenu ? 'Menü schließen' : 'Menü öffnen'}
+                onClick={() => setOpenMobileMenu((v) => !v)}
+              >
+                {openMobileMenu ? <X size={22} /> : <AlignRight size={22} />}
+              </button>
+            </div>
           </div>
 
           {/* Mobile sheet */}
@@ -263,40 +288,32 @@ export default function Navbar() {
                   );
                 })}
 
-                {/* WhatsApp mobile */}
-                <li className="pt-1">
+                <li className="pt-1 grid grid-cols-1 gap-2">
                   <a
-                    href={whatsappHref}
+                    href={WHATSAPP_HREF}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={cx(
-                      'group relative inline-flex w-full items-center justify-center gap-2',
+                      'inline-flex w-full items-center justify-center gap-2',
                       'px-5 py-3 rounded-2xl font-semibold',
-                      'text-white/90',
-                      'bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12'
+                      'border border-white/12 bg-white/[0.06] text-white/90'
                     )}
                   >
-                    <MessageCircle size={16} className="opacity-90" />
-                    <span className="relative">WhatsApp</span>
+                    <MessageCircle size={16} />
+                    WhatsApp
                   </a>
-                </li>
 
-                {/* Anfrage mobile */}
-                <li className="pt-1">
-                  <Link
-                    href={contactHref}
+                  <a
+                    href={MAIL_HREF}
                     className={cx(
-                      'group relative inline-flex w-full items-center justify-center gap-2',
+                      'inline-flex w-full items-center justify-center gap-2',
                       'px-5 py-3 rounded-2xl font-semibold',
-                      'text-black',
-                      'bg-gradient-to-r from-violet-200 via-indigo-200 to-cyan-200',
+                      'bg-gradient-to-r from-violet-200 via-indigo-200 to-cyan-200 text-black',
                       'shadow-[0_22px_55px_-35px_rgba(99,102,241,0.55)]'
                     )}
                   >
-                    <span aria-hidden="true" className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/35" />
-                    <span className="relative">Projekt anfragen</span>
-                    <ArrowRight size={16} className="relative" />
-                  </Link>
+                    Projekt anfragen <ArrowRight size={16} />
+                  </a>
                 </li>
               </ul>
             </div>
