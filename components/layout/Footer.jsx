@@ -1,3 +1,4 @@
+// /components/layout/Footer.jsx (oder .js)
 'use client';
 
 import Link from 'next/link';
@@ -6,9 +7,9 @@ import { ArrowUpRight, MessageCircle, Mail, ExternalLink } from 'lucide-react';
 
 export default function Footer() {
   const whatsappHref =
-    'https://wa.me/4916095757167?text=Hi%20Leon,%0A%0AZiel:%0ADeadline:%0AStand:%0A%0AKurzer%20Kontext:';
+    'https://wa.me/4916095757167?text=Hi%20Leon%20—%20kurze%20Projektanfrage.%0A%0AZiel:%0ADeadline:%0AStand:%0ABudgetrahmen%20(optional):%0ALink/Beispiele%20(optional):';
   const mailHref =
-    'mailto:leonseitz25@icloud.com?subject=Projektanfrage&body=Hi%20Leon,%0A%0AZiel:%0ADeadline:%0AStand:%0A%0AKurzer%20Kontext:';
+    'mailto:hello@leonseitz.com?subject=Projektanfrage&body=Hi%20Leon%20—%20kurze%20Projektanfrage.%0A%0AZiel:%0ADeadline:%0AStand:%0ABudgetrahmen%20(optional):%0ALink/Beispiele%20(optional):';
 
   return (
     <footer className="relative text-white/80">
@@ -66,7 +67,7 @@ export default function Footer() {
                   className="inline-flex items-center gap-2 text-sm text-white/65 hover:text-white transition-colors"
                 >
                   <Mail size={16} />
-                  leonseitz25@icloud.com
+                  hello@leonseitz.com
                 </a>
 
                 <div className="mt-2 rounded-2xl border border-white/10 bg-white/5 p-4">
@@ -75,12 +76,12 @@ export default function Footer() {
                     Ziel:
                     {'\n'}Deadline:
                     {'\n'}Stand:
+                    {'\n'}Budgetrahmen (optional):
+                    {'\n'}Link/Beispiele (optional):
                   </div>
                 </div>
 
-                <p className="text-xs text-white/45">
-                  Datenschutz: Deine Nachricht nutze ich ausschließlich zur Rückmeldung.
-                </p>
+                <p className="text-xs text-white/45">Datenschutz: Deine Nachricht nutze ich ausschließlich zur Rückmeldung.</p>
               </div>
 
               {/* CTA */}
@@ -107,9 +108,7 @@ export default function Footer() {
                   </Link>
                 </div>
 
-                <div className="mt-2 text-xs text-white/45">
-                  Antwortzeit typischerweise: Mo–Fr, innerhalb von 24h.
-                </div>
+                <div className="mt-2 text-xs text-white/45">Antwortzeit typischerweise: Mo–Fr, innerhalb von 24h.</div>
               </div>
             </div>
 
@@ -132,9 +131,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* tiny footer note */}
-        <div className="mt-6 text-xs text-white/35 text-center">
-        </div>
+        <div className="mt-6 text-xs text-white/35 text-center"></div>
       </div>
     </footer>
   );
