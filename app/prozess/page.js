@@ -6,12 +6,12 @@ import Link from 'next/link';
 import {
   ArrowRight,
   CheckCircle2,
-  Circle,
-  Sparkles,
-  Wand2,
-  CreditCard,
-  Shield,
+  Clock,
   ExternalLink,
+  FileSearch,
+  LayoutTemplate,
+  Shield,
+  Sparkles,
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -19,13 +19,13 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 const WHATSAPP_E164 = '4916095757167';
 const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_E164}?text=${encodeURIComponent(
-  `Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel (mehr Anfragen / sauberer Auftritt / beides):\n- Deadline:\n- Link zu aktueller Website (falls vorhanden):\n\nDanke!\n`
+  `Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel (mehr Anfragen / sauberer Auftritt / beides):\n- Deadline:\n- Link zur aktuellen Website (falls vorhanden):\n\nDanke!`
 )}`;
 
-// Wenn Navbar sticky/fixed ist: sorgt dafür, dass Hero nicht "unter" der Navbar sitzt
-const NAV_OFFSET_PX = 96;
+const PORTFOLIO_MOTION = 'https://www.leonseitz.com/portfolio/motion-design';
+const PORTFOLIO_KFA = 'https://www.leonseitz.com/portfolio/kirche-fundraising';
 
-/* ---------- SCENE (match your existing vibe) ---------- */
+/* ---------- SCENE (match homepage vibe) ---------- */
 
 const SCENE = {
   base: '#070312',
@@ -33,9 +33,9 @@ const SCENE = {
        radial-gradient(900px 700px at 82% 25%, rgba(56,189,248,0.14), transparent 55%)`,
   g2: `linear-gradient(135deg, #070312 0%, #0b0b1a 50%, #03040e 100%)`,
   blobs: [
-    { cls: 'bg-violet-500/14', x: '-20%', y: '-18%', s: '56rem', blur: 150 },
-    { cls: 'bg-cyan-500/10', x: '70%', y: '10%', s: '54rem', blur: 160 },
-    { cls: 'bg-fuchsia-500/8', x: '20%', y: '80%', s: '46rem', blur: 160 },
+    { cls: 'bg-violet-500/16', x: '-20%', y: '-18%', s: '56rem', blur: 140 },
+    { cls: 'bg-cyan-500/10', x: '70%', y: '10%', s: '54rem', blur: 150 },
+    { cls: 'bg-fuchsia-500/9', x: '20%', y: '80%', s: '46rem', blur: 150 },
   ],
   accent: 'from-violet-200 via-indigo-200 to-cyan-200',
 };
@@ -70,6 +70,7 @@ function useReveal(ref) {
 function Reveal({ children, delayMs = 0 }) {
   const ref = useRef(null);
   const shown = useReveal(ref);
+
   return (
     <div
       ref={ref}
@@ -88,6 +89,7 @@ function Reveal({ children, delayMs = 0 }) {
 
 function useScrollProgress() {
   const [p, setP] = useState(0);
+
   useEffect(() => {
     const onScroll = () => {
       const doc = document.documentElement;
@@ -98,6 +100,7 @@ function useScrollProgress() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
   return p;
 }
 
@@ -138,6 +141,7 @@ function useMousePos() {
 
 function CursorHalo() {
   const { x, y } = useMousePos();
+
   return (
     <div className="hidden md:block fixed inset-0 z-[6] pointer-events-none">
       <div
@@ -176,6 +180,7 @@ function GlobalBackground() {
           backgroundImage: `${SCENE.g1}, ${SCENE.g2}`,
         }}
       />
+
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.10] mix-blend-overlay"
         style={{
@@ -185,6 +190,7 @@ function GlobalBackground() {
           animation: 'noiseMove 7s linear infinite',
         }}
       />
+
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_35%,transparent_0%,rgba(0,0,0,0.40)_65%,rgba(0,0,0,0.72)_100%)]" />
     </div>
   );
@@ -218,108 +224,11 @@ function GlobalLightLeaks() {
   );
 }
 
-/* ---------- INTERACTIONS ---------- */
-
-function Magnetic({ children, strength = 14, className = '' }) {
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const onMove = (e) => {
-      const r = el.getBoundingClientRect();
-      const cx0 = r.left + r.width / 2;
-      const cy0 = r.top + r.height / 2;
-      const dx = e.clientX - cx0;
-      const dy = e.clientY - cy0;
-      const mx = (dx / r.width) * strength;
-      const my = (dy / r.height) * strength;
-      el.style.transform = `translate3d(${mx}px, ${my}px, 0)`;
-    };
-
-    const onLeave = () => {
-      el.style.transform = 'translate3d(0,0,0)';
-    };
-
-    el.addEventListener('mousemove', onMove);
-    el.addEventListener('mouseleave', onLeave);
-    return () => {
-      el.removeEventListener('mousemove', onMove);
-      el.removeEventListener('mouseleave', onLeave);
-    };
-  }, [strength]);
-
-  return (
-    <span ref={ref} className={cx('inline-flex transition-transform duration-200 ease-out will-change-transform', className)}>
-      {children}
-    </span>
-  );
-}
-
-function TiltCard({ children, className = '' }) {
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const onMove = (e) => {
-      const r = el.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width;
-      const py = (e.clientY - r.top) / r.height;
-      const rx = (0.5 - py) * 10;
-      const ry = (px - 0.5) * 12;
-
-      el.style.setProperty('--rx', `${rx}deg`);
-      el.style.setProperty('--ry', `${ry}deg`);
-      el.style.setProperty('--hx', `${px * 100}%`);
-      el.style.setProperty('--hy', `${py * 100}%`);
-    };
-
-    const onLeave = () => {
-      el.style.setProperty('--rx', `0deg`);
-      el.style.setProperty('--ry', `0deg`);
-    };
-
-    el.addEventListener('mousemove', onMove);
-    el.addEventListener('mouseleave', onLeave);
-    return () => {
-      el.removeEventListener('mousemove', onMove);
-      el.removeEventListener('mouseleave', onLeave);
-    };
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className={cx('relative will-change-transform [transform-style:preserve-3d]', className)}
-      style={{
-        transform: 'perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))',
-        transition: 'transform 180ms ease-out',
-      }}
-    >
-      <div
-        className="pointer-events-none absolute inset-0 rounded-inherit opacity-0 md:opacity-100"
-        style={{
-          background: 'radial-gradient(520px 380px at var(--hx, 50%) var(--hy, 30%), rgba(255,255,255,0.11), transparent 62%)',
-          mixBlendMode: 'screen',
-        }}
-      />
-      {children}
-    </div>
-  );
-}
-
 /* ---------- LAYOUT ---------- */
 
-function SectionShell({ children, id, hero = false }) {
+function SectionShell({ id, children, tight = false }) {
   return (
-    <section
-      id={id}
-      className={cx('relative px-5 md:px-16 py-12 md:py-16 scroll-mt-24', hero ? 'pt-24 md:pt-28' : '')}
-      style={hero ? { paddingTop: `calc(${NAV_OFFSET_PX}px + 2.5rem)` } : undefined}
-    >
+    <section id={id} className={cx('relative px-5 md:px-16', tight ? 'py-10 md:py-12' : 'py-12 md:py-16')}>
       <div className="relative max-w-6xl mx-auto">{children}</div>
     </section>
   );
@@ -327,308 +236,154 @@ function SectionShell({ children, id, hero = false }) {
 
 function Card({ children, className = '' }) {
   return (
-    <TiltCard className={cx('rounded-3xl', className)}>
-      <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8 overflow-hidden relative">
-        <div
-          className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.06]"
-          style={{ filter: 'blur(50px)', animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite' }}
-        />
-        {children}
-      </div>
-    </TiltCard>
+    <div className={cx('rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md', className)}>{children}</div>
   );
 }
 
-function Bullet({ children }) {
+function Pill({ children, tone = 'neutral' }) {
+  const toneCls =
+    tone === 'free'
+      ? 'border-emerald-300/25 bg-emerald-500/10 text-emerald-100'
+      : 'border-white/15 bg-white/10 text-white/85';
+  return <span className={cx('inline-flex items-center rounded-full px-3 py-1 text-xs md:text-sm border', toneCls)}>{children}</span>;
+}
+
+function PackageMetaLink({ href, children }) {
   return (
-    <li className="flex items-start gap-2">
-      <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-      <span>{children}</span>
-    </li>
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-1 underline underline-offset-4 text-white/70 hover:text-white transition-colors"
+    >
+      {children} <ExternalLink size={14} className="text-white/55" />
+    </a>
   );
 }
 
-/* ---------- ROADMAP (green checkmarks + active step) ---------- */
+/* ---------- ROADMAP (scroll checks) ---------- */
 
-function useRoadmapState(stepIds) {
-  const [done, setDone] = useState(() => new Set());
-  const [active, setActive] = useState(stepIds?.[0] ?? null);
+function useRoadmapProgress(initialDoneIds = []) {
+  const [activeStep, setActiveStep] = useState(null);
+  const [doneSteps, setDoneSteps] = useState(() => new Set(initialDoneIds));
 
   useEffect(() => {
-    const els = stepIds.map((id) => document.getElementById(id)).filter(Boolean);
-    if (!els.length) return;
+    // keep "initial done" stable
+    setDoneSteps(new Set(initialDoneIds));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const nodes = Array.from(document.querySelectorAll('[data-roadmap-step]'));
+    if (!nodes.length) return;
 
     const obs = new IntersectionObserver(
       (entries) => {
-        // Active: entry mit höchster Sichtbarkeit
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0));
+        const top = visible[0]?.target?.getAttribute('data-roadmap-step') ?? null;
+        if (top) setActiveStep(top);
 
-        if (visible[0]?.target?.id) setActive(visible[0].target.id);
-
-        // Done: sobald ein Step sichtbar war (dezent)
         entries.forEach((e) => {
-          if (e.isIntersecting && e.intersectionRatio > 0.35) {
-            setDone((prev) => new Set(prev).add(e.target.id));
+          if (e.isIntersecting && (e.intersectionRatio ?? 0) > 0.35) {
+            const id = e.target.getAttribute('data-roadmap-step');
+            if (!id) return;
+            setDoneSteps((prev) => new Set(prev).add(id));
           }
         });
       },
-      { threshold: [0.15, 0.25, 0.35, 0.55, 0.75] }
+      { threshold: [0.2, 0.35, 0.55, 0.75] }
     );
 
-    els.forEach((el) => obs.observe(el));
+    nodes.forEach((n) => obs.observe(n));
     return () => obs.disconnect();
-  }, [stepIds]);
+  }, []);
 
-  return { done, active };
+  return { activeStep, doneSteps };
 }
 
-function Roadmap() {
-  const steps = useMemo(
-    () => [
-      {
-        id: 'rm0',
-        label: 'Sprint 0 (kostenlos)',
-        title: 'Analyse',
-        desc: 'Du bekommst 3 klare Punkte, die Anfragen gerade verhindern.',
-        badge: '0 €',
-        pay: null,
-        defaultDone: true,
-        free: true,
-      },
-      {
-        id: 'rm1',
-        label: 'Sprint 0 (kostenlos)',
-        title: 'Erster Entwurf',
-        desc: 'Du bekommst einen ersten Seiten-Aufbau als Vorschau (Hero + Struktur + CTA).',
-        badge: '0 €',
-        pay: null,
-        defaultDone: true,
-        free: true,
-      },
-      {
-        id: 'rm2',
-        label: 'Sprint 1',
-        title: 'Version 1 + Review',
-        desc: 'Du testest eine lauffähige Version. Danach sagst du: „Passt“ oder „ändern“.',
-        badge: 'Review',
-        pay: { label: 'Zahlung 1 (40%)', rule: 'nur nach deinem „Passt“ nach Sprint 1' },
-      },
-      {
-        id: 'rm3',
-        label: 'Sprint 2',
-        title: 'Feedback umsetzen + Review',
-        desc: 'Ich setze Feedback um. Du prüfst den Zwischenstand.',
-        badge: '2. Review',
-        pay: { label: 'Zahlung 2 (40%)', rule: 'nur nach deiner Freigabe nach Sprint 2' },
-      },
-      {
-        id: 'rm4',
-        label: 'Sprint 3',
-        title: 'Übergabe & Go-Live',
-        desc: 'Zugänge + Dateien. Danach geht es live.',
-        badge: 'Go-Live',
-        pay: { label: 'Zahlung 3 (20%)', rule: 'nur nach Übergabe / live' },
-      },
-    ],
-    []
-  );
+function RoadmapStep({ id, title, desc, badge, badgeTone = 'neutral', state }) {
+  const isActive = state.activeStep === id;
+  const isDone = state.doneSteps.has(id);
 
-  const ids = useMemo(() => steps.map((s) => s.id), [steps]);
-  const { done, active } = useRoadmapState(ids);
-
-  const doneCount = steps.reduce((acc, s) => acc + ((s.defaultDone || done.has(s.id)) ? 1 : 0), 0);
-  const linePct = Math.max(0, Math.min(1, (doneCount - 1) / Math.max(1, steps.length - 1)));
-
-  return (
-    <div className="relative">
-      <div className="absolute left-[18px] top-4 bottom-4 w-[2px] bg-white/10 rounded-full" />
-      <div
-        className="absolute left-[18px] top-4 w-[2px] bg-gradient-to-b from-emerald-200 via-violet-200 to-cyan-200 rounded-full"
-        style={{
-          height: `calc(${linePct * 100}% * (100% - 32px))`,
-          maxHeight: 'calc(100% - 32px)',
-          transition: 'height 700ms ease-out',
-        }}
-      />
-
-      <div className="space-y-3">
-        {steps.map((s) => {
-          const isDone = s.defaultDone || done.has(s.id);
-          const isActive = active === s.id;
-
-          const nodeClass = s.free
-            ? isActive
-              ? 'border-emerald-300/45 bg-emerald-500/10 ring-1 ring-emerald-300/20'
-              : 'border-emerald-300/35 bg-emerald-500/8'
-            : isActive
-              ? 'border-white/25 bg-white/10 ring-1 ring-white/10'
-              : 'border-white/12 bg-black/20';
-
-          return (
-            <div id={s.id} key={s.id} className="relative pl-12">
-              <div className={cx('absolute left-0 top-4 w-9 h-9 rounded-2xl border flex items-center justify-center', nodeClass)}>
-                {isDone ? <CheckCircle2 size={18} className={cx(s.free ? 'text-emerald-200' : 'text-emerald-200')} /> : <Circle size={16} className="text-white/60" />}
-              </div>
-
-              <div
-                className={cx(
-                  'rounded-2xl border backdrop-blur-md p-4 md:p-5 transition-colors',
-                  s.free
-                    ? 'border-emerald-300/20 bg-emerald-500/5'
-                    : 'border-white/15 bg-black/15'
-                )}
-              >
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="text-xs uppercase tracking-wide text-white/55">{s.label}</div>
-                  <span
-                    className={cx(
-                      'inline-flex items-center rounded-full px-3 py-1 text-xs border',
-                      s.free ? 'bg-emerald-500/10 text-emerald-100 border-emerald-300/20' : 'bg-white/10 text-white/85 border-white/15'
-                    )}
-                  >
-                    {s.badge}
-                  </span>
-                </div>
-
-                <div className="mt-2 text-sm md:text-base font-semibold text-white/90">{s.title}</div>
-                <div className="mt-1 text-sm text-white/70 leading-relaxed">{s.desc}</div>
-
-                {s.pay ? (
-                  <div className="mt-3 rounded-xl border border-white/12 bg-black/25 p-3">
-                    <div className="flex items-center gap-2 text-sm text-white/85">
-                      <CreditCard size={16} className="text-white/70" />
-                      <span className="font-semibold">{s.pay.label}</span>
-                    </div>
-                    <div className="mt-1 text-sm text-white/65 flex items-start gap-2">
-                      <Shield size={16} className="mt-[2px] text-white/55" />
-                      <span>{s.pay.rule}</span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="mt-3 rounded-xl border border-emerald-300/20 bg-emerald-500/5 p-3 text-sm text-white/75">
-                    <span className="font-extrabold text-emerald-100">0 €</span> – das bekommst du, bevor irgendwas startet.
-                  </div>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="mt-4 text-xs text-white/55">
-        Der Ablauf ist sprint-basiert. Du prüfst jeden Stand. Zahlungen passieren nur nach deiner Freigabe.
-      </div>
-    </div>
-  );
-}
-
-/* ---------- PACKAGES ---------- */
-
-function PackageCard({ title, price, bullets, time, highlight = false }) {
-  return (
-    <Reveal>
-      <TiltCard className="rounded-3xl">
-        <div
-          className={cx(
-            'rounded-3xl border bg-black/20 backdrop-blur-md p-6 md:p-7 overflow-hidden relative',
-            highlight ? 'border-violet-300/35 ring-1 ring-violet-300/20' : 'border-white/15'
-          )}
-        >
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <div className="text-xs uppercase tracking-wide text-white/55">{title}</div>
-              <div className="mt-2 text-2xl md:text-3xl font-extrabold tracking-tight">
-                <TitleGradient>{price}</TitleGradient>
-              </div>
-            </div>
-
-            {highlight ? (
-              <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs text-white/85 border border-white/15">
-                Am häufigsten gewählt
-              </span>
-            ) : null}
-          </div>
-
-          <ul className="mt-4 space-y-2 text-sm md:text-base text-white/80">
-            {bullets.map((b, i) => (
-              <Bullet key={`${title}-${i}`}>{b}</Bullet>
-            ))}
-          </ul>
-
-          <div className="mt-4 text-sm text-white/65">
-            Lieferzeit: <span className="text-white/85 font-semibold">{time}</span>
-          </div>
-        </div>
-      </TiltCard>
-    </Reveal>
-  );
-}
-
-/* ---------- RECHNER (bigger numbers) ---------- */
-
-function BigEuro({ value }) {
-  return (
-    <div className="leading-none">
-      <div className={cx('bg-clip-text text-transparent bg-gradient-to-r', SCENE.accent, 'font-extrabold tracking-tight')}>
-        <span className="text-[72px] md:text-[104px]">{value}</span>
-        <span className="text-[44px] md:text-[64px] align-baseline ml-2">€</span>
-      </div>
-    </div>
-  );
-}
-
-function PaymentLine({ label, pct, amount, note, emphasize = false }) {
   return (
     <div
+      data-roadmap-step={id}
       className={cx(
-        'rounded-2xl border backdrop-blur-md p-4 md:p-5',
-        emphasize ? 'border-white/20 bg-white/5' : 'border-white/15 bg-black/15'
+        'relative rounded-2xl border p-4 md:p-5 transition-colors',
+        isActive ? 'border-white/25 bg-white/10' : 'border-white/12 bg-white/5'
       )}
     >
-      <div className="text-sm md:text-base font-semibold text-white/90">
-        {label} <span className="text-white/55 font-normal">({pct}%)</span>
+      <div className="flex items-start gap-3">
+        <div className="mt-0.5">
+          <CheckCircle2 size={18} className={cx(isDone ? 'text-emerald-300' : 'text-white/25')} />
+        </div>
+
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
+            {badge ? <Pill tone={badgeTone}>{badge}</Pill> : null}
+          </div>
+          <div className="mt-2 text-sm text-white/70 leading-relaxed">{desc}</div>
+        </div>
       </div>
-      <div className="mt-3">
-        <BigEuro value={amount} />
-      </div>
-      <div className="mt-2 text-sm text-white/70">{note}</div>
+
+      {/* subtle left glow when done */}
+      <div
+        className={cx(
+          'pointer-events-none absolute inset-y-2 left-2 w-1 rounded-full transition-opacity',
+          isDone ? 'opacity-100' : 'opacity-0'
+        )}
+        style={{
+          background: 'linear-gradient(to bottom, rgba(16,185,129,0.0), rgba(16,185,129,0.55), rgba(16,185,129,0.0))',
+          filter: 'blur(0.2px)',
+        }}
+      />
     </div>
   );
+}
+
+/* ---------- CALC ---------- */
+
+function money(n) {
+  const v = Number.isFinite(n) ? n : 0;
+  return Math.round(v);
+}
+
+function calcPayments(total) {
+  const t = Math.max(0, Number(total) || 0);
+  return {
+    p1: money(t * 0.4),
+    p2: money(t * 0.4),
+    p3: money(t * 0.2),
+  };
 }
 
 /* ---------- PAGE ---------- */
 
 export default function ProzessPage() {
-  // Anchor: Startwert MUSS mit erstem sichtbaren Preis harmonieren (Komplett zuerst => 1.100 €)
-  const [amountRaw, setAmountRaw] = useState('1100');
+  // Anchor: start with 1.100 (Komplett) since it is shown first
+  const [selectedPackage, setSelectedPackage] = useState('komplett');
+  const [amount, setAmount] = useState(1100);
 
-  // Paket-Buttons füllen den Rechner; Eingabe bleibt möglich
-  const [selectedPkg, setSelectedPkg] = useState('komplett'); // 'komplett' | 'standard' | 'einstieg'
+  const payments = useMemo(() => calcPayments(amount), [amount]);
 
+  // Roadmap: show first two as already done (0€ start)
+  const roadmapState = useRoadmapProgress(['sprint0', 'sprint1']);
+
+  // Fix: ensure hash scroll works nicely
   useEffect(() => {
-    // initial: ankern auf komplett
-    setSelectedPkg('komplett');
-    setAmountRaw('1100');
+    const handle = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+      const el = document.querySelector(hash);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    handle();
+    window.addEventListener('hashchange', handle);
+    return () => window.removeEventListener('hashchange', handle);
   }, []);
-
-  const amount = useMemo(() => {
-    const n = Number(String(amountRaw).replace(',', '.'));
-    if (!Number.isFinite(n) || n <= 0) return 1100;
-    return Math.round(n);
-  }, [amountRaw]);
-
-  const p1 = Math.round(amount * 0.4);
-  const p2 = Math.round(amount * 0.4);
-  const p3 = Math.round(amount * 0.2);
-
-  const pick = (pkg) => {
-    setSelectedPkg(pkg);
-    if (pkg === 'komplett') setAmountRaw('1100');
-    if (pkg === 'standard') setAmountRaw('700');
-    if (pkg === 'einstieg') setAmountRaw('400');
-  };
 
   return (
     <div className="font-proxima text-white min-h-screen">
@@ -641,69 +396,114 @@ export default function ProzessPage() {
 
       <Navbar />
 
-      {/* HERO: Kostenlos extrem klar + Roadmap direkt sichtbar */}
-      <SectionShell id="hero" hero>
-        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-8 items-start">
-          <div className="flex flex-col gap-5">
+      {/* HERO (fix: spacing under navbar) */}
+      <section className="relative px-5 md:px-16 pt-28 md:pt-36 pb-10 md:pb-14">
+        <div className="relative max-w-6xl mx-auto">
+          <div className="flex flex-col items-center text-center gap-5">
             <Reveal>
-              <span className="inline-flex items-center gap-2 text-xs md:text-sm text-emerald-100 bg-emerald-500/10 ring-1 ring-emerald-300/20 px-3 py-1 rounded-full">
-                <Sparkles size={16} /> 2× kostenlos: Analyse (0 €) + erster Entwurf (0 €)
-              </span>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <Pill tone="free">2× 0 € Start: Analyse + erster Entwurf</Pill>
+                <Pill>
+                  <span className="inline-flex items-center gap-2">
+                    <Sparkles size={16} /> Zahlen nur nach Freigabe
+                  </span>
+                </Pill>
+              </div>
             </Reveal>
 
             <Reveal delayMs={90}>
-              <h1 className="text-3xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
-                Du siehst zuerst etwas,
+              <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight leading-[1.03]">
+                Klarer Ablauf.
                 <span className="block">
-                  <TitleGradient>bevor du zahlst.</TitleGradient>
+                  <TitleGradient>Sprints statt Bauchgefühl.</TitleGradient>
                 </span>
               </h1>
             </Reveal>
 
             <Reveal delayMs={160}>
-              <div className="rounded-3xl border border-emerald-300/20 bg-emerald-500/5 backdrop-blur-md p-5 md:p-6">
-                <div className="text-xs uppercase tracking-wide text-white/55">Kostenloser Einstieg</div>
-                <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div className="rounded-2xl border border-emerald-300/20 bg-black/20 p-4">
-                    <div className="text-sm font-semibold text-emerald-100">Analyse – 0 €</div>
-                    <div className="mt-1 text-sm text-white/75">3 klare Punkte, die Anfragen gerade verhindern.</div>
-                  </div>
-                  <div className="rounded-2xl border border-emerald-300/20 bg-black/20 p-4">
-                    <div className="text-sm font-semibold text-emerald-100">Erster Entwurf – 0 €</div>
-                    <div className="mt-1 text-sm text-white/75">Ein Beispiel-Aufbau als Vorschau (Hero + Struktur + CTA).</div>
-                  </div>
-                </div>
-                <div className="mt-3 text-sm text-white/70">
-                  Danach entscheidest du: weiter oder nicht. Ohne Diskussion.
-                </div>
-              </div>
+              <p className="max-w-2xl text-base md:text-xl text-white/80 leading-relaxed">
+                Du siehst zuerst etwas Konkretes. Dann entscheidest du Sprint für Sprint, ob es weitergeht.
+              </p>
             </Reveal>
 
-            <Reveal delayMs={220}>
-              <div className="rounded-2xl border border-white/12 bg-black/25 p-4 text-sm text-white/75 leading-relaxed">
-                Ablauf in Sprints: Du siehst jeden Stand. Zahlungen passieren nur nach deiner Freigabe.
+            <Reveal delayMs={240}>
+              <div className="max-w-2xl w-full">
+                <Card className="p-5 md:p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div className="rounded-2xl border border-emerald-300/20 bg-emerald-500/10 p-4">
+                      <div className="text-xs uppercase tracking-wide text-emerald-100/90">Kostenlos</div>
+                      <div className="mt-2 text-white/90 font-semibold">Website-Analyse</div>
+                      <div className="mt-1 text-sm text-white/70">Was fehlt, was kostet dich das, was ist der nächste Schritt.</div>
+                    </div>
+                    <div className="rounded-2xl border border-emerald-300/20 bg-emerald-500/10 p-4">
+                      <div className="text-xs uppercase tracking-wide text-emerald-100/90">Kostenlos</div>
+                      <div className="mt-2 text-white/90 font-semibold">Erster Entwurf</div>
+                      <div className="mt-1 text-sm text-white/70">Ein konkreter Aufbau für eine Seite, den du direkt bewerten kannst.</div>
+                    </div>
+                    <div className="rounded-2xl border border-white/12 bg-white/5 p-4">
+                      <div className="text-xs uppercase tracking-wide text-white/55">Prinzip</div>
+                      <div className="mt-2 text-white/90 font-semibold">Zahlung nur nach Review</div>
+                      <div className="mt-1 text-sm text-white/70">Du zahlst erst, wenn du die Sprint-Version gesehen hast.</div>
+                    </div>
+                  </div>
+                </Card>
               </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ANALYSE */}
+      <SectionShell id="analyse" tight>
+        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6 md:gap-8 items-start">
+          <div>
+            <Reveal>
+              <div className="text-xs uppercase tracking-wide text-white/55">Kostenloser Einstieg</div>
+            </Reveal>
+            <Reveal delayMs={90}>
+              <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
+                Du bekommst Klarheit,
+                <span className="block">
+                  <TitleGradient>bevor du irgendwas bezahlst.</TitleGradient>
+                </span>
+              </h2>
+            </Reveal>
+            <Reveal delayMs={160}>
+              <p className="mt-4 text-sm md:text-base text-white/70 max-w-2xl leading-relaxed">
+                Ich prüfe deine Website auf: Verständlichkeit (10-Sekunden-Test), Mobile-Darstellung, Vertrauen (Look &amp; Struktur),
+                und den Weg zur Anfrage (CTA).
+              </p>
             </Reveal>
           </div>
 
           <Reveal delayMs={140}>
-            <Card>
-              <div className="flex items-center justify-between gap-3">
-                <div className="text-xs uppercase tracking-wide text-white/55">Roadmap</div>
-                <Wand2 size={18} className="text-white/55" />
-              </div>
-              <div className="mt-3 text-xl md:text-2xl font-bold text-white/90">
-                Sprints, Reviews, Zahlungen — <TitleGradient>ein System.</TitleGradient>
-              </div>
-              <div className="mt-5">
-                <Roadmap />
+            <Card className="p-5 md:p-6">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-white/10 border border-white/12 flex items-center justify-center">
+                  <FileSearch size={18} className="text-white/80" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-white/90 font-semibold">Ergebnis (kurz &amp; konkret)</div>
+                  <div className="mt-2 text-sm text-white/70 leading-relaxed">
+                    Du bekommst 3–5 klare Punkte: was gerade bremst, was ich ändern würde, und was als nächster Schritt Sinn macht.
+                  </div>
+                  <div className="mt-3 flex items-center gap-2 text-xs text-emerald-100/90">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300/25 bg-emerald-500/10 px-2 py-0.5">
+                      <CheckCircle2 size={14} className="text-emerald-300" /> 0 €
+                    </span>
+                    <span className="text-white/55">Danach optional:</span>
+                    <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300/25 bg-emerald-500/10 px-2 py-0.5">
+                      <LayoutTemplate size={14} className="text-emerald-300" /> 0 € Entwurf
+                    </span>
+                  </div>
+                </div>
               </div>
             </Card>
           </Reveal>
         </div>
       </SectionShell>
 
-      {/* PAKETE (Anchor-Reihenfolge: Komplett -> Standard -> Einstieg) */}
+      {/* PAKETE */}
       <SectionShell id="pakete">
         <Reveal>
           <div className="text-xs uppercase tracking-wide text-white/55">Pakete</div>
@@ -713,210 +513,411 @@ export default function ProzessPage() {
           <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
             Wähle ein Paket.
             <span className="block">
-              <TitleGradient>Der Ablauf bleibt immer gleich.</TitleGradient>
+              <TitleGradient>Der Ablauf bleibt gleich.</TitleGradient>
             </span>
           </h2>
         </Reveal>
 
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-          <PackageCard
-            title="Komplett"
-            price="ab 1.100 €"
-            bullets={[
-              'Website (bis 5 Seiten)',
-              'Mini-Brandbook (Regeln)',
-              <>
-                Motion-Asset{' '}
-                <a
-                  href="https://www.leonseitz.com/portfolio/motion-design"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-white/80 hover:text-white underline underline-offset-4"
-                >
-                  Beispiel ansehen <ExternalLink size={14} />
-                </a>
-              </>,
-            ]}
-            time="ca. 3 Wochen"
-            highlight={false}
-          />
+        <Reveal delayMs={160}>
+          <p className="mt-4 text-sm md:text-base text-white/70 max-w-2xl leading-relaxed">
+            Egal welches Paket: gleiche Sprints, gleiche Reviews, gleiche Transparenz. Die Unterschiede sind nur Umfang und Extras.
+          </p>
+        </Reveal>
 
-          <PackageCard
-            title="Standard"
-            price="ab 700 €"
-            bullets={[
-              'Website (bis 5 Seiten)',
-              'Branding-Grundlage (Farben/Schrift/Logo)',
-              <>
-                Klarer Aufbau wie{' '}
-                <a
-                  href="https://www.leonseitz.com/portfolio/kirche-fundraising"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-white/80 hover:text-white underline underline-offset-4"
-                >
-                  dieses Projekt <ExternalLink size={14} />
-                </a>
-              </>,
-            ]}
-            time="10–14 Tage"
-            highlight
-          />
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+          {/* KOMPLETT (anchor first, no badge) */}
+          <Reveal>
+            <Card className="p-6 md:p-7">
+              <div className="text-xs uppercase tracking-wide text-white/55">Komplett</div>
+              <div className="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+                ab 1.100 <span className="text-white/55">€</span>
+              </div>
+              <ul className="mt-4 space-y-2 text-sm text-white/80">
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+                  <span>Website bis 5 Seiten</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+                  <span>Brandbook (Farben, Typo, Layoutregeln)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+                  <span>
+                    1 Motion-Element{' '}
+                    <span className="ml-1">
+                      <PackageMetaLink href={PORTFOLIO_MOTION}>Beispiel</PackageMetaLink>
+                    </span>
+                  </span>
+                </li>
+              </ul>
+              <div className="mt-5 text-sm text-white/70 flex items-center gap-2">
+                <Clock size={16} className="text-white/60" /> ca. 3 Wochen
+              </div>
+            </Card>
+          </Reveal>
 
-          <PackageCard
-            title="Einstieg"
-            price="ab 400 €"
-            bullets={['1 Landingpage', '1 CTA, klare Struktur', 'Mobil optimiert']}
-            time="7 Tage"
-            highlight={false}
-          />
+          {/* STANDARD (badge + highlight) */}
+          <Reveal delayMs={80}>
+            <Card className="p-6 md:p-7 ring-1 ring-inset ring-violet-300/35 border-white/20">
+              <div className="flex items-center justify-between gap-3">
+                <div className="text-xs uppercase tracking-wide text-white/55">Standard</div>
+                <Pill>Wird am häufigsten gewählt</Pill>
+              </div>
+              <div className="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+                ab 700 <span className="text-white/55">€</span>
+              </div>
+              <ul className="mt-4 space-y-2 text-sm text-white/80">
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+                  <span>Website bis 5 Seiten</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+                  <span>Branding-Grundlage (Farben, Schrift, Logo)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+                  <span>
+                    Aufbau wie im Case{' '}
+                    <span className="ml-1">
+                      <PackageMetaLink href={PORTFOLIO_KFA}>Beispiel</PackageMetaLink>
+                    </span>
+                  </span>
+                </li>
+              </ul>
+              <div className="mt-5 text-sm text-white/70 flex items-center gap-2">
+                <Clock size={16} className="text-white/60" /> 10–14 Tage
+              </div>
+            </Card>
+          </Reveal>
+
+          {/* EINSTIEG */}
+          <Reveal delayMs={120}>
+            <Card className="p-6 md:p-7">
+              <div className="text-xs uppercase tracking-wide text-white/55">Einstieg</div>
+              <div className="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+                ab 400 <span className="text-white/55">€</span>
+              </div>
+              <ul className="mt-4 space-y-2 text-sm text-white/80">
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+                  <span>Eine Landingpage</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+                  <span>Klare Struktur + ein CTA</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+                  <span>Mobil optimiert</span>
+                </li>
+              </ul>
+              <div className="mt-5 text-sm text-white/70 flex items-center gap-2">
+                <Clock size={16} className="text-white/60" /> ~ 7 Tage
+              </div>
+            </Card>
+          </Reveal>
         </div>
 
-        {/* Verbindung Pakete <-> Roadmap (ein mentales Modell) */}
-        <Reveal delayMs={140}>
-          <div className="mt-6 rounded-2xl border border-white/12 bg-black/25 p-4 text-sm text-white/75 leading-relaxed">
-            Der Ablauf ist in allen Paketen identisch: kostenlose Analyse + kostenloser Entwurf, dann Sprint 1/2/3 mit Reviews.
-            Wenn du magst: scrolle kurz zur <a href="#rechner" className="text-white/80 hover:text-white underline underline-offset-4">Zahlungslogik</a>.
-          </div>
-        </Reveal>
+        {/* SYSTEM LINK (merge mental model) */}
+        <div className="mt-6 rounded-2xl border border-white/12 bg-white/5 px-4 py-3 text-sm text-white/75">
+          Der Ablauf ist in allen Paketen identisch: <span className="text-white/90 font-semibold">Sprints + Reviews</span>. Zahlungen werden nur fällig{' '}
+          <span className="text-white/90 font-semibold">nach deiner Freigabe</span>.
+          <Link href="/prozess#roadmap" className="ml-2 underline underline-offset-4 text-white/80 hover:text-white">
+            Ablauf ansehen →
+          </Link>
+        </div>
       </SectionShell>
 
-      {/* RECHNER (Paket-Buttons füllen vor; Default = 1.100 €; Zahlen dominant) */}
+      {/* RECHNER */}
       <SectionShell id="rechner">
-        <Card>
-          <div className="flex items-center justify-between gap-3">
-            <div className="text-xs uppercase tracking-wide text-white/55">Zahlungslogik</div>
-            <Wand2 size={18} className="text-white/55" />
-          </div>
+        <Reveal>
+          <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsrechner</div>
+        </Reveal>
 
+        <Reveal delayMs={90}>
           <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Wähle ein Paket.
+            Wann zahlst du was?
             <span className="block">
-              <TitleGradient>Du siehst sofort, wann was fällig ist.</TitleGradient>
+              <TitleGradient>Nur nach Review.</TitleGradient>
             </span>
           </h2>
+        </Reveal>
 
-          <div className="mt-5 rounded-2xl border border-white/12 bg-black/25 p-4 text-sm text-white/75 leading-relaxed">
-            Wichtig: Die Zahlung kommt erst nach dem Sprint-Review, wenn du sagst: „Passt.“
-          </div>
+        <Reveal delayMs={160}>
+          <p className="mt-4 text-sm md:text-base text-white/70 max-w-2xl leading-relaxed">
+            Wähle ein Paket. Die Beträge werden automatisch übernommen (du kannst sie optional anpassen).
+          </p>
+        </Reveal>
 
-          <div className="mt-6 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-6 md:gap-8 items-start">
-            <div className="rounded-3xl border border-white/15 bg-black/15 backdrop-blur-md p-5 md:p-6">
-              <div className="text-sm text-white/70">Paket auswählen</div>
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-4 md:gap-6">
+          <Card className="p-5 md:p-6">
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedPackage('komplett');
+                  setAmount(1100);
+                }}
+                className={cx(
+                  'px-4 py-2.5 rounded-full text-sm font-semibold border transition-colors',
+                  selectedPackage === 'komplett'
+                    ? 'border-white/25 bg-white text-black'
+                    : 'border-white/15 bg-white/10 hover:bg-white/12'
+                )}
+              >
+                Komplett (1.100 €)
+              </button>
 
-              <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2">
-                <button
-                  onClick={() => pick('einstieg')}
-                  className={cx(
-                    'px-4 py-3 rounded-2xl border text-sm font-semibold transition-colors',
-                    selectedPkg === 'einstieg'
-                      ? 'border-white/25 bg-white/10 text-white'
-                      : 'border-white/12 bg-black/25 text-white/80 hover:bg-white/5'
-                  )}
-                >
-                  Einstieg (400 €)
-                </button>
-                <button
-                  onClick={() => pick('standard')}
-                  className={cx(
-                    'px-4 py-3 rounded-2xl border text-sm font-semibold transition-colors',
-                    selectedPkg === 'standard'
-                      ? 'border-violet-300/35 bg-violet-500/10 text-white'
-                      : 'border-white/12 bg-black/25 text-white/80 hover:bg-white/5'
-                  )}
-                >
-                  Standard (700 €)
-                </button>
-                <button
-                  onClick={() => pick('komplett')}
-                  className={cx(
-                    'px-4 py-3 rounded-2xl border text-sm font-semibold transition-colors',
-                    selectedPkg === 'komplett'
-                      ? 'border-white/25 bg-white/10 text-white'
-                      : 'border-white/12 bg-black/25 text-white/80 hover:bg-white/5'
-                  )}
-                >
-                  Komplett (1.100 €)
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedPackage('standard');
+                  setAmount(700);
+                }}
+                className={cx(
+                  'px-4 py-2.5 rounded-full text-sm font-semibold border transition-colors',
+                  selectedPackage === 'standard'
+                    ? 'border-white/25 bg-white text-black'
+                    : 'border-white/15 bg-white/10 hover:bg-white/12'
+                )}
+              >
+                Standard (700 €)
+              </button>
 
-              <div className="mt-5 text-sm text-white/70">Oder Betrag anpassen (optional)</div>
-              <div className="mt-3 flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedPackage('einstieg');
+                  setAmount(400);
+                }}
+                className={cx(
+                  'px-4 py-2.5 rounded-full text-sm font-semibold border transition-colors',
+                  selectedPackage === 'einstieg'
+                    ? 'border-white/25 bg-white text-black'
+                    : 'border-white/15 bg-white/10 hover:bg-white/12'
+                )}
+              >
+                Einstieg (400 €)
+              </button>
+            </div>
+
+            <div className="mt-4">
+              <label className="text-xs uppercase tracking-wide text-white/55">Optional: Betrag anpassen</label>
+              <div className="mt-2 flex items-center gap-2">
                 <input
-                  value={amountRaw}
-                  onChange={(e) => setAmountRaw(e.target.value)}
                   inputMode="numeric"
-                  className="w-full rounded-2xl border border-white/15 bg-black/35 px-4 py-3 text-white text-lg md:text-xl outline-none focus:border-white/30"
+                  type="number"
+                  min="0"
+                  value={amount}
+                  onChange={(e) => setAmount(Number(e.target.value || 0))}
+                  className="w-full rounded-2xl border border-white/12 bg-black/30 px-4 py-3 text-base text-white outline-none focus:border-white/25"
                   placeholder="z.B. 1100"
-                  aria-label="Projektpreis in Euro"
                 />
-                <div className="text-white/70 font-semibold">€</div>
+                <div className="text-white/60 font-semibold">€</div>
+              </div>
+              <div className="mt-3 text-xs text-white/55">Tipp: Du siehst die erste Sprint-Version, bevor die 2. Rate fällig wird.</div>
+            </div>
+          </Card>
+
+          <Card className="p-5 md:p-6">
+            <div className="text-xs uppercase tracking-wide text-white/55">Zahlung 1 — Projektstart (40%)</div>
+            <div className="mt-3 text-[72px] md:text-[84px] font-extrabold tracking-tight leading-none">
+              {payments.p1} <span className="text-white/55">€</span>
+            </div>
+            <div className="mt-1 text-sm text-white/70">Fällig nach Freigabe von Sprint 1 (nachdem du den Entwurf gesehen hast).</div>
+
+            <div className="mt-6 space-y-4">
+              <div>
+                <div className="text-xs uppercase tracking-wide text-white/55">Zahlung 2 — Review Zwischenstand (40%)</div>
+                <div className="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+                  {payments.p2} <span className="text-white/55">€</span>
+                </div>
+                <div className="mt-1 text-sm text-white/70">Fällig nach Review der ersten laufenden Version.</div>
               </div>
 
-              <div className="mt-5 rounded-2xl border border-emerald-300/20 bg-emerald-500/5 p-4 text-sm text-white/75 leading-relaxed">
-                Vor dem ersten Sprint zahlst du <span className="font-extrabold text-emerald-100">zweimal 0 €</span>:
-                Analyse + Entwurf.
+              <div>
+                <div className="text-xs uppercase tracking-wide text-white/55">Zahlung 3 — Übergabe (20%)</div>
+                <div className="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+                  {payments.p3} <span className="text-white/55">€</span>
+                </div>
+                <div className="mt-1 text-sm text-white/70">Fällig nach finalem Go-Live und Übergabe.</div>
               </div>
             </div>
 
-            <div className="space-y-3">
-              <PaymentLine
-                label="Zahlung 1 – nach Sprint 1"
-                pct={40}
-                amount={p1}
-                note="Fällig nach Review der Version 1 (nur wenn du freigibst)"
-                emphasize
-              />
-              <PaymentLine
-                label="Zahlung 2 – nach Sprint 2"
-                pct={40}
-                amount={p2}
-                note="Fällig nach Review des Zwischenstands (nur wenn du freigibst)"
-              />
-              <PaymentLine
-                label="Zahlung 3 – nach Übergabe"
-                pct={20}
-                amount={p3}
-                note="Fällig nach Go-Live / Übergabe (Zugänge + Dateien)"
-              />
+            <div className="mt-6 rounded-2xl border border-white/12 bg-white/5 p-4 text-sm text-white/75">
+              Du zahlst nur weiter, wenn der Stand stimmt: Sprint → Review → Freigabe. Kein „blind bezahlen“.
             </div>
-          </div>
-        </Card>
+          </Card>
+        </div>
       </SectionShell>
 
-      {/* FINAL CTA (single CTA) */}
+      {/* ROADMAP */}
+      <SectionShell id="roadmap">
+        <Reveal>
+          <div className="text-xs uppercase tracking-wide text-white/55">Roadmap</div>
+        </Reveal>
+
+        <Reveal delayMs={90}>
+          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
+            Sprints mit Meilensteinen.
+            <span className="block">
+              <TitleGradient>Du siehst Fortschritt — sofort.</TitleGradient>
+            </span>
+          </h2>
+        </Reveal>
+
+        <Reveal delayMs={160}>
+          <p className="mt-4 text-sm md:text-base text-white/70 max-w-2xl leading-relaxed">
+            Jeder Sprint endet mit Review. Erst nach deinem „Go“ wird der nächste Schritt fällig.
+          </p>
+        </Reveal>
+
+        <div className="mt-8 grid grid-cols-1 gap-3 md:gap-4">
+          <RoadmapStep
+            id="sprint0"
+            title="Sprint 0 — Analyse"
+            desc="Ich prüfe deine Website: Klarheit, Vertrauen, Mobile, Anfrageweg. Du bekommst 3–5 konkrete Punkte."
+            badge="0 €"
+            badgeTone="free"
+            state={roadmapState}
+          />
+          <RoadmapStep
+            id="sprint1"
+            title="Sprint 1 — Erster Entwurf"
+            desc="Du bekommst einen klaren Aufbau für eine Seite (Struktur + Text-Ansatz). Du sagst: passt oder nicht."
+            badge="0 €"
+            badgeTone="free"
+            state={roadmapState}
+          />
+          <RoadmapStep
+            id="sprint2"
+            title="Sprint 2 — Erste Version"
+            desc="Ich baue eine lauffähige Version. Du testest und gibst Feedback. Zahlung 1 wird erst nach deinem Review fällig."
+            badge="Zahlung 1 (40%) nach Review"
+            state={roadmapState}
+          />
+          <RoadmapStep
+            id="sprint3"
+            title="Sprint 3 — Feinschliff"
+            desc="Änderungen aus dem Review werden sauber umgesetzt. Du bekommst die finale Version zur Freigabe."
+            badge="Zahlung 2 (40%) nach Freigabe"
+            state={roadmapState}
+          />
+          <RoadmapStep
+            id="sprint4"
+            title="Sprint 4 — Go-Live & Übergabe"
+            desc="Ich stelle live, übergebe Zugänge und Dateien. Optional: Betreuung für Updates."
+            badge="Zahlung 3 (20%) nach Übergabe"
+            state={roadmapState}
+          />
+        </div>
+      </SectionShell>
+
+      {/* EINWÄNDE */}
+      <SectionShell id="einwaende" tight>
+        <Reveal>
+          <div className="text-xs uppercase tracking-wide text-white/55">Sicherheit</div>
+        </Reveal>
+
+        <Reveal delayMs={90}>
+          <h2 className="mt-3 text-2xl md:text-4xl font-extrabold leading-tight">
+            Typische Fragen.
+            <span className="block">
+              <TitleGradient>Kurze Antworten.</TitleGradient>
+            </span>
+          </h2>
+        </Reveal>
+
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+          <Card className="p-5">
+            <div className="flex items-start gap-3">
+              <Shield size={18} className="text-white/70 mt-0.5" />
+              <div>
+                <div className="text-white/90 font-semibold">Was, wenn es mir nicht gefällt?</div>
+                <div className="mt-2 text-sm text-white/70">Du siehst Entwurf und erste Version vor der nächsten Zahlung.</div>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-5">
+            <div className="flex items-start gap-3">
+              <Shield size={18} className="text-white/70 mt-0.5" />
+              <div>
+                <div className="text-white/90 font-semibold">Was, wenn ich später etwas ändern will?</div>
+                <div className="mt-2 text-sm text-white/70">Dann entweder Betreuung ab 150 €/Monat oder ein kleines Extra-Projekt.</div>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-5">
+            <div className="flex items-start gap-3">
+              <Shield size={18} className="text-white/70 mt-0.5" />
+              <div>
+                <div className="text-white/90 font-semibold">Was, wenn mein Budget knapp ist?</div>
+                <div className="mt-2 text-sm text-white/70">Wir starten mit Analyse + Entwurf (0 €) und entscheiden dann passend.</div>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </SectionShell>
+
+      {/* RETAINER */}
+      <SectionShell id="betreuung" tight>
+        <Reveal>
+          <div className="text-xs uppercase tracking-wide text-white/55">Nach dem Projekt</div>
+        </Reveal>
+
+        <Reveal delayMs={90}>
+          <h2 className="mt-3 text-2xl md:text-4xl font-extrabold leading-tight">
+            Betreuung optional.
+            <span className="block">
+              <TitleGradient>Monatlich kündbar.</TitleGradient>
+            </span>
+          </h2>
+        </Reveal>
+
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+          <Card className="p-6">
+            <div className="text-white/90 font-semibold">Einmaliges Projekt</div>
+            <div className="mt-2 text-sm text-white/70">Fixer Preis. Saubere Übergabe. Kein Folgevertrag.</div>
+          </Card>
+          <Card className="p-6">
+            <div className="text-white/90 font-semibold">Mit Betreuung</div>
+            <div className="mt-2 text-sm text-white/70">Pflege ab 150 €/Monat. Updates, Anpassungen, Ansprechpartner.</div>
+          </Card>
+        </div>
+      </SectionShell>
+
+      {/* CTA (only CTA) */}
       <SectionShell id="cta">
         <Reveal>
-          <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-10 text-center">
-            <div className="text-xs uppercase tracking-wide text-white/55">Fallback</div>
-            <h3 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">Wenn du willst, schick mir das kurz.</h3>
-            <p className="mt-3 text-sm md:text-base text-white/70 max-w-2xl mx-auto">
-              Ziel, Deadline, Stand. Ich melde mich innerhalb von 24 Stunden.
-            </p>
+          <Card className="p-6 md:p-10">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+              <div>
+                <div className="text-xs uppercase tracking-wide text-white/55">Fallback</div>
+                <div className="mt-3 text-2xl md:text-4xl font-extrabold leading-tight">
+                  Passt das?
+                  <span className="block">
+                    <TitleGradient>Schick mir nur die Basics.</TitleGradient>
+                  </span>
+                </div>
+                <div className="mt-3 text-sm md:text-base text-white/70 max-w-xl">
+                  Branche, Ziel, Deadline, Link zur Website (falls vorhanden). Ich melde mich innerhalb von 24 Stunden.
+                </div>
+              </div>
 
-            <div className="mt-6 flex items-center justify-center">
-              <Magnetic>
-                <a
-                  href={WHATSAPP_HREF}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center justify-center gap-2"
-                >
-                  Per WhatsApp schreiben
-                  <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
-                </a>
-              </Magnetic>
+              <a
+                href={WHATSAPP_HREF}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold"
+              >
+                Per WhatsApp schreiben <ArrowRight size={18} />
+              </a>
             </div>
-
-            <div className="mt-3 text-sm text-white/55">
-              Oder: <Link href="/" className="text-white/70 hover:text-white transition-colors">Startseite</Link>{' '}
-              <span className="text-white/35">·</span>{' '}
-              <Link href="/portfolio" className="text-white/70 hover:text-white transition-colors">Portfolio</Link>
-              <span className="inline-flex items-center gap-1 ml-2 text-white/45">
-                <ExternalLink size={14} />
-              </span>
-            </div>
-          </div>
+          </Card>
         </Reveal>
       </SectionShell>
 
@@ -945,15 +946,6 @@ const globalKeyframes = `
   45% { transform: translate3d(35px, 25px, 0) scale(1.10); }
   85% { transform: translate3d(-30px, -18px, 0) scale(0.94); }
   100% { transform: translate3d(0px, 0px, 0) scale(1); }
-}
-@keyframes shineSoft {
-  0%   { transform: translateX(-220px) rotate(12deg) scale(1);    opacity: 0.00; }
-  12%  { opacity: 0.08; }
-  32%  { transform: translateX(120px) rotate(12deg) scale(1.02);  opacity: 0.06; }
-  46%  { transform: translateX(220px) rotate(12deg) scale(1.01);  opacity: 0.03; }
-  62%  { transform: translateX(220px) rotate(12deg) scale(1.01);  opacity: 0.01; }
-  78%  { transform: translateX(520px) rotate(12deg) scale(1.02);  opacity: 0.05; }
-  100% { transform: translateX(980px) rotate(12deg) scale(1.00);  opacity: 0.00; }
 }
 @keyframes noiseMove {
   0% { transform: translate3d(0,0,0); }
