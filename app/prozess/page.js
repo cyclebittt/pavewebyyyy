@@ -8,10 +8,9 @@ import {
   CheckCircle2,
   Clock,
   ExternalLink,
-  FileSearch,
-  LayoutTemplate,
   Shield,
   Sparkles,
+  Wand2,
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -224,7 +223,7 @@ function GlobalLightLeaks() {
   );
 }
 
-/* ---------- LAYOUT ---------- */
+/* ---------- UI ---------- */
 
 function SectionShell({ id, children, tight = false }) {
   return (
@@ -235,9 +234,7 @@ function SectionShell({ id, children, tight = false }) {
 }
 
 function Card({ children, className = '' }) {
-  return (
-    <div className={cx('rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md', className)}>{children}</div>
-  );
+  return <div className={cx('rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md', className)}>{children}</div>;
 }
 
 function Pill({ children, tone = 'neutral' }) {
@@ -261,7 +258,7 @@ function PackageMetaLink({ href, children }) {
   );
 }
 
-/* ---------- ROADMAP (scroll checks) ---------- */
+/* ---------- ROADMAP (scroll + visual track) ---------- */
 
 function useRoadmapProgress(initialDoneIds = []) {
   const [activeStep, setActiveStep] = useState(null);
@@ -302,41 +299,74 @@ function useRoadmapProgress(initialDoneIds = []) {
   return { activeStep, doneSteps };
 }
 
-function RoadmapStep({ id, title, desc, badge, badgeTone = 'neutral', state }) {
+function RoadmapNode({ id, title, desc, badge, badgeTone = 'neutral', state, isLast = false }) {
   const isActive = state.activeStep === id;
   const isDone = state.doneSteps.has(id);
 
   return (
-    <div
-      data-roadmap-step={id}
-      className={cx(
-        'relative rounded-2xl border p-4 md:p-5 transition-colors',
-        isActive ? 'border-white/25 bg-white/10' : 'border-white/12 bg-white/5'
-      )}
-    >
-      <div className="flex items-start gap-3">
-        <div className="mt-0.5">
-          <CheckCircle2 size={18} className={cx(isDone ? 'text-emerald-300' : 'text-white/25')} />
+    <div data-roadmap-step={id} className="relative">
+      {/* connector "road" */}
+      {!isLast ? (
+        <div className="absolute left-[18px] top-[46px] bottom-[-14px] w-[4px] rounded-full bg-white/10 overflow-hidden">
+          <div
+            className="absolute inset-x-0 top-0 h-full"
+            style={{
+              background: 'linear-gradient(to bottom, rgba(16,185,129,0.0), rgba(16,185,129,0.55), rgba(16,185,129,0.0))',
+              opacity: isDone ? 1 : 0,
+              transition: 'opacity 320ms ease',
+            }}
+          />
+          <div
+            className="absolute inset-0 opacity-30"
+            style={{
+              background:
+                'repeating-linear-gradient(to bottom, rgba(255,255,255,0.10) 0, rgba(255,255,255,0.10) 10px, transparent 10px, transparent 18px)',
+              maskImage: 'linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%)',
+            }}
+          />
         </div>
-
-        <div className="min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
-            {badge ? <Pill tone={badgeTone}>{badge}</Pill> : null}
-          </div>
-          <div className="mt-2 text-sm text-white/70 leading-relaxed">{desc}</div>
-        </div>
-      </div>
+      ) : null}
 
       <div
         className={cx(
-          'pointer-events-none absolute inset-y-2 left-2 w-1 rounded-full transition-opacity',
-          isDone ? 'opacity-100' : 'opacity-0'
+          'relative ml-0 pl-0 rounded-3xl border transition-colors',
+          isActive ? 'border-white/25 bg-white/10' : 'border-white/12 bg-white/5'
         )}
-        style={{
-          background: 'linear-gradient(to bottom, rgba(16,185,129,0.0), rgba(16,185,129,0.55), rgba(16,185,129,0.0))',
-        }}
-      />
+      >
+        <div className="p-5 md:p-6 flex gap-4">
+          {/* "pin" */}
+          <div className="shrink-0 pt-0.5">
+            <div className="relative">
+              <div
+                className={cx(
+                  'w-10 h-10 rounded-2xl border flex items-center justify-center',
+                  isDone ? 'border-emerald-300/30 bg-emerald-500/10' : 'border-white/15 bg-white/10'
+                )}
+              >
+                <CheckCircle2 size={18} className={cx(isDone ? 'text-emerald-300' : 'text-white/30')} />
+              </div>
+
+              {/* subtle glow */}
+              <div
+                className={cx('pointer-events-none absolute inset-0 rounded-2xl opacity-0 md:opacity-100')}
+                style={{
+                  background: isDone
+                    ? 'radial-gradient(18px 18px at 50% 50%, rgba(16,185,129,0.35), transparent 70%)'
+                    : 'radial-gradient(18px 18px at 50% 50%, rgba(255,255,255,0.10), transparent 70%)',
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
+              {badge ? <Pill tone={badgeTone}>{badge}</Pill> : null}
+            </div>
+            <div className="mt-2 text-sm text-white/70 leading-relaxed">{desc}</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -367,13 +397,14 @@ function getRecommendation(amount) {
 /* ---------- PAGE ---------- */
 
 export default function ProzessPage() {
-  // Slider start per request: 700 €
+  // Slider per request:
+  // Range 400–1500, step 50, start 700
   const [amount, setAmount] = useState(700);
 
   const payments = useMemo(() => calcPayments(amount), [amount]);
   const rec = useMemo(() => getRecommendation(amount), [amount]);
 
-  // Roadmap: show first two as already done (kostenloser Start)
+  // show first two as "done" (Kostenlos)
   const roadmapState = useRoadmapProgress(['sprint0', 'sprint1']);
 
   useEffect(() => {
@@ -399,16 +430,16 @@ export default function ProzessPage() {
 
       <Navbar />
 
-      {/* HERO (clean: headline + roadmap only) */}
-      <section className="relative px-5 md:px-16 pt-28 md:pt-36 pb-10 md:pb-14">
+      {/* 1) HERO */}
+      <section className="relative px-5 md:px-16 pt-28 md:pt-36 pb-8 md:pb-10">
         <div className="relative max-w-6xl mx-auto">
           <div className="flex flex-col items-center text-center gap-5">
             <Reveal>
               <div className="flex flex-wrap items-center justify-center gap-2">
-                <Pill tone="free">Kostenloser Start: Analyse + erster Entwurf</Pill>
+                <Pill tone="free">Start: Kostenlos (Analyse + Entwurf)</Pill>
                 <Pill>
                   <span className="inline-flex items-center gap-2">
-                    <Sparkles size={16} /> Du siehst zuerst etwas Konkretes
+                    <Sparkles size={16} /> Sprint-Reviews statt Bauchgefühl
                   </span>
                 </Pill>
               </div>
@@ -416,116 +447,197 @@ export default function ProzessPage() {
 
             <Reveal delayMs={90}>
               <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight leading-[1.03]">
-                Klarer Ablauf.
+                Du siehst erst
                 <span className="block">
-                  <TitleGradient>Sprints mit Review.</TitleGradient>
+                  <TitleGradient>– dann geht’s weiter.</TitleGradient>
                 </span>
               </h1>
             </Reveal>
 
             <Reveal delayMs={160}>
               <p className="max-w-2xl text-base md:text-xl text-white/80 leading-relaxed">
-                Nach jedem Sprint siehst du den Stand. Danach kommt erst das nächste Zahlungsziel.
+                Ein klarer Ablauf in Sprints: Nach jedem Sprint gibt’s ein Review. Danach kommt erst das nächste Zahlungsziel.
               </p>
             </Reveal>
-          </div>
-
-          {/* Roadmap immediately under hero */}
-          <div className="mt-10 md:mt-12" id="roadmap">
-            <div className="grid grid-cols-1 gap-3 md:gap-4">
-              <RoadmapStep
-                id="sprint0"
-                title="Sprint 0 — Analyse"
-                desc="Ich prüfe deine Website: Klarheit, Vertrauen, Mobile, Anfrageweg. Du bekommst 3–5 konkrete Punkte. Danach: nächster Schritt."
-                badge="Kostenlos"
-                badgeTone="free"
-                state={roadmapState}
-              />
-              <RoadmapStep
-                id="sprint1"
-                title="Sprint 1 — Erster Entwurf"
-                desc="Du bekommst einen klaren Aufbau für eine Seite (Struktur + Text-Ansatz). Du sagst: passt oder nicht. Danach: nächster Schritt."
-                badge="Kostenlos"
-                badgeTone="free"
-                state={roadmapState}
-              />
-              <RoadmapStep
-                id="sprint2"
-                title="Sprint 2 — Erste Version"
-                desc="Ich baue eine lauffähige Version. Du testest und gibst Feedback. Danach: Zahlungsziel 1."
-                badge="Zahlungsziel 1 (30%) nach Sprint-Review"
-                state={roadmapState}
-              />
-              <RoadmapStep
-                id="sprint3"
-                title="Sprint 3 — Feinschliff"
-                desc="Änderungen aus dem Review werden sauber umgesetzt. Du bekommst die finale Version zur Freigabe. Danach: Zahlungsziel 2."
-                badge="Zahlungsziel 2 (50%) nach Sprint-Review"
-                state={roadmapState}
-              />
-              <RoadmapStep
-                id="sprint4"
-                title="Sprint 4 — Go-Live & Übergabe"
-                desc="Ich stelle live, übergebe Zugänge und Dateien. Optional: Betreuung für Updates. Danach: Zahlungsziel 3."
-                badge="Zahlungsziel 3 (20%) nach Übergabe"
-                state={roadmapState}
-              />
-            </div>
           </div>
         </div>
       </section>
 
-      {/* ANALYSE */}
-      <SectionShell id="analyse" tight>
-        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6 md:gap-8 items-start">
-          <div>
-            <Reveal>
-              <div className="text-xs uppercase tracking-wide text-white/55">Kostenloser Einstieg</div>
-            </Reveal>
-            <Reveal delayMs={90}>
-              <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-                Du bekommst Klarheit,
-                <span className="block">
-                  <TitleGradient>bevor du dich entscheidest.</TitleGradient>
-                </span>
-              </h2>
-            </Reveal>
-            <Reveal delayMs={160}>
-              <p className="mt-4 text-sm md:text-base text-white/70 max-w-2xl leading-relaxed">
-                Ich prüfe deine Website auf: Verständlichkeit (10-Sekunden-Test), Mobile-Darstellung, Vertrauen (Look &amp; Struktur),
-                und den Weg zur Anfrage (CTA).
-              </p>
-            </Reveal>
-          </div>
+      {/* 2) ROADMAP (visually like a roadmap) */}
+      <SectionShell id="roadmap" tight>
+        <Reveal>
+          <div className="text-xs uppercase tracking-wide text-white/55">Roadmap</div>
+        </Reveal>
 
-          <Reveal delayMs={140}>
-            <Card className="p-5 md:p-6">
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-white/10 border border-white/12 flex items-center justify-center">
-                  <FileSearch size={18} className="text-white/80" />
-                </div>
-                <div className="min-w-0">
-                  <div className="text-white/90 font-semibold">Ergebnis (kurz &amp; konkret)</div>
-                  <div className="mt-2 text-sm text-white/70 leading-relaxed">
-                    Du bekommst 3–5 klare Punkte: was gerade bremst, was ich ändern würde, und was als nächster Schritt Sinn macht.
-                  </div>
-                  <div className="mt-3 flex items-center gap-2 text-xs text-emerald-100/90">
-                    <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300/25 bg-emerald-500/10 px-2 py-0.5">
-                      <CheckCircle2 size={14} className="text-emerald-300" /> Kostenlos
-                    </span>
-                    <span className="text-white/55">danach:</span>
-                    <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300/25 bg-emerald-500/10 px-2 py-0.5">
-                      <LayoutTemplate size={14} className="text-emerald-300" /> Kostenloser Entwurf
-                    </span>
-                  </div>
-                </div>
+        <Reveal delayMs={90}>
+          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
+            Ablauf als Strecke.
+            <span className="block">
+              <TitleGradient>Du siehst, wo du gerade bist.</TitleGradient>
+            </span>
+          </h2>
+        </Reveal>
+
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-4 md:gap-6 items-start">
+          {/* left: visual "road" card */}
+          <Card className="p-6 md:p-7 overflow-hidden relative">
+            <div
+              className="pointer-events-none absolute -left-40 -top-24 h-[160%] w-72 rotate-12 bg-white/10 opacity-[0.06]"
+              style={{ filter: 'blur(60px)', animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite' }}
+            />
+
+            <div className="text-white/90 font-semibold">Sprint-System</div>
+            <div className="mt-2 text-sm text-white/70 leading-relaxed">
+              Jeder Sprint endet mit einem Review. Danach ist klar: weiter / anpassen / stoppen.
+            </div>
+
+            <div className="mt-5 flex flex-wrap gap-2">
+              <Pill tone="free">Sprint 0: Kostenlos</Pill>
+              <Pill tone="free">Sprint 1: Kostenlos</Pill>
+              <Pill>Danach: Zahlungsziele</Pill>
+            </div>
+
+            {/* tiny legend */}
+            <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
+              <div className="rounded-2xl border border-emerald-300/20 bg-emerald-500/10 p-3">
+                <div className="text-xs uppercase tracking-wide text-emerald-100/90">Kostenlos</div>
+                <div className="mt-1 text-white/80">Analyse &amp; Entwurf</div>
               </div>
-            </Card>
-          </Reveal>
+              <div className="rounded-2xl border border-white/12 bg-white/5 p-3">
+                <div className="text-xs uppercase tracking-wide text-white/55">Review</div>
+                <div className="mt-1 text-white/80">nächster Schritt</div>
+              </div>
+            </div>
+          </Card>
+
+          {/* right: roadmap nodes (the actual scroll-tracked content) */}
+          <div className="grid grid-cols-1 gap-3 md:gap-4">
+            <RoadmapNode
+              id="sprint0"
+              title="Sprint 0 — Analyse"
+              desc="Klarheit, Vertrauen, Mobile, Anfrageweg. Du bekommst 3–5 konkrete Punkte."
+              badge="Kostenlos"
+              badgeTone="free"
+              state={roadmapState}
+            />
+            <RoadmapNode
+              id="sprint1"
+              title="Sprint 1 — Erster Entwurf"
+              desc="Du siehst einen konkreten Aufbau für eine Seite. Danach entscheiden wir, ob wir weitergehen."
+              badge="Kostenlos"
+              badgeTone="free"
+              state={roadmapState}
+            />
+            <RoadmapNode
+              id="sprint2"
+              title="Sprint 2 — Erste Version"
+              desc="Lauffähige Version zum Testen + Feedback. Danach: Zahlungsziel 1 (30%)."
+              badge="Zahlungsziel 1 nach Review"
+              state={roadmapState}
+            />
+            <RoadmapNode
+              id="sprint3"
+              title="Sprint 3 — Feinschliff"
+              desc="Änderungen aus dem Review werden umgesetzt. Danach: Zahlungsziel 2 (50%)."
+              badge="Zahlungsziel 2 nach Review"
+              state={roadmapState}
+            />
+            <RoadmapNode
+              id="sprint4"
+              title="Sprint 4 — Go-Live & Übergabe"
+              desc="Live stellen, Zugänge & Dateien. Danach: Zahlungsziel 3 (20%)."
+              badge="Zahlungsziel 3 nach Übergabe"
+              state={roadmapState}
+              isLast
+            />
+          </div>
         </div>
       </SectionShell>
 
-      {/* PAKETE */}
+      {/* 3) RECHNER WITH SLIDER */}
+      <SectionShell id="rechner">
+        <Reveal>
+          <div className="text-xs uppercase tracking-wide text-white/55">Rahmen wählen</div>
+        </Reveal>
+
+        <Reveal delayMs={90}>
+          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
+            Slider bewegen.
+            <span className="block">
+              <TitleGradient>Du siehst sofort die Zahlungsziele.</TitleGradient>
+            </span>
+          </h2>
+        </Reveal>
+
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-4 md:gap-6">
+          <Card className="p-6 md:p-7">
+            <div className="text-xs uppercase tracking-wide text-white/55">Betrag</div>
+
+            <div className="mt-4">
+              <input
+                type="range"
+                min={400}
+                max={1500}
+                step={50}
+                value={amount}
+                onChange={(e) => setAmount(Number(e.target.value))}
+                className="w-full accent-white"
+              />
+              <div className="mt-2 flex items-center justify-between text-xs text-white/45">
+                <span>400 €</span>
+                <span>1.500 €</span>
+              </div>
+            </div>
+
+            <div className="mt-5">
+              {/* dominant number */}
+              <div className="text-[76px] md:text-[92px] font-extrabold tracking-tight leading-none">
+                {amount} <span className="text-white/55">€</span>
+              </div>
+              <div className="mt-2 text-base md:text-lg text-white/80 font-semibold">{rec.text}</div>
+            </div>
+
+            <div className="mt-6 rounded-2xl border border-emerald-300/20 bg-emerald-500/10 p-4">
+              <div className="text-xs uppercase tracking-wide text-emerald-100/90">Start ist kostenlos</div>
+              <div className="mt-2 text-sm text-white/75 leading-relaxed">
+                Sprint 0 (Analyse) und Sprint 1 (Entwurf) sind kostenlos. Danach geht es Sprint für Sprint weiter.
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6 md:p-7">
+            <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsziel 1 — nach Sprint-Review (30%)</div>
+            <div className="mt-3 text-4xl md:text-5xl font-extrabold tracking-tight leading-none">
+              {payments.p1} <span className="text-white/55">€</span>
+            </div>
+            <div className="mt-1 text-sm text-white/70">Nach Sprint 2 (erste Version gesehen).</div>
+
+            <div className="mt-6 space-y-4">
+              <div>
+                <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsziel 2 — nach Sprint-Review (50%)</div>
+                <div className="mt-2 text-4xl md:text-5xl font-extrabold tracking-tight">
+                  {payments.p2} <span className="text-white/55">€</span>
+                </div>
+                <div className="mt-1 text-sm text-white/70">Nach Sprint 3 (Feinschliff freigegeben).</div>
+              </div>
+
+              <div>
+                <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsziel 3 — nach Übergabe (20%)</div>
+                <div className="mt-2 text-4xl md:text-5xl font-extrabold tracking-tight">
+                  {payments.p3} <span className="text-white/55">€</span>
+                </div>
+                <div className="mt-1 text-sm text-white/70">Nach Sprint 4 (Go-Live + Übergabe).</div>
+              </div>
+            </div>
+
+            <div className="mt-6 rounded-2xl border border-white/12 bg-white/5 p-4 text-sm text-white/75">
+              Sprint → Review → nächstes Zahlungsziel. Transparent und Schritt für Schritt.
+            </div>
+          </Card>
+        </div>
+      </SectionShell>
+
+      {/* 4) PAKETE WITH RECOMMENDATION (highlight card) */}
       <SectionShell id="pakete">
         <Reveal>
           <div className="text-xs uppercase tracking-wide text-white/55">Pakete</div>
@@ -533,26 +645,26 @@ export default function ProzessPage() {
 
         <Reveal delayMs={90}>
           <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Wähle den Rahmen.
+            Umfang wählen.
             <span className="block">
-              <TitleGradient>Der Ablauf ist immer identisch.</TitleGradient>
+              <TitleGradient>Empfehlung ist schon gesetzt.</TitleGradient>
             </span>
           </h2>
         </Reveal>
 
-        <Reveal delayMs={160}>
-          <p className="mt-4 text-sm md:text-base text-white/70 max-w-2xl leading-relaxed">
-            Gleiche Sprints, gleiche Reviews, gleiche Transparenz. Unterschiede sind nur Umfang und Extras.
-          </p>
-        </Reveal>
+        <div className="mt-6 rounded-2xl border border-white/12 bg-white/5 px-4 py-3 text-sm text-white/75">
+          Der Ablauf ist in allen Paketen identisch (Sprints + Reviews). Unterschiede sind nur Umfang und Extras.
+        </div>
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
           {/* KOMPLETT */}
           <Reveal>
             <Card
               className={cx(
-                'p-6 md:p-7 transition-opacity',
-                rec.key === 'komplett' ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100' : 'opacity-55'
+                'p-6 md:p-7 transition-all',
+                rec.key === 'komplett'
+                  ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100 translate-y-0'
+                  : 'opacity-55 translate-y-0'
               )}
             >
               <div className="text-xs uppercase tracking-wide text-white/55">Komplett</div>
@@ -585,8 +697,10 @@ export default function ProzessPage() {
           <Reveal delayMs={80}>
             <Card
               className={cx(
-                'p-6 md:p-7 transition-opacity',
-                rec.key === 'standard' ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100' : 'opacity-55'
+                'p-6 md:p-7 transition-all',
+                rec.key === 'standard'
+                  ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100 translate-y-0'
+                  : 'opacity-55 translate-y-0'
               )}
             >
               <div className="flex items-center justify-between gap-3">
@@ -622,8 +736,10 @@ export default function ProzessPage() {
           <Reveal delayMs={120}>
             <Card
               className={cx(
-                'p-6 md:p-7 transition-opacity',
-                rec.key === 'einstieg' ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100' : 'opacity-55'
+                'p-6 md:p-7 transition-all',
+                rec.key === 'einstieg'
+                  ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100 translate-y-0'
+                  : 'opacity-55 translate-y-0'
               )}
             >
               <div className="text-xs uppercase tracking-wide text-white/55">Einstieg</div>
@@ -650,98 +766,9 @@ export default function ProzessPage() {
             </Card>
           </Reveal>
         </div>
-
-        <div className="mt-6 rounded-2xl border border-white/12 bg-white/5 px-4 py-3 text-sm text-white/75">
-          Der Ablauf ist in allen Paketen identisch: <span className="text-white/90 font-semibold">Sprints + Reviews</span>. Nach jedem Sprint kommt ein klarer nächster Schritt.
-          <Link href="/prozess#rechner" className="ml-2 underline underline-offset-4 text-white/80 hover:text-white">
-            Zahlungsziele ansehen →
-          </Link>
-        </div>
       </SectionShell>
 
-      {/* RECHNER (slider + recommendation) */}
-      <SectionShell id="rechner">
-        <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsrechner</div>
-        </Reveal>
-
-        <Reveal delayMs={90}>
-          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Rahmen wählen.
-            <span className="block">
-              <TitleGradient>Dann siehst du die Zahlungsziele.</TitleGradient>
-            </span>
-          </h2>
-        </Reveal>
-
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-4 md:gap-6">
-          <Card className="p-5 md:p-6">
-            <div className="text-xs uppercase tracking-wide text-white/55">Betrag auswählen</div>
-
-            <div className="mt-4">
-              <input
-                type="range"
-                min={400}
-                max={1500}
-                step={50}
-                value={amount}
-                onChange={(e) => setAmount(Number(e.target.value))}
-                className="w-full accent-white"
-              />
-              <div className="mt-2 flex items-center justify-between text-xs text-white/45">
-                <span>400 €</span>
-                <span>1.500 €</span>
-              </div>
-            </div>
-
-            <div className="mt-5">
-              <div className="text-[72px] md:text-[84px] font-extrabold tracking-tight leading-none">
-                {amount} <span className="text-white/55">€</span>
-              </div>
-              <div className="mt-2 text-base md:text-lg text-white/80 font-semibold">{rec.text}</div>
-            </div>
-
-            <div className="mt-6 rounded-2xl border border-emerald-300/20 bg-emerald-500/10 p-4">
-              <div className="text-xs uppercase tracking-wide text-emerald-100/90">Start ist kostenlos</div>
-              <div className="mt-2 text-sm text-white/75 leading-relaxed">
-                Erst Analyse, dann erster Entwurf. Du siehst etwas Konkretes, bevor ein Rahmen relevant wird.
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-5 md:p-6">
-            <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsziel 1 — nach Sprint-Review (30%)</div>
-            <div className="mt-3 text-4xl md:text-5xl font-extrabold tracking-tight leading-none">
-              {payments.p1} <span className="text-white/55">€</span>
-            </div>
-            <div className="mt-1 text-sm text-white/70">Nach Sprint 2 (erste lauffähige Version gesehen).</div>
-
-            <div className="mt-6 space-y-4">
-              <div>
-                <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsziel 2 — nach Sprint-Review (50%)</div>
-                <div className="mt-2 text-4xl md:text-5xl font-extrabold tracking-tight text-white">
-                  {payments.p2} <span className="text-white/55">€</span>
-                </div>
-                <div className="mt-1 text-sm text-white/70">Nach Sprint 3 (Feinschliff freigegeben).</div>
-              </div>
-
-              <div>
-                <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsziel 3 — nach Übergabe (20%)</div>
-                <div className="mt-2 text-4xl md:text-5xl font-extrabold tracking-tight text-white">
-                  {payments.p3} <span className="text-white/55">€</span>
-                </div>
-                <div className="mt-1 text-sm text-white/70">Nach Sprint 4 (Go-Live + Übergabe).</div>
-              </div>
-            </div>
-
-            <div className="mt-6 rounded-2xl border border-white/12 bg-white/5 p-4 text-sm text-white/75">
-              System: Sprint → Review → nächstes Zahlungsziel. Transparent und Schritt für Schritt.
-            </div>
-          </Card>
-        </div>
-      </SectionShell>
-
-      {/* EINWÄNDE */}
+      {/* 5) EINWÄNDE */}
       <SectionShell id="einwaende" tight>
         <Reveal>
           <div className="text-xs uppercase tracking-wide text-white/55">Sicherheit</div>
@@ -782,41 +809,14 @@ export default function ProzessPage() {
               <Shield size={18} className="text-white/70 mt-0.5" />
               <div>
                 <div className="text-white/90 font-semibold">Was, wenn mein Budget knapp ist?</div>
-                <div className="mt-2 text-sm text-white/70">Wir starten kostenlos mit Analyse + Entwurf und entscheiden dann passend.</div>
+                <div className="mt-2 text-sm text-white/70">Wir starten mit zwei kostenlosen Sprints und entscheiden dann passend.</div>
               </div>
             </div>
           </Card>
         </div>
       </SectionShell>
 
-      {/* RETAINER */}
-      <SectionShell id="betreuung" tight>
-        <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Nach dem Projekt</div>
-        </Reveal>
-
-        <Reveal delayMs={90}>
-          <h2 className="mt-3 text-2xl md:text-4xl font-extrabold leading-tight">
-            Betreuung optional.
-            <span className="block">
-              <TitleGradient>Monatlich kündbar.</TitleGradient>
-            </span>
-          </h2>
-        </Reveal>
-
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-          <Card className="p-6">
-            <div className="text-white/90 font-semibold">Einmaliges Projekt</div>
-            <div className="mt-2 text-sm text-white/70">Fixer Preis. Saubere Übergabe. Kein Folgevertrag.</div>
-          </Card>
-          <Card className="p-6">
-            <div className="text-white/90 font-semibold">Mit Betreuung</div>
-            <div className="mt-2 text-sm text-white/70">Pflege ab 150 €/Monat. Updates, Anpassungen, Ansprechpartner.</div>
-          </Card>
-        </div>
-      </SectionShell>
-
-      {/* CTA (only CTA) */}
+      {/* 6) CTA (only CTA) */}
       <SectionShell id="cta">
         <Reveal>
           <Card className="p-6 md:p-10">
@@ -872,6 +872,15 @@ const globalKeyframes = `
   45% { transform: translate3d(35px, 25px, 0) scale(1.10); }
   85% { transform: translate3d(-30px, -18px, 0) scale(0.94); }
   100% { transform: translate3d(0px, 0px, 0) scale(1); }
+}
+@keyframes shineSoft {
+  0%   { transform: translateX(-220px) rotate(12deg) scale(1);    opacity: 0.00; }
+  12%  { opacity: 0.08; }
+  32%  { transform: translateX(120px) rotate(12deg) scale(1.02);  opacity: 0.06; }
+  46%  { transform: translateX(220px) rotate(12deg) scale(1.01);  opacity: 0.03; }
+  62%  { transform: translateX(220px) rotate(12deg) scale(1.01);  opacity: 0.01; }
+  78%  { transform: translateX(520px) rotate(12deg) scale(1.02);  opacity: 0.05; }
+  100% { transform: translateX(980px) rotate(12deg) scale(1.00);  opacity: 0.00; }
 }
 @keyframes noiseMove {
   0% { transform: translate3d(0,0,0); }
