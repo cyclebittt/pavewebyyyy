@@ -1,1103 +1,1454 @@
-'use client';
+<!doctype html>
+<html lang="de">
+<head>
+  <!--
+    /prozess — Single-file HTML (no framework)
+    Intent: high-end, low-noise, conversion-psychology informed.
+    Notes (Integrity):
+    - Prices are "ab" (starting points).
+    - Social proof is phrased cautiously (no unverifiable counts).
+    - Scarcity is framed as capacity planning, not artificial urgency.
+  -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0B0B14" />
+  <title>Prozess — Leon Seitz</title>
+  <meta name="description" content="Klarer Projektprozess, transparente Pakete und Zahlungslogik. Ohne Agentur-Overhead." />
 
-import Link from 'next/link';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import {
-  ArrowRight,
-  CheckCircle2,
-  ExternalLink,
-  Sparkles,
-  Mail,
-  GitBranch,
-  Target,
-  Layers,
-  CheckCheck,
-  PackageCheck,
-} from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+  <!-- Inter (Google Fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-/* ---------- CONFIG ---------- */
+  <style>
+    /* -----------------------------
+      TOKENS (Paveo-esque dark + subdued accents)
+    ----------------------------- */
+    :root{
+      --bg0:#0F0F18;
+      --bg1:#131329;
+      --bg2:#0B0B14;
 
-const EMAIL = 'hello@leonseitz.com';
-const WHATSAPP_E164 = '4916095757167';
-const WHATSAPP_URL = `https://wa.me/${WHATSAPP_E164}`;
+      --fg:#F0F0F0;
+      --muted:rgba(240,240,240,.72);
+      --dim:rgba(240,240,240,.56);
+      --hair:rgba(240,240,240,.14);
+      --hair2:rgba(240,240,240,.10);
 
-const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_E164}?text=${encodeURIComponent(
-  `Hi Leon,\n\nZiel:\nDeadline:\nStand:\n\nKurzer Kontext:`
-)}`;
+      --violet:#7C3AED;
+      --violet2:#8B5CF6;
+      --indigo:#A5B4FC;
+      --azure:#38BDF8;
 
-const MAIL_HREF = `mailto:${EMAIL}?subject=${encodeURIComponent('Projektanfrage')}&body=${encodeURIComponent(
-  `Hi Leon,\n\nZiel:\nDeadline:\nStand:\n\nKurzer Kontext:`
-)}`;
+      /* radial effects */
+      --rv: 129,51,241;
+      --rb: 56,189,248;
 
-const SECTIONS = [
-  { id: 'hero', label: 'Start' },
-  { id: 'roadmap', label: 'Ablauf' },
-  { id: 'pricing', label: 'Kosten' },
-  { id: 'retainer', label: 'Nach dem Projekt' },
-  { id: 'cta', label: 'Anfrage' },
-];
+      --maxw:1120px;
+      --radius:18px;
+      --radius2:26px;
+      --shadow: 0 22px 70px -55px rgba(0,0,0,.95);
+      --shadow2: 0 34px 110px -80px rgba(0,0,0,.95);
+      --ease: cubic-bezier(.2,.9,.2,1);
+    }
 
-const PHASES = [
-  {
-    n: 1,
-    title: 'Briefing',
-    icon: <Target size={16} />,
-    text: `Du schickst mir Ziel, Deadline und Stand. Ich sage dir kurzfristig, ob und wie ich helfen kann.`,
-    micro: 'Meilenstein: Scope klar + Startsignal',
-  },
-  {
-    n: 2,
-    title: 'Konzept & Struktur',
-    icon: <Layers size={16} />,
-    text: `Wir legen fest, was entsteht: Aufbau, Seiten, Inhalte. Erst wenn das stimmt, fange ich an.`,
-    micro: 'Sprint 1: Struktur-Entwurf + Review',
-  },
-  {
-    n: 3,
-    title: 'Erste Version & Feedback',
-    icon: <GitBranch size={16} />,
-    text: `Du bekommst eine lauffähige Version zum Reviewen. Änderungen sind hier eingebaut, nicht extra.`,
-    micro: 'Sprint 2: Build → Feedback → Anpassung',
-  },
-  {
-    n: 4,
-    title: 'Finalisierung',
-    icon: <CheckCheck size={16} />,
-    text: `Nach deinem Feedback setze ich die letzte Runde um. Keine Überraschungen, kein Scope-Creep.`,
-    micro: 'Sprint 3: Feinschliff + Stabilisierung',
-  },
-  {
-    n: 5,
-    title: 'Übergabe',
-    icon: <PackageCheck size={16} />,
-    text: `Du bekommst alles: Dateien, Zugänge, Setup. Optional: Betreuung ab hier.`,
-    micro: 'Meilenstein: Übergabe + Go-Live',
-  },
-];
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--fg);
+      background: radial-gradient(1200px 700px at 18% 18%, rgba(var(--rv),0.32), transparent 60%),
+                  radial-gradient(950px 720px at 82% 20%, rgba(var(--rb),0.18), transparent 55%),
+                  linear-gradient(135deg, var(--bg0) 0%, var(--bg1) 55%, var(--bg2) 100%);
+      overflow-x:hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: geometricPrecision;
+    }
 
-/* ---------- SCENES / BACKGROUND ---------- */
+    a{ color:inherit; text-decoration:none; }
+    button, input{ font-family:inherit; }
+    ::selection{ background: rgba(124,58,237,.35); }
 
-const SCENES = {
-  hero: {
-    base: '#070312',
-    g1: `radial-gradient(1200px 700px at 18% 18%, rgba(168,85,247,0.34), transparent 60%),
-         radial-gradient(900px 700px at 82% 25%, rgba(56,189,248,0.16), transparent 55%)`,
-    g2: `linear-gradient(135deg, #070312 0%, #0b0b1a 50%, #03040e 100%)`,
-    blobs: [
-      { cls: 'bg-violet-500/18', x: '-20%', y: '-18%', s: '56rem', blur: 140 },
-      { cls: 'bg-cyan-500/12', x: '70%', y: '10%', s: '54rem', blur: 150 },
-      { cls: 'bg-fuchsia-500/10', x: '20%', y: '80%', s: '46rem', blur: 150 },
-    ],
-    accent: 'from-violet-200 via-indigo-200 to-cyan-200',
-  },
-  roadmap: {
-    base: '#021019',
-    g1: `radial-gradient(1100px 750px at 22% 20%, rgba(34,211,238,0.26), transparent 60%),
-         radial-gradient(900px 700px at 88% 15%, rgba(99,102,241,0.20), transparent 55%)`,
-    g2: `linear-gradient(135deg, #021019 0%, #07102a 55%, #05010b 100%)`,
-    blobs: [
-      { cls: 'bg-cyan-500/16', x: '-10%', y: '-10%', s: '58rem', blur: 150 },
-      { cls: 'bg-indigo-500/14', x: '72%', y: '0%', s: '54rem', blur: 150 },
-      { cls: 'bg-emerald-500/10', x: '10%', y: '75%', s: '46rem', blur: 160 },
-    ],
-    accent: 'from-cyan-200 via-indigo-200 to-violet-200',
-  },
-  pricing: {
-    base: '#120316',
-    g1: `radial-gradient(1200px 750px at 20% 10%, rgba(244,114,182,0.18), transparent 60%),
-         radial-gradient(950px 750px at 84% 30%, rgba(168,85,247,0.22), transparent 55%)`,
-    g2: `linear-gradient(135deg, #120316 0%, #1a0714 55%, #040312 100%)`,
-    blobs: [
-      { cls: 'bg-pink-500/12', x: '-18%', y: '-12%', s: '56rem', blur: 160 },
-      { cls: 'bg-violet-500/16', x: '68%', y: '12%', s: '56rem', blur: 150 },
-      { cls: 'bg-cyan-500/10', x: '10%', y: '80%', s: '46rem', blur: 170 },
-    ],
-    accent: 'from-pink-200 via-fuchsia-200 to-indigo-200',
-  },
-  retainer: {
-    base: '#03110a',
-    g1: `radial-gradient(1200px 750px at 18% 10%, rgba(16,185,129,0.13), transparent 60%),
-         radial-gradient(900px 700px at 85% 20%, rgba(59,130,246,0.18), transparent 55%)`,
-    g2: `linear-gradient(135deg, #03110a 0%, #0a1020 55%, #04060d 100%)`,
-    blobs: [
-      { cls: 'bg-emerald-500/11', x: '-12%', y: '-16%', s: '54rem', blur: 170 },
-      { cls: 'bg-cyan-500/11', x: '75%', y: '8%', s: '56rem', blur: 160 },
-      { cls: 'bg-indigo-500/11', x: '18%', y: '82%', s: '48rem', blur: 170 },
-    ],
-    accent: 'from-emerald-200 via-cyan-200 to-indigo-200',
-  },
-  cta: {
-    base: '#04040a',
-    g1: `radial-gradient(1200px 750px at 15% 0%, rgba(99,102,241,0.18), transparent 60%),
-         radial-gradient(900px 700px at 90% 15%, rgba(56,189,248,0.11), transparent 55%)`,
-    g2: `linear-gradient(135deg, #04040a 0%, #07071a 55%, #04030a 100%)`,
-    blobs: [
-      { cls: 'bg-indigo-500/11', x: '-12%', y: '-18%', s: '56rem', blur: 170 },
-      { cls: 'bg-cyan-500/10', x: '76%', y: '8%', s: '56rem', blur: 170 },
-      { cls: 'bg-violet-500/10', x: '18%', y: '82%', s: '48rem', blur: 170 },
-    ],
-    accent: 'from-indigo-200 via-violet-200 to-cyan-200',
-  },
-};
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+    }
 
-/* ---------- UTIL ---------- */
+    /* -----------------------------
+      BACKGROUND LAYERS (subtle motion + grain + vignette)
+    ----------------------------- */
+    .bg-fixed{ position:fixed; inset:0; z-index:-10; pointer-events:none; }
+    .blobs{ position:absolute; inset:0; filter: blur(60px); opacity:.95; mix-blend-mode: screen; }
+    .blob{
+      position:absolute;
+      border-radius:999px;
+      will-change: transform;
+      opacity:.18;
+    }
+    .blob.v1{
+      left:-18%; top:-20%;
+      width:56rem; height:56rem;
+      background: radial-gradient(circle at 35% 30%, rgba(var(--rv), .55), transparent 62%);
+      animation: blob1 16s var(--ease) infinite;
+    }
+    .blob.b1{
+      right:-20%; top:4%;
+      width:54rem; height:54rem;
+      background: radial-gradient(circle at 40% 35%, rgba(var(--rb), .52), transparent 62%);
+      animation: blob2 19s var(--ease) infinite;
+    }
+    .blob.v2{
+      left:18%; bottom:-30%;
+      width:48rem; height:48rem;
+      background: radial-gradient(circle at 45% 35%, rgba(var(--rv), .38), transparent 62%);
+      animation: blob3 23s var(--ease) infinite;
+    }
 
-function cx(...xs) {
-  return xs.filter(Boolean).join(' ');
-}
+    .grain{
+      position:absolute; inset:0;
+      opacity:.10;
+      mix-blend-mode: overlay;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320' viewBox='0 0 320 320'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+      background-size: 240px 240px;
+      animation: grainMove 7s linear infinite;
+    }
 
-function TitleGradient({ sceneId, children }) {
-  const scene = SCENES[sceneId] ?? SCENES.hero;
-  return <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', scene.accent)}>{children}</span>;
-}
+    .vignette{
+      position:absolute; inset:0;
+      background: radial-gradient(80% 60% at 50% 35%, transparent 0%, rgba(0,0,0,.40) 65%, rgba(0,0,0,.78) 100%);
+    }
 
-function useActiveSection(sectionIds) {
-  const [activeId, setActiveId] = useState(sectionIds[0]);
+    @keyframes blob1{
+      0% { transform: translate3d(0,0,0) scale(1); }
+      40%{ transform: translate3d(46px, 22px,0) scale(1.06); }
+      78%{ transform: translate3d(-30px, 18px,0) scale(.98); }
+      100%{ transform: translate3d(0,0,0) scale(1); }
+    }
+    @keyframes blob2{
+      0% { transform: translate3d(0,0,0) scale(1); }
+      35%{ transform: translate3d(-52px, 30px,0) scale(1.05); }
+      76%{ transform: translate3d(26px, -18px,0) scale(.99); }
+      100%{ transform: translate3d(0,0,0) scale(1); }
+    }
+    @keyframes blob3{
+      0% { transform: translate3d(0,0,0) scale(1); }
+      45%{ transform: translate3d(34px, -26px,0) scale(1.08); }
+      82%{ transform: translate3d(-28px, 18px,0) scale(.97); }
+      100%{ transform: translate3d(0,0,0) scale(1); }
+    }
+    @keyframes grainMove{
+      0% { transform: translate3d(0,0,0); }
+      100% { transform: translate3d(90px,60px,0); }
+    }
 
-  useEffect(() => {
-    const els = sectionIds.map((id) => document.getElementById(id)).filter(Boolean);
-    if (!els.length) return;
+    /* -----------------------------
+      LAYOUT
+    ----------------------------- */
+    .container{
+      width:100%;
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 0 20px;
+    }
 
-    const obs = new IntersectionObserver(
-      (entries) => {
-        const best = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0))[0];
-        if (best?.target?.id) setActiveId(best.target.id);
-      },
-      { root: null, rootMargin: '-35% 0px -55% 0px', threshold: [0.12, 0.25, 0.4, 0.55, 0.7] }
-    );
+    section{ padding: 84px 0; }
+    @media (max-width: 720px){
+      section{ padding: 66px 0; }
+    }
 
-    els.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
-  }, [sectionIds]);
+    /* reveal */
+    .reveal{
+      opacity:0;
+      transform: translateY(14px);
+      transition: opacity 650ms var(--ease), transform 650ms var(--ease);
+      will-change: opacity, transform;
+    }
+    .reveal.in{
+      opacity:1;
+      transform: translateY(0);
+    }
 
-  return { activeId };
-}
+    /* subtle top progress bar */
+    .progress{
+      position:fixed;
+      top:0; left:0; right:0;
+      height:2px;
+      z-index:50;
+      pointer-events:none;
+      background: rgba(255,255,255,.08);
+    }
+    .progress > div{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(139,92,246,.95), rgba(56,189,248,.9));
+      transition: width 70ms linear;
+    }
 
-function useReveal(ref) {
-  const [shown, setShown] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) setShown(true);
-      },
-      { threshold: 0.2 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [ref]);
-  return shown;
-}
+    /* typography */
+    h1,h2,h3{ margin:0; letter-spacing:-0.03em; }
+    h1{
+      font-weight: 800;
+      font-size: clamp(38px, 6.3vw, 72px);
+      line-height: 1.03;
+    }
+    h2{
+      font-weight: 800;
+      font-size: clamp(26px, 4.2vw, 46px);
+      line-height: 1.08;
+    }
+    h3{
+      font-weight: 800;
+      font-size: clamp(18px, 3vw, 24px);
+      line-height: 1.15;
+    }
 
-function useScrollProgress() {
-  const [p, setP] = useState(0);
+    p{ margin:0; }
+    .muted{ color: var(--muted); }
+    .dim{ color: var(--dim); }
 
-  useEffect(() => {
-    const onScroll = () => {
-      const doc = document.documentElement;
-      const max = Math.max(1, doc.scrollHeight - doc.clientHeight);
-      setP(doc.scrollTop / max);
-    };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    .accent{
+      background: linear-gradient(90deg, rgba(220,210,255,.96), rgba(200,235,255,.92));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color: transparent;
+    }
 
-  return p;
-}
+    /* pill badges */
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--hair);
+      background: rgba(255,255,255,.06);
+      color: rgba(240,240,240,.86);
+      font-size: 12px;
+      letter-spacing: .01em;
+      box-shadow: 0 18px 60px -50px rgba(0,0,0,.9);
+      backdrop-filter: blur(10px);
+    }
+    .pill .dot{
+      width:7px; height:7px; border-radius:50%;
+      background: rgba(56,189,248,.65);
+      box-shadow: 0 0 18px rgba(56,189,248,.18);
+    }
 
-function useMousePos() {
-  const [pos, setPos] = useState({ x: -9999, y: -9999 });
-  const raf = useRef(null);
+    /* cards */
+    .card{
+      border-radius: var(--radius2);
+      border: 1px solid var(--hair2);
+      background: rgba(255,255,255,.05);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      overflow:hidden;
+      position:relative;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      opacity:.55;
+      filter: blur(24px);
+      background:
+        radial-gradient(60% 80% at 25% 10%, rgba(139,92,246,.14), transparent 60%),
+        radial-gradient(60% 80% at 85% 0%, rgba(56,189,248,.10), transparent 60%),
+        radial-gradient(55% 80% at 50% 115%, rgba(165,180,252,.07), transparent 60%);
+      pointer-events:none;
+    }
+    .card > *{ position:relative; }
 
-  useEffect(() => {
-    const onMove = (e) => {
-      const x = e.clientX;
-      const y = e.clientY;
-      if (raf.current) cancelAnimationFrame(raf.current);
-      raf.current = requestAnimationFrame(() => setPos({ x, y }));
-    };
-    window.addEventListener('mousemove', onMove, { passive: true });
-    return () => {
-      window.removeEventListener('mousemove', onMove);
-      if (raf.current) cancelAnimationFrame(raf.current);
-    };
-  }, []);
+    /* buttons */
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-weight: 700;
+      font-size: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(240,240,240,.92);
+      transition: transform 220ms var(--ease), background 220ms var(--ease), border-color 220ms var(--ease);
+      will-change: transform;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.20); }
+    .btn:active{ transform: translateY(0px); }
 
-  return pos;
-}
+    .btn.primary{
+      background: linear-gradient(90deg, rgba(124,58,237,.95), rgba(139,92,246,.92));
+      border-color: rgba(124,58,237,.35);
+      color: #0B0B14;
+      box-shadow: 0 26px 90px -70px rgba(124,58,237,.95);
+    }
+    .btn.primary:hover{ filter: brightness(1.02); }
+    .btn.outline{
+      background: rgba(255,255,255,.02);
+      border-color: rgba(255,255,255,.18);
+    }
 
-/* ---------- GLOBAL BACKGROUND ---------- */
+    .link{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-weight: 650;
+      color: rgba(240,240,240,.88);
+      padding: 6px 0;
+      border-bottom: 1px solid transparent;
+      transition: border-color 220ms var(--ease), transform 220ms var(--ease), opacity 220ms var(--ease);
+      opacity:.92;
+    }
+    .link:hover{
+      border-color: rgba(240,240,240,.28);
+      transform: translateY(-1px);
+      opacity:1;
+    }
 
-function GlobalBackground({ activeId }) {
-  return (
-    <div className="fixed inset-0 -z-10">
-      {Object.keys(SCENES).map((key) => {
-        const s = SCENES[key];
-        const on = key === activeId;
+    /* section headers */
+    .section-head{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      max-width: 860px;
+    }
+    .subline{
+      font-size: 15px;
+      line-height: 1.65;
+      color: rgba(240,240,240,.72);
+      max-width: 70ch;
+    }
 
-        return (
-          <div
-            key={key}
-            className={cx(
-              'absolute inset-0 transition-[opacity,filter,transform] duration-[1200ms] ease-out will-change-[opacity,filter,transform]',
-              on ? 'opacity-100 blur-0 scale-100' : 'opacity-0 blur-[14px] scale-[1.025]'
-            )}
-            style={{
-              backgroundColor: s.base,
-              backgroundImage: `${s.g1}, ${s.g2}`,
-            }}
-          />
-        );
-      })}
+    /* -----------------------------
+      BLOCK 1 — HERO
+    ----------------------------- */
+    .hero{
+      min-height: 92svh;
+      display:flex;
+      align-items:center;
+      padding: 110px 0 80px;
+    }
+    @media (max-width: 720px){
+      .hero{ padding: 92px 0 66px; min-height: 86svh; }
+    }
+    .hero-inner{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      align-items:flex-start;
+      max-width: 860px;
+    }
+    .hero h1{
+      white-space:pre-line;
+    }
 
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.10] mix-blend-overlay"
-        style={{
-          backgroundImage:
-            'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27320%27 viewBox=%270 0 320 320%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.8%27 numOctaves=%273%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27320%27 height=%27320%27 filter=%27url(%23n)%27 opacity=%270.35%27/%3E%3C/svg%3E")',
-          backgroundSize: '220px 220px',
-          animation: 'noiseMove 7s linear infinite',
-        }}
-      />
+    /* -----------------------------
+      BLOCK 2 — REFERENCE (halo + mini story)
+    ----------------------------- */
+    .ref-wrap{ display:grid; grid-template-columns: 1fr; gap:16px; }
+    @media (min-width: 940px){
+      .ref-wrap{ grid-template-columns: 1.2fr .8fr; gap:18px; align-items:stretch; }
+    }
+    .mock{
+      aspect-ratio: 16 / 10;
+      width:100%;
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
+        radial-gradient(1100px 600px at 25% 10%, rgba(139,92,246,.14), transparent 60%),
+        radial-gradient(900px 600px at 85% 0%, rgba(56,189,248,.11), transparent 60%);
+      border: 1px solid rgba(255,255,255,.10);
+      position:relative;
+      overflow:hidden;
+    }
+    /* browser chrome */
+    .mock .chrome{
+      position:absolute;
+      top:0; left:0; right:0;
+      height: 46px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 0 14px;
+      background: rgba(0,0,0,.28);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(10px);
+    }
+    .dots{ display:flex; gap:8px; }
+    .dots span{
+      width:10px; height:10px; border-radius:999px;
+      background: rgba(240,240,240,.20);
+    }
+    .url{
+      margin-left:6px;
+      font-size: 12px;
+      color: rgba(240,240,240,.60);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      padding: 6px 10px;
+      border-radius: 999px;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 70%;
+    }
+    .mock .shot{
+      position:absolute;
+      inset:46px 0 0 0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color: rgba(240,240,240,.55);
+      font-size: 13px;
+      letter-spacing:.01em;
+    }
+    .mock .shot::before{
+      content:"Screenshot-Platzhalter (hier dein echtes Bild einsetzen)";
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px dashed rgba(240,240,240,.22);
+      background: rgba(0,0,0,.18);
+    }
+    .ref-copy{
+      padding: 18px 18px 20px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      justify-content:center;
+    }
+    .ref-story{
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: rgba(240,240,240,.72);
+      max-width: 60ch;
+    }
 
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_35%,transparent_0%,rgba(0,0,0,0.40)_65%,rgba(0,0,0,0.72)_100%)]" />
+    /* -----------------------------
+      BLOCK 3 — FREE ANALYSIS (reciprocity)
+    ----------------------------- */
+    .analysis{
+      padding: 22px 18px;
+    }
+    .analysis-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      align-items:center;
+    }
+    @media (min-width: 900px){
+      .analysis-grid{ grid-template-columns: 1.2fr .8fr; }
+    }
+    .note{
+      font-size: 12.5px;
+      color: rgba(240,240,240,.55);
+      line-height: 1.55;
+    }
+
+    /* -----------------------------
+      BLOCK 4 — PACKAGES (anchor + contrast + default)
+    ----------------------------- */
+    .packages-head{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-bottom: 18px;
+      max-width: 860px;
+    }
+    .packages-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    @media (min-width: 960px){
+      .packages-grid{ grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+    }
+
+    .pkg{
+      padding: 18px 18px 20px;
+      min-height: 100%;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      position:relative;
+      overflow:hidden;
+      transition: transform 220ms var(--ease), border-color 220ms var(--ease), background 220ms var(--ease);
+    }
+    .pkg:hover{
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.18);
+      background: rgba(255,255,255,.05);
+    }
+
+    .pkg .top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+    }
+    .pkg .name{
+      font-weight: 800;
+      letter-spacing:-0.02em;
+      font-size: 16px;
+    }
+    .price{
+      font-weight: 800;
+      letter-spacing:-0.02em;
+      font-size: 20px;
+      white-space: nowrap;
+    }
+    .lead{
+      color: rgba(240,240,240,.70);
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap: 9px;
+      margin-top: 2px;
+    }
+    .li{
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+      color: rgba(240,240,240,.78);
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+    .li svg{ width:18px; height:18px; flex: 0 0 auto; opacity:.82; margin-top: 1px; }
+
+    .meta{
+      margin-top:auto;
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      color: rgba(240,240,240,.62);
+      font-size: 12.5px;
+      line-height: 1.55;
+    }
+
+    .pkg.anchor::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      opacity:.55;
+      filter: blur(26px);
+      background: radial-gradient(70% 60% at 25% 10%, rgba(165,180,252,.10), transparent 62%),
+                  radial-gradient(60% 70% at 85% 0%, rgba(56,189,248,.10), transparent 60%);
+      pointer-events:none;
+    }
+
+    /* default highlight */
+    .pkg.default{
+      border-color: rgba(124,58,237,.40);
+      background: rgba(124,58,237,.07);
+      transform: translateY(-2px);
+    }
+    .pkg.default:hover{ transform: translateY(-4px); }
+    .badge-mini{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(124,58,237,.35);
+      background: rgba(124,58,237,.14);
+      color: rgba(240,240,240,.88);
+      font-size: 12px;
+      font-weight: 650;
+      width: fit-content;
+    }
+    .badge-mini .spark{
+      width:6px; height:6px; border-radius:999px;
+      background: rgba(56,189,248,.75);
+      box-shadow: 0 0 14px rgba(56,189,248,.18);
+    }
+
+    .packages-foot{
+      margin-top: 14px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .infobox{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.16);
+      padding: 14px 14px;
+      color: rgba(240,240,240,.70);
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+    .social{
+      color: rgba(240,240,240,.52);
+      font-style: italic;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* -----------------------------
+      BLOCK 5 — PAYMENT CALCULATOR (framing + reduce load)
+    ----------------------------- */
+    .calc{
+      padding: 18px;
+    }
+    .calc-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    @media (min-width: 980px){
+      .calc-grid{ grid-template-columns: 1fr 1fr; gap: 14px; align-items:start; }
+    }
+
+    .seg{
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    .seg button{
+      cursor:pointer;
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-weight: 700;
+      font-size: 13px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color: rgba(240,240,240,.86);
+      transition: transform 200ms var(--ease), border-color 200ms var(--ease), background 200ms var(--ease);
+    }
+    .seg button:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.07); }
+    .seg button.active{
+      border-color: rgba(124,58,237,.45);
+      background: rgba(124,58,237,.14);
+    }
+
+    .inputrow{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .inputwrap{
+      flex:1 1 auto;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+    }
+    .inputwrap svg{ width:18px; height:18px; opacity:.82; }
+    .inputwrap input{
+      width:100%;
+      border:none;
+      outline:none;
+      background: transparent;
+      color: rgba(240,240,240,.92);
+      font-weight: 750;
+      font-size: 14px;
+    }
+    .inputwrap input::placeholder{ color: rgba(240,240,240,.42); font-weight: 650; }
+
+    .paylist{
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .payrow{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      padding: 12px 12px;
+      display:flex;
+      gap: 12px;
+      align-items:flex-start;
+    }
+    .payrow .n{
+      width:34px; height:34px;
+      border-radius: 12px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.10);
+      color: rgba(240,240,240,.90);
+      font-weight: 850;
+      flex: 0 0 auto;
+    }
+    .payrow .txt{ flex:1 1 auto; display:flex; flex-direction:column; gap:2px; }
+    .payrow .title{ font-weight: 800; font-size: 13.5px; letter-spacing:-0.01em; }
+    .payrow .sub{ color: rgba(240,240,240,.62); font-size: 12.5px; line-height: 1.5; }
+    .payrow .amt{ font-weight: 850; letter-spacing:-0.02em; white-space: nowrap; color: rgba(240,240,240,.92); }
+
+    .framebox{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.16);
+      padding: 14px 14px;
+      color: rgba(240,240,240,.72);
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+
+    /* -----------------------------
+      BLOCK 6 — PROCESS (effort justification + milestone glow)
+    ----------------------------- */
+    .timeline{
+      margin-top: 16px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .phase{
+      position:relative;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      overflow:hidden;
+      padding: 16px 16px 16px 58px;
+      min-height: 110px;
+      transition: border-color 220ms var(--ease), background 220ms var(--ease);
+    }
+    .phase:hover{ border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.05); }
+
+    /* left rail */
+    .phase::before{
+      content:"";
+      position:absolute;
+      left: 28px;
+      top: 18px;
+      bottom: 18px;
+      width: 2px;
+      background: rgba(255,255,255,.10);
+      border-radius: 2px;
+    }
+    /* animated fill when "completed" in viewport */
+    .phase .fill{
+      position:absolute;
+      left: 28px;
+      top: 18px;
+      width: 2px;
+      height: 0%;
+      background: linear-gradient(180deg, rgba(139,92,246,.95), rgba(56,189,248,.85));
+      border-radius: 2px;
+      transition: height 900ms var(--ease);
+      box-shadow: 0 0 24px rgba(124,58,237,.18);
+    }
+    .phase.inview .fill{ height: calc(100% - 36px); }
+
+    .phase .badgeN{
+      position:absolute;
+      left: 12px;
+      top: 14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 14px;
+      display:flex; align-items:center; justify-content:center;
+      font-weight: 900;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.10);
+      color: rgba(240,240,240,.92);
+    }
+    .phase .h{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    .phase .t{
+      font-weight: 850;
+      letter-spacing:-0.02em;
+      font-size: 15px;
+    }
+    .phase .ms{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color: rgba(240,240,240,.60);
+      font-size: 12.5px;
+      white-space: nowrap;
+    }
+    .phase .ms svg{ width:16px; height:16px; opacity:.8; }
+    .phase .d{
+      color: rgba(240,240,240,.72);
+      font-size: 13.5px;
+      line-height: 1.6;
+      max-width: 90ch;
+      white-space: pre-line;
+    }
+
+    /* -----------------------------
+      BLOCK 7 — OBJECTIONS (risk reduction, not FAQ-y)
+    ----------------------------- */
+    .objections{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    @media (min-width: 980px){
+      .objections{ grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    }
+    .ob{
+      padding: 16px 16px;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+    }
+    .ob .q{
+      font-weight: 850;
+      letter-spacing:-0.02em;
+      margin-bottom: 8px;
+    }
+    .ob .a{
+      color: rgba(240,240,240,.72);
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+
+    /* -----------------------------
+      BLOCK 8 — RETAINER
+    ----------------------------- */
+    .ret-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    @media (min-width: 900px){
+      .ret-grid{ grid-template-columns: 1fr 1fr; }
+    }
+    .ret{
+      padding: 18px 18px;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .ret .tt{
+      font-weight: 900;
+      letter-spacing:-0.02em;
+      font-size: 16px;
+    }
+    .ret .pp{
+      color: rgba(240,240,240,.72);
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+    .ret .tag{
+      margin-top:auto;
+      color: rgba(240,240,240,.58);
+      font-size: 12.5px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 10px;
+      line-height: 1.5;
+    }
+
+    /* -----------------------------
+      BLOCK 9 — CTA
+    ----------------------------- */
+    .cta{
+      padding: 22px 18px;
+    }
+    .cta-actions{
+      margin-top: 12px;
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    footer{
+      padding: 26px 0 40px;
+      color: rgba(240,240,240,.45);
+      font-size: 12.5px;
+      text-align:center;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- fixed background layers -->
+  <div class="bg-fixed" aria-hidden="true">
+    <div class="blobs">
+      <div class="blob v1"></div>
+      <div class="blob b1"></div>
+      <div class="blob v2"></div>
     </div>
-  );
-}
+    <div class="grain"></div>
+    <div class="vignette"></div>
+  </div>
 
-function GlobalLightLeaks({ activeId }) {
-  return (
-    <div className="fixed inset-0 -z-10 pointer-events-none">
-      {Object.keys(SCENES).map((key) => {
-        const scene = SCENES[key];
-        const on = key === activeId;
+  <!-- scroll progress -->
+  <div class="progress" aria-hidden="true"><div id="pbar"></div></div>
 
-        return (
-          <div
-            key={key}
-            className={cx(
-              'absolute inset-0 transition-[opacity,filter] duration-[1200ms] ease-out will-change-[opacity,filter]',
-              on ? 'opacity-100 blur-0' : 'opacity-0 blur-[20px]'
-            )}
-          >
-            {scene.blobs.map((b, i) => (
-              <div
-                key={i}
-                className={cx(
-                  'absolute rounded-full',
-                  b.cls,
-                  i === 0
-                    ? 'animate-[blob_10s_ease-in-out_infinite]'
-                    : i === 1
-                      ? 'animate-[blob2_12s_ease-in-out_infinite]'
-                      : 'animate-[blob3_14s_ease-in-out_infinite]'
-                )}
-                style={{
-                  left: b.x,
-                  top: b.y,
-                  width: b.s,
-                  height: b.s,
-                  filter: `blur(${b.blur}px)`,
-                }}
-              />
-            ))}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
+  <!-- BLOCK 1 — HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner reveal">
+        <div class="pill">
+          <span class="dot" aria-hidden="true"></span>
+          Aktuell plane ich Kapazität für bis zu zwei neue Projekte gleichzeitig.
+        </div>
 
-/* ---------- UI ADDONS ---------- */
+        <h1>Klar. Strukturiert.
+Ohne Agenturpreis.</h1>
 
-function ScrollProgressBar() {
-  const p = useScrollProgress();
-  return (
-    <div className="fixed top-0 left-0 right-0 z-[60] pointer-events-none">
-      <div className="h-[2px] bg-white/10">
-        <div
-          className="h-full bg-gradient-to-r from-violet-300 via-cyan-300 to-emerald-300"
-          style={{ width: `${Math.round(p * 100)}%`, transition: 'width 80ms linear' }}
-        />
+        <p class="subline">
+          Jeden Monat verlieren lokale Unternehmen Anfragen an Wettbewerber mit besserem Webauftritt.
+          Ich setze einen Auftritt um, der führt – in Tagen, nicht Monaten.
+        </p>
       </div>
     </div>
-  );
-}
+  </section>
 
-function CursorHalo() {
-  const { x, y } = useMousePos();
-
-  return (
-    <div className="hidden md:block fixed inset-0 z-[6] pointer-events-none">
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(800px 600px at ${x}px ${y}px, rgba(255,255,255,0.045), transparent 70%)`,
-          filter: 'blur(18px)',
-          opacity: 0.6,
-          mixBlendMode: 'screen',
-          transition: 'background 80ms linear',
-        }}
-      />
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(1400px 1050px at ${x}px ${y}px, rgba(99,102,241,0.035), transparent 78%)`,
-          filter: 'blur(34px)',
-          opacity: 0.55,
-          mixBlendMode: 'screen',
-          transition: 'background 80ms linear',
-        }}
-      />
-    </div>
-  );
-}
-
-function Magnetic({ children, strength = 14, className = '' }) {
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const onMove = (e) => {
-      const r = el.getBoundingClientRect();
-      const cx0 = r.left + r.width / 2;
-      const cy0 = r.top + r.height / 2;
-      const dx = e.clientX - cx0;
-      const dy = e.clientY - cy0;
-      const mx = (dx / r.width) * strength;
-      const my = (dy / r.height) * strength;
-      el.style.transform = `translate3d(${mx}px, ${my}px, 0)`;
-    };
-
-    const onLeave = () => {
-      el.style.transform = 'translate3d(0,0,0)';
-    };
-
-    el.addEventListener('mousemove', onMove);
-    el.addEventListener('mouseleave', onLeave);
-    return () => {
-      el.removeEventListener('mousemove', onMove);
-      el.removeEventListener('mouseleave', onLeave);
-    };
-  }, [strength]);
-
-  return (
-    <span ref={ref} className={cx('inline-flex transition-transform duration-200 ease-out will-change-transform', className)}>
-      {children}
-    </span>
-  );
-}
-
-function TiltCard({ children, className = '' }) {
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const onMove = (e) => {
-      const r = el.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width;
-      const py = (e.clientY - r.top) / r.height;
-      const rx = (0.5 - py) * 10;
-      const ry = (px - 0.5) * 12;
-
-      el.style.setProperty('--rx', `${rx}deg`);
-      el.style.setProperty('--ry', `${ry}deg`);
-      el.style.setProperty('--hx', `${px * 100}%`);
-      el.style.setProperty('--hy', `${py * 100}%`);
-    };
-
-    const onLeave = () => {
-      el.style.setProperty('--rx', `0deg`);
-      el.style.setProperty('--ry', `0deg`);
-    };
-
-    el.addEventListener('mousemove', onMove);
-    el.addEventListener('mouseleave', onLeave);
-    return () => {
-      el.removeEventListener('mousemove', onMove);
-      el.removeEventListener('mouseleave', onLeave);
-    };
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className={cx('relative will-change-transform [transform-style:preserve-3d]', className)}
-      style={{
-        transform: 'perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))',
-        transition: 'transform 180ms ease-out',
-      }}
-    >
-      <div
-        className="pointer-events-none absolute inset-0 rounded-inherit opacity-0 md:opacity-100"
-        style={{
-          background: 'radial-gradient(520px 380px at var(--hx, 50%) var(--hy, 30%), rgba(255,255,255,0.11), transparent 62%)',
-          mixBlendMode: 'screen',
-        }}
-      />
-      {children}
-    </div>
-  );
-}
-
-/* ---------- STRUCTURE ---------- */
-
-function Scene({ id, children }) {
-  return (
-    <section id={id} className="relative min-h-screen flex items-center px-5 md:px-16 py-16 md:snap-start scroll-mt-24">
-      <div className="relative max-w-6xl mx-auto w-full">{children}</div>
-    </section>
-  );
-}
-
-function Reveal({ children, delayMs = 0 }) {
-  const ref = useRef(null);
-  const shown = useReveal(ref);
-
-  return (
-    <div
-      ref={ref}
-      className={cx('transition-all duration-700 will-change-transform', shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6')}
-      style={{ transitionDelay: `${delayMs}ms` }}
-    >
-      {children}
-    </div>
-  );
-}
-
-/* ---------- ROADMAP: ACTIVE PHASE ---------- */
-
-function useActivePhase(phaseIds) {
-  const [activeIdx, setActiveIdx] = useState(0);
-
-  useEffect(() => {
-    const els = phaseIds.map((id) => document.getElementById(id)).filter(Boolean);
-    if (!els.length) return;
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0))[0];
-        if (!visible?.target?.id) return;
-        const idx = phaseIds.indexOf(visible.target.id);
-        if (idx >= 0) setActiveIdx(idx);
-      },
-      { root: null, rootMargin: '-35% 0px -55% 0px', threshold: [0.15, 0.25, 0.45, 0.65] }
-    );
-
-    els.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
-  }, [phaseIds]);
-
-  return activeIdx;
-}
-
-function Roadmap({ sceneId = 'roadmap' }) {
-  const phaseIds = useMemo(() => PHASES.map((p) => `phase-${p.n}`), []);
-  const activeIdx = useActivePhase(phaseIds);
-
-  const progressPct = useMemo(() => {
-    // 0..1 based on active phase index
-    const n = Math.max(1, PHASES.length - 1);
-    return Math.min(1, Math.max(0, activeIdx / n));
-  }, [activeIdx]);
-
-  return (
-    <div className="mt-10">
-      <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8 overflow-hidden relative">
-        <div
-          className="pointer-events-none absolute -inset-px opacity-70 blur-2xl"
-          style={{
-            background:
-              'radial-gradient(60%_80%_at_25%_10%,rgba(99,102,241,0.12),transparent_60%),radial-gradient(60%_80%_at_85%_0%,rgba(56,189,248,0.10),transparent_60%),radial-gradient(55%_80%_at_50%_115%,rgba(168,85,247,0.08),transparent_60%)',
-          }}
-        />
-
-        <div className="relative">
-          <div className="text-xs uppercase tracking-wide text-white/55">Roadmap</div>
-          <div className="mt-3 text-2xl md:text-4xl font-extrabold leading-tight text-white">
-            Agile Phasen mit klaren Meilensteinen.
-            <span className="block text-base md:text-lg mt-2">
-              <TitleGradient sceneId={sceneId}>Du siehst jederzeit, wo wir stehen – und was als Nächstes passiert.</TitleGradient>
-            </span>
-          </div>
-
-          <div className="mt-8 grid grid-cols-1 gap-5 md:gap-6">
-            <div className="relative">
-              {/* Left rail */}
-              <div className="absolute left-[18px] top-2 bottom-2 w-[2px] bg-white/10 rounded-full" />
-              {/* Progress fill */}
-              <div
-                className="absolute left-[18px] top-2 w-[2px] rounded-full bg-gradient-to-b from-cyan-300 via-violet-300 to-emerald-300"
-                style={{
-                  height: `calc(${Math.round(progressPct * 100)}% + 28px)`,
-                  transition: 'height 550ms cubic-bezier(.2,.9,.2,1)',
-                  filter: 'drop-shadow(0 0 14px rgba(56,189,248,0.25)) drop-shadow(0 0 18px rgba(168,85,247,0.18))',
-                }}
-              />
-
-              <div className="space-y-5 md:space-y-6">
-                {PHASES.map((p, idx) => {
-                  const done = idx < activeIdx;
-                  const active = idx === activeIdx;
-
-                  return (
-                    <div key={p.n} id={`phase-${p.n}`} className="relative pl-14">
-                      <div
-                        className={cx(
-                          'absolute left-0 top-1.5 w-10 h-10 rounded-full flex items-center justify-center',
-                          'border border-white/15 bg-black/35 backdrop-blur-md',
-                          active ? 'ring-2 ring-white/20' : '',
-                          done ? 'shadow-[0_0_24px_-8px_rgba(52,211,153,0.55)]' : '',
-                          active ? 'shadow-[0_0_26px_-8px_rgba(56,189,248,0.55)]' : ''
-                        )}
-                        style={{
-                          transition: 'box-shadow 450ms ease, transform 450ms ease',
-                          transform: active ? 'translateZ(0) scale(1.02)' : 'translateZ(0) scale(1)',
-                        }}
-                      >
-                        <div
-                          className={cx(
-                            'w-8 h-8 rounded-full flex items-center justify-center text-black font-extrabold text-sm',
-                            'bg-gradient-to-r',
-                            (SCENES[sceneId] ?? SCENES.roadmap).accent
-                          )}
-                        >
-                          {p.n}
-                        </div>
-                      </div>
-
-                      <TiltCard className="rounded-3xl">
-                        <div
-                          className={cx(
-                            'rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-5 md:p-6 relative overflow-hidden',
-                            active ? 'border-white/25' : '',
-                            done ? 'opacity-95' : 'opacity-90'
-                          )}
-                        >
-                          <div
-                            className={cx('pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.06]')}
-                            style={{
-                              filter: 'blur(50px)',
-                              animation: active ? 'shineSoft 5.4s cubic-bezier(.2,.9,.2,1) infinite' : 'none',
-                            }}
-                          />
-
-                          <div className="flex items-start justify-between gap-3">
-                            <div className="min-w-0">
-                              <div className="inline-flex items-center gap-2 text-xs uppercase tracking-wide text-white/55">
-                                <span className="w-9 h-9 rounded-xl bg-white/10 border border-white/12 flex items-center justify-center">
-                                  {p.icon}
-                                </span>
-                                Phase {p.n}
-                                {done ? <span className="text-emerald-200/80">— erledigt</span> : null}
-                                {active && !done ? <span className="text-cyan-200/80">— aktuell</span> : null}
-                              </div>
-
-                              <div className="mt-3 text-xl md:text-2xl font-extrabold text-white leading-tight">{p.title}</div>
-                            </div>
-
-                            <div
-                              className={cx(
-                                'shrink-0 w-10 h-10 rounded-2xl border border-white/12 bg-white/5 flex items-center justify-center',
-                                done ? 'text-emerald-200/80' : active ? 'text-cyan-200/80' : 'text-white/60'
-                              )}
-                            >
-                              <CheckCircle2 size={18} />
-                            </div>
-                          </div>
-
-                          <p className="mt-3 text-sm md:text-base text-white/70 leading-relaxed">{p.text}</p>
-
-                          <div className="mt-4 text-xs text-white/55">
-                            <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', (SCENES[sceneId] ?? SCENES.roadmap).accent)}>
-                              {p.micro}
-                            </span>
-                          </div>
-
-                          <div className="mt-4 rounded-2xl border border-white/10 bg-black/25 p-3 text-xs text-white/65 leading-relaxed">
-                            Transparenz-Logik: In jeder Phase gibt es einen klaren Review-Punkt. Du gibst Feedback, ich setze um. Danach geht’s
-                            erst weiter.
-                          </div>
-                        </div>
-                      </TiltCard>
-                    </div>
-                  );
-                })}
+  <!-- BLOCK 2 — REFERENZ -->
+  <section>
+    <div class="container">
+      <div class="ref-wrap">
+        <div class="card reveal">
+          <div style="padding:14px;">
+            <div class="mock">
+              <div class="chrome">
+                <div class="dots" aria-hidden="true">
+                  <span></span><span></span><span></span>
+                </div>
+                <div class="url">leonseitz.com</div>
               </div>
+              <div class="shot" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="ref-copy">
+            <h3>Ein Eindruck, der hängen bleibt.</h3>
+            <p class="ref-story">
+              Ein Unternehmer aus der Region hatte keinen klaren Online-Auftritt.
+              Nach dem Go-Live kamen die ersten qualifizierten Anfragen – weil der Weg zur Kontaktaufnahme endlich eindeutig war.
+            </p>
+
+            <div style="display:flex; justify-content:flex-end;">
+              <a class="link" href="https://leonseitz.com" target="_blank" rel="noopener noreferrer">
+                leonseitz.com ansehen
+                <span aria-hidden="true">→</span>
+              </a>
             </div>
 
-            <div className="mt-1 text-xs text-white/55">
-              Hinweis: Der Scope bleibt bewusst stabil. Zusätzliche Wünsche klären wir als „Next Sprint“ (separat), statt das laufende Projekt zu
-              verwässern.
-            </div>
+            <p class="note">
+              Hinweis: Der Screenshot ist hier bewusst als Platzhalter. Du kannst ihn später durch ein echtes Bild ersetzen.
+            </p>
           </div>
         </div>
       </div>
     </div>
-  );
-}
+  </section>
 
-/* ---------- PRICING CALC ---------- */
-
-function formatEUR(n) {
-  return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 }).format(Math.round(n));
-}
-
-function PricingCalculator({ sceneId = 'pricing' }) {
-  const DEFAULT = 500;
-
-  const [raw, setRaw] = useState('');
-  const price = useMemo(() => {
-    const cleaned = String(raw).replace(',', '.').replace(/[^\d.]/g, '');
-    const v = parseFloat(cleaned);
-    return Number.isFinite(v) && v >= 0 ? v : null;
-  }, [raw]);
-
-  const base = price ?? DEFAULT;
-
-  const p1 = base * 0.4;
-  const p2 = base * 0.4;
-  const p3 = base * 0.2;
-
-  const chip = (label) => (
-    <span className="inline-flex items-center gap-2 text-xs md:text-sm text-white/85 bg-white/10 ring-1 ring-white/15 px-3 py-1 rounded-full">
-      <Sparkles size={16} /> {label}
-    </span>
-  );
-
-  return (
-    <TiltCard className="rounded-3xl">
-      <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-10 overflow-hidden relative">
-        <div
-          className="pointer-events-none absolute -inset-px opacity-65 blur-2xl"
-          style={{
-            background:
-              'radial-gradient(60%_80%_at_25%_10%,rgba(244,114,182,0.12),transparent_60%),radial-gradient(60%_80%_at_85%_0%,rgba(168,85,247,0.10),transparent_60%),radial-gradient(55%_80%_at_50%_115%,rgba(56,189,248,0.08),transparent_60%)',
-          }}
-        />
-
-        <div className="relative">
-          {chip('Live-Rechner')}
-          <div className="mt-4 text-2xl md:text-4xl font-extrabold leading-tight text-white">
-            Was kostet dein Projekt?
-            <span className="block text-base md:text-lg mt-2">
-              <TitleGradient sceneId={sceneId}>Trag den Projektpreis ein – ich zeige dir direkt, wann du was zahlst.</TitleGradient>
-            </span>
+  <!-- BLOCK 3 — KOSTENLOSE WEBSITE-ANALYSE -->
+  <section>
+    <div class="container">
+      <div class="card analysis reveal">
+        <div class="analysis-grid">
+          <div>
+            <h2>Kostenlose Website-Analyse</h2>
+            <p class="subline" style="margin-top:12px;">
+              Ich schaue mir deinen aktuellen Auftritt an und sage dir in 15 Minuten konkret, was fehlt – und was ich ändern würde.
+              Kein Pitch. Kein Commitment.
+            </p>
+            <p class="note" style="margin-top:10px;">
+              Normalerweise ist dieser Schritt Teil bezahlter Beratung. Für neue Anfragen mache ich ihn als Einstieg kostenlos.
+            </p>
           </div>
 
-          <div className="mt-6">
-            <label className="block text-xs uppercase tracking-wide text-white/55">Projektpreis</label>
-            <div className="mt-2 flex items-center gap-3">
-              <div className="relative flex-1">
-                <input
-                  inputMode="decimal"
-                  value={raw}
-                  onChange={(e) => setRaw(e.target.value)}
-                  placeholder="z.B. 500"
-                  className={cx(
-                    'w-full rounded-2xl px-4 py-3.5',
-                    'border border-white/15 bg-black/30 backdrop-blur-md',
-                    'text-white placeholder:text-white/35',
-                    'outline-none focus:border-white/25'
-                  )}
-                />
-                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/55 text-sm">€</div>
-              </div>
-
-              <div className="hidden md:block text-xs text-white/55">
-                {price === null ? (
-                  <span>
-                    Beispiel-Rechnung: <span className="text-white/80">{DEFAULT}€</span>
-                  </span>
-                ) : (
-                  <span>
-                    Live: <span className="text-white/80">{formatEUR(base)}€</span>
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-7 grid grid-cols-1 gap-3">
-            <div className="rounded-2xl border border-white/12 bg-black/25 p-4">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="text-sm font-semibold text-white/90">Zahlung 1 — Projektstart (40%)</div>
-                  <div className="mt-1 text-xs text-white/60">Fällig nach Auftragsbestätigung</div>
-                </div>
-                <div className={cx('text-lg md:text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r', (SCENES[sceneId] ?? SCENES.pricing).accent)}>
-                  {formatEUR(p1)} €
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-white/12 bg-black/25 p-4">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="text-sm font-semibold text-white/90">Zahlung 2 — Freigabe Zwischenstand (40%)</div>
-                  <div className="mt-1 text-xs text-white/60">Fällig nach Review der ersten Version</div>
-                </div>
-                <div className={cx('text-lg md:text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r', (SCENES[sceneId] ?? SCENES.pricing).accent)}>
-                  {formatEUR(p2)} €
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-white/12 bg-black/25 p-4">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="text-sm font-semibold text-white/90">Zahlung 3 — Übergabe (20%)</div>
-                  <div className="mt-1 text-xs text-white/60">Fällig nach finalem Go-Live</div>
-                </div>
-                <div className={cx('text-lg md:text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r', (SCENES[sceneId] ?? SCENES.pricing).accent)}>
-                  {formatEUR(p3)} €
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 rounded-2xl border border-white/12 bg-white/5 p-4 text-sm text-white/70 leading-relaxed">
-            Diese Aufteilung schützt beide Seiten: Du zahlst nur weiter, wenn der Stand stimmt. Ich arbeite mit klarem Auftrag weiter.
+          <div style="display:flex; justify-content:flex-start; align-items:center; gap:10px; flex-wrap:wrap;">
+            <a class="btn primary" href="https://wa.me/4916095757167" target="_blank" rel="noopener noreferrer">
+              <i data-lucide="message-circle"></i>
+              Analyse anfragen
+            </a>
+            <a class="btn outline" href="mailto:hello@leonseitz.com?subject=Website-Analyse%20anfragen" aria-label="Per Mail schreiben">
+              <i data-lucide="mail"></i>
+              Per Mail
+            </a>
           </div>
         </div>
       </div>
-    </TiltCard>
-  );
-}
+    </div>
+  </section>
 
-/* ---------- CTA BUTTONS ---------- */
+  <!-- BLOCK 4 — PAKETE -->
+  <section>
+    <div class="container">
+      <div class="packages-head reveal">
+        <h2>Was du bekommst.</h2>
+        <p class="subline">Vergleichbare Agenturen starten häufig deutlich höher (z.B. ab 3.000 €) – hier arbeitest du direkt mit mir, ohne Umwege.</p>
+      </div>
 
-function PrimaryButton({ href, children }) {
-  return (
-    <Magnetic>
-      <a
-        href={href}
-        className="group px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center justify-center gap-2"
-      >
-        {children}
-        <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
-      </a>
-    </Magnetic>
-  );
-}
-
-function GhostButton({ href, children, external = false }) {
-  return (
-    <Magnetic strength={10}>
-      <a
-        href={href}
-        target={external ? '_blank' : undefined}
-        rel={external ? 'noopener noreferrer' : undefined}
-        className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
-      >
-        {children}
-      </a>
-    </Magnetic>
-  );
-}
-
-/* ---------- PAGE ---------- */
-
-export default function ProzessPage() {
-  const sectionIds = useMemo(() => SECTIONS.map((s) => s.id), []);
-  const { activeId } = useActiveSection(sectionIds);
-
-  useEffect(() => {
-    const handle = () => {
-      const hash = window.location.hash;
-      if (!hash) return;
-      const el = document.querySelector(hash);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    };
-    handle();
-    window.addEventListener('hashchange', handle);
-    return () => window.removeEventListener('hashchange', handle);
-  }, []);
-
-  return (
-    <div className="font-proxima text-white">
-      <style>{globalKeyframes}</style>
-
-      <GlobalBackground activeId={activeId} />
-      <GlobalLightLeaks activeId={activeId} />
-
-      <ScrollProgressBar />
-      <CursorHalo />
-
-      <Navbar />
-
-      <main className="md:snap-y md:snap-mandatory">
-        {/* BLOCK 1 – HERO */}
-        <Scene id="hero">
-          <div className="flex flex-col items-center text-center gap-6">
-            <Reveal>
-              <span className="inline-flex items-center gap-2 text-xs md:text-sm text-white/85 bg-white/10 ring-1 ring-white/15 px-3 py-1 rounded-full">
-                <Sparkles size={16} /> Prozess statt Bauchgefühl
-              </span>
-            </Reveal>
-
-            <Reveal delayMs={90}>
-              <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight leading-[1.03]">
-                So läuft ein Projekt ab.
-                <span className="block">
-                  <TitleGradient sceneId="hero">Klar strukturiert.</TitleGradient>
-                </span>
-              </h1>
-            </Reveal>
-
-            <Reveal delayMs={160}>
-              <p className="max-w-2xl text-base md:text-xl text-white/80 leading-relaxed">
-                Mit festen Meilensteinen. Ohne Überraschungen. Du bist in jeder Phase eingebunden – mit klaren Feedbackschleifen.
-              </p>
-            </Reveal>
-          </div>
-        </Scene>
-
-        {/* BLOCK 2 – ROADMAP */}
-        <Scene id="roadmap">
-          <div className="grid grid-cols-1 gap-10">
+      <div class="packages-grid">
+        <!-- Anchor first -->
+        <div class="pkg anchor reveal" data-pkg="komplett" data-amount="1100">
+          <div class="top">
             <div>
-              <Reveal>
-                <div className="text-xs uppercase tracking-wide text-white/55">02 — Ablauf</div>
-              </Reveal>
-
-              <Reveal delayMs={90}>
-                <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                  Planbar.
-                  <span className="block">
-                    <TitleGradient sceneId="roadmap">Mit Sprints und Reviews.</TitleGradient>
-                  </span>
-                </h2>
-              </Reveal>
-
-              <Reveal delayMs={160}>
-                <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-3xl">
-                  Ich arbeite lieber in klaren Etappen als in „wir schauen mal“. Du bekommst sichtbaren Fortschritt, definierte Review-Punkte
-                  und ein sauberes Ende.
-                </p>
-              </Reveal>
+              <div class="name">Komplett</div>
+              <div class="lead">Für einen Auftritt, der als System funktioniert.</div>
             </div>
-
-            <Reveal delayMs={200}>
-              <Roadmap sceneId="roadmap" />
-            </Reveal>
+            <div class="price">ab 1.100 €</div>
           </div>
-        </Scene>
 
-        {/* BLOCK 3 – ZAHLUNGSRECHNER */}
-        <Scene id="pricing">
-          <div className="grid grid-cols-1 gap-10">
+          <div class="list">
+            <div class="li"><i data-lucide="check-circle-2"></i><span>Website bis 5 Seiten</span></div>
+            <div class="li"><i data-lucide="check-circle-2"></i><span>Vollständiges Brandbook (Farben, Typo, Layoutregeln)</span></div>
+            <div class="li"><i data-lucide="check-circle-2"></i><span>Ein Motion-Element für Social Media</span></div>
+            <div class="li"><i data-lucide="check-circle-2"></i><span>Übergabe aller Zugänge und Dateien</span></div>
+            <div class="li"><i data-lucide="check-circle-2"></i><span>Optional: Betreuung ab 150 €/Monat</span></div>
+          </div>
+
+          <div class="meta">
+            <div><strong>Lieferzeit:</strong> ca. 3 Wochen (je nach Umfang & Feedbacktempo)</div>
+          </div>
+        </div>
+
+        <!-- Default middle -->
+        <div class="pkg default reveal" data-pkg="standard" data-amount="700" aria-label="Standard Paket (vorausgewählt)">
+          <div class="badge-mini"><span class="spark" aria-hidden="true"></span>Wird am häufigsten gewählt</div>
+
+          <div class="top" style="margin-top:2px;">
             <div>
-              <Reveal>
-                <div className="text-xs uppercase tracking-wide text-white/55">03 — Kosten</div>
-              </Reveal>
-
-              <Reveal delayMs={90}>
-                <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                  Klarer Rahmen.
-                  <span className="block">
-                    <TitleGradient sceneId="pricing">Klare Zahlungslogik.</TitleGradient>
-                  </span>
-                </h2>
-              </Reveal>
-
-              <Reveal delayMs={160}>
-                <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-3xl">
-                  Kein Rätselraten. Du siehst, wie sich Zahlungen an Meilensteine koppeln – und warum das für beide Seiten sinnvoll ist.
-                </p>
-              </Reveal>
+              <div class="name">Standard</div>
+              <div class="lead">Klarer Webauftritt mit sauberer Führung zur Anfrage.</div>
             </div>
-
-            <Reveal delayMs={220}>
-              <PricingCalculator sceneId="pricing" />
-            </Reveal>
+            <div class="price">ab 700 €</div>
           </div>
-        </Scene>
 
-        {/* BLOCK 4 – RETAINER */}
-        <Scene id="retainer">
-          <div className="grid grid-cols-1 gap-10">
+          <div class="list">
+            <div class="li"><i data-lucide="check-circle-2"></i><span>Website bis 5 Seiten</span></div>
+            <div class="li"><i data-lucide="check-circle-2"></i><span>Branding-Grundlage (Farben, Schrift, Logo-Einbindung)</span></div>
+            <div class="li"><i data-lucide="check-circle-2"></i><span>Kontaktformular, mobil optimiert</span></div>
+            <div class="li"><i data-lucide="check-circle-2"></i><span>Übergabe aller Zugänge</span></div>
+            <div class="li"><i data-lucide="check-circle-2"></i><span>Optional: Betreuung ab 150 €/Monat</span></div>
+          </div>
+
+          <div class="meta">
+            <div><strong>Lieferzeit:</strong> 10–14 Tage (bei zügigem Feedback)</div>
+          </div>
+        </div>
+
+        <!-- Entry -->
+        <div class="pkg reveal" data-pkg="einstieg" data-amount="400">
+          <div class="top">
             <div>
-              <Reveal>
-                <div className="text-xs uppercase tracking-wide text-white/55">04 — Nach dem Projekt</div>
-              </Reveal>
-
-              <Reveal delayMs={90}>
-                <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                  Danach ist nicht „weg“.
-                  <span className="block">
-                    <TitleGradient sceneId="retainer">Optional mit Betreuung.</TitleGradient>
-                  </span>
-                </h2>
-              </Reveal>
-
-              <Reveal delayMs={160}>
-                <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-3xl">
-                  Wenn du möchtest, betreue ich deine Website weiter – für Anpassungen, neue Seiten oder kleine Updates. Monatlich kündbar,
-                  ohne Abo-Stress.
-                </p>
-              </Reveal>
+              <div class="name">Einstieg</div>
+              <div class="lead">Eine Landingpage, ein Ziel, ein klarer CTA.</div>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Reveal delayMs={220}>
-                <TiltCard className="rounded-3xl">
-                  <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8">
-                    <div className="text-xs uppercase tracking-wide text-white/55">Option A</div>
-                    <div className="mt-3 text-xl md:text-3xl font-extrabold text-white/90">Einmaliges Projekt</div>
-                    <p className="mt-3 text-sm md:text-base text-white/70 leading-relaxed">
-                      Einmalige Umsetzung. Fixer Preis. Klare Übergabe. Kein Folgevertrag.
-                    </p>
-                    <div className="mt-5 rounded-2xl border border-white/10 bg-black/25 p-4 text-sm text-white/70 leading-relaxed">
-                      Gut, wenn du intern selbst weiterarbeiten willst und nur eine saubere Basis brauchst.
-                    </div>
-                  </div>
-                </TiltCard>
-              </Reveal>
-
-              <Reveal delayMs={260}>
-                <TiltCard className="rounded-3xl">
-                  <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8 overflow-hidden relative">
-                    <div
-                      className="pointer-events-none absolute -inset-px opacity-60 blur-2xl"
-                      style={{
-                        background:
-                          'radial-gradient(60%_80%_at_25%_10%,rgba(16,185,129,0.12),transparent_60%),radial-gradient(60%_80%_at_85%_0%,rgba(59,130,246,0.10),transparent_60%),radial-gradient(55%_80%_at_50%_115%,rgba(56,189,248,0.08),transparent_60%)',
-                      }}
-                    />
-                    <div className="relative">
-                      <div className="text-xs uppercase tracking-wide text-white/55">Option B</div>
-                      <div className="mt-3 text-xl md:text-3xl font-extrabold text-white/90">Mit Betreuung</div>
-                      <p className="mt-3 text-sm md:text-base text-white/70 leading-relaxed">
-                        Projekt + monatliche Pflege ab 150 €/Monat. Updates, Anpassungen, Ansprechpartner.
-                      </p>
-                      <div className="mt-5 rounded-2xl border border-white/10 bg-black/25 p-4 text-sm text-white/70 leading-relaxed">
-                        Sinnvoll, wenn du regelmäßig kleine Änderungen willst, ohne jedes Mal neu zu starten.
-                      </div>
-                    </div>
-                  </div>
-                </TiltCard>
-              </Reveal>
-            </div>
+            <div class="price">ab 400 €</div>
           </div>
-        </Scene>
 
-        {/* BLOCK 5 – CTA */}
-        <Scene id="cta">
-          <div className="rounded-3xl border border-white/15 bg-black/25 backdrop-blur-md p-6 md:p-12">
-            <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
-              <div>
-                <Reveal>
-                  <div className="text-xs uppercase tracking-wide text-white/55">Anfrage</div>
-                </Reveal>
+          <div class="list">
+            <div class="li"><i data-lucide="check-circle-2"></i><span>Eine Landingpage</span></div>
+            <div class="li"><i data-lucide="check-circle-2"></i><span>Klare Struktur, ein CTA</span></div>
+            <div class="li"><i data-lucide="check-circle-2"></i><span>Mobil optimiert</span></div>
+            <div class="li"><i data-lucide="check-circle-2"></i><span>Übergabe aller Zugänge</span></div>
+            <div class="li"><i data-lucide="check-circle-2"></i><span>Optional: Betreuung ab 150 €/Monat</span></div>
+          </div>
 
-                <Reveal delayMs={90}>
-                  <h3 className="mt-2 text-2xl md:text-5xl font-extrabold leading-tight">Passt das für dich?</h3>
-                </Reveal>
+          <div class="meta">
+            <div><strong>Lieferzeit:</strong> ca. 7 Tage (bei klarer Vorlage)</div>
+          </div>
+        </div>
+      </div>
 
-                <Reveal delayMs={160}>
-                  <p className="mt-4 text-white/80 leading-relaxed max-w-2xl">
-                    Schick mir Ziel, Deadline und Stand – dann sage ich dir, ob es zeitlich hinkommt und was der sinnvollste nächste Schritt ist.
-                  </p>
-                </Reveal>
+      <div class="packages-foot reveal">
+        <div class="infobox">
+          Alle Preise sind Ausgangspunkte. Nach der kostenlosen Analyse bekommst du ein konkretes Angebot mit Scope – damit es keine Überraschungen gibt.
+        </div>
+        <div class="social">Hinweis: Viele Entscheidungen fallen leichter, wenn man einen lokalen Vergleich hat. Darum ist die Analyse vorab der Standardstart.</div>
+      </div>
+    </div>
+  </section>
 
-                <Reveal delayMs={240}>
-                  <div className="mt-6 space-y-3">
-                    {['Ziel (was soll passieren?)', 'Deadline (bis wann?)', 'Stand (Material, Beispiele, bestehende Assets?)'].map((t) => (
-                      <div key={t} className="flex items-start gap-2">
-                        <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                        <span className="text-sm md:text-base text-white/80">{t}</span>
-                      </div>
-                    ))}
-                  </div>
-                </Reveal>
+  <!-- BLOCK 5 — ZAHLUNGSRECHNER -->
+  <section>
+    <div class="container">
+      <div class="card calc reveal">
+        <div class="calc-grid">
+          <div>
+            <h2>Wann zahlst du was?</h2>
+            <p class="subline" style="margin-top:12px;">
+              Du zahlst erst weiter, wenn der Stand passt. Die zweite Rate wird erst fällig, nachdem du die erste Version gesehen und freigegeben hast.
+            </p>
 
-                <Reveal delayMs={320}>
-                  <div className="mt-8 flex flex-wrap gap-2">
-                    <PrimaryButton href={WHATSAPP_HREF}>
-                      <ExternalLink size={18} /> Per WhatsApp
-                    </PrimaryButton>
+            <div class="seg" role="tablist" aria-label="Paketauswahl">
+              <button type="button" data-set="400">Einstieg (400 €)</button>
+              <button type="button" data-set="700" class="active" aria-selected="true">Standard (700 €)</button>
+              <button type="button" data-set="1100">Komplett (1.100 €)</button>
+            </div>
 
-                    <GhostButton href={MAIL_HREF}>
-                      <Mail size={18} /> Per Mail
-                    </GhostButton>
+            <div class="inputrow">
+              <div class="inputwrap" aria-label="Projektpreis eingeben">
+                <i data-lucide="euro"></i>
+                <input id="amount" inputmode="numeric" pattern="[0-9]*" placeholder="z.B. 700" />
+              </div>
+            </div>
 
-                    <GhostButton href={WHATSAPP_URL} external>
-                      <ExternalLink size={18} /> Direkt öffnen
-                    </GhostButton>
-                  </div>
-                </Reveal>
+            <div class="paylist" aria-live="polite">
+              <div class="payrow">
+                <div class="n">1</div>
+                <div class="txt">
+                  <div class="title">Projektstart (40 %)</div>
+                  <div class="sub">Fällig nach Auftragsbestätigung</div>
+                </div>
+                <div class="amt" id="p1">280 €</div>
               </div>
 
-              <Reveal delayMs={200}>
-                <TiltCard className="rounded-3xl">
-                  <div className="rounded-3xl border border-white/15 bg-black/25 p-6">
-                    <div className="text-sm md:text-base font-semibold text-white/90">Copy/Paste</div>
-                    <div className="mt-3 rounded-2xl border border-white/10 bg-black/30 p-4 text-sm text-white/85 whitespace-pre-wrap leading-relaxed">
-{`Ziel:
-Deadline:
-Stand:
-Budgetrahmen (optional):
-Link/Beispiele (optional):`}
-                    </div>
-                    <div className="mt-4 text-sm text-white/60">Das reicht komplett für eine erste Einschätzung.</div>
-                  </div>
-                </TiltCard>
-              </Reveal>
+              <div class="payrow">
+                <div class="n">2</div>
+                <div class="txt">
+                  <div class="title">Erste Version (40 %)</div>
+                  <div class="sub">Fällig nachdem du die erste Version gesehen und freigegeben hast</div>
+                </div>
+                <div class="amt" id="p2">280 €</div>
+              </div>
+
+              <div class="payrow">
+                <div class="n">3</div>
+                <div class="txt">
+                  <div class="title">Go-Live (20 %)</div>
+                  <div class="sub">Fällig nach Übergabe</div>
+                </div>
+                <div class="amt" id="p3">140 €</div>
+              </div>
             </div>
           </div>
-        </Scene>
-      </main>
 
-      <Footer />
+          <div class="framebox">
+            <strong>Warum diese Aufteilung?</strong><br><br>
+            Diese Struktur schützt beide Seiten: Du gibst erst dann den nächsten Schritt frei, wenn du den Stand gesehen hast.
+            Und ich arbeite mit klarem Auftrag weiter – ohne Scope-Creep, ohne Unklarheit, ohne „wir schauen mal“.
+          </div>
+        </div>
+      </div>
     </div>
-  );
-}
+  </section>
 
-/* ---------- KEYFRAMES ---------- */
+  <!-- BLOCK 6 — PROZESS -->
+  <section>
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Wie das konkret abläuft.</h2>
+        <p class="subline">
+          Du bist nicht „nur Abnehmer“. Du siehst Zwischenschritte, gibst Feedback und weißt jederzeit, wo wir stehen.
+          Agil bedeutet hier: klare Sprints, klare Meilensteine, klare Freigaben.
+        </p>
+      </div>
 
-const globalKeyframes = `
-@keyframes blob {
-  0% { transform: translate3d(0px, 0px, 0) scale(1); }
-  35% { transform: translate3d(40px, -30px, 0) scale(1.08); }
-  70% { transform: translate3d(-30px, 20px, 0) scale(0.96); }
-  100% { transform: translate3d(0px, 0px, 0) scale(1); }
-}
-@keyframes blob2 {
-  0% { transform: translate3d(0px, 0px, 0) scale(1); }
-  40% { transform: translate3d(-45px, 35px, 0) scale(1.06); }
-  80% { transform: translate3d(25px, -20px, 0) scale(0.96); }
-  100% { transform: translate3d(0px, 0px, 0) scale(1); }
-}
-@keyframes blob3 {
-  0% { transform: translate3d(0px, 0px, 0) scale(1); }
-  45% { transform: translate3d(35px, 25px, 0) scale(1.10); }
-  85% { transform: translate3d(-30px, -18px, 0) scale(0.94); }
-  100% { transform: translate3d(0px, 0px, 0) scale(1); }
-}
-@keyframes shineSoft {
-  0%   { transform: translateX(-220px) rotate(12deg) scale(1);    opacity: 0.00; }
-  12%  { opacity: 0.08; }
-  32%  { transform: translateX(120px) rotate(12deg) scale(1.02);  opacity: 0.06; }
-  46%  { transform: translateX(220px) rotate(12deg) scale(1.01);  opacity: 0.03; }
-  62%  { transform: translateX(220px) rotate(12deg) scale(1.01);  opacity: 0.01; }
-  78%  { transform: translateX(520px) rotate(12deg) scale(1.02);  opacity: 0.05; }
-  100% { transform: translateX(980px) rotate(12deg) scale(1.00);  opacity: 0.00; }
-}
-@keyframes noiseMove {
-  0% { transform: translate3d(0,0,0); }
-  100% { transform: translate3d(90px,60px,0); }
-}
-`;
+      <div class="timeline">
+        <div class="phase reveal" data-phase>
+          <span class="fill" aria-hidden="true"></span>
+          <div class="badgeN">1</div>
+          <div class="h">
+            <div class="t">Briefing</div>
+            <div class="ms"><i data-lucide="flag"></i><span>Meilenstein: Scope definiert</span></div>
+          </div>
+          <div class="d">Du schickst Ziel, Stand und Deadline.
+Ich analysiere das und antworte innerhalb von 24 Stunden mit einer ersten Einschätzung und konkreten Rückfragen.</div>
+        </div>
+
+        <div class="phase reveal" data-phase>
+          <span class="fill" aria-hidden="true"></span>
+          <div class="badgeN">2</div>
+          <div class="h">
+            <div class="t">Konzept & Struktur</div>
+            <div class="ms"><i data-lucide="flag"></i><span>Meilenstein: Struktur freigegeben</span></div>
+          </div>
+          <div class="d">Ich lege Seitenaufbau, Inhalte und die Branding-Grundlage fest.
+Du bekommst das zur Freigabe – erst danach fange ich an zu bauen.</div>
+        </div>
+
+        <div class="phase reveal" data-phase>
+          <span class="fill" aria-hidden="true"></span>
+          <div class="badgeN">3</div>
+          <div class="h">
+            <div class="t">Erste Version & Feedback</div>
+            <div class="ms"><i data-lucide="flag"></i><span>Meilenstein: Review abgeschlossen</span></div>
+          </div>
+          <div class="d">Du bekommst eine lauffähige Version zum Testen.
+Eine vollständige Feedback-Runde ist eingebaut – keine Extra-Kosten.
+Nach der Freigabe wird die zweite Rate fällig.</div>
+        </div>
+
+        <div class="phase reveal" data-phase>
+          <span class="fill" aria-hidden="true"></span>
+          <div class="badgeN">4</div>
+          <div class="h">
+            <div class="t">Finalisierung</div>
+            <div class="ms"><i data-lucide="flag"></i><span>Meilenstein: Freigabe erteilt</span></div>
+          </div>
+          <div class="d">Letzte Anpassungen, Feinschliff, technische Stabilisierung.
+Was vereinbart war, wird geliefert – keine Überraschungen, kein Scope-Creep.</div>
+        </div>
+
+        <div class="phase reveal" data-phase>
+          <span class="fill" aria-hidden="true"></span>
+          <div class="badgeN">5</div>
+          <div class="h">
+            <div class="t">Übergabe</div>
+            <div class="ms"><i data-lucide="flag"></i><span>Meilenstein: Go-Live</span></div>
+          </div>
+          <div class="d">Du bekommst alle Dateien, Zugänge und ein kurzes Setup-Briefing.
+Optional geht es ab hier in Betreuung – wenn du Updates ohne Reibung willst.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOCK 7 — EINWÄNDE -->
+  <section>
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Was wenn…?</h2>
+        <p class="subline">
+          Drei typische Risiken – und wie sie im Prozess abgefedert sind.
+        </p>
+      </div>
+
+      <div class="objections">
+        <div class="ob reveal">
+          <div class="q">Was wenn mir das Ergebnis nicht gefällt?</div>
+          <div class="a">
+            Du siehst die erste Version, bevor die zweite Rate fällig wird.
+            Feedback ist eingeplant – nicht „on top“.
+          </div>
+        </div>
+
+        <div class="ob reveal">
+          <div class="q">Was wenn ich später Änderungen brauche?</div>
+          <div class="a">
+            Dafür gibt es Betreuung ab 150 €/Monat – oder wir lösen es als separates Mini-Projekt.
+            Du bekommst in jedem Fall einen klaren Rahmen.
+          </div>
+        </div>
+
+        <div class="ob reveal">
+          <div class="q">Was wenn mein Budget nicht reicht?</div>
+          <div class="a">
+            Nach der Analyse machen wir ein passendes Angebot.
+            Oft reicht ein sauberer Einstieg, der später erweitert wird.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOCK 8 — RETAINER -->
+  <section>
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Nach dem Projekt.</h2>
+        <p class="subline">
+          Entweder saubere Übergabe – oder laufende Pflege. Ohne Abo-Stress, monatlich kündbar.
+        </p>
+      </div>
+
+      <div class="ret-grid">
+        <div class="ret reveal">
+          <div class="tt">Einmalig</div>
+          <div class="pp">Fixer Preis. Klare Umsetzung. Saubere Übergabe. Kein Folgevertrag.</div>
+          <div class="tag">Ideal, wenn du intern weiterarbeiten willst.</div>
+        </div>
+
+        <div class="ret reveal">
+          <div class="tt">Mit Betreuung</div>
+          <div class="pp">Projekt + monatliche Pflege ab 150 €/Monat. Updates, Anpassungen, Ansprechpartner.</div>
+          <div class="tag">Ideal, wenn du schnell iterieren willst, ohne Reibung.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOCK 9 — CTA -->
+  <section>
+    <div class="container">
+      <div class="card cta reveal">
+        <div class="section-head">
+          <h2>Passt das?</h2>
+          <p class="subline">
+            Sag mir, welches Paket grob passt – oder starte mit der kostenlosen Analyse.
+            Beides dauert keine zwei Minuten.
+          </p>
+          <div class="cta-actions">
+            <a class="btn primary" href="https://wa.me/4916095757167" target="_blank" rel="noopener noreferrer">
+              <i data-lucide="message-circle"></i>
+              Kostenlose Analyse anfragen
+            </a>
+            <a class="btn outline" href="mailto:hello@leonseitz.com?subject=Projektanfrage" aria-label="Per Mail schreiben">
+              <i data-lucide="mail"></i>
+              Per Mail schreiben
+            </a>
+          </div>
+          <p class="note" style="margin-top:10px;">
+            Copy/Paste: Ziel · Deadline · aktueller Stand · Link/Beispiele (optional)
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>© <span id="y"></span> Leon Seitz · Prozess</footer>
+
+  <!-- Lucide Icons (CDN) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    /*
+      Interactions:
+      1) Scroll progress bar
+      2) Reveal-on-scroll (section elements)
+      3) Process phases: fill rail when each phase enters viewport ("done" feeling)
+      4) Payment calculator with package defaults + live typing
+    */
+    (function () {
+      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Icons
+      if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
+
+      // Footer year
+      document.getElementById('y').textContent = String(new Date().getFullYear());
+
+      // Scroll progress
+      const pbar = document.getElementById('pbar');
+      const onScroll = () => {
+        const doc = document.documentElement;
+        const max = Math.max(1, doc.scrollHeight - doc.clientHeight);
+        const p = doc.scrollTop / max;
+        if (pbar) pbar.style.width = Math.round(p * 100) + '%';
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      // Reveal-on-scroll
+      const revealEls = Array.from(document.querySelectorAll('.reveal'));
+      if (!prefersReduced && 'IntersectionObserver' in window) {
+        const rObs = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add('in');
+              rObs.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.18, rootMargin: '0px 0px -10% 0px' });
+        revealEls.forEach(el => rObs.observe(el));
+      } else {
+        revealEls.forEach(el => el.classList.add('in'));
+      }
+
+      // Process phases "completed" animation
+      const phases = Array.from(document.querySelectorAll('[data-phase]'));
+      if (!prefersReduced && 'IntersectionObserver' in window) {
+        const pObs = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) e.target.classList.add('inview');
+          });
+        }, { threshold: 0.35, rootMargin: '0px 0px -15% 0px' });
+        phases.forEach(el => pObs.observe(el));
+      } else {
+        phases.forEach(el => el.classList.add('inview'));
+      }
+
+      // Payment calculator
+      const amountInput = document.getElementById('amount');
+      const p1 = document.getElementById('p1');
+      const p2 = document.getElementById('p2');
+      const p3 = document.getElementById('p3');
+
+      const segButtons = Array.from(document.querySelectorAll('.seg button'));
+
+      // Default Effect: Standard (700€) preselected
+      let current = 700;
+
+      const formatEUR = (n) => {
+        // Integer euros, German formatting
+        const v = Math.round(n);
+        return v.toLocaleString('de-DE') + ' €';
+      };
+
+      const compute = (val) => {
+        const v = Number.isFinite(val) ? Math.max(0, val) : 0;
+        const a1 = v * 0.40;
+        const a2 = v * 0.40;
+        const a3 = v * 0.20;
+        p1.textContent = formatEUR(a1);
+        p2.textContent = formatEUR(a2);
+        p3.textContent = formatEUR(a3);
+      };
+
+      const setActiveSeg = (value) => {
+        current = value;
+        segButtons.forEach(b => {
+          const is = Number(b.dataset.set) === value;
+          b.classList.toggle('active', is);
+          if (is) b.setAttribute('aria-selected', 'true');
+          else b.removeAttribute('aria-selected');
+        });
+        if (amountInput) amountInput.value = String(value);
+        compute(value);
+      };
+
+      segButtons.forEach(b => {
+        b.addEventListener('click', () => {
+          const v = Number(b.dataset.set);
+          if (!Number.isFinite(v)) return;
+          setActiveSeg(v);
+        });
+      });
+
+      // Input: live typing
+      const parseNumber = (s) => {
+        if (!s) return NaN;
+        // keep digits only
+        const digits = String(s).replace(/[^\d]/g, '');
+        if (!digits) return NaN;
+        return Number(digits);
+      };
+
+      if (amountInput) {
+        amountInput.addEventListener('input', (e) => {
+          const v = parseNumber(e.target.value);
+          // If empty/invalid -> keep placeholders based on current default
+          if (!Number.isFinite(v)) {
+            compute(current);
+            return;
+          }
+          // remove segment highlight if custom value differs from presets
+          const preset = [400,700,1100].includes(v);
+          if (preset) {
+            setActiveSeg(v);
+          } else {
+            segButtons.forEach(btn => {
+              btn.classList.remove('active');
+              btn.removeAttribute('aria-selected');
+            });
+            current = v;
+            compute(v);
+          }
+        });
+      }
+
+      // Initial
+      setActiveSeg(700);
+    })();
+  </script>
+</body>
+</html>
