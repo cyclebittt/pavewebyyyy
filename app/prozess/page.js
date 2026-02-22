@@ -3,7 +3,16 @@
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, ExternalLink, Sparkles, Wand2 } from 'lucide-react';
+import {
+  ArrowRight,
+  CheckCircle2,
+  Circle,
+  Sparkles,
+  Wand2,
+  CreditCard,
+  Shield,
+  ExternalLink,
+} from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 /* ---------- CONFIG ---------- */
@@ -13,7 +22,10 @@ const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_E164}?text=${encodeURIComponent(
   `Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel (mehr Anfragen / sauberer Auftritt / beides):\n- Deadline:\n- Link zu aktueller Website (falls vorhanden):\n- Budgetrahmen (optional):\n`
 )}`;
 
-/* ---------- SCENE (match old vibe) ---------- */
+// Wenn dein Navbar fixed/sticky ist: Offset damit Hero nicht "unter" der Navbar sitzt
+const NAV_OFFSET_PX = 96;
+
+/* ---------- SCENE (old vibe) ---------- */
 
 const SCENE = {
   base: '#070312',
@@ -73,7 +85,7 @@ function Reveal({ children, delayMs = 0 }) {
   );
 }
 
-/* ---------- PROGRESS + HALO (same as old) ---------- */
+/* ---------- PROGRESS + HALO ---------- */
 
 function useScrollProgress() {
   const [p, setP] = useState(0);
@@ -303,9 +315,13 @@ function TiltCard({ children, className = '' }) {
 
 /* ---------- LAYOUT ---------- */
 
-function SectionShell({ children, id }) {
+function SectionShell({ children, id, hero = false }) {
   return (
-    <section id={id} className="relative px-5 md:px-16 py-12 md:py-16 scroll-mt-24">
+    <section
+      id={id}
+      className={cx('relative px-5 md:px-16 py-12 md:py-16 scroll-mt-24', hero ? 'pt-24 md:pt-28' : '')}
+      style={hero ? { paddingTop: `calc(${NAV_OFFSET_PX}px + 2.5rem)` } : undefined}
+    >
       <div className="relative max-w-6xl mx-auto">{children}</div>
     </section>
   );
@@ -334,7 +350,171 @@ function Bullet({ children }) {
   );
 }
 
-/* ---------- COMPONENTS ---------- */
+/* ---------- ROADMAP (Sprints + Payments, vertical, animated line) ---------- */
+
+function useInViewProgress(stepIds) {
+  const [done, setDone] = useState(() => new Set());
+
+  useEffect(() => {
+    const els = stepIds.map((id) => document.getElementById(id)).filter(Boolean);
+    if (!els.length) return;
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting && e.intersectionRatio > 0.35) {
+            setDone((prev) => new Set(prev).add(e.target.id));
+          }
+        });
+      },
+      { threshold: [0.2, 0.35, 0.55] }
+    );
+
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, [stepIds]);
+
+  return done;
+}
+
+function Roadmap() {
+  const steps = useMemo(
+    () => [
+      {
+        id: 'rm0',
+        label: 'Sprint 0 (kostenlos)',
+        title: 'Analyse',
+        desc: 'Ich zeige dir 3 konkrete Punkte, die gerade Anfragen verhindern.',
+        badge: 'Kostenlos',
+        icon: <Sparkles size={16} className="text-white/80" />,
+        pay: null,
+        defaultDone: true, // soll als "abgehakt" wirken
+      },
+      {
+        id: 'rm1',
+        label: 'Sprint 0 (kostenlos)',
+        title: 'Erster Entwurf',
+        desc: 'Du bekommst einen ersten Seiten-Aufbau (Hero + Struktur + CTA) als Vorschau.',
+        badge: 'Kostenlos',
+        icon: <Wand2 size={16} className="text-white/80" />,
+        pay: null,
+        defaultDone: true, // ebenfalls als kostenloser Einstieg
+      },
+      {
+        id: 'rm2',
+        label: 'Sprint 1',
+        title: 'Version 1',
+        desc: 'Ich baue eine lauffähige erste Version. Du klickst sie durch und gibst Feedback.',
+        badge: 'Review',
+        icon: <Circle size={16} className="text-white/70" />,
+        pay: {
+          label: 'Zahlung 1 (40%)',
+          rule: 'nur wenn du sagst: „Passt.“',
+        },
+      },
+      {
+        id: 'rm3',
+        label: 'Sprint 2',
+        title: 'Feinschliff',
+        desc: 'Ich setze Feedback um und mache alles „fertig für live“.',
+        badge: '2. Review',
+        icon: <Circle size={16} className="text-white/70" />,
+        pay: {
+          label: 'Zahlung 2 (40%)',
+          rule: 'nur nach Freigabe des Zwischenstands',
+        },
+      },
+      {
+        id: 'rm4',
+        label: 'Sprint 3',
+        title: 'Übergabe & Go-Live',
+        desc: 'Du bekommst Zugänge + Dateien. Danach geht es live.',
+        badge: 'Go-Live',
+        icon: <Circle size={16} className="text-white/70" />,
+        pay: {
+          label: 'Zahlung 3 (20%)',
+          rule: 'nur nach Übergabe / live',
+        },
+      },
+    ],
+    []
+  );
+
+  const ids = useMemo(() => steps.map((s) => s.id), [steps]);
+  const done = useInViewProgress(ids);
+
+  const doneCount = steps.reduce((acc, s) => acc + (s.defaultDone || done.has(s.id) ? 1 : 0), 0);
+  const linePct = Math.max(0, Math.min(1, (doneCount - 1) / Math.max(1, steps.length - 1)));
+
+  return (
+    <div className="relative">
+      {/* animated spine */}
+      <div className="absolute left-[18px] top-4 bottom-4 w-[2px] bg-white/10 rounded-full" />
+      <div
+        className="absolute left-[18px] top-4 w-[2px] bg-gradient-to-b from-violet-200 via-indigo-200 to-cyan-200 rounded-full"
+        style={{
+          height: `calc(${linePct * 100}% * (100% - 32px))`,
+          maxHeight: 'calc(100% - 32px)',
+          transition: 'height 700ms ease-out',
+        }}
+      />
+
+      <div className="space-y-3">
+        {steps.map((s, idx) => {
+          const isDone = s.defaultDone || done.has(s.id);
+          return (
+            <div id={s.id} key={s.id} className="relative pl-12">
+              {/* node */}
+              <div
+                className={cx(
+                  'absolute left-0 top-4 w-9 h-9 rounded-2xl border flex items-center justify-center',
+                  isDone ? 'border-white/20 bg-white/10' : 'border-white/12 bg-black/20'
+                )}
+              >
+                {isDone ? <CheckCircle2 size={18} className="text-white" /> : s.icon}
+              </div>
+
+              <div className="rounded-2xl border border-white/15 bg-black/15 backdrop-blur-md p-4 md:p-5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="text-xs uppercase tracking-wide text-white/55">{s.label}</div>
+                  <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs text-white/85 border border-white/15">
+                    {s.badge}
+                  </span>
+                </div>
+
+                <div className="mt-2 text-sm md:text-base font-semibold text-white/90">{s.title}</div>
+                <div className="mt-1 text-sm text-white/70 leading-relaxed">{s.desc}</div>
+
+                {s.pay ? (
+                  <div className="mt-3 rounded-xl border border-white/12 bg-black/25 p-3">
+                    <div className="flex items-center gap-2 text-sm text-white/85">
+                      <CreditCard size={16} className="text-white/70" />
+                      <span className="font-semibold">{s.pay.label}</span>
+                    </div>
+                    <div className="mt-1 text-sm text-white/65 flex items-start gap-2">
+                      <Shield size={16} className="mt-[2px] text-white/55" />
+                      <span>{s.pay.rule}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-3 rounded-xl border border-white/12 bg-black/25 p-3 text-sm text-white/70">
+                    <span className="font-semibold text-white/85">0 €</span> – du bekommst das, bevor überhaupt etwas startet.
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-4 text-xs text-white/55">
+        Kurz gesagt: Du gibst nach jedem Sprint Feedback. Zahlungen passieren nur nach deinem „Go“.
+      </div>
+    </div>
+  );
+}
+
+/* ---------- PACKAGES ---------- */
 
 function PackageCard({ title, price, bullets, time, highlight = false }) {
   return (
@@ -375,12 +555,14 @@ function PackageCard({ title, price, bullets, time, highlight = false }) {
   );
 }
 
+/* ---------- RECHNER (dominant value) ---------- */
+
 function BigEuro({ value }) {
   return (
     <div className="leading-none">
       <div className={cx('bg-clip-text text-transparent bg-gradient-to-r', SCENE.accent, 'font-extrabold tracking-tight')}>
-        <span className="text-[64px] md:text-[84px]">{value}</span>
-        <span className="text-[40px] md:text-[52px] align-baseline ml-2">€</span>
+        <span className="text-[64px] md:text-[88px]">{value}</span>
+        <span className="text-[40px] md:text-[56px] align-baseline ml-2">€</span>
       </div>
     </div>
   );
@@ -389,46 +571,14 @@ function BigEuro({ value }) {
 function PaymentLine({ label, pct, amount, note }) {
   return (
     <div className="rounded-2xl border border-white/15 bg-black/15 backdrop-blur-md p-4 md:p-5">
-      <div className="flex items-baseline justify-between gap-4">
-        <div className="text-sm md:text-base font-semibold text-white/90">
-          {label} <span className="text-white/55 font-normal">({pct}%)</span>
-        </div>
+      <div className="text-sm md:text-base font-semibold text-white/90">
+        {label} <span className="text-white/55 font-normal">({pct}%)</span>
       </div>
       <div className="mt-3">
         <BigEuro value={amount} />
       </div>
       <div className="mt-2 text-sm text-white/70">{note}</div>
     </div>
-  );
-}
-
-function PhaseRow({ n, title, a, b }) {
-  return (
-    <Reveal>
-      <div className="rounded-2xl border border-white/15 bg-black/15 backdrop-blur-md p-5 md:p-6">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white text-black flex items-center justify-center font-extrabold">
-            {n}
-          </div>
-          <div className="min-w-0">
-            <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
-            <div className="mt-1 text-sm text-white/75 leading-relaxed">{a}</div>
-            <div className="mt-1 text-sm text-white/60 leading-relaxed">{b}</div>
-          </div>
-        </div>
-      </div>
-    </Reveal>
-  );
-}
-
-function Objection({ q, a }) {
-  return (
-    <Reveal>
-      <div className="rounded-2xl border border-white/15 bg-black/15 backdrop-blur-md p-5">
-        <div className="text-sm md:text-base font-semibold text-white/90">{q}</div>
-        <div className="mt-2 text-sm text-white/70">{a}</div>
-      </div>
-    </Reveal>
   );
 }
 
@@ -458,54 +608,61 @@ export default function ProzessPage() {
 
       <Navbar />
 
-      {/* HERO: one thing -> free value */}
-      <SectionShell id="hero">
-        <div className="flex flex-col items-center text-center gap-5">
-          <Reveal>
-            <span className="inline-flex items-center gap-2 text-xs md:text-sm text-white/85 bg-white/10 ring-1 ring-white/15 px-3 py-1 rounded-full">
-              <Sparkles size={16} /> Kostenlos: 15-Minuten Website-Analyse (klar & konkret)
-            </span>
-          </Reveal>
-
-          <Reveal delayMs={90}>
-            <h1 className="text-3xl md:text-6xl font-extrabold tracking-tight leading-[1.05] max-w-4xl">
-              Du bekommst eine klare Einschätzung,
-              <span className="block">
-                <TitleGradient>was gerade Anfragen verhindert.</TitleGradient>
+      {/* HERO: Fix navbar overlap + make "free" obvious + show roadmap immediately */}
+      <SectionShell id="hero" hero>
+        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-8 items-start">
+          <div className="flex flex-col gap-5">
+            <Reveal>
+              <span className="inline-flex items-center gap-2 text-xs md:text-sm text-white/85 bg-white/10 ring-1 ring-white/15 px-3 py-1 rounded-full">
+                <Sparkles size={16} /> Kostenloser Einstieg: Analyse + erster Entwurf (0 €)
               </span>
-            </h1>
-          </Reveal>
+            </Reveal>
 
-          <Reveal delayMs={160}>
-            <p className="max-w-2xl text-sm md:text-base text-white/75 leading-relaxed">
-              Ohne Pitch. Du gehst mit einer konkreten To-Do-Liste raus.
-            </p>
+            <Reveal delayMs={90}>
+              <h1 className="text-3xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
+                Du siehst zuerst etwas,
+                <span className="block">
+                  <TitleGradient>bevor du irgendwas zahlst.</TitleGradient>
+                </span>
+              </h1>
+            </Reveal>
+
+            <Reveal delayMs={160}>
+              <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-5 md:p-6">
+                <div className="text-xs uppercase tracking-wide text-white/55">Was du kostenlos bekommst</div>
+                <ul className="mt-4 space-y-2 text-sm md:text-base text-white/80">
+                  <Bullet>15-Minuten Analyse: 3 klare Punkte, die Anfragen bremsen</Bullet>
+                  <Bullet>Erster Entwurf: ein Beispiel-Aufbau (Hero + Struktur + CTA)</Bullet>
+                  <Bullet>Erst danach entscheidest du: weiter oder nicht</Bullet>
+                </ul>
+              </div>
+            </Reveal>
+
+            <Reveal delayMs={220}>
+              <div className="rounded-2xl border border-white/12 bg-black/25 p-4 text-sm text-white/75 leading-relaxed">
+                Wichtig: Zahlungen sind sprint-basiert. Du zahlst nur nach deinem „Go“ nach dem jeweiligen Sprint.
+              </div>
+            </Reveal>
+          </div>
+
+          <Reveal delayMs={140}>
+            <Card>
+              <div className="flex items-center justify-between gap-3">
+                <div className="text-xs uppercase tracking-wide text-white/55">Roadmap</div>
+                <Wand2 size={18} className="text-white/55" />
+              </div>
+              <div className="mt-3 text-xl md:text-2xl font-bold text-white/90">
+                Sprints, Reviews, Zahlungen — <TitleGradient>transparent.</TitleGradient>
+              </div>
+              <div className="mt-5">
+                <Roadmap />
+              </div>
+            </Card>
           </Reveal>
         </div>
       </SectionShell>
 
-      {/* ANALYSE: one thing -> what I check + benefit */}
-      <SectionShell id="analyse">
-        <Card>
-          <div className="text-xs uppercase tracking-wide text-white/55">Kostenlose Analyse</div>
-
-          <h2 className="mt-3 text-2xl md:text-4xl font-extrabold leading-tight">
-            Was ich prüfe
-            <span className="block">
-              <TitleGradient>und was du davon hast.</TitleGradient>
-            </span>
-          </h2>
-
-          <ul className="mt-5 space-y-2 text-sm md:text-base text-white/80 max-w-3xl">
-            <Bullet>Versteht man in 10 Sekunden, was ihr anbietet?</Bullet>
-            <Bullet>Wirkt es auf dem Handy vertrauenswürdig?</Bullet>
-            <Bullet>Führt die Seite klar zur Anfrage – oder verliert sie Leute?</Bullet>
-            <Bullet>3 konkrete Änderungen, die sofort Wirkung haben.</Bullet>
-          </ul>
-        </Card>
-      </SectionShell>
-
-      {/* PAKETE: one thing -> options */}
+      {/* PAKETE (short, but still present) */}
       <SectionShell id="pakete">
         <Reveal>
           <div className="text-xs uppercase tracking-wide text-white/55">Pakete</div>
@@ -515,7 +672,7 @@ export default function ProzessPage() {
           <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
             Drei Optionen.
             <span className="block">
-              <TitleGradient>Kein Kleingedrucktes.</TitleGradient>
+              <TitleGradient>Du wählst die passende Größe.</TitleGradient>
             </span>
           </h2>
         </Reveal>
@@ -545,7 +702,7 @@ export default function ProzessPage() {
         </div>
       </SectionShell>
 
-      {/* RECHNER: one thing -> money moment */}
+      {/* RECHNER (money moment + “value you’d invest”) */}
       <SectionShell id="rechner">
         <Card>
           <div className="flex items-center justify-between gap-3">
@@ -554,15 +711,22 @@ export default function ProzessPage() {
           </div>
 
           <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Tipp deinen Betrag ein.
+            Trag den Betrag ein,
             <span className="block">
-              <TitleGradient>Dann siehst du sofort die Zahlungen.</TitleGradient>
+              <TitleGradient>den du investieren würdest.</TitleGradient>
             </span>
           </h2>
 
+          <div className="mt-5 rounded-2xl border border-white/12 bg-black/25 p-4 text-sm text-white/75 leading-relaxed">
+            Du zahlst nur weiter, wenn du nach dem Sprint zufrieden bist und „Go“ gibst.
+          </div>
+
           <div className="mt-6 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-6 md:gap-8 items-start">
             <div className="rounded-3xl border border-white/15 bg-black/15 backdrop-blur-md p-5 md:p-6">
-              <label className="text-sm text-white/70">Projektpreis (du setzt den Wert, der für dich passt)</label>
+              <label className="text-sm text-white/70">
+                Projektpreis (dein Wert — einfach testen, live berechnet)
+              </label>
+
               <div className="mt-3 flex items-center gap-3">
                 <input
                   value={amountRaw}
@@ -575,71 +739,21 @@ export default function ProzessPage() {
                 <div className="text-white/70 font-semibold">€</div>
               </div>
 
-              <div className="mt-4 text-sm text-white/65">
-                Du kannst auch einfach eine andere Zahl testen. Der Rechner zeigt dir sofort, wie sich das auf die Zahlungen auswirkt.
-              </div>
-
               <div className="mt-5 rounded-2xl border border-white/12 bg-black/25 p-4 text-sm text-white/75 leading-relaxed">
-                Du zahlst die 2. Rate erst, wenn du die 1. Version gesehen hast.
+                Sprint-Logik: Du siehst zuerst die Version. Zahlung kommt erst nach deinem „Passt“.
               </div>
             </div>
 
             <div className="space-y-3">
-              <PaymentLine label="Start" pct={40} amount={p1} note="Fällig nach Auftragsbestätigung" />
-              <PaymentLine label="Erste Version" pct={40} amount={p2} note="Fällig nach deinem Review der ersten Version" />
-              <PaymentLine label="Go-Live" pct={20} amount={p3} note="Fällig nach Übergabe (Zugänge + Dateien)" />
+              <PaymentLine label="Zahlung 1 – nach Sprint 1" pct={40} amount={p1} note="Fällig nach Review der Version 1 (nur wenn du freigibst)" />
+              <PaymentLine label="Zahlung 2 – nach Sprint 2" pct={40} amount={p2} note="Fällig nach Freigabe des Zwischenstands (nur wenn du freigibst)" />
+              <PaymentLine label="Zahlung 3 – nach Übergabe" pct={20} amount={p3} note="Fällig nach Go-Live / Übergabe (Zugänge + Dateien)" />
             </div>
           </div>
         </Card>
       </SectionShell>
 
-      {/* PROZESS: one thing -> steps */}
-      <SectionShell id="prozess">
-        <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Ablauf</div>
-        </Reveal>
-
-        <Reveal delayMs={90}>
-          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Fünf Phasen.
-            <span className="block">
-              <TitleGradient>Du weißt jederzeit, wo wir stehen.</TitleGradient>
-            </span>
-          </h2>
-        </Reveal>
-
-        <div className="mt-8 grid grid-cols-1 gap-3">
-          <PhaseRow n="1" title="Briefing" a="Du gibst Ziel, Deadline und Stand." b="Meilenstein: Umfang ist klar." />
-          <PhaseRow n="2" title="Konzept & Struktur" a="Du bekommst Aufbau + Inhalte zur Freigabe." b="Meilenstein: Struktur freigegeben." />
-          <PhaseRow n="3" title="Erste Version" a="Du bekommst eine klickbare Version zum Prüfen." b="Meilenstein: Review abgeschlossen (2. Rate)." />
-          <PhaseRow n="4" title="Finalisierung" a="Letzte Anpassungen + Feinschliff." b="Meilenstein: Freigabe erteilt." />
-          <PhaseRow n="5" title="Übergabe" a="Zugänge + Dateien + kurzes Setup." b="Meilenstein: Go-Live (letzte Rate)." />
-        </div>
-      </SectionShell>
-
-      {/* EINWÄNDE: one thing -> risk reduction */}
-      <SectionShell id="einwaende">
-        <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Kurz geklärt</div>
-        </Reveal>
-
-        <Reveal delayMs={90}>
-          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Typische Fragen.
-            <span className="block">
-              <TitleGradient>Kurz beantwortet.</TitleGradient>
-            </span>
-          </h2>
-        </Reveal>
-
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-5">
-          <Objection q="Was, wenn mir die erste Version nicht gefällt?" a="Du siehst sie, bevor die 2. Rate fällig wird." />
-          <Objection q="Was, wenn später Änderungen nötig sind?" a="Dann entweder Betreuung oder ein kleines Add-On." />
-          <Objection q="Was, wenn das Budget knapp ist?" a="Wir starten kleiner und bauen aus – nach der Analyse." />
-        </div>
-      </SectionShell>
-
-      {/* CTA: only CTA on page */}
+      {/* FINAL CTA (single CTA) */}
       <SectionShell id="cta">
         <Reveal>
           <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-10 text-center">
