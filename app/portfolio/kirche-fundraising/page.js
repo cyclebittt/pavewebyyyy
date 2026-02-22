@@ -1,4 +1,4 @@
-```jsx
+/* START: page.js */
 'use client';
 
 import Navbar from '@/components/layout/Navbar';
@@ -23,12 +23,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 const WHATSAPP_E164 = '4916095757167';
 const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_E164}?text=${encodeURIComponent(
-  `Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel (mehr Anfragen / sauberer Auftritt / beides):\n- Deadline:\n- Link zu aktueller Website (falls vorhanden):\n\nDanke!`
+  'Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel (mehr Anfragen / sauberer Auftritt / beides):\n- Deadline:\n- Link zu aktueller Website (falls vorhanden):\n\nDanke!'
 )}`;
 
 const EMAIL = 'hello@leonseitz.com';
 const MAIL_HREF = `mailto:${EMAIL}?subject=${encodeURIComponent('Kostenlose Website-Analyse')}&body=${encodeURIComponent(
-  `Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel (mehr Anfragen / sauberer Auftritt / beides):\n- Deadline:\n- Link zu aktueller Website (falls vorhanden):\n\nDanke!`
+  'Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel (mehr Anfragen / sauberer Auftritt / beides):\n- Deadline:\n- Link zu aktueller Website (falls vorhanden):\n\nDanke!'
 )}`;
 
 const DEFAULT_PRICES = {
@@ -41,7 +41,6 @@ const REF = {
   url: 'https://kircheab.de/spenden',
   labelTop: 'Beispiel aus der Region: kircheab.de',
   labelBottom: 'Konzeption, Design & Umsetzung in unter 2 Wochen.',
-  // Optionaler Proof-Satz – bewusst nicht zu laut
   proofSmall: 'Ergebnis: über 17.000 € Spenden in 2 Monaten.',
 };
 
@@ -443,33 +442,19 @@ function PriceLine({ label, amount, hint }) {
   );
 }
 
-function PackageCard({
-  title,
-  priceLabel,
-  lead,
-  bullets,
-  timeLabel,
-  emphasized = false,
-  badge,
-  icon,
-}) {
+function PackageCard({ title, priceLabel, lead, bullets, timeLabel, emphasized = false, badge, icon }) {
   return (
     <Reveal>
       <TiltCard className={cx('rounded-3xl', emphasized ? 'scale-[1.01]' : '')}>
         <div
           className={cx(
             'rounded-3xl backdrop-blur-md p-6 md:p-7 overflow-hidden relative',
-            emphasized
-              ? 'border-2 border-violet-400/60 bg-black/20'
-              : 'border border-white/15 bg-black/20'
+            emphasized ? 'border-2 border-violet-400/60 bg-black/20' : 'border border-white/15 bg-black/20'
           )}
         >
           <div
             className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.06]"
-            style={{
-              filter: 'blur(52px)',
-              animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite',
-            }}
+            style={{ filter: 'blur(52px)', animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite' }}
           />
 
           <div className="flex items-start justify-between gap-3">
@@ -545,13 +530,7 @@ function PackageSelector({ active, onSelect }) {
 
 function BrowserMiniMock({ href, label = 'kircheab.de/spenden' }) {
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group inline-flex items-center gap-3"
-      aria-label="Referenz öffnen"
-    >
+    <a href={href} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-3" aria-label="Referenz öffnen">
       <div className="w-[200px] max-w-[200px]">
         <div className="rounded-2xl border border-white/15 bg-black/25 backdrop-blur-md overflow-hidden">
           <div className="px-3 py-2 border-b border-white/10 flex items-center gap-1.5">
@@ -570,15 +549,27 @@ function BrowserMiniMock({ href, label = 'kircheab.de/spenden' }) {
         <div className="text-sm font-semibold text-white/90 flex items-center gap-2">
           Referenz ansehen <ExternalLink size={16} className="text-white/55" />
         </div>
-        <div className="mt-1 text-xs md:text-sm text-white/65">
-          Öffnet im neuen Tab (echtes Projekt)
-        </div>
+        <div className="mt-1 text-xs md:text-sm text-white/65">Öffnet im neuen Tab (echtes Projekt)</div>
       </div>
     </a>
   );
 }
 
-/* ---------- PROCESS (effort justification) ---------- */
+/* ---------- PROCESS ---------- */
+
+function FlagIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 21V5" stroke="rgba(255,255,255,0.75)" strokeWidth="2" strokeLinecap="round" />
+      <path
+        d="M6 5h10l-1.5 3L16 11H6V5Z"
+        stroke="rgba(255,255,255,0.75)"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 function StepItem({ n, title, body, milestone }) {
   return (
@@ -587,15 +578,10 @@ function StepItem({ n, title, body, milestone }) {
         <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-7 relative overflow-hidden">
           <div
             className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.06]"
-            style={{
-              filter: 'blur(54px)',
-              animation: 'shineSoft 6.4s cubic-bezier(.2,.9,.2,1) infinite',
-            }}
+            style={{ filter: 'blur(54px)', animation: 'shineSoft 6.4s cubic-bezier(.2,.9,.2,1) infinite' }}
           />
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white text-black flex items-center justify-center font-extrabold">
-              {n}
-            </div>
+            <div className="w-10 h-10 rounded-2xl bg-white text-black flex items-center justify-center font-extrabold">{n}</div>
             <div className="min-w-0">
               <div className="text-base md:text-lg font-extrabold text-white">{title}</div>
               <p className="mt-2 text-sm md:text-base text-white/75 leading-relaxed whitespace-pre-line">{body}</p>
@@ -615,29 +601,9 @@ function StepItem({ n, title, body, milestone }) {
   );
 }
 
-function FlagIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M5 21V5"
-        stroke="rgba(255,255,255,0.75)"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M6 5h10l-1.5 3L16 11H6V5Z"
-        stroke="rgba(255,255,255,0.75)"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 /* ---------- PAGE ---------- */
 
 export default function ProzessPage() {
-  // smooth hash scroll (optional)
   useEffect(() => {
     const handle = () => {
       const hash = window.location.hash;
@@ -650,15 +616,15 @@ export default function ProzessPage() {
     return () => window.removeEventListener('hashchange', handle);
   }, []);
 
-  const [activePkg, setActivePkg] = useState('standard'); // Default Effect
+  const [activePkg, setActivePkg] = useState('standard');
   const [price, setPrice] = useState(DEFAULT_PRICES.standard);
-  const [custom, setCustom] = useState(''); // string to allow empty
+  const [custom, setCustom] = useState('');
 
   const computed = useMemo(() => {
     const base = Number.isFinite(price) ? price : DEFAULT_PRICES.standard;
     const p1 = Math.round(base * 0.4);
     const p2 = Math.round(base * 0.4);
-    const p3 = Math.max(0, base - p1 - p2); // keep 100%
+    const p3 = Math.max(0, base - p1 - p2);
     return { base, p1, p2, p3 };
   }, [price]);
 
@@ -668,19 +634,20 @@ export default function ProzessPage() {
     setPrice(value);
   }, []);
 
-  const onCustomChange = useCallback((v) => {
-    // allow empty
-    setCustom(v);
-    const num = Number(String(v).replace(',', '.'));
-    if (!v) {
-      // fallback to current selected package
-      const fallback = DEFAULT_PRICES[activePkg] ?? DEFAULT_PRICES.standard;
-      setPrice(fallback);
-      return;
-    }
-    if (!Number.isFinite(num) || num < 0) return;
-    setPrice(Math.round(num));
-  }, [activePkg]);
+  const onCustomChange = useCallback(
+    (v) => {
+      setCustom(v);
+      const num = Number(String(v).replace(',', '.'));
+      if (!v) {
+        const fallback = DEFAULT_PRICES[activePkg] ?? DEFAULT_PRICES.standard;
+        setPrice(fallback);
+        return;
+      }
+      if (!Number.isFinite(num) || num < 0) return;
+      setPrice(Math.round(num));
+    },
+    [activePkg]
+  );
 
   return (
     <div className="font-proxima text-white min-h-screen">
@@ -857,7 +824,6 @@ export default function ProzessPage() {
         </Reveal>
 
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-          {/* Anchor first: teuerstes Paket zuerst */}
           <PackageCard
             title="Komplett"
             priceLabel="ab 1.100 €"
@@ -910,18 +876,15 @@ export default function ProzessPage() {
           />
         </div>
 
-        {/* Referenz integriert: kompakt, direkt unter Paketen */}
         <Reveal delayMs={140}>
           <div className="mt-7 rounded-3xl border border-white/12 bg-black/20 backdrop-blur-md p-5 md:p-6">
             <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
               <BrowserMiniMock href={REF.url} />
-
               <div className="min-w-0">
                 <div className="text-sm md:text-base font-semibold text-white/90">{REF.labelTop}</div>
                 <div className="mt-1 text-sm text-white/70">{REF.labelBottom}</div>
                 <div className="mt-2 text-xs text-white/55">{REF.proofSmall}</div>
               </div>
-
               <div className="md:ml-auto">
                 <GhostCTA href={REF.url} external>
                   Öffnen <ExternalLink size={16} />
@@ -931,7 +894,6 @@ export default function ProzessPage() {
           </div>
         </Reveal>
 
-        {/* Infokasten (wie im Prompt) */}
         <Reveal delayMs={200}>
           <div className="mt-6 rounded-3xl border border-white/12 bg-black/20 backdrop-blur-md p-5 md:p-6">
             <div className="text-sm md:text-base text-white/80 leading-relaxed">
@@ -1003,21 +965,13 @@ export default function ProzessPage() {
                   </div>
 
                   <div className="mt-5">
-                    <PriceLine
-                      label="Zahlung 1 – Projektstart (40%)"
-                      amount={computed.p1}
-                      hint="Fällig nach Auftragsbestätigung"
-                    />
+                    <PriceLine label="Zahlung 1 – Projektstart (40%)" amount={computed.p1} hint="Fällig nach Auftragsbestätigung" />
                     <PriceLine
                       label="Zahlung 2 – Erste Version (40%)"
                       amount={computed.p2}
                       hint="Fällig nachdem du die erste Version gesehen und freigegeben hast"
                     />
-                    <PriceLine
-                      label="Zahlung 3 – Go-Live (20%)"
-                      amount={computed.p3}
-                      hint="Fällig nach Übergabe (finaler Stand online)"
-                    />
+                    <PriceLine label="Zahlung 3 – Go-Live (20%)" amount={computed.p3} hint="Fällig nach Übergabe (finaler Stand online)" />
                   </div>
 
                   <div className="mt-5 rounded-2xl border border-white/12 bg-white/5 p-4 text-sm text-white/75 leading-relaxed">
@@ -1080,143 +1034,6 @@ export default function ProzessPage() {
         </div>
       </SectionShell>
 
-      {/* Einwände */}
-      <SectionShell id="einwaende">
-        <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Risikoreduktion</div>
-        </Reveal>
-
-        <Reveal delayMs={90}>
-          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Was, wenn…?
-            <span className="block">
-              <TitleGradient>Die drei häufigsten Fragen – klar beantwortet.</TitleGradient>
-            </span>
-          </h2>
-        </Reveal>
-
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-5">
-          <Reveal>
-            <TiltCard className="rounded-3xl">
-              <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6">
-                <div className="text-sm font-extrabold text-white/90">Was passiert, wenn mir die erste Version nicht gefällt?</div>
-                <p className="mt-3 text-sm text-white/75 leading-relaxed">
-                  Du zahlst die zweite Rate erst, wenn du die erste Version gesehen und freigegeben hast.
-                  Eine vollständige Feedback-Runde ist im Preis enthalten.
-                </p>
-              </div>
-            </TiltCard>
-          </Reveal>
-
-          <Reveal delayMs={80}>
-            <TiltCard className="rounded-3xl">
-              <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6">
-                <div className="text-sm font-extrabold text-white/90">Was ist, wenn ich später Änderungen brauche?</div>
-                <p className="mt-3 text-sm text-white/75 leading-relaxed">
-                  Dafür gibt es optional Betreuung ab 150 €/Monat (kleine Updates, Anpassungen, Ansprechpartner).
-                  Alternativ kann man Änderungen auch als separates Mini-Projekt umsetzen.
-                </p>
-              </div>
-            </TiltCard>
-          </Reveal>
-
-          <Reveal delayMs={140}>
-            <TiltCard className="rounded-3xl">
-              <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6">
-                <div className="text-sm font-extrabold text-white/90">Was ist, wenn mein Budget nicht reicht?</div>
-                <p className="mt-3 text-sm text-white/75 leading-relaxed">
-                  Schreib mir kurz deinen Rahmen. Nach der kostenlosen Analyse machen wir ein passendes Angebot,
-                  das realistisch ist – ohne dich zu etwas zu drängen.
-                </p>
-              </div>
-            </TiltCard>
-          </Reveal>
-        </div>
-      </SectionShell>
-
-      {/* Retainer */}
-      <SectionShell id="retainer">
-        <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Nach dem Projekt</div>
-        </Reveal>
-
-        <Reveal delayMs={90}>
-          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Danach musst du nicht allein weitermachen.
-            <span className="block">
-              <TitleGradient>Aber du musst auch kein Abo abschließen.</TitleGradient>
-            </span>
-          </h2>
-        </Reveal>
-
-        <Reveal delayMs={150}>
-          <p className="mt-4 text-sm md:text-base text-white/75 max-w-2xl leading-relaxed">
-            Wenn du möchtest, betreue ich deine Website weiter – für Anpassungen, neue Seiten oder kleine Updates.
-            Monatlich kündbar, kein Abo-Stress.
-          </p>
-        </Reveal>
-
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-          <Reveal>
-            <CardShell>
-              <div className="text-sm md:text-base font-extrabold text-white/90">Einmaliges Projekt</div>
-              <p className="mt-3 text-sm text-white/75 leading-relaxed">
-                Einmalige Umsetzung. Fixer Preis. Saubere Übergabe. Danach keine Verpflichtung.
-              </p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                <Badge>Kein Folgevertrag</Badge>
-                <Badge>Alle Zugänge & Dateien</Badge>
-              </div>
-            </CardShell>
-          </Reveal>
-
-          <Reveal delayMs={90}>
-            <CardShell>
-              <div className="text-sm md:text-base font-extrabold text-white/90">Mit Betreuung</div>
-              <p className="mt-3 text-sm text-white/75 leading-relaxed">
-                Projekt + monatliche Pflege ab 150 €/Monat. Updates, Anpassungen, Ansprechpartner. Monatlich kündbar.
-              </p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                <Badge>Ab 150 €/Monat</Badge>
-                <Badge>Monatlich kündbar</Badge>
-              </div>
-            </CardShell>
-          </Reveal>
-        </div>
-      </SectionShell>
-
-      {/* CTA */}
-      <SectionShell id="cta">
-        <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Nächster Schritt</div>
-        </Reveal>
-
-        <Reveal delayMs={90}>
-          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Passt das?
-            <span className="block">
-              <TitleGradient>Dann schick mir kurz dein Vorhaben.</TitleGradient>
-            </span>
-          </h2>
-        </Reveal>
-
-        <Reveal delayMs={150}>
-          <p className="mt-4 text-sm md:text-base text-white/75 max-w-2xl leading-relaxed">
-            Sag mir kurz: welches Paket dich interessiert – oder ob du zuerst die kostenlose Analyse möchtest.
-            Beides dauert keine 2 Minuten.
-          </p>
-        </Reveal>
-
-        <Reveal delayMs={220}>
-          <div className="mt-6 flex flex-wrap gap-2">
-            <PrimaryCTA href={WHATSAPP_HREF} label="Kostenlose Analyse anfragen" external />
-            <GhostCTA href={MAIL_HREF} external>
-              Per Mail schreiben <ExternalLink size={16} />
-            </GhostCTA>
-          </div>
-        </Reveal>
-      </SectionShell>
-
       <Footer />
     </div>
   );
@@ -1257,5 +1074,4 @@ const globalKeyframes = `
   100% { transform: translate3d(90px,60px,0); }
 }
 `;
-```
-
+/* END: page.js */
