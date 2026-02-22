@@ -2,7 +2,6 @@
 
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import Link from 'next/link';
 import {
   ArrowRight,
   CheckCircle2,
@@ -10,7 +9,6 @@ import {
   ExternalLink,
   Shield,
   Sparkles,
-  Wand2,
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -258,7 +256,7 @@ function PackageMetaLink({ href, children }) {
   );
 }
 
-/* ---------- ROADMAP (scroll + visual track) ---------- */
+/* ---------- ROADMAP (simple, like before; no side boxes) ---------- */
 
 function useRoadmapProgress(initialDoneIds = []) {
   const [activeStep, setActiveStep] = useState(null);
@@ -299,72 +297,36 @@ function useRoadmapProgress(initialDoneIds = []) {
   return { activeStep, doneSteps };
 }
 
-function RoadmapNode({ id, title, desc, badge, badgeTone = 'neutral', state, isLast = false }) {
+function RoadmapItem({ id, title, desc, tag, tagTone = 'neutral', state }) {
   const isActive = state.activeStep === id;
   const isDone = state.doneSteps.has(id);
 
   return (
-    <div data-roadmap-step={id} className="relative">
-      {/* connector "road" */}
-      {!isLast ? (
-        <div className="absolute left-[18px] top-[46px] bottom-[-14px] w-[4px] rounded-full bg-white/10 overflow-hidden">
+    <div
+      data-roadmap-step={id}
+      className={cx(
+        'rounded-2xl border px-4 py-4 md:px-5 md:py-5 transition-colors',
+        isActive ? 'border-white/25 bg-white/10' : 'border-white/12 bg-white/5'
+      )}
+    >
+      <div className="flex items-start gap-3">
+        <div className="shrink-0 pt-0.5">
           <div
-            className="absolute inset-x-0 top-0 h-full"
-            style={{
-              background: 'linear-gradient(to bottom, rgba(16,185,129,0.0), rgba(16,185,129,0.55), rgba(16,185,129,0.0))',
-              opacity: isDone ? 1 : 0,
-              transition: 'opacity 320ms ease',
-            }}
-          />
-          <div
-            className="absolute inset-0 opacity-30"
-            style={{
-              background:
-                'repeating-linear-gradient(to bottom, rgba(255,255,255,0.10) 0, rgba(255,255,255,0.10) 10px, transparent 10px, transparent 18px)',
-              maskImage: 'linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%)',
-            }}
-          />
+            className={cx(
+              'w-9 h-9 rounded-2xl border flex items-center justify-center',
+              isDone ? 'border-emerald-300/30 bg-emerald-500/10' : 'border-white/15 bg-white/10'
+            )}
+          >
+            <CheckCircle2 size={18} className={cx(isDone ? 'text-emerald-300' : 'text-white/30')} />
+          </div>
         </div>
-      ) : null}
 
-      <div
-        className={cx(
-          'relative ml-0 pl-0 rounded-3xl border transition-colors',
-          isActive ? 'border-white/25 bg-white/10' : 'border-white/12 bg-white/5'
-        )}
-      >
-        <div className="p-5 md:p-6 flex gap-4">
-          {/* "pin" */}
-          <div className="shrink-0 pt-0.5">
-            <div className="relative">
-              <div
-                className={cx(
-                  'w-10 h-10 rounded-2xl border flex items-center justify-center',
-                  isDone ? 'border-emerald-300/30 bg-emerald-500/10' : 'border-white/15 bg-white/10'
-                )}
-              >
-                <CheckCircle2 size={18} className={cx(isDone ? 'text-emerald-300' : 'text-white/30')} />
-              </div>
-
-              {/* subtle glow */}
-              <div
-                className={cx('pointer-events-none absolute inset-0 rounded-2xl opacity-0 md:opacity-100')}
-                style={{
-                  background: isDone
-                    ? 'radial-gradient(18px 18px at 50% 50%, rgba(16,185,129,0.35), transparent 70%)'
-                    : 'radial-gradient(18px 18px at 50% 50%, rgba(255,255,255,0.10), transparent 70%)',
-                }}
-              />
-            </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
+            {tag ? <Pill tone={tagTone}>{tag}</Pill> : null}
           </div>
-
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
-              {badge ? <Pill tone={badgeTone}>{badge}</Pill> : null}
-            </div>
-            <div className="mt-2 text-sm text-white/70 leading-relaxed">{desc}</div>
-          </div>
+          <div className="mt-2 text-sm text-white/70 leading-relaxed">{desc}</div>
         </div>
       </div>
     </div>
@@ -404,20 +366,8 @@ export default function ProzessPage() {
   const payments = useMemo(() => calcPayments(amount), [amount]);
   const rec = useMemo(() => getRecommendation(amount), [amount]);
 
-  // show first two as "done" (Kostenlos)
+  // first two steps are "done" (Kostenlos)
   const roadmapState = useRoadmapProgress(['sprint0', 'sprint1']);
-
-  useEffect(() => {
-    const handle = () => {
-      const hash = window.location.hash;
-      if (!hash) return;
-      const el = document.querySelector(hash);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    };
-    handle();
-    window.addEventListener('hashchange', handle);
-    return () => window.removeEventListener('hashchange', handle);
-  }, []);
 
   return (
     <div className="font-proxima text-white min-h-screen">
@@ -463,7 +413,7 @@ export default function ProzessPage() {
         </div>
       </section>
 
-      {/* 2) ROADMAP (visually like a roadmap) */}
+      {/* 2) ROADMAP (clean, no side boxes) */}
       <SectionShell id="roadmap" tight>
         <Reveal>
           <div className="text-xs uppercase tracking-wide text-white/55">Roadmap</div>
@@ -471,86 +421,61 @@ export default function ProzessPage() {
 
         <Reveal delayMs={90}>
           <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Ablauf als Strecke.
+            Ein Ablauf.
             <span className="block">
-              <TitleGradient>Du siehst, wo du gerade bist.</TitleGradient>
+              <TitleGradient>Sprint → Review → nächster Schritt.</TitleGradient>
             </span>
           </h2>
         </Reveal>
 
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-4 md:gap-6 items-start">
-          {/* left: visual "road" card */}
-          <Card className="p-6 md:p-7 overflow-hidden relative">
-            <div
-              className="pointer-events-none absolute -left-40 -top-24 h-[160%] w-72 rotate-12 bg-white/10 opacity-[0.06]"
-              style={{ filter: 'blur(60px)', animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite' }}
-            />
-
-            <div className="text-white/90 font-semibold">Sprint-System</div>
-            <div className="mt-2 text-sm text-white/70 leading-relaxed">
-              Jeder Sprint endet mit einem Review. Danach ist klar: weiter / anpassen / stoppen.
-            </div>
-
-            <div className="mt-5 flex flex-wrap gap-2">
+        <div className="mt-8">
+          <Card className="p-5 md:p-6">
+            <div className="flex flex-wrap gap-2 mb-4">
               <Pill tone="free">Sprint 0: Kostenlos</Pill>
               <Pill tone="free">Sprint 1: Kostenlos</Pill>
               <Pill>Danach: Zahlungsziele</Pill>
             </div>
 
-            {/* tiny legend */}
-            <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
-              <div className="rounded-2xl border border-emerald-300/20 bg-emerald-500/10 p-3">
-                <div className="text-xs uppercase tracking-wide text-emerald-100/90">Kostenlos</div>
-                <div className="mt-1 text-white/80">Analyse &amp; Entwurf</div>
-              </div>
-              <div className="rounded-2xl border border-white/12 bg-white/5 p-3">
-                <div className="text-xs uppercase tracking-wide text-white/55">Review</div>
-                <div className="mt-1 text-white/80">nächster Schritt</div>
-              </div>
+            <div className="grid grid-cols-1 gap-3 md:gap-4">
+              <RoadmapItem
+                id="sprint0"
+                title="Sprint 0 — Analyse"
+                desc="Klarheit, Vertrauen, Mobile, Anfrageweg. Du bekommst 3–5 konkrete Punkte."
+                tag="Kostenlos"
+                tagTone="free"
+                state={roadmapState}
+              />
+              <RoadmapItem
+                id="sprint1"
+                title="Sprint 1 — Erster Entwurf"
+                desc="Du siehst einen konkreten Aufbau für eine Seite. Danach entscheiden wir, ob wir weitergehen."
+                tag="Kostenlos"
+                tagTone="free"
+                state={roadmapState}
+              />
+              <RoadmapItem
+                id="sprint2"
+                title="Sprint 2 — Erste Version"
+                desc="Lauffähige Version zum Testen + Feedback. Danach: Zahlungsziel 1 (30%)."
+                tag="Ziel 1 nach Review"
+                state={roadmapState}
+              />
+              <RoadmapItem
+                id="sprint3"
+                title="Sprint 3 — Feinschliff"
+                desc="Änderungen aus dem Review werden umgesetzt. Danach: Zahlungsziel 2 (50%)."
+                tag="Ziel 2 nach Review"
+                state={roadmapState}
+              />
+              <RoadmapItem
+                id="sprint4"
+                title="Sprint 4 — Go-Live & Übergabe"
+                desc="Live stellen, Zugänge & Dateien. Danach: Zahlungsziel 3 (20%)."
+                tag="Ziel 3 nach Übergabe"
+                state={roadmapState}
+              />
             </div>
           </Card>
-
-          {/* right: roadmap nodes (the actual scroll-tracked content) */}
-          <div className="grid grid-cols-1 gap-3 md:gap-4">
-            <RoadmapNode
-              id="sprint0"
-              title="Sprint 0 — Analyse"
-              desc="Klarheit, Vertrauen, Mobile, Anfrageweg. Du bekommst 3–5 konkrete Punkte."
-              badge="Kostenlos"
-              badgeTone="free"
-              state={roadmapState}
-            />
-            <RoadmapNode
-              id="sprint1"
-              title="Sprint 1 — Erster Entwurf"
-              desc="Du siehst einen konkreten Aufbau für eine Seite. Danach entscheiden wir, ob wir weitergehen."
-              badge="Kostenlos"
-              badgeTone="free"
-              state={roadmapState}
-            />
-            <RoadmapNode
-              id="sprint2"
-              title="Sprint 2 — Erste Version"
-              desc="Lauffähige Version zum Testen + Feedback. Danach: Zahlungsziel 1 (30%)."
-              badge="Zahlungsziel 1 nach Review"
-              state={roadmapState}
-            />
-            <RoadmapNode
-              id="sprint3"
-              title="Sprint 3 — Feinschliff"
-              desc="Änderungen aus dem Review werden umgesetzt. Danach: Zahlungsziel 2 (50%)."
-              badge="Zahlungsziel 2 nach Review"
-              state={roadmapState}
-            />
-            <RoadmapNode
-              id="sprint4"
-              title="Sprint 4 — Go-Live & Übergabe"
-              desc="Live stellen, Zugänge & Dateien. Danach: Zahlungsziel 3 (20%)."
-              badge="Zahlungsziel 3 nach Übergabe"
-              state={roadmapState}
-              isLast
-            />
-          </div>
         </div>
       </SectionShell>
 
@@ -590,7 +515,6 @@ export default function ProzessPage() {
             </div>
 
             <div className="mt-5">
-              {/* dominant number */}
               <div className="text-[76px] md:text-[92px] font-extrabold tracking-tight leading-none">
                 {amount} <span className="text-white/55">€</span>
               </div>
@@ -662,9 +586,7 @@ export default function ProzessPage() {
             <Card
               className={cx(
                 'p-6 md:p-7 transition-all',
-                rec.key === 'komplett'
-                  ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100 translate-y-0'
-                  : 'opacity-55 translate-y-0'
+                rec.key === 'komplett' ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100' : 'opacity-55'
               )}
             >
               <div className="text-xs uppercase tracking-wide text-white/55">Komplett</div>
@@ -698,9 +620,7 @@ export default function ProzessPage() {
             <Card
               className={cx(
                 'p-6 md:p-7 transition-all',
-                rec.key === 'standard'
-                  ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100 translate-y-0'
-                  : 'opacity-55 translate-y-0'
+                rec.key === 'standard' ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100' : 'opacity-55'
               )}
             >
               <div className="flex items-center justify-between gap-3">
@@ -737,9 +657,7 @@ export default function ProzessPage() {
             <Card
               className={cx(
                 'p-6 md:p-7 transition-all',
-                rec.key === 'einstieg'
-                  ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100 translate-y-0'
-                  : 'opacity-55 translate-y-0'
+                rec.key === 'einstieg' ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100' : 'opacity-55'
               )}
             >
               <div className="text-xs uppercase tracking-wide text-white/55">Einstieg</div>
@@ -868,19 +786,10 @@ const globalKeyframes = `
   100% { transform: translate3d(0px, 0px, 0) scale(1); }
 }
 @keyframes blob3 {
-  0% { transform: translate3d(0px, 0px, 0) scale(1); }
+  0% { transform: translate3d(0px, 0px, 0) scale(1.10); }
   45% { transform: translate3d(35px, 25px, 0) scale(1.10); }
   85% { transform: translate3d(-30px, -18px, 0) scale(0.94); }
   100% { transform: translate3d(0px, 0px, 0) scale(1); }
-}
-@keyframes shineSoft {
-  0%   { transform: translateX(-220px) rotate(12deg) scale(1);    opacity: 0.00; }
-  12%  { opacity: 0.08; }
-  32%  { transform: translateX(120px) rotate(12deg) scale(1.02);  opacity: 0.06; }
-  46%  { transform: translateX(220px) rotate(12deg) scale(1.01);  opacity: 0.03; }
-  62%  { transform: translateX(220px) rotate(12deg) scale(1.01);  opacity: 0.01; }
-  78%  { transform: translateX(520px) rotate(12deg) scale(1.02);  opacity: 0.05; }
-  100% { transform: translateX(980px) rotate(12deg) scale(1.00);  opacity: 0.00; }
 }
 @keyframes noiseMove {
   0% { transform: translate3d(0,0,0); }
