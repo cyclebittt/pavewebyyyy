@@ -1,50 +1,19 @@
-/* START: page.js */
 'use client';
 
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Link from 'next/link';
-import {
-  ArrowLeft,
-  ArrowRight,
-  Sparkles,
-  ExternalLink,
-  CheckCircle2,
-  Wand2,
-  FileText,
-  Clock,
-  Shield,
-  CreditCard,
-  LayoutTemplate,
-} from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowRight, CheckCircle2, ExternalLink, Sparkles, Wand2 } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 /* ---------- CONFIG ---------- */
 
 const WHATSAPP_E164 = '4916095757167';
 const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_E164}?text=${encodeURIComponent(
-  'Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel (mehr Anfragen / sauberer Auftritt / beides):\n- Deadline:\n- Link zu aktueller Website (falls vorhanden):\n\nDanke!'
+  `Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel (mehr Anfragen / sauberer Auftritt / beides):\n- Deadline:\n- Link zu aktueller Website (falls vorhanden):\n- Budgetrahmen (optional):\n`
 )}`;
 
-const EMAIL = 'hello@leonseitz.com';
-const MAIL_HREF = `mailto:${EMAIL}?subject=${encodeURIComponent('Kostenlose Website-Analyse')}&body=${encodeURIComponent(
-  'Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel (mehr Anfragen / sauberer Auftritt / beides):\n- Deadline:\n- Link zu aktueller Website (falls vorhanden):\n\nDanke!'
-)}`;
-
-const DEFAULT_PRICES = {
-  einstieg: 400,
-  standard: 700,
-  komplett: 1100,
-};
-
-const REF = {
-  url: 'https://kircheab.de/spenden',
-  labelTop: 'Beispiel aus der Region: kircheab.de',
-  labelBottom: 'Konzeption, Design & Umsetzung in unter 2 Wochen.',
-  proofSmall: 'Ergebnis: über 17.000 € Spenden in 2 Monaten.',
-};
-
-/* ---------- SCENE (match homepage vibe) ---------- */
+/* ---------- SCENE (match old vibe) ---------- */
 
 const SCENE = {
   base: '#070312',
@@ -52,9 +21,9 @@ const SCENE = {
        radial-gradient(900px 700px at 82% 25%, rgba(56,189,248,0.14), transparent 55%)`,
   g2: `linear-gradient(135deg, #070312 0%, #0b0b1a 50%, #03040e 100%)`,
   blobs: [
-    { cls: 'bg-violet-500/16', x: '-20%', y: '-18%', s: '56rem', blur: 140 },
-    { cls: 'bg-cyan-500/10', x: '70%', y: '10%', s: '54rem', blur: 150 },
-    { cls: 'bg-fuchsia-500/9', x: '20%', y: '80%', s: '46rem', blur: 150 },
+    { cls: 'bg-violet-500/14', x: '-20%', y: '-18%', s: '56rem', blur: 150 },
+    { cls: 'bg-cyan-500/10', x: '70%', y: '10%', s: '54rem', blur: 160 },
+    { cls: 'bg-fuchsia-500/8', x: '20%', y: '80%', s: '46rem', blur: 160 },
   ],
   accent: 'from-violet-200 via-indigo-200 to-cyan-200',
 };
@@ -104,11 +73,10 @@ function Reveal({ children, delayMs = 0 }) {
   );
 }
 
-/* ---------- PROGRESS + HALO ---------- */
+/* ---------- PROGRESS + HALO (same as old) ---------- */
 
 function useScrollProgress() {
   const [p, setP] = useState(0);
-
   useEffect(() => {
     const onScroll = () => {
       const doc = document.documentElement;
@@ -119,7 +87,6 @@ function useScrollProgress() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
-
   return p;
 }
 
@@ -199,7 +166,6 @@ function GlobalBackground() {
           backgroundImage: `${SCENE.g1}, ${SCENE.g2}`,
         }}
       />
-
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.10] mix-blend-overlay"
         style={{
@@ -209,7 +175,6 @@ function GlobalBackground() {
           animation: 'noiseMove 7s linear infinite',
         }}
       />
-
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_35%,transparent_0%,rgba(0,0,0,0.40)_65%,rgba(0,0,0,0.72)_100%)]" />
     </div>
   );
@@ -336,9 +301,9 @@ function TiltCard({ children, className = '' }) {
   );
 }
 
-/* ---------- PAGE STRUCTURE ---------- */
+/* ---------- LAYOUT ---------- */
 
-function SectionShell({ id, children }) {
+function SectionShell({ children, id }) {
   return (
     <section id={id} className="relative px-5 md:px-16 py-12 md:py-16 scroll-mt-24">
       <div className="relative max-w-6xl mx-auto">{children}</div>
@@ -346,71 +311,13 @@ function SectionShell({ id, children }) {
   );
 }
 
-/* ---------- UI ---------- */
-
-function PrimaryCTA({ href, label, external = false }) {
-  const inner = (
-    <span className="group px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center justify-center gap-2">
-      {label}
-      <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
-    </span>
-  );
-
-  return (
-    <Magnetic>
-      {external ? (
-        <a href={href} target="_blank" rel="noopener noreferrer">
-          {inner}
-        </a>
-      ) : (
-        <Link href={href}>{inner}</Link>
-      )}
-    </Magnetic>
-  );
-}
-
-function GhostCTA({ href, children, external = false }) {
-  return (
-    <Magnetic strength={10}>
-      {external ? (
-        <a
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
-        >
-          {children}
-        </a>
-      ) : (
-        <Link
-          href={href}
-          className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
-        >
-          {children}
-        </Link>
-      )}
-    </Magnetic>
-  );
-}
-
-function Badge({ children }) {
-  return (
-    <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs md:text-[13px] text-white/85 border border-white/15">
-      {children}
-    </span>
-  );
-}
-
-function CardShell({ children, className = '' }) {
+function Card({ children, className = '' }) {
   return (
     <TiltCard className={cx('rounded-3xl', className)}>
       <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8 overflow-hidden relative">
         <div
-          className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.07]"
-          style={{
-            filter: 'blur(50px)',
-            animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite',
-          }}
+          className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.06]"
+          style={{ filter: 'blur(50px)', animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite' }}
         />
         {children}
       </div>
@@ -418,185 +325,109 @@ function CardShell({ children, className = '' }) {
   );
 }
 
-function SmallPill({ children }) {
+function Bullet({ children }) {
   return (
-    <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs md:text-sm text-white/85 border border-white/15">
-      {children}
-    </span>
+    <li className="flex items-start gap-2">
+      <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+      <span>{children}</span>
+    </li>
   );
 }
 
-/* ---------- PACKAGE + CALC ---------- */
+/* ---------- COMPONENTS ---------- */
 
-function PriceLine({ label, amount, hint }) {
-  return (
-    <div className="flex items-start justify-between gap-4 py-3 border-b border-white/10 last:border-b-0">
-      <div className="min-w-0">
-        <div className="text-sm md:text-base font-semibold text-white/90">{label}</div>
-        <div className="mt-1 text-xs md:text-sm text-white/60">{hint}</div>
-      </div>
-      <div className="shrink-0 text-sm md:text-base font-semibold text-white/90 tabular-nums">
-        {amount.toLocaleString('de-DE')} €
-      </div>
-    </div>
-  );
-}
-
-function PackageCard({ title, priceLabel, lead, bullets, timeLabel, emphasized = false, badge, icon }) {
+function PackageCard({ title, price, bullets, time, highlight = false }) {
   return (
     <Reveal>
-      <TiltCard className={cx('rounded-3xl', emphasized ? 'scale-[1.01]' : '')}>
+      <TiltCard className="rounded-3xl">
         <div
           className={cx(
-            'rounded-3xl backdrop-blur-md p-6 md:p-7 overflow-hidden relative',
-            emphasized ? 'border-2 border-violet-400/60 bg-black/20' : 'border border-white/15 bg-black/20'
+            'rounded-3xl border bg-black/20 backdrop-blur-md p-6 md:p-7 overflow-hidden relative',
+            highlight ? 'border-violet-300/35 ring-1 ring-violet-300/20' : 'border-white/15'
           )}
         >
-          <div
-            className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.06]"
-            style={{ filter: 'blur(52px)', animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite' }}
-          />
-
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center">{icon}</span>
-                <div className="text-xs uppercase tracking-wide text-white/55">Paket</div>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <div className="text-xs uppercase tracking-wide text-white/55">{title}</div>
+              <div className="mt-2 text-2xl md:text-3xl font-extrabold tracking-tight">
+                <TitleGradient>{price}</TitleGradient>
               </div>
-              <div className="mt-3 text-xl md:text-2xl font-extrabold text-white">{title}</div>
-              <div className="mt-1 text-sm text-white/70">{lead}</div>
             </div>
-
-            <div className="text-right">
-              {badge ? (
-                <div className="mb-2">
-                  <span className="inline-flex items-center rounded-full bg-violet-500/15 px-3 py-1 text-xs text-white/90 border border-violet-400/30">
-                    {badge}
-                  </span>
-                </div>
-              ) : null}
-              <div className="text-sm text-white/60">Preis</div>
-              <div className="mt-1 text-2xl md:text-3xl font-extrabold tracking-tight">
-                <TitleGradient>{priceLabel}</TitleGradient>
-              </div>
-              <div className="mt-1 text-xs text-white/55">{timeLabel}</div>
-            </div>
+            {highlight ? (
+              <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs text-white/85 border border-white/15">
+                Am häufigsten gewählt
+              </span>
+            ) : null}
           </div>
 
-          <ul className="mt-5 space-y-2 text-sm text-white/80">
+          <ul className="mt-4 space-y-2 text-sm md:text-base text-white/80">
             {bullets.map((b) => (
-              <li key={b} className="flex items-start gap-2">
-                <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                <span>{b}</span>
-              </li>
+              <Bullet key={b}>{b}</Bullet>
             ))}
           </ul>
+
+          <div className="mt-4 text-sm text-white/65">
+            Lieferzeit: <span className="text-white/85 font-semibold">{time}</span>
+          </div>
         </div>
       </TiltCard>
     </Reveal>
   );
 }
 
-function PackageSelector({ active, onSelect }) {
-  const items = [
-    { key: 'einstieg', label: 'Einstieg (400 €)', value: DEFAULT_PRICES.einstieg },
-    { key: 'standard', label: 'Standard (700 €)', value: DEFAULT_PRICES.standard },
-    { key: 'komplett', label: 'Komplett (1.100 €)', value: DEFAULT_PRICES.komplett },
-  ];
-
+function BigEuro({ value }) {
   return (
-    <div className="flex flex-wrap gap-2">
-      {items.map((it) => {
-        const on = active === it.key;
-        return (
-          <button
-            key={it.key}
-            type="button"
-            onClick={() => onSelect(it.key, it.value)}
-            className={cx(
-              'px-4 py-2.5 rounded-full text-sm font-semibold border transition-colors',
-              on
-                ? 'border-violet-400/60 bg-violet-500/15 text-white'
-                : 'border-white/15 bg-white/5 text-white/80 hover:bg-white/8 hover:border-white/25'
-            )}
-          >
-            {it.label}
-          </button>
-        );
-      })}
+    <div className="leading-none">
+      <div className={cx('bg-clip-text text-transparent bg-gradient-to-r', SCENE.accent, 'font-extrabold tracking-tight')}>
+        <span className="text-[64px] md:text-[84px]">{value}</span>
+        <span className="text-[40px] md:text-[52px] align-baseline ml-2">€</span>
+      </div>
     </div>
   );
 }
 
-function BrowserMiniMock({ href, label = 'kircheab.de/spenden' }) {
+function PaymentLine({ label, pct, amount, note }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-3" aria-label="Referenz öffnen">
-      <div className="w-[200px] max-w-[200px]">
-        <div className="rounded-2xl border border-white/15 bg-black/25 backdrop-blur-md overflow-hidden">
-          <div className="px-3 py-2 border-b border-white/10 flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-white/30" />
-            <span className="w-2.5 h-2.5 rounded-full bg-white/18" />
-            <span className="w-2.5 h-2.5 rounded-full bg-white/18" />
-            <div className="ml-2 text-[11px] text-white/55 truncate">{label}</div>
-          </div>
-          <div className="h-20 bg-[radial-gradient(70%_80%_at_25%_20%,rgba(168,85,247,0.20),transparent_60%),radial-gradient(70%_80%_at_90%_0%,rgba(56,189,248,0.16),transparent_65%),linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))]">
-            <div className="h-full w-full opacity-70 group-hover:opacity-90 transition-opacity" />
-          </div>
+    <div className="rounded-2xl border border-white/15 bg-black/15 backdrop-blur-md p-4 md:p-5">
+      <div className="flex items-baseline justify-between gap-4">
+        <div className="text-sm md:text-base font-semibold text-white/90">
+          {label} <span className="text-white/55 font-normal">({pct}%)</span>
         </div>
       </div>
-
-      <div className="min-w-0">
-        <div className="text-sm font-semibold text-white/90 flex items-center gap-2">
-          Referenz ansehen <ExternalLink size={16} className="text-white/55" />
-        </div>
-        <div className="mt-1 text-xs md:text-sm text-white/65">Öffnet im neuen Tab (echtes Projekt)</div>
+      <div className="mt-3">
+        <BigEuro value={amount} />
       </div>
-    </a>
+      <div className="mt-2 text-sm text-white/70">{note}</div>
+    </div>
   );
 }
 
-/* ---------- PROCESS ---------- */
-
-function FlagIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M5 21V5" stroke="rgba(255,255,255,0.75)" strokeWidth="2" strokeLinecap="round" />
-      <path
-        d="M6 5h10l-1.5 3L16 11H6V5Z"
-        stroke="rgba(255,255,255,0.75)"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function StepItem({ n, title, body, milestone }) {
+function PhaseRow({ n, title, a, b }) {
   return (
     <Reveal>
-      <TiltCard className="rounded-3xl">
-        <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-7 relative overflow-hidden">
-          <div
-            className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.06]"
-            style={{ filter: 'blur(54px)', animation: 'shineSoft 6.4s cubic-bezier(.2,.9,.2,1) infinite' }}
-          />
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white text-black flex items-center justify-center font-extrabold">{n}</div>
-            <div className="min-w-0">
-              <div className="text-base md:text-lg font-extrabold text-white">{title}</div>
-              <p className="mt-2 text-sm md:text-base text-white/75 leading-relaxed whitespace-pre-line">{body}</p>
-              <div className="mt-4 inline-flex items-center gap-2 text-xs md:text-sm text-white/65">
-                <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-white/10 border border-white/12">
-                  <FlagIcon />
-                </span>
-                <span className="min-w-0">
-                  <span className="text-white/55">Ergebnis:</span> {milestone}
-                </span>
-              </div>
-            </div>
+      <div className="rounded-2xl border border-white/15 bg-black/15 backdrop-blur-md p-5 md:p-6">
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 rounded-xl bg-white text-black flex items-center justify-center font-extrabold">
+            {n}
+          </div>
+          <div className="min-w-0">
+            <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
+            <div className="mt-1 text-sm text-white/75 leading-relaxed">{a}</div>
+            <div className="mt-1 text-sm text-white/60 leading-relaxed">{b}</div>
           </div>
         </div>
-      </TiltCard>
+      </div>
+    </Reveal>
+  );
+}
+
+function Objection({ q, a }) {
+  return (
+    <Reveal>
+      <div className="rounded-2xl border border-white/15 bg-black/15 backdrop-blur-md p-5">
+        <div className="text-sm md:text-base font-semibold text-white/90">{q}</div>
+        <div className="mt-2 text-sm text-white/70">{a}</div>
+      </div>
     </Reveal>
   );
 }
@@ -604,50 +435,17 @@ function StepItem({ n, title, body, milestone }) {
 /* ---------- PAGE ---------- */
 
 export default function ProzessPage() {
-  useEffect(() => {
-    const handle = () => {
-      const hash = window.location.hash;
-      if (!hash) return;
-      const el = document.querySelector(hash);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    };
-    handle();
-    window.addEventListener('hashchange', handle);
-    return () => window.removeEventListener('hashchange', handle);
-  }, []);
+  const [amountRaw, setAmountRaw] = useState('700');
 
-  const [activePkg, setActivePkg] = useState('standard');
-  const [price, setPrice] = useState(DEFAULT_PRICES.standard);
-  const [custom, setCustom] = useState('');
+  const amount = useMemo(() => {
+    const n = Number(String(amountRaw).replace(',', '.'));
+    if (!Number.isFinite(n) || n <= 0) return 700;
+    return Math.round(n);
+  }, [amountRaw]);
 
-  const computed = useMemo(() => {
-    const base = Number.isFinite(price) ? price : DEFAULT_PRICES.standard;
-    const p1 = Math.round(base * 0.4);
-    const p2 = Math.round(base * 0.4);
-    const p3 = Math.max(0, base - p1 - p2);
-    return { base, p1, p2, p3 };
-  }, [price]);
-
-  const setFromPkg = useCallback((key, value) => {
-    setActivePkg(key);
-    setCustom('');
-    setPrice(value);
-  }, []);
-
-  const onCustomChange = useCallback(
-    (v) => {
-      setCustom(v);
-      const num = Number(String(v).replace(',', '.'));
-      if (!v) {
-        const fallback = DEFAULT_PRICES[activePkg] ?? DEFAULT_PRICES.standard;
-        setPrice(fallback);
-        return;
-      }
-      if (!Number.isFinite(num) || num < 0) return;
-      setPrice(Math.round(num));
-    },
-    [activePkg]
-  );
+  const p1 = Math.round(amount * 0.4);
+  const p2 = Math.round(amount * 0.4);
+  const p3 = Math.round(amount * 0.2);
 
   return (
     <div className="font-proxima text-white min-h-screen">
@@ -660,149 +458,54 @@ export default function ProzessPage() {
 
       <Navbar />
 
-      {/* HERO */}
-      <SectionShell>
-        <div className="flex flex-col gap-8">
+      {/* HERO: one thing -> free value */}
+      <SectionShell id="hero">
+        <div className="flex flex-col items-center text-center gap-5">
           <Reveal>
-            <Link href="/" className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors">
-              <ArrowLeft size={16} /> Zurück
-            </Link>
+            <span className="inline-flex items-center gap-2 text-xs md:text-sm text-white/85 bg-white/10 ring-1 ring-white/15 px-3 py-1 rounded-full">
+              <Sparkles size={16} /> Kostenlos: 15-Minuten Website-Analyse (klar & konkret)
+            </span>
           </Reveal>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-6 md:gap-8 items-start">
-            <div>
-              <Reveal>
-                <SmallPill>
-                  <Sparkles size={16} />
-                  Aktuell nehme ich zwei neue Projekte an.
-                </SmallPill>
-              </Reveal>
+          <Reveal delayMs={90}>
+            <h1 className="text-3xl md:text-6xl font-extrabold tracking-tight leading-[1.05] max-w-4xl">
+              Du bekommst eine klare Einschätzung,
+              <span className="block">
+                <TitleGradient>was gerade Anfragen verhindert.</TitleGradient>
+              </span>
+            </h1>
+          </Reveal>
 
-              <Reveal delayMs={90}>
-                <h1 className="mt-4 text-3xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
-                  Eine Website, die dir aktiv Anfragen bringt.
-                  <span className="block">
-                    <TitleGradient>Ohne Agenturpreise. Ohne Umwege.</TitleGradient>
-                  </span>
-                </h1>
-              </Reveal>
-
-              <Reveal delayMs={160}>
-                <p className="mt-4 text-white/80 text-sm md:text-base max-w-xl leading-relaxed">
-                  Wenn deine Website keine Anfragen bringt, verliert dein Unternehmen jeden Monat potenzielle Kunden.
-                  Ich baue dir eine Seite, die in wenigen Sekunden erklärt, was ihr macht – und die Besucher gezielt zur
-                  Kontaktaufnahme führt.
-                </p>
-              </Reveal>
-
-              <Reveal delayMs={240}>
-                <div className="mt-6 flex flex-wrap gap-2 text-xs md:text-sm">
-                  <Badge>Mobile-first</Badge>
-                  <Badge>Klare Struktur</Badge>
-                  <Badge>Transparenter Ablauf</Badge>
-                  <Badge>Feedback eingebaut</Badge>
-                </div>
-              </Reveal>
-
-              <Reveal delayMs={320}>
-                <div className="mt-8 flex flex-wrap gap-2">
-                  <PrimaryCTA href="#analyse" label="Kostenlose Analyse ansehen" />
-                  <GhostCTA href={WHATSAPP_HREF} external>
-                    Direkt per WhatsApp <ExternalLink size={16} />
-                  </GhostCTA>
-                </div>
-              </Reveal>
-            </div>
-
-            <Reveal delayMs={140}>
-              <CardShell>
-                <div className="text-xs uppercase tracking-wide text-white/55">Was du hier auf der Seite bekommst</div>
-                <div className="mt-4 grid grid-cols-1 gap-3">
-                  <div className="rounded-2xl border border-white/12 bg-white/5 p-4">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-white/90">
-                      <Shield size={16} className="text-white/70" /> Kein Risiko
-                    </div>
-                    <div className="mt-1 text-sm text-white/70">
-                      Du zahlst die zweite Rate erst, wenn du die erste Version gesehen und freigegeben hast.
-                    </div>
-                  </div>
-                  <div className="rounded-2xl border border-white/12 bg-white/5 p-4">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-white/90">
-                      <Clock size={16} className="text-white/70" /> Klare Dauer
-                    </div>
-                    <div className="mt-1 text-sm text-white/70">
-                      Du siehst weiter unten die typische Lieferzeit pro Paket – ohne „vielleicht“.
-                    </div>
-                  </div>
-                  <div className="rounded-2xl border border-white/12 bg-white/5 p-4">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-white/90">
-                      <CreditCard size={16} className="text-white/70" /> Klare Zahlungen
-                    </div>
-                    <div className="mt-1 text-sm text-white/70">
-                      Ein Rechner zeigt dir live: wann du was zahlst – und warum diese Aufteilung fair ist.
-                    </div>
-                  </div>
-                </div>
-              </CardShell>
-            </Reveal>
-          </div>
+          <Reveal delayMs={160}>
+            <p className="max-w-2xl text-sm md:text-base text-white/75 leading-relaxed">
+              Ohne Pitch. Du gehst mit einer konkreten To-Do-Liste raus.
+            </p>
+          </Reveal>
         </div>
       </SectionShell>
 
-      {/* Analyse */}
+      {/* ANALYSE: one thing -> what I check + benefit */}
       <SectionShell id="analyse">
-        <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Kostenlose Website-Analyse</div>
-        </Reveal>
+        <Card>
+          <div className="text-xs uppercase tracking-wide text-white/55">Kostenlose Analyse</div>
 
-        <Reveal delayMs={90}>
-          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            In 15 Minuten weißt du,
+          <h2 className="mt-3 text-2xl md:text-4xl font-extrabold leading-tight">
+            Was ich prüfe
             <span className="block">
-              <TitleGradient>was konkret fehlt – und was ich ändern würde.</TitleGradient>
+              <TitleGradient>und was du davon hast.</TitleGradient>
             </span>
           </h2>
-        </Reveal>
 
-        <Reveal delayMs={160}>
-          <CardShell className="mt-6">
-            <p className="text-sm md:text-base text-white/80 leading-relaxed max-w-3xl">
-              Ich prüfe deine Website anhand von vier klaren Punkten:
-            </p>
-
-            <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-3">
-              {[
-                'Versteht ein Besucher in 10 Sekunden, was ihr anbietet?',
-                'Ist der Aufbau logisch (Problem → Lösung → Kontakt)?',
-                'Funktioniert alles am Smartphone einwandfrei?',
-                'Wirkt die Seite professionell genug, um Vertrauen aufzubauen?',
-              ].map((t) => (
-                <div key={t} className="rounded-2xl border border-white/12 bg-white/5 p-4 flex items-start gap-2">
-                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                  <div className="text-sm text-white/75">{t}</div>
-                </div>
-              ))}
-            </div>
-
-            <p className="mt-5 text-sm md:text-base text-white/75 leading-relaxed max-w-3xl">
-              Danach bekommst du eine kurze, klare Liste mit konkreten Änderungen. Ohne Verkaufsdruck. Ohne Verpflichtung.
-            </p>
-
-            <div className="mt-6 flex flex-wrap gap-2">
-              <PrimaryCTA href={WHATSAPP_HREF} label="Analyse anfragen (WhatsApp)" external />
-              <GhostCTA href={MAIL_HREF} external>
-                Alternativ per Mail <ExternalLink size={16} />
-              </GhostCTA>
-            </div>
-
-            <div className="mt-4 text-xs md:text-sm text-white/60">
-              Normalerweise ein bezahlter Beratungs-Schritt. Für neue Anfragen kostenlos.
-            </div>
-          </CardShell>
-        </Reveal>
+          <ul className="mt-5 space-y-2 text-sm md:text-base text-white/80 max-w-3xl">
+            <Bullet>Versteht man in 10 Sekunden, was ihr anbietet?</Bullet>
+            <Bullet>Wirkt es auf dem Handy vertrauenswürdig?</Bullet>
+            <Bullet>Führt die Seite klar zur Anfrage – oder verliert sie Leute?</Bullet>
+            <Bullet>3 konkrete Änderungen, die sofort Wirkung haben.</Bullet>
+          </ul>
+        </Card>
       </SectionShell>
 
-      {/* Pakete */}
+      {/* PAKETE: one thing -> options */}
       <SectionShell id="pakete">
         <Reveal>
           <div className="text-xs uppercase tracking-wide text-white/55">Pakete</div>
@@ -810,228 +513,166 @@ export default function ProzessPage() {
 
         <Reveal delayMs={90}>
           <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Was du bekommst.
+            Drei Optionen.
             <span className="block">
-              <TitleGradient>Ohne Interpretationsspielraum.</TitleGradient>
+              <TitleGradient>Kein Kleingedrucktes.</TitleGradient>
             </span>
           </h2>
         </Reveal>
 
-        <Reveal delayMs={150}>
-          <div className="mt-3 text-sm md:text-base text-white/70">
-            Vergleichbare Agenturen starten oft ab <span className="text-white/85 font-semibold">3.000 €</span> – hier ist der Weg direkter.
-          </div>
-        </Reveal>
-
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           <PackageCard
             title="Komplett"
-            priceLabel="ab 1.100 €"
-            lead="Wenn du ein rundes Gesamtpaket willst (Website + klare Guidelines + ein Motion-Asset)."
-            timeLabel="Lieferzeit: ca. 3 Wochen"
-            emphasized={false}
-            badge={null}
-            icon={<Wand2 size={18} className="text-white/80" />}
-            bullets={[
-              'Website mit bis zu 5 Unterseiten (z.B. Startseite, Leistungen, Über uns, Kontakt, Impressum)',
-              'Vollständiges Brandbook (Farben, Typo, Layoutregeln)',
-              'Ein Motion-Element für Social Media (Wiedererkennung)',
-              'Übergabe aller Zugänge und Dateien',
-              'Optional: Betreuung ab 150 €/Monat',
-            ]}
+            price="ab 1.100 €"
+            bullets={['Website (bis 5 Seiten)', 'Mini-Brandbook (Regeln)', '1 Motion-Asset']}
+            time="ca. 3 Wochen"
+            highlight={false}
           />
-
           <PackageCard
             title="Standard"
-            priceLabel="ab 700 €"
-            lead="Der häufigste Fall: klare Website, saubere Linie, Kontaktweg – schnell live."
-            timeLabel="Lieferzeit: 10–14 Tage"
-            emphasized
-            badge="Wird am häufigsten gewählt."
-            icon={<LayoutTemplate size={18} className="text-white/80" />}
-            bullets={[
-              'Website mit bis zu 5 Unterseiten (z.B. Startseite, Leistungen, Über uns, Kontakt, Impressum)',
-              'Grundlegende visuelle Linie (Farben, Schrift, saubere Struktur, Einbindung eures Logos)',
-              'Kontaktformular, mobil optimiert',
-              'Übergabe aller Zugänge',
-              'Optional: Betreuung ab 150 €/Monat',
-            ]}
+            price="ab 700 €"
+            bullets={['Website (bis 5 Seiten)', 'Branding-Grundlage', 'Kontakt + klare CTAs']}
+            time="10–14 Tage"
+            highlight
           />
-
           <PackageCard
             title="Einstieg"
-            priceLabel="ab 400 €"
-            lead="Wenn du erstmal schnell und sauber starten willst – eine Seite, ein Ziel, ein CTA."
-            timeLabel="Lieferzeit: 7 Tage"
-            emphasized={false}
-            badge={null}
-            icon={<FileText size={18} className="text-white/80" />}
-            bullets={[
-              'Eine einzelne, klar strukturierte Seite (Landingpage)',
-              'Fokus auf eine konkrete Handlung (z.B. Termin anfragen)',
-              'Mobil optimiert',
-              'Übergabe aller Zugänge',
-              'Optional: Betreuung ab 150 €/Monat',
-            ]}
+            price="ab 400 €"
+            bullets={['1 Landingpage', 'Klarer Aufbau + 1 CTA', 'Mobil optimiert']}
+            time="7 Tage"
+            highlight={false}
           />
         </div>
-
-        <Reveal delayMs={140}>
-          <div className="mt-7 rounded-3xl border border-white/12 bg-black/20 backdrop-blur-md p-5 md:p-6">
-            <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
-              <BrowserMiniMock href={REF.url} />
-              <div className="min-w-0">
-                <div className="text-sm md:text-base font-semibold text-white/90">{REF.labelTop}</div>
-                <div className="mt-1 text-sm text-white/70">{REF.labelBottom}</div>
-                <div className="mt-2 text-xs text-white/55">{REF.proofSmall}</div>
-              </div>
-              <div className="md:ml-auto">
-                <GhostCTA href={REF.url} external>
-                  Öffnen <ExternalLink size={16} />
-                </GhostCTA>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-
-        <Reveal delayMs={200}>
-          <div className="mt-6 rounded-3xl border border-white/12 bg-black/20 backdrop-blur-md p-5 md:p-6">
-            <div className="text-sm md:text-base text-white/80 leading-relaxed">
-              Alle Preise sind Ausgangspunkte. Nach der kostenlosen Analyse erhältst du ein genaues Angebot – ohne Überraschungen.
-            </div>
-            <div className="mt-3 text-sm text-white/60 italic">
-              Bereits drei Unternehmen aus der Region haben sich für eines dieser Pakete entschieden.
-            </div>
-          </div>
-        </Reveal>
       </SectionShell>
 
-      {/* Rechner */}
+      {/* RECHNER: one thing -> money moment */}
       <SectionShell id="rechner">
-        <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsrechner</div>
-        </Reveal>
+        <Card>
+          <div className="flex items-center justify-between gap-3">
+            <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsrechner</div>
+            <Wand2 size={18} className="text-white/55" />
+          </div>
 
-        <Reveal delayMs={90}>
           <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Wann zahlst du was?
+            Tipp deinen Betrag ein.
             <span className="block">
-              <TitleGradient>Du siehst es live – ohne Nachfragen.</TitleGradient>
+              <TitleGradient>Dann siehst du sofort die Zahlungen.</TitleGradient>
             </span>
           </h2>
-        </Reveal>
 
-        <Reveal delayMs={160}>
-          <CardShell className="mt-6">
-            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-              <div className="min-w-0">
-                <div className="text-sm md:text-base font-semibold text-white/90">
-                  1) Paket auswählen (oder eigenen Betrag eintragen)
-                </div>
-                <div className="mt-3">
-                  <PackageSelector active={activePkg} onSelect={setFromPkg} />
-                </div>
-
-                <div className="mt-5">
-                  <label className="block text-sm font-semibold text-white/90" htmlFor="customPrice">
-                    Oder eigener Betrag (optional)
-                  </label>
-                  <div className="mt-2 flex items-center gap-2">
-                    <input
-                      id="customPrice"
-                      inputMode="numeric"
-                      className="w-full md:w-[280px] rounded-2xl border border-white/15 bg-black/30 px-4 py-3 text-white/90 placeholder:text-white/35 outline-none focus:ring-2 focus:ring-violet-400/40"
-                      placeholder="z.B. 500"
-                      value={custom}
-                      onChange={(e) => onCustomChange(e.target.value)}
-                    />
-                    <span className="text-white/60 font-semibold">€</span>
-                  </div>
-                  <div className="mt-2 text-xs md:text-sm text-white/60">
-                    Du kannst hier auch deinen Budget-Rahmen eintragen. Ich sage dir ehrlich, was dafür realistisch möglich ist.
-                  </div>
-                </div>
+          <div className="mt-6 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-6 md:gap-8 items-start">
+            <div className="rounded-3xl border border-white/15 bg-black/15 backdrop-blur-md p-5 md:p-6">
+              <label className="text-sm text-white/70">Projektpreis (du setzt den Wert, der für dich passt)</label>
+              <div className="mt-3 flex items-center gap-3">
+                <input
+                  value={amountRaw}
+                  onChange={(e) => setAmountRaw(e.target.value)}
+                  inputMode="numeric"
+                  className="w-full rounded-2xl border border-white/15 bg-black/35 px-4 py-3 text-white text-lg md:text-xl outline-none focus:border-white/30"
+                  placeholder="z.B. 700"
+                  aria-label="Projektpreis in Euro"
+                />
+                <div className="text-white/70 font-semibold">€</div>
               </div>
 
-              <div className="w-full lg:max-w-md">
-                <div className="text-sm md:text-base font-semibold text-white/90">
-                  2) Deine Zahlungen (automatisch berechnet)
-                </div>
+              <div className="mt-4 text-sm text-white/65">
+                Du kannst auch einfach eine andere Zahl testen. Der Rechner zeigt dir sofort, wie sich das auf die Zahlungen auswirkt.
+              </div>
 
-                <div className="mt-3 rounded-3xl border border-white/12 bg-black/20 backdrop-blur-md p-5 md:p-6">
-                  <div className="text-xs uppercase tracking-wide text-white/55">Projektpreis</div>
-                  <div className="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight tabular-nums">
-                    <TitleGradient>{computed.base.toLocaleString('de-DE')} €</TitleGradient>
-                  </div>
-
-                  <div className="mt-5">
-                    <PriceLine label="Zahlung 1 – Projektstart (40%)" amount={computed.p1} hint="Fällig nach Auftragsbestätigung" />
-                    <PriceLine
-                      label="Zahlung 2 – Erste Version (40%)"
-                      amount={computed.p2}
-                      hint="Fällig nachdem du die erste Version gesehen und freigegeben hast"
-                    />
-                    <PriceLine label="Zahlung 3 – Go-Live (20%)" amount={computed.p3} hint="Fällig nach Übergabe (finaler Stand online)" />
-                  </div>
-
-                  <div className="mt-5 rounded-2xl border border-white/12 bg-white/5 p-4 text-sm text-white/75 leading-relaxed">
-                    <span className="font-semibold text-white/85">Kein Risiko:</span> Du zahlst die zweite Rate erst,
-                    wenn du die erste Version gesehen und freigegeben hast. Kein Geld für etwas, das du noch nicht kennst.
-                  </div>
-                </div>
+              <div className="mt-5 rounded-2xl border border-white/12 bg-black/25 p-4 text-sm text-white/75 leading-relaxed">
+                Du zahlst die 2. Rate erst, wenn du die 1. Version gesehen hast.
               </div>
             </div>
-          </CardShell>
-        </Reveal>
+
+            <div className="space-y-3">
+              <PaymentLine label="Start" pct={40} amount={p1} note="Fällig nach Auftragsbestätigung" />
+              <PaymentLine label="Erste Version" pct={40} amount={p2} note="Fällig nach deinem Review der ersten Version" />
+              <PaymentLine label="Go-Live" pct={20} amount={p3} note="Fällig nach Übergabe (Zugänge + Dateien)" />
+            </div>
+          </div>
+        </Card>
       </SectionShell>
 
-      {/* Prozess */}
+      {/* PROZESS: one thing -> steps */}
       <SectionShell id="prozess">
         <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Prozess</div>
+          <div className="text-xs uppercase tracking-wide text-white/55">Ablauf</div>
         </Reveal>
 
         <Reveal delayMs={90}>
           <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Wie das konkret abläuft.
+            Fünf Phasen.
             <span className="block">
-              <TitleGradient>Mit Meilensteinen – nicht „irgendwie“.</TitleGradient>
+              <TitleGradient>Du weißt jederzeit, wo wir stehen.</TitleGradient>
             </span>
           </h2>
         </Reveal>
 
-        <div className="mt-8 grid grid-cols-1 gap-4 md:gap-6">
-          <StepItem
-            n="1"
-            title="Briefing (Start)"
-            body={`Du schickst mir:\n– Was ihr anbietet\n– Wer eure Zielgruppe ist\n– Bis wann die Website stehen soll\n\nIch antworte innerhalb von 24 Stunden mit:\n– Einschätzung zum Umfang\n– Realistischem Zeitplan\n– Konkreten Rückfragen`}
-            milestone="Wir wissen exakt, was gebaut wird (Umfang + Zeitplan)."
-          />
-          <StepItem
-            n="2"
-            title="Konzept & Struktur"
-            body={`Ich lege fest:\n– Welche Seiten sinnvoll sind\n– Welche Inhalte auf welche Seite gehören\n– Wie der Ablauf Besucher → Kontakt aussieht\n\nDu bekommst das zur Freigabe. Erst wenn das passt, fange ich an zu bauen.`}
-            milestone="Struktur freigegeben (du weißt vorher, was entsteht)."
-          />
-          <StepItem
-            n="3"
-            title="Erste Version + Feedback"
-            body={`Du bekommst einen funktionierenden Link.\nDu kannst alles selbst testen – auch am Handy.\n\nEine vollständige Feedback-Runde ist enthalten (Änderungen sind hier eingebaut, nicht extra).`}
-            milestone="Erste Version freigegeben (zweite Rate wird erst dann fällig)."
-          />
-          <StepItem
-            n="4"
-            title="Finalisierung"
-            body={`Letzte Anpassungen, Feinschliff, technische Stabilisierung.\nWas vereinbart war, wird geliefert – kein Scope-Creep.\n\nWenn etwas zusätzlich dazu kommt, wird es vorher klar abgestimmt (damit es keine Überraschungen gibt).`}
-            milestone="Finaler Stand freigegeben."
-          />
-          <StepItem
-            n="5"
-            title="Übergabe"
-            body={`Du bekommst alles:\n– Zugänge (Domain/Hosting/Website)\n– Dateien/Assets\n– kurzes Setup-Briefing, damit du selbst weiterarbeiten kannst\n\nOptional: monatliche Betreuung ab hier.`}
-            milestone="Go-Live + Übergabe (letzte Rate fällig)."
-          />
+        <div className="mt-8 grid grid-cols-1 gap-3">
+          <PhaseRow n="1" title="Briefing" a="Du gibst Ziel, Deadline und Stand." b="Meilenstein: Umfang ist klar." />
+          <PhaseRow n="2" title="Konzept & Struktur" a="Du bekommst Aufbau + Inhalte zur Freigabe." b="Meilenstein: Struktur freigegeben." />
+          <PhaseRow n="3" title="Erste Version" a="Du bekommst eine klickbare Version zum Prüfen." b="Meilenstein: Review abgeschlossen (2. Rate)." />
+          <PhaseRow n="4" title="Finalisierung" a="Letzte Anpassungen + Feinschliff." b="Meilenstein: Freigabe erteilt." />
+          <PhaseRow n="5" title="Übergabe" a="Zugänge + Dateien + kurzes Setup." b="Meilenstein: Go-Live (letzte Rate)." />
         </div>
+      </SectionShell>
+
+      {/* EINWÄNDE: one thing -> risk reduction */}
+      <SectionShell id="einwaende">
+        <Reveal>
+          <div className="text-xs uppercase tracking-wide text-white/55">Kurz geklärt</div>
+        </Reveal>
+
+        <Reveal delayMs={90}>
+          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
+            Typische Fragen.
+            <span className="block">
+              <TitleGradient>Kurz beantwortet.</TitleGradient>
+            </span>
+          </h2>
+        </Reveal>
+
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-5">
+          <Objection q="Was, wenn mir die erste Version nicht gefällt?" a="Du siehst sie, bevor die 2. Rate fällig wird." />
+          <Objection q="Was, wenn später Änderungen nötig sind?" a="Dann entweder Betreuung oder ein kleines Add-On." />
+          <Objection q="Was, wenn das Budget knapp ist?" a="Wir starten kleiner und bauen aus – nach der Analyse." />
+        </div>
+      </SectionShell>
+
+      {/* CTA: only CTA on page */}
+      <SectionShell id="cta">
+        <Reveal>
+          <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-10 text-center">
+            <div className="text-xs uppercase tracking-wide text-white/55">Fallback</div>
+            <h3 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">Wenn du willst, schick mir das kurz.</h3>
+            <p className="mt-3 text-sm md:text-base text-white/70 max-w-2xl mx-auto">
+              Ziel, Deadline, Stand. Ich melde mich innerhalb von 24 Stunden.
+            </p>
+
+            <div className="mt-6 flex items-center justify-center">
+              <Magnetic>
+                <a
+                  href={WHATSAPP_HREF}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center justify-center gap-2"
+                >
+                  Per WhatsApp schreiben
+                  <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
+                </a>
+              </Magnetic>
+            </div>
+
+            <div className="mt-3 text-sm text-white/55">
+              Oder: <Link href="/" className="text-white/70 hover:text-white transition-colors">Startseite</Link>{' '}
+              <span className="text-white/35">·</span>{' '}
+              <Link href="/portfolio" className="text-white/70 hover:text-white transition-colors">Portfolio</Link>
+              <span className="inline-flex items-center gap-1 ml-2 text-white/45">
+                <ExternalLink size={14} />
+              </span>
+            </div>
+          </div>
+        </Reveal>
       </SectionShell>
 
       <Footer />
@@ -1074,4 +715,3 @@ const globalKeyframes = `
   100% { transform: translate3d(90px,60px,0); }
 }
 `;
-/* END: page.js */
