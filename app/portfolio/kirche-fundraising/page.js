@@ -1,3 +1,4 @@
+```jsx
 'use client';
 
 import Navbar from '@/components/layout/Navbar';
@@ -7,21 +8,46 @@ import {
   ArrowLeft,
   ArrowRight,
   Sparkles,
-  Globe2,
-  Clock,
-  LayoutTemplate,
-  CreditCard,
-  FileText,
-  Video,
-  CheckCircle2,
   ExternalLink,
+  CheckCircle2,
   Wand2,
+  FileText,
+  Clock,
+  Shield,
+  CreditCard,
+  LayoutTemplate,
 } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+/* ---------- CONFIG ---------- */
+
+const WHATSAPP_E164 = '4916095757167';
+const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_E164}?text=${encodeURIComponent(
+  `Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel (mehr Anfragen / sauberer Auftritt / beides):\n- Deadline:\n- Link zu aktueller Website (falls vorhanden):\n\nDanke!`
+)}`;
+
+const EMAIL = 'hello@leonseitz.com';
+const MAIL_HREF = `mailto:${EMAIL}?subject=${encodeURIComponent('Kostenlose Website-Analyse')}&body=${encodeURIComponent(
+  `Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel (mehr Anfragen / sauberer Auftritt / beides):\n- Deadline:\n- Link zu aktueller Website (falls vorhanden):\n\nDanke!`
+)}`;
+
+const DEFAULT_PRICES = {
+  einstieg: 400,
+  standard: 700,
+  komplett: 1100,
+};
+
+const REF = {
+  url: 'https://kircheab.de/spenden',
+  labelTop: 'Beispiel aus der Region: kircheab.de',
+  labelBottom: 'Konzeption, Design & Umsetzung in unter 2 Wochen.',
+  // Optionaler Proof-Satz – bewusst nicht zu laut
+  proofSmall: 'Ergebnis: über 17.000 € Spenden in 2 Monaten.',
+};
 
 /* ---------- SCENE (match homepage vibe) ---------- */
 
-const CASE_SCENE = {
+const SCENE = {
   base: '#070312',
   g1: `radial-gradient(1200px 700px at 18% 18%, rgba(168,85,247,0.30), transparent 60%),
        radial-gradient(900px 700px at 82% 25%, rgba(56,189,248,0.14), transparent 55%)`,
@@ -36,12 +62,12 @@ const CASE_SCENE = {
 
 /* ---------- UTIL ---------- */
 
-function cx() {
-  return Array.from(arguments).filter(Boolean).join(' ');
+function cx(...xs) {
+  return xs.filter(Boolean).join(' ');
 }
 
 function TitleGradient({ children }) {
-  return <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', CASE_SCENE.accent)}>{children}</span>;
+  return <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', SCENE.accent)}>{children}</span>;
 }
 
 function useReveal(ref) {
@@ -170,8 +196,8 @@ function GlobalBackground() {
       <div
         className="absolute inset-0"
         style={{
-          backgroundColor: CASE_SCENE.base,
-          backgroundImage: `${CASE_SCENE.g1}, ${CASE_SCENE.g2}`,
+          backgroundColor: SCENE.base,
+          backgroundImage: `${SCENE.g1}, ${SCENE.g2}`,
         }}
       />
 
@@ -193,7 +219,7 @@ function GlobalBackground() {
 function GlobalLightLeaks() {
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none">
-      {CASE_SCENE.blobs.map((b, i) => (
+      {SCENE.blobs.map((b, i) => (
         <div
           key={i}
           className={cx(
@@ -313,9 +339,9 @@ function TiltCard({ children, className = '' }) {
 
 /* ---------- PAGE STRUCTURE ---------- */
 
-function SectionShell({ children }) {
+function SectionShell({ id, children }) {
   return (
-    <section className="relative px-5 md:px-16 py-12 md:py-16">
+    <section id={id} className="relative px-5 md:px-16 py-12 md:py-16 scroll-mt-24">
       <div className="relative max-w-6xl mx-auto">{children}</div>
     </section>
   );
@@ -376,41 +402,103 @@ function Badge({ children }) {
   );
 }
 
-function MetaCard({ label, value, icon }) {
+function CardShell({ children, className = '' }) {
   return (
-    <TiltCard className="rounded-2xl">
-      <div className="rounded-2xl border border-white/15 bg-black/20 backdrop-blur-md p-4">
-        <div className="text-xs uppercase tracking-wide text-white/55 flex items-center gap-1.5">
-          {icon ? <span className="text-white/70">{icon}</span> : null}
-          {label}
-        </div>
-        <div className="mt-1 text-sm md:text-base text-white/90">{value}</div>
+    <TiltCard className={cx('rounded-3xl', className)}>
+      <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8 overflow-hidden relative">
+        <div
+          className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.07]"
+          style={{
+            filter: 'blur(50px)',
+            animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite',
+          }}
+        />
+        {children}
       </div>
     </TiltCard>
   );
 }
 
-function MiniCard({ icon, title, bullets }) {
+function SmallPill({ children }) {
+  return (
+    <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs md:text-sm text-white/85 border border-white/15">
+      {children}
+    </span>
+  );
+}
+
+/* ---------- PACKAGE + CALC ---------- */
+
+function PriceLine({ label, amount, hint }) {
+  return (
+    <div className="flex items-start justify-between gap-4 py-3 border-b border-white/10 last:border-b-0">
+      <div className="min-w-0">
+        <div className="text-sm md:text-base font-semibold text-white/90">{label}</div>
+        <div className="mt-1 text-xs md:text-sm text-white/60">{hint}</div>
+      </div>
+      <div className="shrink-0 text-sm md:text-base font-semibold text-white/90 tabular-nums">
+        {amount.toLocaleString('de-DE')} €
+      </div>
+    </div>
+  );
+}
+
+function PackageCard({
+  title,
+  priceLabel,
+  lead,
+  bullets,
+  timeLabel,
+  emphasized = false,
+  badge,
+  icon,
+}) {
   return (
     <Reveal>
-      <TiltCard className="rounded-3xl">
-        <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 overflow-hidden relative">
+      <TiltCard className={cx('rounded-3xl', emphasized ? 'scale-[1.01]' : '')}>
+        <div
+          className={cx(
+            'rounded-3xl backdrop-blur-md p-6 md:p-7 overflow-hidden relative',
+            emphasized
+              ? 'border-2 border-violet-400/60 bg-black/20'
+              : 'border border-white/15 bg-black/20'
+          )}
+        >
           <div
-            className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.07]"
+            className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.06]"
             style={{
-              filter: 'blur(50px)',
+              filter: 'blur(52px)',
               animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite',
             }}
           />
-          <div className="flex items-center justify-between gap-4">
-            <div className="inline-flex items-center gap-2 text-xs uppercase tracking-wide text-white/60">
-              <span className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center">{icon}</span>
-              {title}
+
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center">{icon}</span>
+                <div className="text-xs uppercase tracking-wide text-white/55">Paket</div>
+              </div>
+              <div className="mt-3 text-xl md:text-2xl font-extrabold text-white">{title}</div>
+              <div className="mt-1 text-sm text-white/70">{lead}</div>
             </div>
-            <Wand2 size={18} className="text-white/55" />
+
+            <div className="text-right">
+              {badge ? (
+                <div className="mb-2">
+                  <span className="inline-flex items-center rounded-full bg-violet-500/15 px-3 py-1 text-xs text-white/90 border border-violet-400/30">
+                    {badge}
+                  </span>
+                </div>
+              ) : null}
+              <div className="text-sm text-white/60">Preis</div>
+              <div className="mt-1 text-2xl md:text-3xl font-extrabold tracking-tight">
+                <TitleGradient>{priceLabel}</TitleGradient>
+              </div>
+              <div className="mt-1 text-xs text-white/55">{timeLabel}</div>
+            </div>
           </div>
 
-          <ul className="mt-4 space-y-2 text-sm text-white/80">
+          <ul className="mt-5 space-y-2 text-sm text-white/80">
             {bullets.map((b) => (
               <li key={b} className="flex items-start gap-2">
                 <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
@@ -424,19 +512,132 @@ function MiniCard({ icon, title, bullets }) {
   );
 }
 
-function ImpactItem({ text }) {
+function PackageSelector({ active, onSelect }) {
+  const items = [
+    { key: 'einstieg', label: 'Einstieg (400 €)', value: DEFAULT_PRICES.einstieg },
+    { key: 'standard', label: 'Standard (700 €)', value: DEFAULT_PRICES.standard },
+    { key: 'komplett', label: 'Komplett (1.100 €)', value: DEFAULT_PRICES.komplett },
+  ];
+
   return (
-    <TiltCard className="rounded-2xl">
-      <div className="rounded-2xl border border-white/15 bg-black/20 backdrop-blur-md p-4 text-sm md:text-base text-white/80">
-        {text}
+    <div className="flex flex-wrap gap-2">
+      {items.map((it) => {
+        const on = active === it.key;
+        return (
+          <button
+            key={it.key}
+            type="button"
+            onClick={() => onSelect(it.key, it.value)}
+            className={cx(
+              'px-4 py-2.5 rounded-full text-sm font-semibold border transition-colors',
+              on
+                ? 'border-violet-400/60 bg-violet-500/15 text-white'
+                : 'border-white/15 bg-white/5 text-white/80 hover:bg-white/8 hover:border-white/25'
+            )}
+          >
+            {it.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function BrowserMiniMock({ href, label = 'kircheab.de/spenden' }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group inline-flex items-center gap-3"
+      aria-label="Referenz öffnen"
+    >
+      <div className="w-[200px] max-w-[200px]">
+        <div className="rounded-2xl border border-white/15 bg-black/25 backdrop-blur-md overflow-hidden">
+          <div className="px-3 py-2 border-b border-white/10 flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-white/30" />
+            <span className="w-2.5 h-2.5 rounded-full bg-white/18" />
+            <span className="w-2.5 h-2.5 rounded-full bg-white/18" />
+            <div className="ml-2 text-[11px] text-white/55 truncate">{label}</div>
+          </div>
+          <div className="h-20 bg-[radial-gradient(70%_80%_at_25%_20%,rgba(168,85,247,0.20),transparent_60%),radial-gradient(70%_80%_at_90%_0%,rgba(56,189,248,0.16),transparent_65%),linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))]">
+            <div className="h-full w-full opacity-70 group-hover:opacity-90 transition-opacity" />
+          </div>
+        </div>
       </div>
-    </TiltCard>
+
+      <div className="min-w-0">
+        <div className="text-sm font-semibold text-white/90 flex items-center gap-2">
+          Referenz ansehen <ExternalLink size={16} className="text-white/55" />
+        </div>
+        <div className="mt-1 text-xs md:text-sm text-white/65">
+          Öffnet im neuen Tab (echtes Projekt)
+        </div>
+      </div>
+    </a>
+  );
+}
+
+/* ---------- PROCESS (effort justification) ---------- */
+
+function StepItem({ n, title, body, milestone }) {
+  return (
+    <Reveal>
+      <TiltCard className="rounded-3xl">
+        <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-7 relative overflow-hidden">
+          <div
+            className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.06]"
+            style={{
+              filter: 'blur(54px)',
+              animation: 'shineSoft 6.4s cubic-bezier(.2,.9,.2,1) infinite',
+            }}
+          />
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-white text-black flex items-center justify-center font-extrabold">
+              {n}
+            </div>
+            <div className="min-w-0">
+              <div className="text-base md:text-lg font-extrabold text-white">{title}</div>
+              <p className="mt-2 text-sm md:text-base text-white/75 leading-relaxed whitespace-pre-line">{body}</p>
+              <div className="mt-4 inline-flex items-center gap-2 text-xs md:text-sm text-white/65">
+                <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-white/10 border border-white/12">
+                  <FlagIcon />
+                </span>
+                <span className="min-w-0">
+                  <span className="text-white/55">Ergebnis:</span> {milestone}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </TiltCard>
+    </Reveal>
+  );
+}
+
+function FlagIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M5 21V5"
+        stroke="rgba(255,255,255,0.75)"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M6 5h10l-1.5 3L16 11H6V5Z"
+        stroke="rgba(255,255,255,0.75)"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
 
 /* ---------- PAGE ---------- */
 
-export default function KircheFundraisingPage() {
+export default function ProzessPage() {
+  // smooth hash scroll (optional)
   useEffect(() => {
     const handle = () => {
       const hash = window.location.hash;
@@ -448,6 +649,38 @@ export default function KircheFundraisingPage() {
     window.addEventListener('hashchange', handle);
     return () => window.removeEventListener('hashchange', handle);
   }, []);
+
+  const [activePkg, setActivePkg] = useState('standard'); // Default Effect
+  const [price, setPrice] = useState(DEFAULT_PRICES.standard);
+  const [custom, setCustom] = useState(''); // string to allow empty
+
+  const computed = useMemo(() => {
+    const base = Number.isFinite(price) ? price : DEFAULT_PRICES.standard;
+    const p1 = Math.round(base * 0.4);
+    const p2 = Math.round(base * 0.4);
+    const p3 = Math.max(0, base - p1 - p2); // keep 100%
+    return { base, p1, p2, p3 };
+  }, [price]);
+
+  const setFromPkg = useCallback((key, value) => {
+    setActivePkg(key);
+    setCustom('');
+    setPrice(value);
+  }, []);
+
+  const onCustomChange = useCallback((v) => {
+    // allow empty
+    setCustom(v);
+    const num = Number(String(v).replace(',', '.'));
+    if (!v) {
+      // fallback to current selected package
+      const fallback = DEFAULT_PRICES[activePkg] ?? DEFAULT_PRICES.standard;
+      setPrice(fallback);
+      return;
+    }
+    if (!Number.isFinite(num) || num < 0) return;
+    setPrice(Math.round(num));
+  }, [activePkg]);
 
   return (
     <div className="font-proxima text-white min-h-screen">
@@ -464,199 +697,523 @@ export default function KircheFundraisingPage() {
       <SectionShell>
         <div className="flex flex-col gap-8">
           <Reveal>
-            <Link href="/portfolio" className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors">
-              <ArrowLeft size={16} /> Zurück zum Portfolio
+            <Link href="/" className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors">
+              <ArrowLeft size={16} /> Zurück
             </Link>
           </Reveal>
 
           <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-6 md:gap-8 items-start">
             <div>
               <Reveal>
-                <span className="inline-flex items-center gap-2 text-xs md:text-sm text-white/85 bg-white/10 ring-1 ring-white/15 px-3 py-1 rounded-full">
-                  <Sparkles size={16} /> Case Study · Kirche für Aschaffenburg
-                </span>
+                <SmallPill>
+                  <Sparkles size={16} />
+                  Aktuell nehme ich zwei neue Projekte an.
+                </SmallPill>
               </Reveal>
 
               <Reveal delayMs={90}>
                 <h1 className="mt-4 text-3xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
-                  Fundraising-Seite,
+                  Eine Website, die dir aktiv Anfragen bringt.
                   <span className="block">
-                    <TitleGradient>klar aufgebaut und schnell live.</TitleGradient>
+                    <TitleGradient>Ohne Agenturpreise. Ohne Umwege.</TitleGradient>
                   </span>
                 </h1>
               </Reveal>
 
               <Reveal delayMs={160}>
                 <p className="mt-4 text-white/80 text-sm md:text-base max-w-xl leading-relaxed">
-                  Ziel war eine Seite, die ohne Erklärung funktioniert: Anliegen verstehen, Vertrauen bekommen, Spendenweg wählen.
-                  Dazu DE/EN Inhalte, Flyer und ein Projektvideo.
+                  Wenn deine Website keine Anfragen bringt, verliert dein Unternehmen jeden Monat potenzielle Kunden.
+                  Ich baue dir eine Seite, die in wenigen Sekunden erklärt, was ihr macht – und die Besucher gezielt zur
+                  Kontaktaufnahme führt.
                 </p>
               </Reveal>
 
               <Reveal delayMs={240}>
                 <div className="mt-6 flex flex-wrap gap-2 text-xs md:text-sm">
-                  <Badge>Landingpage</Badge>
-                  <Badge>DE &amp; EN</Badge>
-                  <Badge>PayPal &amp; Überweisung</Badge>
-                  <Badge>QR-Codes</Badge>
-                  <Badge>Flyer</Badge>
-                  <Badge>Video</Badge>
+                  <Badge>Mobile-first</Badge>
+                  <Badge>Klare Struktur</Badge>
+                  <Badge>Transparenter Ablauf</Badge>
+                  <Badge>Feedback eingebaut</Badge>
                 </div>
               </Reveal>
 
               <Reveal delayMs={320}>
                 <div className="mt-8 flex flex-wrap gap-2">
-                  <PrimaryCTA href="https://kircheab.de/spenden" label="Zur Spenden-Seite" external />
-                  <GhostCTA href="/#request">Ähnliches Projekt anfragen</GhostCTA>
+                  <PrimaryCTA href="#analyse" label="Kostenlose Analyse ansehen" />
+                  <GhostCTA href={WHATSAPP_HREF} external>
+                    Direkt per WhatsApp <ExternalLink size={16} />
+                  </GhostCTA>
                 </div>
               </Reveal>
             </div>
 
             <Reveal delayMs={140}>
-              <TiltCard className="rounded-3xl">
-                <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-4 md:p-5 overflow-hidden relative">
-                  <div
-                    className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.07]"
-                    style={{
-                      filter: 'blur(50px)',
-                      animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite',
-                    }}
-                  />
-
-                  <div className="flex items-center justify-between gap-3 px-2 pb-3">
-                    <div className="inline-flex items-center gap-2 text-xs md:text-sm text-white/85">
-                      <Video size={16} className="text-white/80" />
-                      Projektvideo
+              <CardShell>
+                <div className="text-xs uppercase tracking-wide text-white/55">Was du hier auf der Seite bekommst</div>
+                <div className="mt-4 grid grid-cols-1 gap-3">
+                  <div className="rounded-2xl border border-white/12 bg-white/5 p-4">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-white/90">
+                      <Shield size={16} className="text-white/70" /> Kein Risiko
                     </div>
-                    <div className="inline-flex items-center gap-2 text-xs text-white/55">
-                      <Globe2 size={14} className="text-white/60" />
-                      DE &amp; EN
+                    <div className="mt-1 text-sm text-white/70">
+                      Du zahlst die zweite Rate erst, wenn du die erste Version gesehen und freigegeben hast.
                     </div>
                   </div>
-
-                  <div className="relative w-full aspect-video overflow-hidden rounded-2xl border border-white/15 bg-black">
-                    <iframe
-                      className="absolute inset-0 w-full h-full"
-                      src="https://www.youtube-nocookie.com/embed/svgNO7ErcKg"
-                      title="Kirche für Aschaffenburg – Fundraising Video"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      allowFullScreen
-                    />
-                  </div>
-
-                  <div className="mt-4 rounded-2xl border border-white/15 bg-black/20 backdrop-blur-md p-4 md:p-5">
-                    <div className="text-xs uppercase tracking-wide text-white/55">Spenden in 2 Monaten</div>
-                    <div className="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight">
-                      <TitleGradient>17.000 €</TitleGradient>
+                  <div className="rounded-2xl border border-white/12 bg-white/5 p-4">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-white/90">
+                      <Clock size={16} className="text-white/70" /> Klare Dauer
                     </div>
-                    <p className="mt-2 text-sm md:text-base text-white/70 leading-relaxed">
-                      Wir sind sehr dankbar. Aus unserer Sicht wäre das ohne Gott nicht möglich gewesen.
-                    </p>
+                    <div className="mt-1 text-sm text-white/70">
+                      Du siehst weiter unten die typische Lieferzeit pro Paket – ohne „vielleicht“.
+                    </div>
                   </div>
-
-                  <div className="mt-4 px-2 flex flex-wrap gap-2">
-                    <GhostCTA href="https://kircheab.de/spenden" external>
-                      Landingpage ansehen <ExternalLink size={16} />
-                    </GhostCTA>
-                    <GhostCTA href="/portfolio">Mehr Cases <ArrowRight size={16} /></GhostCTA>
+                  <div className="rounded-2xl border border-white/12 bg-white/5 p-4">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-white/90">
+                      <CreditCard size={16} className="text-white/70" /> Klare Zahlungen
+                    </div>
+                    <div className="mt-1 text-sm text-white/70">
+                      Ein Rechner zeigt dir live: wann du was zahlst – und warum diese Aufteilung fair ist.
+                    </div>
                   </div>
                 </div>
-              </TiltCard>
+              </CardShell>
             </Reveal>
           </div>
         </div>
       </SectionShell>
 
-      {/* META */}
-      <SectionShell>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
-          <MetaCard label="Ziel" value="Spenden sammeln" />
-          <MetaCard label="Zeitraum" value="~ 2 Wochen bis live" icon={<Clock size={16} />} />
-          <MetaCard label="Rolle" value="Konzept · Design · Umsetzung" />
-          <MetaCard label="Setup" value="DE/EN · Payments · QR" />
-        </div>
-      </SectionShell>
-
-      {/* WHAT I DID */}
-      <SectionShell>
+      {/* Analyse */}
+      <SectionShell id="analyse">
         <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Was geliefert wurde</div>
+          <div className="text-xs uppercase tracking-wide text-white/55">Kostenlose Website-Analyse</div>
         </Reveal>
 
         <Reveal delayMs={90}>
           <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Klarer Aufbau,
+            In 15 Minuten weißt du,
             <span className="block">
-              <TitleGradient>wenig Reibung.</TitleGradient>
+              <TitleGradient>was konkret fehlt – und was ich ändern würde.</TitleGradient>
             </span>
           </h2>
         </Reveal>
 
         <Reveal delayMs={160}>
-          <p className="mt-4 text-sm md:text-base text-white/70 max-w-2xl leading-relaxed">
-            Fokus war weniger „schön“, sondern „verständlich und einfach zu nutzen“: klare Story, klare Spendenwege, sauberer Ablauf.
-          </p>
+          <CardShell className="mt-6">
+            <p className="text-sm md:text-base text-white/80 leading-relaxed max-w-3xl">
+              Ich prüfe deine Website anhand von vier klaren Punkten:
+            </p>
+
+            <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-3">
+              {[
+                'Versteht ein Besucher in 10 Sekunden, was ihr anbietet?',
+                'Ist der Aufbau logisch (Problem → Lösung → Kontakt)?',
+                'Funktioniert alles am Smartphone einwandfrei?',
+                'Wirkt die Seite professionell genug, um Vertrauen aufzubauen?',
+              ].map((t) => (
+                <div key={t} className="rounded-2xl border border-white/12 bg-white/5 p-4 flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+                  <div className="text-sm text-white/75">{t}</div>
+                </div>
+              ))}
+            </div>
+
+            <p className="mt-5 text-sm md:text-base text-white/75 leading-relaxed max-w-3xl">
+              Danach bekommst du eine kurze, klare Liste mit konkreten Änderungen. Ohne Verkaufsdruck. Ohne Verpflichtung.
+            </p>
+
+            <div className="mt-6 flex flex-wrap gap-2">
+              <PrimaryCTA href={WHATSAPP_HREF} label="Analyse anfragen (WhatsApp)" external />
+              <GhostCTA href={MAIL_HREF} external>
+                Alternativ per Mail <ExternalLink size={16} />
+              </GhostCTA>
+            </div>
+
+            <div className="mt-4 text-xs md:text-sm text-white/60">
+              Normalerweise ein bezahlter Beratungs-Schritt. Für neue Anfragen kostenlos.
+            </div>
+          </CardShell>
+        </Reveal>
+      </SectionShell>
+
+      {/* Pakete */}
+      <SectionShell id="pakete">
+        <Reveal>
+          <div className="text-xs uppercase tracking-wide text-white/55">Pakete</div>
         </Reveal>
 
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-          <MiniCard
-            icon={<LayoutTemplate size={18} />}
-            title="Landingpage"
-            bullets={['Story und Struktur', 'Mobile-first Umsetzung', 'Vertrauen und klare CTAs']}
+        <Reveal delayMs={90}>
+          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
+            Was du bekommst.
+            <span className="block">
+              <TitleGradient>Ohne Interpretationsspielraum.</TitleGradient>
+            </span>
+          </h2>
+        </Reveal>
+
+        <Reveal delayMs={150}>
+          <div className="mt-3 text-sm md:text-base text-white/70">
+            Vergleichbare Agenturen starten oft ab <span className="text-white/85 font-semibold">3.000 €</span> – hier ist der Weg direkter.
+          </div>
+        </Reveal>
+
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+          {/* Anchor first: teuerstes Paket zuerst */}
+          <PackageCard
+            title="Komplett"
+            priceLabel="ab 1.100 €"
+            lead="Wenn du ein rundes Gesamtpaket willst (Website + klare Guidelines + ein Motion-Asset)."
+            timeLabel="Lieferzeit: ca. 3 Wochen"
+            emphasized={false}
+            badge={null}
+            icon={<Wand2 size={18} className="text-white/80" />}
+            bullets={[
+              'Website mit bis zu 5 Unterseiten (z.B. Startseite, Leistungen, Über uns, Kontakt, Impressum)',
+              'Vollständiges Brandbook (Farben, Typo, Layoutregeln)',
+              'Ein Motion-Element für Social Media (Wiedererkennung)',
+              'Übergabe aller Zugänge und Dateien',
+              'Optional: Betreuung ab 150 €/Monat',
+            ]}
           />
-          <MiniCard
-            icon={<CreditCard size={18} />}
-            title="Spendenwege"
-            bullets={['PayPal und Überweisung', 'QR-Codes und kurze Links', 'so wenig Reibung wie möglich']}
+
+          <PackageCard
+            title="Standard"
+            priceLabel="ab 700 €"
+            lead="Der häufigste Fall: klare Website, saubere Linie, Kontaktweg – schnell live."
+            timeLabel="Lieferzeit: 10–14 Tage"
+            emphasized
+            badge="Wird am häufigsten gewählt."
+            icon={<LayoutTemplate size={18} className="text-white/80" />}
+            bullets={[
+              'Website mit bis zu 5 Unterseiten (z.B. Startseite, Leistungen, Über uns, Kontakt, Impressum)',
+              'Grundlegende visuelle Linie (Farben, Schrift, saubere Struktur, Einbindung eures Logos)',
+              'Kontaktformular, mobil optimiert',
+              'Übergabe aller Zugänge',
+              'Optional: Betreuung ab 150 €/Monat',
+            ]}
           />
-          <MiniCard
-            icon={<FileText size={18} />}
-            title="Content und Medien"
-            bullets={['Texte in DE und EN', '4 Flyer für Verteilung', 'Projektvideo für Reichweite']}
+
+          <PackageCard
+            title="Einstieg"
+            priceLabel="ab 400 €"
+            lead="Wenn du erstmal schnell und sauber starten willst – eine Seite, ein Ziel, ein CTA."
+            timeLabel="Lieferzeit: 7 Tage"
+            emphasized={false}
+            badge={null}
+            icon={<FileText size={18} className="text-white/80" />}
+            bullets={[
+              'Eine einzelne, klar strukturierte Seite (Landingpage)',
+              'Fokus auf eine konkrete Handlung (z.B. Termin anfragen)',
+              'Mobil optimiert',
+              'Übergabe aller Zugänge',
+              'Optional: Betreuung ab 150 €/Monat',
+            ]}
+          />
+        </div>
+
+        {/* Referenz integriert: kompakt, direkt unter Paketen */}
+        <Reveal delayMs={140}>
+          <div className="mt-7 rounded-3xl border border-white/12 bg-black/20 backdrop-blur-md p-5 md:p-6">
+            <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
+              <BrowserMiniMock href={REF.url} />
+
+              <div className="min-w-0">
+                <div className="text-sm md:text-base font-semibold text-white/90">{REF.labelTop}</div>
+                <div className="mt-1 text-sm text-white/70">{REF.labelBottom}</div>
+                <div className="mt-2 text-xs text-white/55">{REF.proofSmall}</div>
+              </div>
+
+              <div className="md:ml-auto">
+                <GhostCTA href={REF.url} external>
+                  Öffnen <ExternalLink size={16} />
+                </GhostCTA>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+
+        {/* Infokasten (wie im Prompt) */}
+        <Reveal delayMs={200}>
+          <div className="mt-6 rounded-3xl border border-white/12 bg-black/20 backdrop-blur-md p-5 md:p-6">
+            <div className="text-sm md:text-base text-white/80 leading-relaxed">
+              Alle Preise sind Ausgangspunkte. Nach der kostenlosen Analyse erhältst du ein genaues Angebot – ohne Überraschungen.
+            </div>
+            <div className="mt-3 text-sm text-white/60 italic">
+              Bereits drei Unternehmen aus der Region haben sich für eines dieser Pakete entschieden.
+            </div>
+          </div>
+        </Reveal>
+      </SectionShell>
+
+      {/* Rechner */}
+      <SectionShell id="rechner">
+        <Reveal>
+          <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsrechner</div>
+        </Reveal>
+
+        <Reveal delayMs={90}>
+          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
+            Wann zahlst du was?
+            <span className="block">
+              <TitleGradient>Du siehst es live – ohne Nachfragen.</TitleGradient>
+            </span>
+          </h2>
+        </Reveal>
+
+        <Reveal delayMs={160}>
+          <CardShell className="mt-6">
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+              <div className="min-w-0">
+                <div className="text-sm md:text-base font-semibold text-white/90">
+                  1) Paket auswählen (oder eigenen Betrag eintragen)
+                </div>
+                <div className="mt-3">
+                  <PackageSelector active={activePkg} onSelect={setFromPkg} />
+                </div>
+
+                <div className="mt-5">
+                  <label className="block text-sm font-semibold text-white/90" htmlFor="customPrice">
+                    Oder eigener Betrag (optional)
+                  </label>
+                  <div className="mt-2 flex items-center gap-2">
+                    <input
+                      id="customPrice"
+                      inputMode="numeric"
+                      className="w-full md:w-[280px] rounded-2xl border border-white/15 bg-black/30 px-4 py-3 text-white/90 placeholder:text-white/35 outline-none focus:ring-2 focus:ring-violet-400/40"
+                      placeholder="z.B. 500"
+                      value={custom}
+                      onChange={(e) => onCustomChange(e.target.value)}
+                    />
+                    <span className="text-white/60 font-semibold">€</span>
+                  </div>
+                  <div className="mt-2 text-xs md:text-sm text-white/60">
+                    Du kannst hier auch deinen Budget-Rahmen eintragen. Ich sage dir ehrlich, was dafür realistisch möglich ist.
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-full lg:max-w-md">
+                <div className="text-sm md:text-base font-semibold text-white/90">
+                  2) Deine Zahlungen (automatisch berechnet)
+                </div>
+
+                <div className="mt-3 rounded-3xl border border-white/12 bg-black/20 backdrop-blur-md p-5 md:p-6">
+                  <div className="text-xs uppercase tracking-wide text-white/55">Projektpreis</div>
+                  <div className="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight tabular-nums">
+                    <TitleGradient>{computed.base.toLocaleString('de-DE')} €</TitleGradient>
+                  </div>
+
+                  <div className="mt-5">
+                    <PriceLine
+                      label="Zahlung 1 – Projektstart (40%)"
+                      amount={computed.p1}
+                      hint="Fällig nach Auftragsbestätigung"
+                    />
+                    <PriceLine
+                      label="Zahlung 2 – Erste Version (40%)"
+                      amount={computed.p2}
+                      hint="Fällig nachdem du die erste Version gesehen und freigegeben hast"
+                    />
+                    <PriceLine
+                      label="Zahlung 3 – Go-Live (20%)"
+                      amount={computed.p3}
+                      hint="Fällig nach Übergabe (finaler Stand online)"
+                    />
+                  </div>
+
+                  <div className="mt-5 rounded-2xl border border-white/12 bg-white/5 p-4 text-sm text-white/75 leading-relaxed">
+                    <span className="font-semibold text-white/85">Kein Risiko:</span> Du zahlst die zweite Rate erst,
+                    wenn du die erste Version gesehen und freigegeben hast. Kein Geld für etwas, das du noch nicht kennst.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardShell>
+        </Reveal>
+      </SectionShell>
+
+      {/* Prozess */}
+      <SectionShell id="prozess">
+        <Reveal>
+          <div className="text-xs uppercase tracking-wide text-white/55">Prozess</div>
+        </Reveal>
+
+        <Reveal delayMs={90}>
+          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
+            Wie das konkret abläuft.
+            <span className="block">
+              <TitleGradient>Mit Meilensteinen – nicht „irgendwie“.</TitleGradient>
+            </span>
+          </h2>
+        </Reveal>
+
+        <div className="mt-8 grid grid-cols-1 gap-4 md:gap-6">
+          <StepItem
+            n="1"
+            title="Briefing (Start)"
+            body={`Du schickst mir:\n– Was ihr anbietet\n– Wer eure Zielgruppe ist\n– Bis wann die Website stehen soll\n\nIch antworte innerhalb von 24 Stunden mit:\n– Einschätzung zum Umfang\n– Realistischem Zeitplan\n– Konkreten Rückfragen`}
+            milestone="Wir wissen exakt, was gebaut wird (Umfang + Zeitplan)."
+          />
+          <StepItem
+            n="2"
+            title="Konzept & Struktur"
+            body={`Ich lege fest:\n– Welche Seiten sinnvoll sind\n– Welche Inhalte auf welche Seite gehören\n– Wie der Ablauf Besucher → Kontakt aussieht\n\nDu bekommst das zur Freigabe. Erst wenn das passt, fange ich an zu bauen.`}
+            milestone="Struktur freigegeben (du weißt vorher, was entsteht)."
+          />
+          <StepItem
+            n="3"
+            title="Erste Version + Feedback"
+            body={`Du bekommst einen funktionierenden Link.\nDu kannst alles selbst testen – auch am Handy.\n\nEine vollständige Feedback-Runde ist enthalten (Änderungen sind hier eingebaut, nicht extra).`}
+            milestone="Erste Version freigegeben (zweite Rate wird erst dann fällig)."
+          />
+          <StepItem
+            n="4"
+            title="Finalisierung"
+            body={`Letzte Anpassungen, Feinschliff, technische Stabilisierung.\nWas vereinbart war, wird geliefert – kein Scope-Creep.\n\nWenn etwas zusätzlich dazu kommt, wird es vorher klar abgestimmt (damit es keine Überraschungen gibt).`}
+            milestone="Finaler Stand freigegeben."
+          />
+          <StepItem
+            n="5"
+            title="Übergabe"
+            body={`Du bekommst alles:\n– Zugänge (Domain/Hosting/Website)\n– Dateien/Assets\n– kurzes Setup-Briefing, damit du selbst weiterarbeiten kannst\n\nOptional: monatliche Betreuung ab hier.`}
+            milestone="Go-Live + Übergabe (letzte Rate fällig)."
           />
         </div>
       </SectionShell>
 
-      {/* IMPACT */}
-      <SectionShell>
+      {/* Einwände */}
+      <SectionShell id="einwaende">
         <Reveal>
-          <TiltCard className="rounded-3xl">
-            <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-10 overflow-hidden relative">
-              <div
-                className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.07]"
-                style={{
-                  filter: 'blur(50px)',
-                  animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite',
-                }}
-              />
+          <div className="text-xs uppercase tracking-wide text-white/55">Risikoreduktion</div>
+        </Reveal>
 
-              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-                <div>
-                  <div className="text-xs uppercase tracking-wide text-white/55">Wirkung</div>
-                  <h3 className="mt-3 text-xl md:text-3xl font-bold text-white/90">System statt Einzelteil</h3>
-                  <p className="mt-3 text-sm md:text-base text-white/70 max-w-2xl leading-relaxed">
-                    Die Seite wurde so gebaut, dass Menschen schnell verstehen, worum es geht, und ohne Hürden spenden können.
-                  </p>
-                </div>
+        <Reveal delayMs={90}>
+          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
+            Was, wenn…?
+            <span className="block">
+              <TitleGradient>Die drei häufigsten Fragen – klar beantwortet.</TitleGradient>
+            </span>
+          </h2>
+        </Reveal>
 
-                <Link href="/#request" className="text-sm md:text-base text-white/70 hover:text-white transition-colors md:text-right">
-                  Ähnliches Projekt anfragen <span className="text-white/45">(3 Infos reichen)</span>
-                </Link>
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-5">
+          <Reveal>
+            <TiltCard className="rounded-3xl">
+              <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6">
+                <div className="text-sm font-extrabold text-white/90">Was passiert, wenn mir die erste Version nicht gefällt?</div>
+                <p className="mt-3 text-sm text-white/75 leading-relaxed">
+                  Du zahlst die zweite Rate erst, wenn du die erste Version gesehen und freigegeben hast.
+                  Eine vollständige Feedback-Runde ist im Preis enthalten.
+                </p>
               </div>
+            </TiltCard>
+          </Reveal>
 
-              <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3">
-                <ImpactItem text="Anliegen in wenigen Sekunden verständlich durch Story und klare Struktur." />
-                <ImpactItem text="Spendenweg direkt: PayPal oder Überweisung, ergänzt durch QR-Codes." />
-                <ImpactItem text="Einheitliche Assets (Flyer und Video), damit überall auf dasselbe Ziel verlinkt wird." />
+          <Reveal delayMs={80}>
+            <TiltCard className="rounded-3xl">
+              <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6">
+                <div className="text-sm font-extrabold text-white/90">Was ist, wenn ich später Änderungen brauche?</div>
+                <p className="mt-3 text-sm text-white/75 leading-relaxed">
+                  Dafür gibt es optional Betreuung ab 150 €/Monat (kleine Updates, Anpassungen, Ansprechpartner).
+                  Alternativ kann man Änderungen auch als separates Mini-Projekt umsetzen.
+                </p>
               </div>
+            </TiltCard>
+          </Reveal>
 
-              <div className="mt-8 flex flex-wrap gap-2">
-                <PrimaryCTA href="https://kircheab.de/spenden" label="Zur Spenden-Seite" external />
-                <GhostCTA href="/portfolio">Mehr Projekte ansehen</GhostCTA>
+          <Reveal delayMs={140}>
+            <TiltCard className="rounded-3xl">
+              <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6">
+                <div className="text-sm font-extrabold text-white/90">Was ist, wenn mein Budget nicht reicht?</div>
+                <p className="mt-3 text-sm text-white/75 leading-relaxed">
+                  Schreib mir kurz deinen Rahmen. Nach der kostenlosen Analyse machen wir ein passendes Angebot,
+                  das realistisch ist – ohne dich zu etwas zu drängen.
+                </p>
               </div>
-            </div>
-          </TiltCard>
+            </TiltCard>
+          </Reveal>
+        </div>
+      </SectionShell>
+
+      {/* Retainer */}
+      <SectionShell id="retainer">
+        <Reveal>
+          <div className="text-xs uppercase tracking-wide text-white/55">Nach dem Projekt</div>
+        </Reveal>
+
+        <Reveal delayMs={90}>
+          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
+            Danach musst du nicht allein weitermachen.
+            <span className="block">
+              <TitleGradient>Aber du musst auch kein Abo abschließen.</TitleGradient>
+            </span>
+          </h2>
+        </Reveal>
+
+        <Reveal delayMs={150}>
+          <p className="mt-4 text-sm md:text-base text-white/75 max-w-2xl leading-relaxed">
+            Wenn du möchtest, betreue ich deine Website weiter – für Anpassungen, neue Seiten oder kleine Updates.
+            Monatlich kündbar, kein Abo-Stress.
+          </p>
+        </Reveal>
+
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <Reveal>
+            <CardShell>
+              <div className="text-sm md:text-base font-extrabold text-white/90">Einmaliges Projekt</div>
+              <p className="mt-3 text-sm text-white/75 leading-relaxed">
+                Einmalige Umsetzung. Fixer Preis. Saubere Übergabe. Danach keine Verpflichtung.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                <Badge>Kein Folgevertrag</Badge>
+                <Badge>Alle Zugänge & Dateien</Badge>
+              </div>
+            </CardShell>
+          </Reveal>
+
+          <Reveal delayMs={90}>
+            <CardShell>
+              <div className="text-sm md:text-base font-extrabold text-white/90">Mit Betreuung</div>
+              <p className="mt-3 text-sm text-white/75 leading-relaxed">
+                Projekt + monatliche Pflege ab 150 €/Monat. Updates, Anpassungen, Ansprechpartner. Monatlich kündbar.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                <Badge>Ab 150 €/Monat</Badge>
+                <Badge>Monatlich kündbar</Badge>
+              </div>
+            </CardShell>
+          </Reveal>
+        </div>
+      </SectionShell>
+
+      {/* CTA */}
+      <SectionShell id="cta">
+        <Reveal>
+          <div className="text-xs uppercase tracking-wide text-white/55">Nächster Schritt</div>
+        </Reveal>
+
+        <Reveal delayMs={90}>
+          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
+            Passt das?
+            <span className="block">
+              <TitleGradient>Dann schick mir kurz dein Vorhaben.</TitleGradient>
+            </span>
+          </h2>
+        </Reveal>
+
+        <Reveal delayMs={150}>
+          <p className="mt-4 text-sm md:text-base text-white/75 max-w-2xl leading-relaxed">
+            Sag mir kurz: welches Paket dich interessiert – oder ob du zuerst die kostenlose Analyse möchtest.
+            Beides dauert keine 2 Minuten.
+          </p>
+        </Reveal>
+
+        <Reveal delayMs={220}>
+          <div className="mt-6 flex flex-wrap gap-2">
+            <PrimaryCTA href={WHATSAPP_HREF} label="Kostenlose Analyse anfragen" external />
+            <GhostCTA href={MAIL_HREF} external>
+              Per Mail schreiben <ExternalLink size={16} />
+            </GhostCTA>
+          </div>
         </Reveal>
       </SectionShell>
 
@@ -700,3 +1257,5 @@ const globalKeyframes = `
   100% { transform: translate3d(90px,60px,0); }
 }
 `;
+```
+
