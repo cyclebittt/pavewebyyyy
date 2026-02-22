@@ -1,161 +1,62 @@
+/* START: page.js */
 'use client';
 
-import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import Link from 'next/link';
 import {
+  ArrowLeft,
   ArrowRight,
-  CheckCircle2,
-  ExternalLink,
-  FileText,
-  Mail,
-  MessageCircle,
-  Flag,
   Sparkles,
+  ExternalLink,
+  CheckCircle2,
   Wand2,
-  X,
+  FileText,
+  Clock,
+  Shield,
+  CreditCard,
+  LayoutTemplate,
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 /* ---------- CONFIG ---------- */
 
-const EMAIL = 'hello@leonseitz.com';
 const WHATSAPP_E164 = '4916095757167';
-const WHATSAPP_URL = `https://wa.me/${WHATSAPP_E164}`;
-
-const WHATSAPP_ANALYSE_HREF = `${WHATSAPP_URL}?text=${encodeURIComponent(
-  `Hi Leon,\n\nIch möchte die kostenlose Website-Analyse.\n\nZiel:\nDeadline:\nStand:\nLink zur aktuellen Website:\n\nKurzkontext:`
+const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_E164}?text=${encodeURIComponent(
+  'Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel (mehr Anfragen / sauberer Auftritt / beides):\n- Deadline:\n- Link zu aktueller Website (falls vorhanden):\n\nDanke!'
 )}`;
 
-const MAIL_HREF = `mailto:${EMAIL}?subject=${encodeURIComponent('Projektanfrage')}&body=${encodeURIComponent(
-  `Hi Leon,\n\nZiel:\nDeadline:\nStand:\nLink/Beispiele:\n\nKurzkontext:`
+const EMAIL = 'hello@leonseitz.com';
+const MAIL_HREF = `mailto:${EMAIL}?subject=${encodeURIComponent('Kostenlose Website-Analyse')}&body=${encodeURIComponent(
+  'Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel (mehr Anfragen / sauberer Auftritt / beides):\n- Deadline:\n- Link zu aktueller Website (falls vorhanden):\n\nDanke!'
 )}`;
 
-const LIVE_PREVIEW_URL = 'https://leonseitz.com'; // Referenz-Link (dezent)
+const DEFAULT_PRICES = {
+  einstieg: 400,
+  standard: 700,
+  komplett: 1100,
+};
 
-/* ---------- SCENES (same aesthetic language as home) ---------- */
+const REF = {
+  url: 'https://kircheab.de/spenden',
+  labelTop: 'Beispiel aus der Region: kircheab.de',
+  labelBottom: 'Konzeption, Design & Umsetzung in unter 2 Wochen.',
+  proofSmall: 'Ergebnis: über 17.000 € Spenden in 2 Monaten.',
+};
 
-const SECTIONS = [
-  { id: 's1', label: 'Start' },
-  { id: 's2', label: 'Referenz' },
-  { id: 's3', label: 'Analyse' },
-  { id: 's4', label: 'Pakete' },
-  { id: 's5', label: 'Zahlung' },
-  { id: 's6', label: 'Prozess' },
-  { id: 's7', label: 'Einwände' },
-  { id: 's8', label: 'Betreuung' },
-  { id: 'request', label: 'Anfrage' },
-];
+/* ---------- SCENE (match homepage vibe) ---------- */
 
-const SCENES = {
-  s1: {
-    base: '#070312',
-    g1: `radial-gradient(1200px 700px at 18% 18%, rgba(168,85,247,0.32), transparent 60%),
-         radial-gradient(900px 700px at 82% 25%, rgba(56,189,248,0.14), transparent 55%)`,
-    g2: `linear-gradient(135deg, #070312 0%, #0b0b1a 50%, #03040e 100%)`,
-    blobs: [
-      { cls: 'bg-violet-500/18', x: '-20%', y: '-18%', s: '56rem', blur: 140 },
-      { cls: 'bg-cyan-500/12', x: '70%', y: '10%', s: '54rem', blur: 150 },
-      { cls: 'bg-fuchsia-500/10', x: '20%', y: '80%', s: '46rem', blur: 150 },
-    ],
-    accent: 'from-violet-200 via-indigo-200 to-cyan-200',
-  },
-  s2: {
-    base: '#021019',
-    g1: `radial-gradient(1100px 750px at 22% 20%, rgba(34,211,238,0.22), transparent 60%),
-         radial-gradient(900px 700px at 88% 15%, rgba(99,102,241,0.18), transparent 55%)`,
-    g2: `linear-gradient(135deg, #021019 0%, #07102a 55%, #05010b 100%)`,
-    blobs: [
-      { cls: 'bg-cyan-500/16', x: '-10%', y: '-10%', s: '58rem', blur: 150 },
-      { cls: 'bg-indigo-500/14', x: '72%', y: '0%', s: '54rem', blur: 150 },
-      { cls: 'bg-emerald-500/10', x: '10%', y: '75%', s: '46rem', blur: 160 },
-    ],
-    accent: 'from-cyan-200 via-indigo-200 to-violet-200',
-  },
-  s3: {
-    base: '#120316',
-    g1: `radial-gradient(1200px 750px at 20% 10%, rgba(244,114,182,0.14), transparent 60%),
-         radial-gradient(950px 750px at 84% 30%, rgba(168,85,247,0.20), transparent 55%)`,
-    g2: `linear-gradient(135deg, #120316 0%, #1a0714 55%, #040312 100%)`,
-    blobs: [
-      { cls: 'bg-pink-500/12', x: '-18%', y: '-12%', s: '56rem', blur: 160 },
-      { cls: 'bg-violet-500/16', x: '68%', y: '12%', s: '56rem', blur: 150 },
-      { cls: 'bg-cyan-500/10', x: '10%', y: '80%', s: '46rem', blur: 170 },
-    ],
-    accent: 'from-pink-200 via-fuchsia-200 to-indigo-200',
-  },
-  s4: {
-    base: '#03110a',
-    g1: `radial-gradient(1200px 750px at 18% 10%, rgba(16,185,129,0.10), transparent 60%),
-         radial-gradient(900px 700px at 85% 20%, rgba(59,130,246,0.16), transparent 55%)`,
-    g2: `linear-gradient(135deg, #03110a 0%, #0a1020 55%, #04060d 100%)`,
-    blobs: [
-      { cls: 'bg-emerald-500/11', x: '-12%', y: '-16%', s: '54rem', blur: 170 },
-      { cls: 'bg-cyan-500/11', x: '75%', y: '8%', s: '56rem', blur: 160 },
-      { cls: 'bg-indigo-500/11', x: '18%', y: '82%', s: '48rem', blur: 170 },
-    ],
-    accent: 'from-emerald-200 via-cyan-200 to-indigo-200',
-  },
-  s5: {
-    base: '#120b02',
-    g1: `radial-gradient(1200px 750px at 15% 10%, rgba(250,204,21,0.08), transparent 60%),
-         radial-gradient(900px 700px at 88% 25%, rgba(236,72,153,0.14), transparent 55%)`,
-    g2: `linear-gradient(135deg, #120b02 0%, #1b0713 55%, #05020a 100%)`,
-    blobs: [
-      { cls: 'bg-amber-400/10', x: '-10%', y: '-14%', s: '56rem', blur: 170 },
-      { cls: 'bg-pink-500/11', x: '74%', y: '10%', s: '56rem', blur: 160 },
-      { cls: 'bg-violet-500/11', x: '18%', y: '82%', s: '48rem', blur: 170 },
-    ],
-    accent: 'from-amber-200 via-pink-200 to-violet-200',
-  },
-  s6: {
-    base: '#04040a',
-    g1: `radial-gradient(1200px 750px at 15% 0%, rgba(99,102,241,0.16), transparent 60%),
-         radial-gradient(900px 700px at 90% 15%, rgba(56,189,248,0.10), transparent 55%)`,
-    g2: `linear-gradient(135deg, #04040a 0%, #07071a 55%, #04030a 100%)`,
-    blobs: [
-      { cls: 'bg-indigo-500/11', x: '-12%', y: '-18%', s: '56rem', blur: 170 },
-      { cls: 'bg-cyan-500/10', x: '76%', y: '8%', s: '56rem', blur: 170 },
-      { cls: 'bg-violet-500/10', x: '18%', y: '82%', s: '48rem', blur: 170 },
-    ],
-    accent: 'from-indigo-200 via-violet-200 to-cyan-200',
-  },
-  s7: {
-    base: '#06020f',
-    g1: `radial-gradient(1200px 750px at 18% 10%, rgba(168,85,247,0.18), transparent 60%),
-         radial-gradient(900px 700px at 85% 20%, rgba(56,189,248,0.10), transparent 55%)`,
-    g2: `linear-gradient(135deg, #06020f 0%, #0b0716 55%, #04030a 100%)`,
-    blobs: [
-      { cls: 'bg-violet-500/12', x: '-12%', y: '-16%', s: '54rem', blur: 170 },
-      { cls: 'bg-cyan-500/10', x: '75%', y: '8%', s: '56rem', blur: 160 },
-      { cls: 'bg-fuchsia-500/10', x: '10%', y: '82%', s: '48rem', blur: 170 },
-    ],
-    accent: 'from-violet-200 via-fuchsia-200 to-cyan-200',
-  },
-  s8: {
-    base: '#071018',
-    g1: `radial-gradient(1200px 750px at 18% 10%, rgba(56,189,248,0.16), transparent 60%),
-         radial-gradient(900px 700px at 85% 20%, rgba(168,85,247,0.12), transparent 55%)`,
-    g2: `linear-gradient(135deg, #071018 0%, #0b1226 55%, #05020a 100%)`,
-    blobs: [
-      { cls: 'bg-cyan-500/12', x: '-10%', y: '-14%', s: '56rem', blur: 170 },
-      { cls: 'bg-indigo-500/10', x: '74%', y: '10%', s: '56rem', blur: 160 },
-      { cls: 'bg-violet-500/10', x: '18%', y: '82%', s: '48rem', blur: 170 },
-    ],
-    accent: 'from-cyan-200 via-indigo-200 to-violet-200',
-  },
-  request: {
-    base: '#04040a',
-    g1: `radial-gradient(1200px 750px at 15% 0%, rgba(99,102,241,0.18), transparent 60%),
-         radial-gradient(900px 700px at 90% 15%, rgba(56,189,248,0.11), transparent 55%)`,
-    g2: `linear-gradient(135deg, #04040a 0%, #07071a 55%, #04030a 100%)`,
-    blobs: [
-      { cls: 'bg-indigo-500/11', x: '-12%', y: '-18%', s: '56rem', blur: 170 },
-      { cls: 'bg-cyan-500/10', x: '76%', y: '8%', s: '56rem', blur: 170 },
-      { cls: 'bg-violet-500/10', x: '18%', y: '82%', s: '48rem', blur: 170 },
-    ],
-    accent: 'from-indigo-200 via-violet-200 to-cyan-200',
-  },
+const SCENE = {
+  base: '#070312',
+  g1: `radial-gradient(1200px 700px at 18% 18%, rgba(168,85,247,0.30), transparent 60%),
+       radial-gradient(900px 700px at 82% 25%, rgba(56,189,248,0.14), transparent 55%)`,
+  g2: `linear-gradient(135deg, #070312 0%, #0b0b1a 50%, #03040e 100%)`,
+  blobs: [
+    { cls: 'bg-violet-500/16', x: '-20%', y: '-18%', s: '56rem', blur: 140 },
+    { cls: 'bg-cyan-500/10', x: '70%', y: '10%', s: '54rem', blur: 150 },
+    { cls: 'bg-fuchsia-500/9', x: '20%', y: '80%', s: '46rem', blur: 150 },
+  ],
+  accent: 'from-violet-200 via-indigo-200 to-cyan-200',
 };
 
 /* ---------- UTIL ---------- */
@@ -164,33 +65,8 @@ function cx(...xs) {
   return xs.filter(Boolean).join(' ');
 }
 
-function TitleGradient({ sceneId, children }) {
-  const scene = SCENES[sceneId] ?? SCENES.s1;
-  return <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', scene.accent)}>{children}</span>;
-}
-
-function useActiveSection(sectionIds) {
-  const [activeId, setActiveId] = useState(sectionIds[0]);
-
-  useEffect(() => {
-    const els = sectionIds.map((id) => document.getElementById(id)).filter(Boolean);
-    if (!els.length) return;
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        const best = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0))[0];
-        if (best?.target?.id) setActiveId(best.target.id);
-      },
-      { root: null, rootMargin: '-35% 0px -55% 0px', threshold: [0.12, 0.25, 0.4, 0.55, 0.7] }
-    );
-
-    els.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
-  }, [sectionIds]);
-
-  return { activeId };
+function TitleGradient({ children }) {
+  return <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', SCENE.accent)}>{children}</span>;
 }
 
 function useReveal(ref) {
@@ -202,13 +78,33 @@ function useReveal(ref) {
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) setShown(true);
       },
-      { threshold: 0.18 }
+      { threshold: 0.2 }
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, [ref]);
   return shown;
 }
+
+function Reveal({ children, delayMs = 0 }) {
+  const ref = useRef(null);
+  const shown = useReveal(ref);
+
+  return (
+    <div
+      ref={ref}
+      className={cx(
+        'transition-all duration-700 will-change-transform',
+        shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+      )}
+      style={{ transitionDelay: `${delayMs}ms` }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/* ---------- PROGRESS + HALO ---------- */
 
 function useScrollProgress() {
   const [p, setP] = useState(0);
@@ -225,6 +121,20 @@ function useScrollProgress() {
   }, []);
 
   return p;
+}
+
+function ScrollProgressBar() {
+  const p = useScrollProgress();
+  return (
+    <div className="fixed top-0 left-0 right-0 z-[60] pointer-events-none">
+      <div className="h-[2px] bg-white/10">
+        <div
+          className="h-full bg-gradient-to-r from-violet-300 via-cyan-300 to-emerald-300"
+          style={{ width: `${Math.round(p * 100)}%`, transition: 'width 80ms linear' }}
+        />
+      </div>
+    </div>
+  );
 }
 
 function useMousePos() {
@@ -248,29 +158,47 @@ function useMousePos() {
   return pos;
 }
 
-/* ---------- GLOBAL BACKGROUND ---------- */
+function CursorHalo() {
+  const { x, y } = useMousePos();
 
-function GlobalBackground({ activeId }) {
+  return (
+    <div className="hidden md:block fixed inset-0 z-[6] pointer-events-none">
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(800px 600px at ${x}px ${y}px, rgba(255,255,255,0.045), transparent 70%)`,
+          filter: 'blur(18px)',
+          opacity: 0.6,
+          mixBlendMode: 'screen',
+          transition: 'background 80ms linear',
+        }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(1400px 1050px at ${x}px ${y}px, rgba(99,102,241,0.035), transparent 78%)`,
+          filter: 'blur(34px)',
+          opacity: 0.55,
+          mixBlendMode: 'screen',
+          transition: 'background 80ms linear',
+        }}
+      />
+    </div>
+  );
+}
+
+/* ---------- GLOBAL BG ---------- */
+
+function GlobalBackground() {
   return (
     <div className="fixed inset-0 -z-10">
-      {Object.keys(SCENES).map((key) => {
-        const s = SCENES[key];
-        const on = key === activeId;
-
-        return (
-          <div
-            key={key}
-            className={cx(
-              'absolute inset-0 transition-[opacity,filter,transform] duration-[1200ms] ease-out will-change-[opacity,filter,transform]',
-              on ? 'opacity-100 blur-0 scale-100' : 'opacity-0 blur-[14px] scale-[1.025]'
-            )}
-            style={{
-              backgroundColor: s.base,
-              backgroundImage: `${s.g1}, ${s.g2}`,
-            }}
-          />
-        );
-      })}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundColor: SCENE.base,
+          backgroundImage: `${SCENE.g1}, ${SCENE.g2}`,
+        }}
+      />
 
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.10] mix-blend-overlay"
@@ -287,92 +215,35 @@ function GlobalBackground({ activeId }) {
   );
 }
 
-function GlobalLightLeaks({ activeId }) {
+function GlobalLightLeaks() {
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none">
-      {Object.keys(SCENES).map((key) => {
-        const scene = SCENES[key];
-        const on = key === activeId;
-
-        return (
-          <div
-            key={key}
-            className={cx(
-              'absolute inset-0 transition-[opacity,filter] duration-[1200ms] ease-out will-change-[opacity,filter]',
-              on ? 'opacity-100 blur-0' : 'opacity-0 blur-[20px]'
-            )}
-          >
-            {scene.blobs.map((b, i) => (
-              <div
-                key={i}
-                className={cx(
-                  'absolute rounded-full',
-                  b.cls,
-                  i === 0
-                    ? 'animate-[blob_10s_ease-in-out_infinite]'
-                    : i === 1
-                      ? 'animate-[blob2_12s_ease-in-out_infinite]'
-                      : 'animate-[blob3_14s_ease-in-out_infinite]'
-                )}
-                style={{
-                  left: b.x,
-                  top: b.y,
-                  width: b.s,
-                  height: b.s,
-                  filter: `blur(${b.blur}px)`,
-                }}
-              />
-            ))}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-/* ---------- UI ADDONS ---------- */
-
-function ScrollProgressBar() {
-  const p = useScrollProgress();
-  return (
-    <div className="fixed top-0 left-0 right-0 z-[60] pointer-events-none">
-      <div className="h-[2px] bg-white/10">
+      {SCENE.blobs.map((b, i) => (
         <div
-          className="h-full bg-gradient-to-r from-violet-300 via-cyan-300 to-emerald-300"
-          style={{ width: `${Math.round(p * 100)}%`, transition: 'width 80ms linear' }}
+          key={i}
+          className={cx(
+            'absolute rounded-full',
+            b.cls,
+            i === 0
+              ? 'animate-[blob_10s_ease-in-out_infinite]'
+              : i === 1
+                ? 'animate-[blob2_12s_ease-in-out_infinite]'
+                : 'animate-[blob3_14s_ease-in-out_infinite]'
+          )}
+          style={{
+            left: b.x,
+            top: b.y,
+            width: b.s,
+            height: b.s,
+            filter: `blur(${b.blur}px)`,
+          }}
         />
-      </div>
+      ))}
     </div>
   );
 }
 
-function CursorHalo() {
-  const { x, y } = useMousePos();
-  return (
-    <div className="hidden md:block fixed inset-0 z-[6] pointer-events-none">
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(800px 600px at ${x}px ${y}px, rgba(255,255,255,0.040), transparent 70%)`,
-          filter: 'blur(18px)',
-          opacity: 0.6,
-          mixBlendMode: 'screen',
-          transition: 'background 80ms linear',
-        }}
-      />
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(1400px 1050px at ${x}px ${y}px, rgba(99,102,241,0.032), transparent 78%)`,
-          filter: 'blur(34px)',
-          opacity: 0.55,
-          mixBlendMode: 'screen',
-          transition: 'background 80ms linear',
-        }}
-      />
-    </div>
-  );
-}
+/* ---------- INTERACTIONS ---------- */
 
 function Magnetic({ children, strength = 14, className = '' }) {
   const ref = useRef(null);
@@ -456,7 +327,7 @@ function TiltCard({ children, className = '' }) {
       <div
         className="pointer-events-none absolute inset-0 rounded-inherit opacity-0 md:opacity-100"
         style={{
-          background: 'radial-gradient(520px 380px at var(--hx, 50%) var(--hy, 30%), rgba(255,255,255,0.10), transparent 62%)',
+          background: 'radial-gradient(520px 380px at var(--hx, 50%) var(--hy, 30%), rgba(255,255,255,0.11), transparent 62%)',
           mixBlendMode: 'screen',
         }}
       />
@@ -465,976 +336,705 @@ function TiltCard({ children, className = '' }) {
   );
 }
 
-function Scene({ id, children }) {
+/* ---------- PAGE STRUCTURE ---------- */
+
+function SectionShell({ id, children }) {
   return (
-    <section id={id} className="relative min-h-screen flex items-center px-5 md:px-16 py-16 md:snap-start scroll-mt-24">
-      <div className="relative max-w-6xl mx-auto w-full">{children}</div>
+    <section id={id} className="relative px-5 md:px-16 py-12 md:py-16 scroll-mt-24">
+      <div className="relative max-w-6xl mx-auto">{children}</div>
     </section>
   );
 }
 
-function Reveal({ children, delayMs = 0 }) {
-  const ref = useRef(null);
-  const shown = useReveal(ref);
+/* ---------- UI ---------- */
+
+function PrimaryCTA({ href, label, external = false }) {
+  const inner = (
+    <span className="group px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center justify-center gap-2">
+      {label}
+      <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
+    </span>
+  );
 
   return (
-    <div
-      ref={ref}
-      className={cx(
-        'transition-all duration-700 will-change-transform',
-        shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+    <Magnetic>
+      {external ? (
+        <a href={href} target="_blank" rel="noopener noreferrer">
+          {inner}
+        </a>
+      ) : (
+        <Link href={href}>{inner}</Link>
       )}
-      style={{ transitionDelay: `${delayMs}ms` }}
-    >
+    </Magnetic>
+  );
+}
+
+function GhostCTA({ href, children, external = false }) {
+  return (
+    <Magnetic strength={10}>
+      {external ? (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
+        >
+          {children}
+        </a>
+      ) : (
+        <Link
+          href={href}
+          className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
+        >
+          {children}
+        </Link>
+      )}
+    </Magnetic>
+  );
+}
+
+function Badge({ children }) {
+  return (
+    <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs md:text-[13px] text-white/85 border border-white/15">
       {children}
+    </span>
+  );
+}
+
+function CardShell({ children, className = '' }) {
+  return (
+    <TiltCard className={cx('rounded-3xl', className)}>
+      <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8 overflow-hidden relative">
+        <div
+          className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.07]"
+          style={{
+            filter: 'blur(50px)',
+            animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite',
+          }}
+        />
+        {children}
+      </div>
+    </TiltCard>
+  );
+}
+
+function SmallPill({ children }) {
+  return (
+    <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs md:text-sm text-white/85 border border-white/15">
+      {children}
+    </span>
+  );
+}
+
+/* ---------- PACKAGE + CALC ---------- */
+
+function PriceLine({ label, amount, hint }) {
+  return (
+    <div className="flex items-start justify-between gap-4 py-3 border-b border-white/10 last:border-b-0">
+      <div className="min-w-0">
+        <div className="text-sm md:text-base font-semibold text-white/90">{label}</div>
+        <div className="mt-1 text-xs md:text-sm text-white/60">{hint}</div>
+      </div>
+      <div className="shrink-0 text-sm md:text-base font-semibold text-white/90 tabular-nums">
+        {amount.toLocaleString('de-DE')} €
+      </div>
     </div>
   );
 }
 
-function PrimaryCTA({ label, href = '/#request' }) {
+function PackageCard({ title, priceLabel, lead, bullets, timeLabel, emphasized = false, badge, icon }) {
   return (
-    <Magnetic>
-      <Link
-        href={href}
-        className="group px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center justify-center gap-2"
-      >
-        {label}
-        <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
-      </Link>
-    </Magnetic>
+    <Reveal>
+      <TiltCard className={cx('rounded-3xl', emphasized ? 'scale-[1.01]' : '')}>
+        <div
+          className={cx(
+            'rounded-3xl backdrop-blur-md p-6 md:p-7 overflow-hidden relative',
+            emphasized ? 'border-2 border-violet-400/60 bg-black/20' : 'border border-white/15 bg-black/20'
+          )}
+        >
+          <div
+            className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.06]"
+            style={{ filter: 'blur(52px)', animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite' }}
+          />
+
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center">{icon}</span>
+                <div className="text-xs uppercase tracking-wide text-white/55">Paket</div>
+              </div>
+              <div className="mt-3 text-xl md:text-2xl font-extrabold text-white">{title}</div>
+              <div className="mt-1 text-sm text-white/70">{lead}</div>
+            </div>
+
+            <div className="text-right">
+              {badge ? (
+                <div className="mb-2">
+                  <span className="inline-flex items-center rounded-full bg-violet-500/15 px-3 py-1 text-xs text-white/90 border border-violet-400/30">
+                    {badge}
+                  </span>
+                </div>
+              ) : null}
+              <div className="text-sm text-white/60">Preis</div>
+              <div className="mt-1 text-2xl md:text-3xl font-extrabold tracking-tight">
+                <TitleGradient>{priceLabel}</TitleGradient>
+              </div>
+              <div className="mt-1 text-xs text-white/55">{timeLabel}</div>
+            </div>
+          </div>
+
+          <ul className="mt-5 space-y-2 text-sm text-white/80">
+            {bullets.map((b) => (
+              <li key={b} className="flex items-start gap-2">
+                <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </TiltCard>
+    </Reveal>
   );
 }
 
-function GhostCTA({ href, children }) {
+function PackageSelector({ active, onSelect }) {
+  const items = [
+    { key: 'einstieg', label: 'Einstieg (400 €)', value: DEFAULT_PRICES.einstieg },
+    { key: 'standard', label: 'Standard (700 €)', value: DEFAULT_PRICES.standard },
+    { key: 'komplett', label: 'Komplett (1.100 €)', value: DEFAULT_PRICES.komplett },
+  ];
+
   return (
-    <Magnetic strength={10}>
-      <Link
-        href={href}
-        className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
-      >
-        {children}
-      </Link>
-    </Magnetic>
+    <div className="flex flex-wrap gap-2">
+      {items.map((it) => {
+        const on = active === it.key;
+        return (
+          <button
+            key={it.key}
+            type="button"
+            onClick={() => onSelect(it.key, it.value)}
+            className={cx(
+              'px-4 py-2.5 rounded-full text-sm font-semibold border transition-colors',
+              on
+                ? 'border-violet-400/60 bg-violet-500/15 text-white'
+                : 'border-white/15 bg-white/5 text-white/80 hover:bg-white/8 hover:border-white/25'
+            )}
+          >
+            {it.label}
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
-function GradientPillButton({ href, icon, children, gradient, external = false, onClick }) {
-  const classes =
-    'inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold border border-white/12 bg-white/[0.06] backdrop-blur-xl hover:bg-white/[0.10] transition-colors';
-
-  const inner = (
-    <>
-      <span className={cx('inline-flex items-center justify-center w-8 h-8 rounded-full', 'bg-gradient-to-r', gradient, 'text-black')}>
-        {icon}
-      </span>
-      <span className="text-white/90">{children}</span>
-      {external ? <ExternalLink size={14} className="text-white/60" /> : null}
-    </>
-  );
-
-  if (onClick) {
-    return (
-      <button type="button" onClick={onClick} className={classes}>
-        {inner}
-      </button>
-    );
-  }
-
+function BrowserMiniMock({ href, label = 'kircheab.de/spenden' }) {
   return (
-    <a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} className={classes}>
-      {inner}
+    <a href={href} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-3" aria-label="Referenz öffnen">
+      <div className="w-[200px] max-w-[200px]">
+        <div className="rounded-2xl border border-white/15 bg-black/25 backdrop-blur-md overflow-hidden">
+          <div className="px-3 py-2 border-b border-white/10 flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-white/30" />
+            <span className="w-2.5 h-2.5 rounded-full bg-white/18" />
+            <span className="w-2.5 h-2.5 rounded-full bg-white/18" />
+            <div className="ml-2 text-[11px] text-white/55 truncate">{label}</div>
+          </div>
+          <div className="h-20 bg-[radial-gradient(70%_80%_at_25%_20%,rgba(168,85,247,0.20),transparent_60%),radial-gradient(70%_80%_at_90%_0%,rgba(56,189,248,0.16),transparent_65%),linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))]">
+            <div className="h-full w-full opacity-70 group-hover:opacity-90 transition-opacity" />
+          </div>
+        </div>
+      </div>
+
+      <div className="min-w-0">
+        <div className="text-sm font-semibold text-white/90 flex items-center gap-2">
+          Referenz ansehen <ExternalLink size={16} className="text-white/55" />
+        </div>
+        <div className="mt-1 text-xs md:text-sm text-white/65">Öffnet im neuen Tab (echtes Projekt)</div>
+      </div>
     </a>
   );
 }
 
-/* ---------- MODAL (optional screenshot embed slot) ---------- */
+/* ---------- PROCESS ---------- */
 
-function Modal({ open, onClose, title, children }) {
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e) => {
-      if (e.key === 'Escape') onClose?.();
-    };
-    document.addEventListener('keydown', onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prev;
-    };
-  }, [open, onClose]);
-
-  if (!open) return null;
-
+function FlagIcon() {
   return (
-    <div className="fixed inset-0 z-[120]">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="absolute inset-0 flex items-center justify-center p-4 md:p-8">
-        <div className="relative w-full max-w-5xl rounded-3xl border border-white/14 bg-black/35 backdrop-blur-2xl shadow-[0_30px_90px_-60px_rgba(0,0,0,0.95)] overflow-hidden">
-          <div className="pointer-events-none absolute -inset-px opacity-70 blur-2xl bg-[radial-gradient(60%_80%_at_25%_10%,rgba(99,102,241,0.12),transparent_60%),radial-gradient(60%_80%_at_85%_0%,rgba(56,189,248,0.10),transparent_60%),radial-gradient(55%_80%_at_50%_115%,rgba(168,85,247,0.08),transparent_60%)]" />
-          <div className="relative p-4 md:p-5 flex items-center justify-between gap-3 border-b border-white/10">
-            <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
-            <button
-              onClick={onClose}
-              className="inline-flex items-center justify-center w-10 h-10 rounded-2xl border border-white/12 bg-white/5 hover:bg-white/10 transition-colors"
-              aria-label="Schließen"
-              type="button"
-            >
-              <X size={18} className="text-white/80" />
-            </button>
-          </div>
-          <div className="relative p-4 md:p-5">{children}</div>
-        </div>
-      </div>
-    </div>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 21V5" stroke="rgba(255,255,255,0.75)" strokeWidth="2" strokeLinecap="round" />
+      <path
+        d="M6 5h10l-1.5 3L16 11H6V5Z"
+        stroke="rgba(255,255,255,0.75)"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
 
-/* ---------- PAYMENT CALC ---------- */
-
-function formatEUR(n) {
-  const v = Math.round(n || 0);
-  return new Intl.NumberFormat('de-DE').format(v) + ' €';
-}
-
-/* ---------- PROCESS PHASE (animated “done” rail) ---------- */
-
-function Phase({ n, title, milestone, desc, sceneId }) {
-  const ref = useRef(null);
-  const shown = useReveal(ref);
-
+function StepItem({ n, title, body, milestone }) {
   return (
-    <TiltCard className="rounded-3xl">
-      <div
-        ref={ref}
-        className={cx(
-          'relative overflow-hidden rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-5 md:p-6',
-          shown ? 'opacity-100' : 'opacity-0'
-        )}
-        style={{ transition: 'opacity 700ms cubic-bezier(.2,.9,.2,1)' }}
-      >
-        {/* vertical rail */}
-        <div className="absolute left-6 top-6 bottom-6 w-[2px] bg-white/10 rounded-full" />
-        <div
-          className={cx('absolute left-6 top-6 w-[2px] rounded-full bg-gradient-to-b', (SCENES[sceneId] ?? SCENES.s1).accent)}
-          style={{
-            height: shown ? 'calc(100% - 3rem)' : '0%',
-            transition: 'height 900ms cubic-bezier(.2,.9,.2,1) 120ms',
-            boxShadow: '0 0 24px rgba(124,58,237,0.16)',
-          }}
-        />
-
-        <div className="pl-8">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center font-extrabold text-white/90">
-                {n}
+    <Reveal>
+      <TiltCard className="rounded-3xl">
+        <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-7 relative overflow-hidden">
+          <div
+            className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.06]"
+            style={{ filter: 'blur(54px)', animation: 'shineSoft 6.4s cubic-bezier(.2,.9,.2,1) infinite' }}
+          />
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-white text-black flex items-center justify-center font-extrabold">{n}</div>
+            <div className="min-w-0">
+              <div className="text-base md:text-lg font-extrabold text-white">{title}</div>
+              <p className="mt-2 text-sm md:text-base text-white/75 leading-relaxed whitespace-pre-line">{body}</p>
+              <div className="mt-4 inline-flex items-center gap-2 text-xs md:text-sm text-white/65">
+                <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-white/10 border border-white/12">
+                  <FlagIcon />
+                </span>
+                <span className="min-w-0">
+                  <span className="text-white/55">Ergebnis:</span> {milestone}
+                </span>
               </div>
-              <div className="text-base md:text-lg font-extrabold tracking-tight text-white">{title}</div>
             </div>
-            <div className="hidden md:flex items-center gap-2 text-xs text-white/60 whitespace-nowrap">
-              <Flag size={16} className="text-white/55" />
-              {milestone}
-            </div>
-          </div>
-
-          <div className="mt-3 text-sm md:text-base text-white/70 leading-relaxed whitespace-pre-line">{desc}</div>
-
-          <div className="mt-4 md:hidden flex items-center gap-2 text-xs text-white/60">
-            <Flag size={16} className="text-white/55" />
-            {milestone}
           </div>
         </div>
-      </div>
-    </TiltCard>
+      </TiltCard>
+    </Reveal>
   );
 }
 
 /* ---------- PAGE ---------- */
 
 export default function ProzessPage() {
-  const sectionIds = useMemo(() => SECTIONS.map((s) => s.id), []);
-  const { activeId } = useActiveSection(sectionIds);
+  useEffect(() => {
+    const handle = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+      const el = document.querySelector(hash);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    handle();
+    window.addEventListener('hashchange', handle);
+    return () => window.removeEventListener('hashchange', handle);
+  }, []);
 
-  const [openRefModal, setOpenRefModal] = useState(false);
+  const [activePkg, setActivePkg] = useState('standard');
+  const [price, setPrice] = useState(DEFAULT_PRICES.standard);
+  const [custom, setCustom] = useState('');
 
-  // Default Effect: Standard preselected in calculator
-  const PRESETS = useMemo(() => ({ einstieg: 400, standard: 700, komplett: 1100 }), []);
-  const [selectedPreset, setSelectedPreset] = useState('standard');
-  const [amountInput, setAmountInput] = useState(String(PRESETS.standard));
+  const computed = useMemo(() => {
+    const base = Number.isFinite(price) ? price : DEFAULT_PRICES.standard;
+    const p1 = Math.round(base * 0.4);
+    const p2 = Math.round(base * 0.4);
+    const p3 = Math.max(0, base - p1 - p2);
+    return { base, p1, p2, p3 };
+  }, [price]);
 
-  const amount = useMemo(() => {
-    const digits = String(amountInput ?? '').replace(/[^\d]/g, '');
-    const v = digits ? Number(digits) : PRESETS[selectedPreset] ?? 700;
-    return Number.isFinite(v) ? v : 700;
-  }, [amountInput, PRESETS, selectedPreset]);
+  const setFromPkg = useCallback((key, value) => {
+    setActivePkg(key);
+    setCustom('');
+    setPrice(value);
+  }, []);
 
-  const payments = useMemo(() => {
-    const p1 = amount * 0.4;
-    const p2 = amount * 0.4;
-    const p3 = amount * 0.2;
-    return { p1, p2, p3 };
-  }, [amount]);
-
-  // When preset clicked: fill input
-  const applyPreset = useCallback(
-    (key) => {
-      setSelectedPreset(key);
-      setAmountInput(String(PRESETS[key] ?? 700));
+  const onCustomChange = useCallback(
+    (v) => {
+      setCustom(v);
+      const num = Number(String(v).replace(',', '.'));
+      if (!v) {
+        const fallback = DEFAULT_PRICES[activePkg] ?? DEFAULT_PRICES.standard;
+        setPrice(fallback);
+        return;
+      }
+      if (!Number.isFinite(num) || num < 0) return;
+      setPrice(Math.round(num));
     },
-    [PRESETS]
+    [activePkg]
   );
 
-  // If user types a non-preset value: keep selection but visually it’s custom (we keep the active button unless user selects another)
-  // We do NOT auto-switch preset based on typing to avoid annoying jumps.
-
   return (
-    <div className="font-proxima text-white">
+    <div className="font-proxima text-white min-h-screen">
       <style>{globalKeyframes}</style>
 
-      <GlobalBackground activeId={activeId} />
-      <GlobalLightLeaks activeId={activeId} />
-
+      <GlobalBackground />
+      <GlobalLightLeaks />
       <ScrollProgressBar />
       <CursorHalo />
 
       <Navbar />
 
-      <main className="md:snap-y md:snap-mandatory">
-        {/* 01 — HERO */}
-        <Scene id="s1">
-          <div className="flex flex-col items-center text-center gap-6">
-            <Reveal>
-              <span className="inline-flex items-center gap-2 text-xs md:text-sm text-white/85 bg-white/10 ring-1 ring-white/15 px-3 py-1 rounded-full">
-                <Sparkles size={16} /> Kapazität geplant für bis zu zwei neue Projekte parallel
-              </span>
-            </Reveal>
+      {/* HERO */}
+      <SectionShell>
+        <div className="flex flex-col gap-8">
+          <Reveal>
+            <Link href="/" className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors">
+              <ArrowLeft size={16} /> Zurück
+            </Link>
+          </Reveal>
 
-            <Reveal delayMs={90}>
-              <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight leading-[1.03]">
-                Klar. Strukturiert.
-                <span className="block">
-                  <TitleGradient sceneId="s1">Ohne Agenturpreis.</TitleGradient>
-                </span>
-              </h1>
-            </Reveal>
-
-            <Reveal delayMs={160}>
-              <p className="max-w-2xl text-base md:text-xl text-white/80 leading-relaxed">
-                Jeden Monat verlieren lokale Unternehmen Anfragen an Wettbewerber mit besserem Webauftritt. Ich baue einen Auftritt, der führt – mit klaren
-                Meilensteinen und Feedbackschleifen.
-              </p>
-            </Reveal>
-
-            <Reveal delayMs={240}>
-              <div className="flex flex-col items-center gap-3">
-                <PrimaryCTA label="Kostenlose Analyse starten" href="/prozess#s3" />
-                <p className="text-sm md:text-base text-white/65 max-w-xl">
-                  Du zahlst die zweite Rate erst, wenn du die erste Version gesehen und freigegeben hast.
-                </p>
-              </div>
-            </Reveal>
-          </div>
-        </Scene>
-
-        {/* 02 — REFERENZ (Halo + Story) */}
-        <Scene id="s2">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            <Reveal>
-              <TiltCard className="rounded-3xl">
-                <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md overflow-hidden">
-                  {/* Browser chrome */}
-                  <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-white/10 bg-black/20">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-white/20" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-white/20" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-white/20" />
-                    </div>
-                    <div className="text-xs text-white/55 truncate">leonseitz.com</div>
-                    <button
-                      type="button"
-                      onClick={() => setOpenRefModal(true)}
-                      className="text-xs font-semibold text-white/70 hover:text-white/90 transition-colors"
-                    >
-                      Preview
-                    </button>
-                  </div>
-
-                  {/* Placeholder screenshot area */}
-                  <div className="relative h-56 md:h-80">
-                    <div className="absolute inset-0 bg-[radial-gradient(70%_70%_at_30%_0%,rgba(255,255,255,0.14),transparent_55%)] mix-blend-screen opacity-60" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="px-4 py-2 rounded-full border border-white/15 bg-black/30 text-xs text-white/70">
-                        Screenshot-Platzhalter (hier dein echtes Bild)
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </TiltCard>
-            </Reveal>
-
+          <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-6 md:gap-8 items-start">
             <div>
               <Reveal>
-                <div className="text-xs uppercase tracking-wide text-white/55">Referenz</div>
+                <SmallPill>
+                  <Sparkles size={16} />
+                  Aktuell nehme ich zwei neue Projekte an.
+                </SmallPill>
               </Reveal>
 
               <Reveal delayMs={90}>
-                <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                  Ein starker Eindruck
+                <h1 className="mt-4 text-3xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
+                  Eine Website, die dir aktiv Anfragen bringt.
                   <span className="block">
-                    <TitleGradient sceneId="s2">färbt alles danach.</TitleGradient>
+                    <TitleGradient>Ohne Agenturpreise. Ohne Umwege.</TitleGradient>
                   </span>
-                </h2>
+                </h1>
               </Reveal>
 
               <Reveal delayMs={160}>
-                <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
-                  Ein regionaler Betrieb hatte keinen klaren Online-Auftritt. Nach dem Go-Live kamen die ersten qualifizierten Anfragen – weil Struktur und CTA
-                  nicht mehr „irgendwo“ waren, sondern geführt haben.
+                <p className="mt-4 text-white/80 text-sm md:text-base max-w-xl leading-relaxed">
+                  Wenn deine Website keine Anfragen bringt, verliert dein Unternehmen jeden Monat potenzielle Kunden.
+                  Ich baue dir eine Seite, die in wenigen Sekunden erklärt, was ihr macht – und die Besucher gezielt zur
+                  Kontaktaufnahme führt.
                 </p>
               </Reveal>
 
               <Reveal delayMs={240}>
+                <div className="mt-6 flex flex-wrap gap-2 text-xs md:text-sm">
+                  <Badge>Mobile-first</Badge>
+                  <Badge>Klare Struktur</Badge>
+                  <Badge>Transparenter Ablauf</Badge>
+                  <Badge>Feedback eingebaut</Badge>
+                </div>
+              </Reveal>
+
+              <Reveal delayMs={320}>
                 <div className="mt-8 flex flex-wrap gap-2">
-                  <GhostCTA href="/portfolio">
-                    <ExternalLink size={18} /> Portfolio
+                  <PrimaryCTA href="#analyse" label="Kostenlose Analyse ansehen" />
+                  <GhostCTA href={WHATSAPP_HREF} external>
+                    Direkt per WhatsApp <ExternalLink size={16} />
                   </GhostCTA>
-                  <a
-                    className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
-                    href={LIVE_PREVIEW_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <ExternalLink size={18} /> leonseitz.com ansehen
-                  </a>
-                </div>
-              </Reveal>
-
-              <Reveal delayMs={320}>
-                <p className="mt-4 text-sm text-white/55 max-w-xl">
-                  Hinweis: Kein Zahlen-Bombardement. Ein sauberer Case ist hier der Beweis – nicht ein Statistikblock.
-                </p>
-              </Reveal>
-            </div>
-          </div>
-        </Scene>
-
-        {/* 03 — FREE ANALYSIS (Reciprocity) */}
-        <Scene id="s3">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
-            <div>
-              <Reveal>
-                <div className="text-xs uppercase tracking-wide text-white/55">Kostenloser Start</div>
-              </Reveal>
-
-              <Reveal delayMs={90}>
-                <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                  Kostenlose
-                  <span className="block">
-                    <TitleGradient sceneId="s3">Website-Analyse</TitleGradient>
-                  </span>
-                </h2>
-              </Reveal>
-
-              <Reveal delayMs={160}>
-                <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
-                  Ich schaue mir deinen aktuellen Auftritt an und sage dir in 15 Minuten konkret, was fehlt – und was ich ändern würde. Kein Pitch. Kein
-                  Commitment.
-                </p>
-              </Reveal>
-
-              <Reveal delayMs={240}>
-                <p className="mt-4 text-sm text-white/55 max-w-xl">
-                  Normalerweise ist das ein kostenpflichtiger Schritt (Strategie/Review). Für neue Anfragen ist es mein Einstieg – damit du Klarheit bekommst,
-                  bevor du entscheidest.
-                </p>
-              </Reveal>
-
-              <Reveal delayMs={320}>
-                <div className="mt-8 flex flex-wrap gap-2">
-                  <a
-                    href={WHATSAPP_ANALYSE_HREF}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center justify-center gap-2"
-                  >
-                    <MessageCircle size={18} /> Analyse anfragen
-                    <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
-                  </a>
-
-                  <a
-                    href={MAIL_HREF}
-                    className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
-                  >
-                    <Mail size={18} /> Per Mail
-                  </a>
                 </div>
               </Reveal>
             </div>
 
             <Reveal delayMs={140}>
-              <TiltCard className="rounded-3xl">
-                <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8">
-                  <div className="text-xs uppercase tracking-wide text-white/55">Was ich mir anschaue</div>
-                  <div className="mt-4 space-y-3">
-                    {[
-                      'Klarheit der Botschaft (in 10 Sekunden erfassbar?)',
-                      'Struktur: Problem → Lösung → Proof → CTA',
-                      'Mobile-Führung & Lade-/UX-Hygiene',
-                      'Wie „vertrauenswürdig“ wirkt es visuell?',
-                    ].map((t) => (
-                      <div key={t} className="flex items-start gap-2">
-                        <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                        <span className="text-sm md:text-base text-white/80">{t}</span>
-                      </div>
-                    ))}
+              <CardShell>
+                <div className="text-xs uppercase tracking-wide text-white/55">Was du hier auf der Seite bekommst</div>
+                <div className="mt-4 grid grid-cols-1 gap-3">
+                  <div className="rounded-2xl border border-white/12 bg-white/5 p-4">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-white/90">
+                      <Shield size={16} className="text-white/70" /> Kein Risiko
+                    </div>
+                    <div className="mt-1 text-sm text-white/70">
+                      Du zahlst die zweite Rate erst, wenn du die erste Version gesehen und freigegeben hast.
+                    </div>
+                  </div>
+                  <div className="rounded-2xl border border-white/12 bg-white/5 p-4">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-white/90">
+                      <Clock size={16} className="text-white/70" /> Klare Dauer
+                    </div>
+                    <div className="mt-1 text-sm text-white/70">
+                      Du siehst weiter unten die typische Lieferzeit pro Paket – ohne „vielleicht“.
+                    </div>
+                  </div>
+                  <div className="rounded-2xl border border-white/12 bg-white/5 p-4">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-white/90">
+                      <CreditCard size={16} className="text-white/70" /> Klare Zahlungen
+                    </div>
+                    <div className="mt-1 text-sm text-white/70">
+                      Ein Rechner zeigt dir live: wann du was zahlst – und warum diese Aufteilung fair ist.
+                    </div>
                   </div>
                 </div>
-              </TiltCard>
+              </CardShell>
             </Reveal>
-          </div>
-        </Scene>
-
-        {/* 04 — PACKAGES (Anchor first, Default middle, Contrast line) */}
-        <Scene id="s4">
-          <div>
-            <Reveal>
-              <div className="text-xs uppercase tracking-wide text-white/55">Pakete</div>
-            </Reveal>
-
-            <Reveal delayMs={90}>
-              <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                Was du bekommst.
-                <span className="block">
-                  <TitleGradient sceneId="s4">Ohne Umwege.</TitleGradient>
-                </span>
-              </h2>
-            </Reveal>
-
-            <Reveal delayMs={160}>
-              <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-3xl">
-                Vergleichbare Agenturen starten häufig deutlich höher (z.B. ab 3.000 €) – hier hast du kurze Wege und eine klare Verantwortung.
-              </p>
-            </Reveal>
-
-            <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-4">
-              {/* Anchor: Komplett */}
-              <Reveal>
-                <TiltCard className="rounded-3xl">
-                  <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-7 overflow-hidden relative">
-                    <div className="pointer-events-none absolute -inset-px opacity-70 blur-2xl bg-[radial-gradient(60%_80%_at_25%_10%,rgba(165,180,252,0.12),transparent_60%),radial-gradient(60%_80%_at_85%_0%,rgba(56,189,248,0.10),transparent_60%),radial-gradient(55%_80%_at_50%_115%,rgba(16,185,129,0.08),transparent_60%)]" />
-                    <div className="relative">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <div className="text-xs uppercase tracking-wide text-white/55">Komplett</div>
-                          <div className="mt-2 text-2xl font-extrabold text-white">ab 1.100 €</div>
-                        </div>
-                        <Wand2 size={18} className="text-white/55" />
-                      </div>
-
-                      <p className="mt-3 text-sm text-white/70 leading-relaxed">
-                        Für einen Auftritt, der als System funktioniert (Branding → Content → Anfrageweg).
-                      </p>
-
-                      <div className="mt-5 space-y-2">
-                        {[
-                          'Website bis 5 Seiten',
-                          'Vollständiges Brandbook (Farben, Typo, Layoutregeln)',
-                          'Ein Motion-Element für Social Media',
-                          'Übergabe aller Zugänge und Dateien',
-                          'Optional: Betreuung ab 150 €/Monat',
-                        ].map((t) => (
-                          <div key={t} className="flex items-start gap-2">
-                            <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                            <span className="text-sm text-white/80">{t}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="mt-6 text-xs text-white/55">Lieferzeit: ca. 3 Wochen (abhängig von Umfang & Feedbacktempo)</div>
-                    </div>
-                  </div>
-                </TiltCard>
-              </Reveal>
-
-              {/* Default: Standard */}
-              <Reveal delayMs={70}>
-                <TiltCard className="rounded-3xl">
-                  <div className="rounded-3xl border-2 border-violet-400/40 bg-violet-500/10 backdrop-blur-md p-6 md:p-7 overflow-hidden relative">
-                    <div className="pointer-events-none absolute -inset-px opacity-70 blur-2xl bg-[radial-gradient(60%_80%_at_25%_10%,rgba(124,58,237,0.16),transparent_60%),radial-gradient(60%_80%_at_85%_0%,rgba(56,189,248,0.10),transparent_60%),radial-gradient(55%_80%_at_50%_115%,rgba(165,180,252,0.08),transparent_60%)]" />
-                    <div className="relative">
-                      <div className="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1 rounded-full border border-violet-300/30 bg-white/5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-300/80" />
-                        Wird am häufigsten gewählt
-                      </div>
-
-                      <div className="mt-4 flex items-start justify-between gap-3">
-                        <div>
-                          <div className="text-xs uppercase tracking-wide text-white/55">Standard</div>
-                          <div className="mt-2 text-2xl font-extrabold text-white">ab 700 €</div>
-                        </div>
-                        <Wand2 size={18} className="text-white/55" />
-                      </div>
-
-                      <p className="mt-3 text-sm text-white/70 leading-relaxed">
-                        Der solide Kern: klare Struktur, saubere Umsetzung, starker CTA.
-                      </p>
-
-                      <div className="mt-5 space-y-2">
-                        {[
-                          'Website bis 5 Seiten',
-                          'Branding-Grundlage (Farben, Schrift, Logo-Einbindung)',
-                          'Kontaktformular, mobil optimiert',
-                          'Übergabe aller Zugänge',
-                          'Optional: Betreuung ab 150 €/Monat',
-                        ].map((t) => (
-                          <div key={t} className="flex items-start gap-2">
-                            <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                            <span className="text-sm text-white/80">{t}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="mt-6 text-xs text-white/55">Lieferzeit: 10–14 Tage (bei zügigem Feedback)</div>
-                    </div>
-                  </div>
-                </TiltCard>
-              </Reveal>
-
-              {/* Einstieg */}
-              <Reveal delayMs={140}>
-                <TiltCard className="rounded-3xl">
-                  <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-7 overflow-hidden relative">
-                    <div className="relative">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <div className="text-xs uppercase tracking-wide text-white/55">Einstieg</div>
-                          <div className="mt-2 text-2xl font-extrabold text-white">ab 400 €</div>
-                        </div>
-                        <Wand2 size={18} className="text-white/55" />
-                      </div>
-
-                      <p className="mt-3 text-sm text-white/70 leading-relaxed">
-                        Wenn es schnell und fokussiert sein soll: eine Landingpage, ein Ziel.
-                      </p>
-
-                      <div className="mt-5 space-y-2">
-                        {['Eine Landingpage', 'Klare Struktur, ein CTA', 'Mobil optimiert', 'Übergabe aller Zugänge', 'Optional: Betreuung ab 150 €/Monat'].map(
-                          (t) => (
-                            <div key={t} className="flex items-start gap-2">
-                              <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                              <span className="text-sm text-white/80">{t}</span>
-                            </div>
-                          )
-                        )}
-                      </div>
-
-                      <div className="mt-6 text-xs text-white/55">Lieferzeit: ca. 7 Tage (bei klarer Vorlage)</div>
-                    </div>
-                  </div>
-                </TiltCard>
-              </Reveal>
-            </div>
-
-            <Reveal delayMs={220}>
-              <div className="mt-6 rounded-3xl border border-white/12 bg-black/20 backdrop-blur-md p-5 md:p-6 text-sm text-white/70 leading-relaxed">
-                Alle Preise sind Ausgangspunkte. Nach der kostenlosen Analyse bekommst du ein klares Angebot mit Scope – damit es keine Überraschungen gibt.
-              </div>
-            </Reveal>
-
-            <Reveal delayMs={280}>
-              <div className="mt-3 text-sm text-white/55 italic">
-                Viele Projekte starten als Einstieg oder Standard – und werden später erweitert, wenn die Basis steht.
-              </div>
-            </Reveal>
-          </div>
-        </Scene>
-
-        {/* 05 — PAYMENT CALCULATOR */}
-        <Scene id="s5">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-            <div>
-              <Reveal>
-                <div className="text-xs uppercase tracking-wide text-white/55">Zahlungslogik</div>
-              </Reveal>
-
-              <Reveal delayMs={90}>
-                <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                  Wann zahlst du was?
-                  <span className="block">
-                    <TitleGradient sceneId="s5">Ohne Risiko-Feeling.</TitleGradient>
-                  </span>
-                </h2>
-              </Reveal>
-
-              <Reveal delayMs={160}>
-                <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
-                  Du zahlst die zweite Rate erst, wenn du die erste Version gesehen und freigegeben hast. Das hält beide Seiten ehrlich.
-                </p>
-              </Reveal>
-
-              <Reveal delayMs={240}>
-                <div className="mt-8 flex flex-wrap gap-2">
-                  {[
-                    { key: 'einstieg', label: 'Einstieg (400 €)', scene: 'from-amber-200 via-pink-200 to-violet-200' },
-                    { key: 'standard', label: 'Standard (700 €)', scene: 'from-violet-200 via-indigo-200 to-cyan-200' },
-                    { key: 'komplett', label: 'Komplett (1.100 €)', scene: 'from-emerald-200 via-cyan-200 to-indigo-200' },
-                  ].map((b) => (
-                    <button
-                      key={b.key}
-                      type="button"
-                      onClick={() => applyPreset(b.key)}
-                      className={cx(
-                        'px-4 py-2.5 rounded-full text-sm font-semibold border transition-colors backdrop-blur-xl',
-                        selectedPreset === b.key ? 'border-white/25 bg-white/[0.10]' : 'border-white/12 bg-white/[0.06] hover:bg-white/[0.10]'
-                      )}
-                    >
-                      <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', b.scene)}>{b.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </Reveal>
-
-              <Reveal delayMs={320}>
-                <div className="mt-5 rounded-3xl border border-white/12 bg-black/20 backdrop-blur-md p-5 md:p-6">
-                  <div className="text-sm font-semibold text-white/85">Projektpreis</div>
-                  <div className="mt-3 flex items-center gap-3">
-                    <div className="px-4 py-3 rounded-2xl border border-white/12 bg-white/5 flex-1">
-                      <input
-                        value={amountInput}
-                        onChange={(e) => setAmountInput(e.target.value)}
-                        inputMode="numeric"
-                        placeholder="z.B. 700"
-                        className="w-full bg-transparent outline-none text-white font-semibold"
-                        aria-label="Projektpreis in Euro"
-                      />
-                    </div>
-                    <div className="text-white/70 font-semibold">€</div>
-                  </div>
-
-                  <div className="mt-5 space-y-3">
-                    {[
-                      { n: '1', title: 'Projektstart (40 %)', amount: payments.p1, sub: 'Fällig nach Auftragsbestätigung' },
-                      { n: '2', title: 'Erste Version (40 %)', amount: payments.p2, sub: 'Fällig nachdem du die erste Version gesehen und freigegeben hast' },
-                      { n: '3', title: 'Go-Live (20 %)', amount: payments.p3, sub: 'Fällig nach Übergabe' },
-                    ].map((r) => (
-                      <div key={r.n} className="rounded-2xl border border-white/12 bg-white/5 p-4 flex items-start gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center font-extrabold">{r.n}</div>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-start justify-between gap-3">
-                            <div className="text-sm font-semibold text-white/90">{r.title}</div>
-                            <div className="text-sm font-extrabold text-white/90 whitespace-nowrap">{formatEUR(r.amount)}</div>
-                          </div>
-                          <div className="mt-1 text-xs text-white/60 leading-relaxed">{r.sub}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-4 rounded-2xl border border-white/10 bg-black/30 p-4 text-sm text-white/70 leading-relaxed">
-                    Diese Aufteilung schützt beide Seiten: Du zahlst nur weiter, wenn der Stand stimmt. Ich arbeite mit klarem Auftrag weiter.
-                  </div>
-                </div>
-              </Reveal>
-            </div>
-
-            <Reveal delayMs={140}>
-              <TiltCard className="rounded-3xl">
-                <div className="rounded-3xl border border-white/15 bg-black/25 backdrop-blur-md p-6 md:p-8">
-                  <div className="text-xs uppercase tracking-wide text-white/55">Framing</div>
-                  <div className="mt-3 text-xl md:text-3xl font-extrabold text-white/90">Du siehst die erste Version, bevor du weiterzahlst.</div>
-                  <p className="mt-3 text-sm md:text-base text-white/70 leading-relaxed">
-                    Nicht „3 Zahlungen“, sondern: Du gibst den nächsten Schritt erst frei, wenn du den Stand kennst. Das reduziert Risiko-Gefühl und hält den
-                    Prozess sauber.
-                  </p>
-                </div>
-              </TiltCard>
-            </Reveal>
-          </div>
-        </Scene>
-
-        {/* 06 — PROCESS (Effort Justification + Agile milestones) */}
-        <Scene id="s6">
-          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 items-start">
-            <div className="lg:sticky lg:top-24">
-              <Reveal>
-                <div className="text-xs uppercase tracking-wide text-white/55">Prozess</div>
-              </Reveal>
-
-              <Reveal delayMs={90}>
-                <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                  Sichtbare Arbeit.
-                  <span className="block">
-                    <TitleGradient sceneId="s6">Klare Meilensteine.</TitleGradient>
-                  </span>
-                </h2>
-              </Reveal>
-
-              <Reveal delayMs={160}>
-                <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed">
-                  Agil heißt hier: kurze Sprints, klare Review-Punkte und Freigaben. Du bist eingebunden, nicht überrascht.
-                </p>
-              </Reveal>
-
-              <Reveal delayMs={260}>
-                <div className="mt-8">
-                  <PrimaryCTA label="Analyse anfragen" href="/prozess#request" />
-                </div>
-              </Reveal>
-            </div>
-
-            <div className="space-y-4">
-              <Phase
-                sceneId="s6"
-                n="1"
-                title="Briefing"
-                milestone="Scope definiert"
-                desc={`Du schickst mir Ziel, Stand und Deadline.\nIch antworte innerhalb von 24 Stunden mit einer ersten Einschätzung und konkreten Rückfragen.`}
-              />
-              <Phase
-                sceneId="s6"
-                n="2"
-                title="Konzept & Struktur"
-                milestone="Struktur freigegeben"
-                desc={`Ich lege Seitenaufbau, Inhalte und Branding-Grundlage fest.\nDu bekommst das zur Freigabe – erst danach fange ich an zu bauen.`}
-              />
-              <Phase
-                sceneId="s6"
-                n="3"
-                title="Erste Version & Feedback"
-                milestone="Review abgeschlossen"
-                desc={`Du bekommst eine lauffähige Version zum Testen.\nEine vollständige Feedback-Runde ist eingebaut – keine Extra-Kosten.\nNach Freigabe wird die zweite Rate fällig.`}
-              />
-              <Phase
-                sceneId="s6"
-                n="4"
-                title="Finalisierung"
-                milestone="Freigabe erteilt"
-                desc={`Letzte Anpassungen, Feinschliff, technische Stabilisierung.\nWas vereinbart war, wird geliefert – kein Scope-Creep.`}
-              />
-              <Phase
-                sceneId="s6"
-                n="5"
-                title="Übergabe"
-                milestone="Go-Live"
-                desc={`Du bekommst alle Dateien, Zugänge und ein kurzes Setup-Briefing.\nOptional: Betreuung ab hier, wenn du Updates ohne Reibung willst.`}
-              />
-            </div>
-          </div>
-        </Scene>
-
-        {/* 07 — OBJECTIONS */}
-        <Scene id="s7">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-            <div>
-              <Reveal>
-                <div className="text-xs uppercase tracking-wide text-white/55">Risikoreduktion</div>
-              </Reveal>
-
-              <Reveal delayMs={90}>
-                <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                  Was wenn…?
-                  <span className="block">
-                    <TitleGradient sceneId="s7">Dann ist es schon eingeplant.</TitleGradient>
-                  </span>
-                </h2>
-              </Reveal>
-
-              <Reveal delayMs={160}>
-                <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
-                  Drei typische Unsicherheiten – und wie der Ablauf sie abfedert.
-                </p>
-              </Reveal>
-            </div>
-
-            <div className="space-y-4">
-              {[
-                {
-                  q: 'Was wenn mir das Ergebnis nicht gefällt?',
-                  a: 'Du siehst die erste Version, bevor die zweite Rate fällig wird. Feedback ist eingebaut – nicht „extra“.',
-                },
-                {
-                  q: 'Was wenn ich später Änderungen brauche?',
-                  a: 'Dafür gibt es Betreuung ab 150 €/Monat – oder wir lösen es als separates Mini-Projekt. In jedem Fall mit klarem Rahmen.',
-                },
-                {
-                  q: 'Was wenn mein Budget nicht reicht?',
-                  a: 'Nach der Analyse machen wir ein passgenaues Angebot. Häufig reicht ein Einstieg, der später erweitert wird.',
-                },
-              ].map((x, i) => (
-                <Reveal key={x.q} delayMs={i * 70}>
-                  <TiltCard className="rounded-3xl">
-                    <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-7">
-                      <div className="text-base md:text-lg font-extrabold text-white/90">{x.q}</div>
-                      <p className="mt-2 text-sm md:text-base text-white/70 leading-relaxed">{x.a}</p>
-                    </div>
-                  </TiltCard>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </Scene>
-
-        {/* 08 — RETAINER */}
-        <Scene id="s8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            <div>
-              <Reveal>
-                <div className="text-xs uppercase tracking-wide text-white/55">Nach dem Projekt</div>
-              </Reveal>
-
-              <Reveal delayMs={90}>
-                <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                  Saubere Übergabe.
-                  <span className="block">
-                    <TitleGradient sceneId="s8">Oder Betreuung.</TitleGradient>
-                  </span>
-                </h2>
-              </Reveal>
-
-              <Reveal delayMs={160}>
-                <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
-                  Wenn du möchtest, betreue ich deine Website weiter – für Anpassungen, neue Seiten oder kleine Updates. Monatlich kündbar, kein Abo-Stress.
-                </p>
-              </Reveal>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Reveal>
-                <TiltCard className="rounded-3xl">
-                  <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-7">
-                    <div className="text-base md:text-lg font-extrabold text-white/90">Einmaliges Projekt</div>
-                    <p className="mt-2 text-sm md:text-base text-white/70 leading-relaxed">
-                      Einmalige Umsetzung. Fixer Preis. Klare Übergabe. Kein Folgevertrag.
-                    </p>
-                  </div>
-                </TiltCard>
-              </Reveal>
-
-              <Reveal delayMs={90}>
-                <TiltCard className="rounded-3xl">
-                  <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-7">
-                    <div className="text-base md:text-lg font-extrabold text-white/90">Mit Betreuung</div>
-                    <p className="mt-2 text-sm md:text-base text-white/70 leading-relaxed">
-                      Projekt + monatliche Pflege ab 150 €/Monat. Updates, Anpassungen, Ansprechpartner. Monatlich kündbar.
-                    </p>
-                  </div>
-                </TiltCard>
-              </Reveal>
-            </div>
-          </div>
-        </Scene>
-
-        {/* 09 — CTA */}
-        <Scene id="request">
-          <div className="rounded-3xl border border-white/15 bg-black/25 backdrop-blur-md p-6 md:p-12">
-            <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
-              <div>
-                <Reveal>
-                  <div className="text-xs uppercase tracking-wide text-white/55">Anfrage</div>
-                </Reveal>
-
-                <Reveal delayMs={90}>
-                  <h3 className="mt-2 text-2xl md:text-5xl font-extrabold leading-tight">Start mit der Analyse oder sag mir kurz dein Paket</h3>
-                </Reveal>
-
-                <Reveal delayMs={160}>
-                  <p className="mt-4 text-white/80 leading-relaxed max-w-2xl">
-                    Ziel, Deadline, Stand. Danach sage ich dir, ob es passt – und was der sinnvollste nächste Schritt ist.
-                  </p>
-                </Reveal>
-
-                <Reveal delayMs={240}>
-                  <div className="mt-6 space-y-3">
-                    {['Ziel (was soll passieren?)', 'Deadline (bis wann?)', 'Stand (Material, Beispiele, bestehende Assets?)'].map((t) => (
-                      <div key={t} className="flex items-start gap-2">
-                        <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                        <span className="text-sm md:text-base text-white/80">{t}</span>
-                      </div>
-                    ))}
-                  </div>
-                </Reveal>
-
-                <Reveal delayMs={340}>
-                  <div className="mt-8 flex flex-wrap gap-2">
-                    <Magnetic>
-                      <a
-                        href={WHATSAPP_ANALYSE_HREF}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center gap-2"
-                      >
-                        <MessageCircle size={18} /> Kostenlose Analyse anfragen
-                      </a>
-                    </Magnetic>
-
-                    <Magnetic strength={10}>
-                      <a
-                        href={MAIL_HREF}
-                        className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
-                      >
-                        <Mail size={18} /> Per Mail schreiben
-                      </a>
-                    </Magnetic>
-
-                    <GhostCTA href="/portfolio">
-                      <ExternalLink size={18} /> Erst Portfolio
-                    </GhostCTA>
-                  </div>
-                </Reveal>
-              </div>
-
-              <Reveal delayMs={200}>
-                <TiltCard className="rounded-3xl">
-                  <div className="rounded-3xl border border-white/15 bg-black/25 p-6">
-                    <div className="text-sm md:text-base font-semibold text-white/90">Copy/Paste</div>
-                    <div className="mt-3 rounded-2xl border border-white/10 bg-black/30 p-4 text-sm text-white/85 whitespace-pre-wrap leading-relaxed">
-{`Ziel:
-Deadline:
-Stand:
-Budgetrahmen (optional):
-Link/Beispiele (optional):`}
-                    </div>
-                    <div className="mt-4 text-sm text-white/60">Das reicht komplett für eine erste Einschätzung.</div>
-                  </div>
-                </TiltCard>
-              </Reveal>
-            </div>
-          </div>
-        </Scene>
-      </main>
-
-      <Footer />
-
-      {/* Reference modal (optional) */}
-      <Modal open={openRefModal} onClose={() => setOpenRefModal(false)} title="Referenz — Screenshot / Preview Slot">
-        <div className="grid grid-cols-1 gap-3">
-          <div className="text-sm text-white/70">
-            Platzhalter: Hier könntest du später ein echtes Bild oder einen Embed zeigen. Für jetzt ist es nur ein Slot – damit der Halo-Block visuell stark bleibt.
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            <a
-              href={LIVE_PREVIEW_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold border border-white/12 bg-white/[0.06] hover:bg-white/[0.10] transition-colors"
-            >
-              <ExternalLink size={16} className="text-white/80" />
-              leonseitz.com öffnen
-            </a>
-          </div>
-
-          <div className="relative w-full overflow-hidden rounded-2xl border border-white/12 bg-black/20">
-            <div className="aspect-[16/10] md:aspect-[16/9] flex items-center justify-center">
-              <div className="px-4 py-2 rounded-full border border-white/15 bg-black/30 text-xs text-white/70">
-                Screenshot / Embed Platzhalter
-              </div>
-            </div>
           </div>
         </div>
-      </Modal>
+      </SectionShell>
+
+      {/* Analyse */}
+      <SectionShell id="analyse">
+        <Reveal>
+          <div className="text-xs uppercase tracking-wide text-white/55">Kostenlose Website-Analyse</div>
+        </Reveal>
+
+        <Reveal delayMs={90}>
+          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
+            In 15 Minuten weißt du,
+            <span className="block">
+              <TitleGradient>was konkret fehlt – und was ich ändern würde.</TitleGradient>
+            </span>
+          </h2>
+        </Reveal>
+
+        <Reveal delayMs={160}>
+          <CardShell className="mt-6">
+            <p className="text-sm md:text-base text-white/80 leading-relaxed max-w-3xl">
+              Ich prüfe deine Website anhand von vier klaren Punkten:
+            </p>
+
+            <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-3">
+              {[
+                'Versteht ein Besucher in 10 Sekunden, was ihr anbietet?',
+                'Ist der Aufbau logisch (Problem → Lösung → Kontakt)?',
+                'Funktioniert alles am Smartphone einwandfrei?',
+                'Wirkt die Seite professionell genug, um Vertrauen aufzubauen?',
+              ].map((t) => (
+                <div key={t} className="rounded-2xl border border-white/12 bg-white/5 p-4 flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+                  <div className="text-sm text-white/75">{t}</div>
+                </div>
+              ))}
+            </div>
+
+            <p className="mt-5 text-sm md:text-base text-white/75 leading-relaxed max-w-3xl">
+              Danach bekommst du eine kurze, klare Liste mit konkreten Änderungen. Ohne Verkaufsdruck. Ohne Verpflichtung.
+            </p>
+
+            <div className="mt-6 flex flex-wrap gap-2">
+              <PrimaryCTA href={WHATSAPP_HREF} label="Analyse anfragen (WhatsApp)" external />
+              <GhostCTA href={MAIL_HREF} external>
+                Alternativ per Mail <ExternalLink size={16} />
+              </GhostCTA>
+            </div>
+
+            <div className="mt-4 text-xs md:text-sm text-white/60">
+              Normalerweise ein bezahlter Beratungs-Schritt. Für neue Anfragen kostenlos.
+            </div>
+          </CardShell>
+        </Reveal>
+      </SectionShell>
+
+      {/* Pakete */}
+      <SectionShell id="pakete">
+        <Reveal>
+          <div className="text-xs uppercase tracking-wide text-white/55">Pakete</div>
+        </Reveal>
+
+        <Reveal delayMs={90}>
+          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
+            Was du bekommst.
+            <span className="block">
+              <TitleGradient>Ohne Interpretationsspielraum.</TitleGradient>
+            </span>
+          </h2>
+        </Reveal>
+
+        <Reveal delayMs={150}>
+          <div className="mt-3 text-sm md:text-base text-white/70">
+            Vergleichbare Agenturen starten oft ab <span className="text-white/85 font-semibold">3.000 €</span> – hier ist der Weg direkter.
+          </div>
+        </Reveal>
+
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+          <PackageCard
+            title="Komplett"
+            priceLabel="ab 1.100 €"
+            lead="Wenn du ein rundes Gesamtpaket willst (Website + klare Guidelines + ein Motion-Asset)."
+            timeLabel="Lieferzeit: ca. 3 Wochen"
+            emphasized={false}
+            badge={null}
+            icon={<Wand2 size={18} className="text-white/80" />}
+            bullets={[
+              'Website mit bis zu 5 Unterseiten (z.B. Startseite, Leistungen, Über uns, Kontakt, Impressum)',
+              'Vollständiges Brandbook (Farben, Typo, Layoutregeln)',
+              'Ein Motion-Element für Social Media (Wiedererkennung)',
+              'Übergabe aller Zugänge und Dateien',
+              'Optional: Betreuung ab 150 €/Monat',
+            ]}
+          />
+
+          <PackageCard
+            title="Standard"
+            priceLabel="ab 700 €"
+            lead="Der häufigste Fall: klare Website, saubere Linie, Kontaktweg – schnell live."
+            timeLabel="Lieferzeit: 10–14 Tage"
+            emphasized
+            badge="Wird am häufigsten gewählt."
+            icon={<LayoutTemplate size={18} className="text-white/80" />}
+            bullets={[
+              'Website mit bis zu 5 Unterseiten (z.B. Startseite, Leistungen, Über uns, Kontakt, Impressum)',
+              'Grundlegende visuelle Linie (Farben, Schrift, saubere Struktur, Einbindung eures Logos)',
+              'Kontaktformular, mobil optimiert',
+              'Übergabe aller Zugänge',
+              'Optional: Betreuung ab 150 €/Monat',
+            ]}
+          />
+
+          <PackageCard
+            title="Einstieg"
+            priceLabel="ab 400 €"
+            lead="Wenn du erstmal schnell und sauber starten willst – eine Seite, ein Ziel, ein CTA."
+            timeLabel="Lieferzeit: 7 Tage"
+            emphasized={false}
+            badge={null}
+            icon={<FileText size={18} className="text-white/80" />}
+            bullets={[
+              'Eine einzelne, klar strukturierte Seite (Landingpage)',
+              'Fokus auf eine konkrete Handlung (z.B. Termin anfragen)',
+              'Mobil optimiert',
+              'Übergabe aller Zugänge',
+              'Optional: Betreuung ab 150 €/Monat',
+            ]}
+          />
+        </div>
+
+        <Reveal delayMs={140}>
+          <div className="mt-7 rounded-3xl border border-white/12 bg-black/20 backdrop-blur-md p-5 md:p-6">
+            <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
+              <BrowserMiniMock href={REF.url} />
+              <div className="min-w-0">
+                <div className="text-sm md:text-base font-semibold text-white/90">{REF.labelTop}</div>
+                <div className="mt-1 text-sm text-white/70">{REF.labelBottom}</div>
+                <div className="mt-2 text-xs text-white/55">{REF.proofSmall}</div>
+              </div>
+              <div className="md:ml-auto">
+                <GhostCTA href={REF.url} external>
+                  Öffnen <ExternalLink size={16} />
+                </GhostCTA>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal delayMs={200}>
+          <div className="mt-6 rounded-3xl border border-white/12 bg-black/20 backdrop-blur-md p-5 md:p-6">
+            <div className="text-sm md:text-base text-white/80 leading-relaxed">
+              Alle Preise sind Ausgangspunkte. Nach der kostenlosen Analyse erhältst du ein genaues Angebot – ohne Überraschungen.
+            </div>
+            <div className="mt-3 text-sm text-white/60 italic">
+              Bereits drei Unternehmen aus der Region haben sich für eines dieser Pakete entschieden.
+            </div>
+          </div>
+        </Reveal>
+      </SectionShell>
+
+      {/* Rechner */}
+      <SectionShell id="rechner">
+        <Reveal>
+          <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsrechner</div>
+        </Reveal>
+
+        <Reveal delayMs={90}>
+          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
+            Wann zahlst du was?
+            <span className="block">
+              <TitleGradient>Du siehst es live – ohne Nachfragen.</TitleGradient>
+            </span>
+          </h2>
+        </Reveal>
+
+        <Reveal delayMs={160}>
+          <CardShell className="mt-6">
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+              <div className="min-w-0">
+                <div className="text-sm md:text-base font-semibold text-white/90">
+                  1) Paket auswählen (oder eigenen Betrag eintragen)
+                </div>
+                <div className="mt-3">
+                  <PackageSelector active={activePkg} onSelect={setFromPkg} />
+                </div>
+
+                <div className="mt-5">
+                  <label className="block text-sm font-semibold text-white/90" htmlFor="customPrice">
+                    Oder eigener Betrag (optional)
+                  </label>
+                  <div className="mt-2 flex items-center gap-2">
+                    <input
+                      id="customPrice"
+                      inputMode="numeric"
+                      className="w-full md:w-[280px] rounded-2xl border border-white/15 bg-black/30 px-4 py-3 text-white/90 placeholder:text-white/35 outline-none focus:ring-2 focus:ring-violet-400/40"
+                      placeholder="z.B. 500"
+                      value={custom}
+                      onChange={(e) => onCustomChange(e.target.value)}
+                    />
+                    <span className="text-white/60 font-semibold">€</span>
+                  </div>
+                  <div className="mt-2 text-xs md:text-sm text-white/60">
+                    Du kannst hier auch deinen Budget-Rahmen eintragen. Ich sage dir ehrlich, was dafür realistisch möglich ist.
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-full lg:max-w-md">
+                <div className="text-sm md:text-base font-semibold text-white/90">
+                  2) Deine Zahlungen (automatisch berechnet)
+                </div>
+
+                <div className="mt-3 rounded-3xl border border-white/12 bg-black/20 backdrop-blur-md p-5 md:p-6">
+                  <div className="text-xs uppercase tracking-wide text-white/55">Projektpreis</div>
+                  <div className="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight tabular-nums">
+                    <TitleGradient>{computed.base.toLocaleString('de-DE')} €</TitleGradient>
+                  </div>
+
+                  <div className="mt-5">
+                    <PriceLine label="Zahlung 1 – Projektstart (40%)" amount={computed.p1} hint="Fällig nach Auftragsbestätigung" />
+                    <PriceLine
+                      label="Zahlung 2 – Erste Version (40%)"
+                      amount={computed.p2}
+                      hint="Fällig nachdem du die erste Version gesehen und freigegeben hast"
+                    />
+                    <PriceLine label="Zahlung 3 – Go-Live (20%)" amount={computed.p3} hint="Fällig nach Übergabe (finaler Stand online)" />
+                  </div>
+
+                  <div className="mt-5 rounded-2xl border border-white/12 bg-white/5 p-4 text-sm text-white/75 leading-relaxed">
+                    <span className="font-semibold text-white/85">Kein Risiko:</span> Du zahlst die zweite Rate erst,
+                    wenn du die erste Version gesehen und freigegeben hast. Kein Geld für etwas, das du noch nicht kennst.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardShell>
+        </Reveal>
+      </SectionShell>
+
+      {/* Prozess */}
+      <SectionShell id="prozess">
+        <Reveal>
+          <div className="text-xs uppercase tracking-wide text-white/55">Prozess</div>
+        </Reveal>
+
+        <Reveal delayMs={90}>
+          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
+            Wie das konkret abläuft.
+            <span className="block">
+              <TitleGradient>Mit Meilensteinen – nicht „irgendwie“.</TitleGradient>
+            </span>
+          </h2>
+        </Reveal>
+
+        <div className="mt-8 grid grid-cols-1 gap-4 md:gap-6">
+          <StepItem
+            n="1"
+            title="Briefing (Start)"
+            body={`Du schickst mir:\n– Was ihr anbietet\n– Wer eure Zielgruppe ist\n– Bis wann die Website stehen soll\n\nIch antworte innerhalb von 24 Stunden mit:\n– Einschätzung zum Umfang\n– Realistischem Zeitplan\n– Konkreten Rückfragen`}
+            milestone="Wir wissen exakt, was gebaut wird (Umfang + Zeitplan)."
+          />
+          <StepItem
+            n="2"
+            title="Konzept & Struktur"
+            body={`Ich lege fest:\n– Welche Seiten sinnvoll sind\n– Welche Inhalte auf welche Seite gehören\n– Wie der Ablauf Besucher → Kontakt aussieht\n\nDu bekommst das zur Freigabe. Erst wenn das passt, fange ich an zu bauen.`}
+            milestone="Struktur freigegeben (du weißt vorher, was entsteht)."
+          />
+          <StepItem
+            n="3"
+            title="Erste Version + Feedback"
+            body={`Du bekommst einen funktionierenden Link.\nDu kannst alles selbst testen – auch am Handy.\n\nEine vollständige Feedback-Runde ist enthalten (Änderungen sind hier eingebaut, nicht extra).`}
+            milestone="Erste Version freigegeben (zweite Rate wird erst dann fällig)."
+          />
+          <StepItem
+            n="4"
+            title="Finalisierung"
+            body={`Letzte Anpassungen, Feinschliff, technische Stabilisierung.\nWas vereinbart war, wird geliefert – kein Scope-Creep.\n\nWenn etwas zusätzlich dazu kommt, wird es vorher klar abgestimmt (damit es keine Überraschungen gibt).`}
+            milestone="Finaler Stand freigegeben."
+          />
+          <StepItem
+            n="5"
+            title="Übergabe"
+            body={`Du bekommst alles:\n– Zugänge (Domain/Hosting/Website)\n– Dateien/Assets\n– kurzes Setup-Briefing, damit du selbst weiterarbeiten kannst\n\nOptional: monatliche Betreuung ab hier.`}
+            milestone="Go-Live + Übergabe (letzte Rate fällig)."
+          />
+        </div>
+      </SectionShell>
+
+      <Footer />
     </div>
   );
 }
@@ -1460,8 +1060,18 @@ const globalKeyframes = `
   85% { transform: translate3d(-30px, -18px, 0) scale(0.94); }
   100% { transform: translate3d(0px, 0px, 0) scale(1); }
 }
+@keyframes shineSoft {
+  0%   { transform: translateX(-220px) rotate(12deg) scale(1);    opacity: 0.00; }
+  12%  { opacity: 0.08; }
+  32%  { transform: translateX(120px) rotate(12deg) scale(1.02);  opacity: 0.06; }
+  46%  { transform: translateX(220px) rotate(12deg) scale(1.01);  opacity: 0.03; }
+  62%  { transform: translateX(220px) rotate(12deg) scale(1.01);  opacity: 0.01; }
+  78%  { transform: translateX(520px) rotate(12deg) scale(1.02);  opacity: 0.05; }
+  100% { transform: translateX(980px) rotate(12deg) scale(1.00);  opacity: 0.00; }
+}
 @keyframes noiseMove {
   0% { transform: translate3d(0,0,0); }
   100% { transform: translate3d(90px,60px,0); }
 }
 `;
+/* END: page.js */
