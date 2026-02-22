@@ -254,7 +254,7 @@ function PackageMetaLink({ href, children }) {
   );
 }
 
-/* ---------- ROADMAP — VISUAL TIMELINE (CHANGE 3 + 4) ---------- */
+/* ---------- ROADMAP — VISUAL TIMELINE ---------- */
 
 const ROADMAP_STEPS = [
   {
@@ -263,7 +263,6 @@ const ROADMAP_STEPS = [
     desc: 'Klarheit, Vertrauen, Mobile, Anfrageweg. Du bekommst 3–5 konkrete Punkte + einen ersten Seiten-Aufbau als Vorschau.',
     tag: 'Kostenlos',
     tagTone: 'free',
-    payment: null,
   },
   {
     id: 'sprint2',
@@ -271,7 +270,6 @@ const ROADMAP_STEPS = [
     desc: 'Lauffähige Version zum Testen + Feedback. Du klickst sie durch und gibst Feedback.',
     tag: 'Zahlungsziel 1 nach Review (30%)',
     tagTone: 'neutral',
-    payment: 1,
   },
   {
     id: 'sprint3',
@@ -279,7 +277,6 @@ const ROADMAP_STEPS = [
     desc: 'Änderungen aus dem Review werden umgesetzt. Alles bereit für Go-Live.',
     tag: 'Zahlungsziel 2 nach Review (50%)',
     tagTone: 'neutral',
-    payment: 2,
   },
   {
     id: 'sprint4',
@@ -287,7 +284,6 @@ const ROADMAP_STEPS = [
     desc: 'Live stellen, Zugänge & Dateien. Danach bist du fertig.',
     tag: 'Zahlungsziel 3 nach Übergabe (20%)',
     tagTone: 'neutral',
-    payment: 3,
   },
 ];
 
@@ -297,18 +293,14 @@ function RoadmapTimeline() {
   function toggle(id) {
     setDoneSteps((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
   }
 
   return (
     <div className="relative">
-      {/* Vertical connecting line */}
       <div className="absolute left-5 top-5 bottom-5 w-[2px] bg-gradient-to-b from-emerald-400/40 via-violet-400/30 to-white/10 md:left-6" />
 
       <div className="space-y-3">
@@ -317,12 +309,7 @@ function RoadmapTimeline() {
           const isFree = step.tagTone === 'free';
 
           return (
-            <div
-              key={step.id}
-              className="relative flex items-start gap-4 md:gap-5"
-              style={{ animationDelay: `${i * 80}ms` }}
-            >
-              {/* Node — clickable */}
+            <div key={step.id} className="relative flex items-start gap-4 md:gap-5" style={{ animationDelay: `${i * 80}ms` }}>
               <button
                 onClick={() => toggle(step.id)}
                 title={done ? 'Als offen markieren' : 'Als erledigt markieren'}
@@ -335,29 +322,17 @@ function RoadmapTimeline() {
                       : 'border-white/15 bg-white/8 hover:bg-white/14'
                 )}
               >
-                <CheckCircle2
-                  size={20}
-                  className={cx(
-                    'transition-colors duration-300',
-                    done ? 'text-emerald-300' : 'text-white/25'
-                  )}
-                />
+                <CheckCircle2 size={20} className={cx('transition-colors duration-300', done ? 'text-emerald-300' : 'text-white/25')} />
               </button>
 
-              {/* Content */}
               <div
                 className={cx(
                   'flex-1 rounded-2xl border px-4 py-4 md:px-5 md:py-5 transition-all duration-300',
-                  done
-                    ? 'border-emerald-300/20 bg-emerald-500/6'
-                    : 'border-white/10 bg-white/5'
+                  done ? 'border-emerald-300/20 bg-emerald-500/6' : 'border-white/10 bg-white/5'
                 )}
               >
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <span className={cx(
-                    'text-sm md:text-base font-semibold transition-colors',
-                    done ? 'text-white/50 line-through' : 'text-white/90'
-                  )}>
+                  <span className={cx('text-sm md:text-base font-semibold transition-colors', done ? 'text-white/50 line-through' : 'text-white/90')}>
                     {step.title}
                   </span>
                   {step.tag && <Pill tone={step.tagTone}>{step.tag}</Pill>}
@@ -369,9 +344,7 @@ function RoadmapTimeline() {
         })}
       </div>
 
-      <p className="mt-5 text-xs text-white/40 pl-14 md:pl-17">
-        Klick auf den Node um einen Sprint als erledigt zu markieren.
-      </p>
+      <p className="mt-5 text-xs text-white/40 pl-14 md:pl-17">Klick auf den Node um einen Sprint als erledigt zu markieren.</p>
     </div>
   );
 }
@@ -418,7 +391,7 @@ export default function ProzessPage() {
 
       <Navbar />
 
-      {/* 1) HERO — CHANGE 1: konkreterer Text */}
+      {/* HERO */}
       <section className="relative px-5 md:px-16 pt-28 md:pt-36 pb-8 md:pb-10">
         <div className="relative max-w-6xl mx-auto">
           <div className="flex flex-col items-center text-center gap-5">
@@ -437,21 +410,21 @@ export default function ProzessPage() {
               <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight leading-[1.03]">
                 Du siehst die erste Version.
                 <span className="block">
-                  <TitleGradient>Erst dann geht's weiter.</TitleGradient>
+                  <TitleGradient>Erst dann geht&apos;s weiter.</TitleGradient>
                 </span>
               </h1>
             </Reveal>
 
             <Reveal delayMs={160}>
               <p className="max-w-2xl text-base md:text-xl text-white/80 leading-relaxed">
-                Ein klarer Ablauf in Sprints: Nach jedem Sprint gibt's ein Review. Danach kommt erst das nächste Zahlungsziel.
+                Ein klarer Ablauf in Sprints: Nach jedem Sprint gibt&apos;s ein Review. Danach kommt erst das nächste Zahlungsziel.
               </p>
             </Reveal>
           </div>
         </div>
       </section>
 
-      {/* 2) ROADMAP — CHANGE 3 + 4: visuell, abhakbar */}
+      {/* ROADMAP */}
       <SectionShell id="roadmap" tight>
         <Reveal>
           <div className="text-xs uppercase tracking-wide text-white/55">Roadmap</div>
@@ -477,7 +450,7 @@ export default function ProzessPage() {
         </div>
       </SectionShell>
 
-      {/* 3) RECHNER WITH SLIDER */}
+      {/* RECHNER */}
       <SectionShell id="rechner">
         <Reveal>
           <div className="text-xs uppercase tracking-wide text-white/55">Rahmen wählen</div>
@@ -559,7 +532,7 @@ export default function ProzessPage() {
         </div>
       </SectionShell>
 
-      {/* 4) PAKETE WITH RECOMMENDATION */}
+      {/* PAKETE */}
       <SectionShell id="pakete">
         <Reveal>
           <div className="text-xs uppercase tracking-wide text-white/55">Pakete</div>
@@ -580,45 +553,25 @@ export default function ProzessPage() {
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
           <Reveal>
-            <Card
-              className={cx(
-                'p-6 md:p-7 transition-all',
-                rec.key === 'komplett' ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100' : 'opacity-55'
-              )}
-            >
+            <Card className={cx('p-6 md:p-7 transition-all', rec.key === 'komplett' ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100' : 'opacity-55')}>
               <div className="text-xs uppercase tracking-wide text-white/55">Komplett</div>
               <div className="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-white">
                 ab 1.100 <span className="text-white/55">€</span>
               </div>
               <ul className="mt-4 space-y-2 text-sm text-white/80">
+                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Website bis 5 Seiten</span></li>
+                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Brandbook (Farben, Typo, Layoutregeln)</span></li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                  <span>Website bis 5 Seiten</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                  <span>Brandbook (Farben, Typo, Layoutregeln)</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                  <span>
-                    1 Motion-Element <span className="ml-1"><PackageMetaLink href={PORTFOLIO_MOTION}>Beispiel</PackageMetaLink></span>
-                  </span>
+                  <span>1 Motion-Element <span className="ml-1"><PackageMetaLink href={PORTFOLIO_MOTION}>Beispiel</PackageMetaLink></span></span>
                 </li>
               </ul>
-              <div className="mt-5 text-sm text-white/70 flex items-center gap-2">
-                <Clock size={16} className="text-white/60" /> ca. 3 Wochen
-              </div>
+              <div className="mt-5 text-sm text-white/70 flex items-center gap-2"><Clock size={16} className="text-white/60" /> ca. 3 Wochen</div>
             </Card>
           </Reveal>
 
           <Reveal delayMs={80}>
-            <Card
-              className={cx(
-                'p-6 md:p-7 transition-all',
-                rec.key === 'standard' ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100' : 'opacity-55'
-              )}
-            >
+            <Card className={cx('p-6 md:p-7 transition-all', rec.key === 'standard' ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100' : 'opacity-55')}>
               <div className="flex items-center justify-between gap-3">
                 <div className="text-xs uppercase tracking-wide text-white/55">Standard</div>
                 <Pill>Wird am häufigsten gewählt</Pill>
@@ -627,61 +580,35 @@ export default function ProzessPage() {
                 ab 700 <span className="text-white/55">€</span>
               </div>
               <ul className="mt-4 space-y-2 text-sm text-white/80">
+                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Website bis 5 Seiten</span></li>
+                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Branding-Grundlage (Farben, Schrift, Logo)</span></li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                  <span>Website bis 5 Seiten</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                  <span>Branding-Grundlage (Farben, Schrift, Logo)</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                  <span>
-                    Aufbau wie im Case <span className="ml-1"><PackageMetaLink href={PORTFOLIO_KFA}>Beispiel</PackageMetaLink></span>
-                  </span>
+                  <span>Aufbau wie im Case <span className="ml-1"><PackageMetaLink href={PORTFOLIO_KFA}>Beispiel</PackageMetaLink></span></span>
                 </li>
               </ul>
-              <div className="mt-5 text-sm text-white/70 flex items-center gap-2">
-                <Clock size={16} className="text-white/60" /> 10–14 Tage
-              </div>
+              <div className="mt-5 text-sm text-white/70 flex items-center gap-2"><Clock size={16} className="text-white/60" /> 10–14 Tage</div>
             </Card>
           </Reveal>
 
           <Reveal delayMs={120}>
-            <Card
-              className={cx(
-                'p-6 md:p-7 transition-all',
-                rec.key === 'einstieg' ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100' : 'opacity-55'
-              )}
-            >
+            <Card className={cx('p-6 md:p-7 transition-all', rec.key === 'einstieg' ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100' : 'opacity-55')}>
               <div className="text-xs uppercase tracking-wide text-white/55">Einstieg</div>
               <div className="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-white">
                 ab 400 <span className="text-white/55">€</span>
               </div>
               <ul className="mt-4 space-y-2 text-sm text-white/80">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                  <span>Eine Landingpage</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                  <span>Klare Struktur + ein CTA</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                  <span>Mobil optimiert</span>
-                </li>
+                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Eine Landingpage</span></li>
+                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Klare Struktur + ein CTA</span></li>
+                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Mobil optimiert</span></li>
               </ul>
-              <div className="mt-5 text-sm text-white/70 flex items-center gap-2">
-                <Clock size={16} className="text-white/60" /> ~ 7 Tage
-              </div>
+              <div className="mt-5 text-sm text-white/70 flex items-center gap-2"><Clock size={16} className="text-white/60" /> ~ 7 Tage</div>
             </Card>
           </Reveal>
         </div>
       </SectionShell>
 
-      {/* 5) EINWÄNDE */}
+      {/* EINWÄNDE */}
       <SectionShell id="einwaende" tight>
         <Reveal>
           <div className="text-xs uppercase tracking-wide text-white/55">Sicherheit</div>
@@ -690,9 +617,7 @@ export default function ProzessPage() {
         <Reveal delayMs={90}>
           <h2 className="mt-3 text-2xl md:text-4xl font-extrabold leading-tight">
             Typische Fragen.
-            <span className="block">
-              <TitleGradient>Kurze Antworten.</TitleGradient>
-            </span>
+            <span className="block"><TitleGradient>Kurze Antworten.</TitleGradient></span>
           </h2>
         </Reveal>
 
@@ -729,7 +654,7 @@ export default function ProzessPage() {
         </div>
       </SectionShell>
 
-      {/* 6) CTA — CHANGE 2: "Fallback" Label entfernt */}
+      {/* CTA */}
       <SectionShell id="cta">
         <Reveal>
           <Card className="p-6 md:p-10">
@@ -737,9 +662,7 @@ export default function ProzessPage() {
               <div>
                 <div className="mt-3 text-2xl md:text-4xl font-extrabold leading-tight">
                   Passt das?
-                  <span className="block">
-                    <TitleGradient>Schick mir nur die Basics.</TitleGradient>
-                  </span>
+                  <span className="block"><TitleGradient>Schick mir nur die Basics.</TitleGradient></span>
                 </div>
                 <div className="mt-3 text-sm md:text-base text-white/70 max-w-xl">
                   Branche, Ziel, Deadline, Link zur Website (falls vorhanden). Ich melde mich innerhalb von 24 Stunden.
