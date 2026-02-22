@@ -22,7 +22,7 @@ const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_E164}?text=${encodeURIComponent(
 const PORTFOLIO_MOTION = 'https://www.leonseitz.com/portfolio/motion-design';
 const PORTFOLIO_KFA = 'https://www.leonseitz.com/portfolio/kirche-fundraising';
 
-/* ---------- SCENE (match homepage vibe) ---------- */
+/* ---------- SCENE ---------- */
 
 const SCENE = {
   base: '#070312',
@@ -177,7 +177,6 @@ function GlobalBackground() {
           backgroundImage: `${SCENE.g1}, ${SCENE.g2}`,
         }}
       />
-
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.10] mix-blend-overlay"
         style={{
@@ -187,7 +186,6 @@ function GlobalBackground() {
           animation: 'noiseMove 7s linear infinite',
         }}
       />
-
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_35%,transparent_0%,rgba(0,0,0,0.40)_65%,rgba(0,0,0,0.72)_100%)]" />
     </div>
   );
@@ -256,79 +254,124 @@ function PackageMetaLink({ href, children }) {
   );
 }
 
-/* ---------- ROADMAP (simple, like before; no side boxes) ---------- */
+/* ---------- ROADMAP — VISUAL TIMELINE (CHANGE 3 + 4) ---------- */
 
-function useRoadmapProgress(initialDoneIds = []) {
-  const [activeStep, setActiveStep] = useState(null);
-  const [doneSteps, setDoneSteps] = useState(() => new Set(initialDoneIds));
+const ROADMAP_STEPS = [
+  {
+    id: 'sprint0',
+    title: 'Sprint 0 — Analyse + Entwurf',
+    desc: 'Klarheit, Vertrauen, Mobile, Anfrageweg. Du bekommst 3–5 konkrete Punkte + einen ersten Seiten-Aufbau als Vorschau.',
+    tag: 'Kostenlos',
+    tagTone: 'free',
+    payment: null,
+  },
+  {
+    id: 'sprint2',
+    title: 'Sprint 1 — Erste Version',
+    desc: 'Lauffähige Version zum Testen + Feedback. Du klickst sie durch und gibst Feedback.',
+    tag: 'Zahlungsziel 1 nach Review (30%)',
+    tagTone: 'neutral',
+    payment: 1,
+  },
+  {
+    id: 'sprint3',
+    title: 'Sprint 2 — Feinschliff',
+    desc: 'Änderungen aus dem Review werden umgesetzt. Alles bereit für Go-Live.',
+    tag: 'Zahlungsziel 2 nach Review (50%)',
+    tagTone: 'neutral',
+    payment: 2,
+  },
+  {
+    id: 'sprint4',
+    title: 'Sprint 3 — Go-Live & Übergabe',
+    desc: 'Live stellen, Zugänge & Dateien. Danach bist du fertig.',
+    tag: 'Zahlungsziel 3 nach Übergabe (20%)',
+    tagTone: 'neutral',
+    payment: 3,
+  },
+];
 
-  useEffect(() => {
-    setDoneSteps(new Set(initialDoneIds));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+function RoadmapTimeline() {
+  const [doneSteps, setDoneSteps] = useState(new Set());
 
-  useEffect(() => {
-    const nodes = Array.from(document.querySelectorAll('[data-roadmap-step]'));
-    if (!nodes.length) return;
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0));
-        const top = visible[0]?.target?.getAttribute('data-roadmap-step') ?? null;
-        if (top) setActiveStep(top);
-
-        entries.forEach((e) => {
-          if (e.isIntersecting && (e.intersectionRatio ?? 0) > 0.35) {
-            const id = e.target.getAttribute('data-roadmap-step');
-            if (!id) return;
-            setDoneSteps((prev) => new Set(prev).add(id));
-          }
-        });
-      },
-      { threshold: [0.2, 0.35, 0.55, 0.75] }
-    );
-
-    nodes.forEach((n) => obs.observe(n));
-    return () => obs.disconnect();
-  }, []);
-
-  return { activeStep, doneSteps };
-}
-
-function RoadmapItem({ id, title, desc, tag, tagTone = 'neutral', state }) {
-  const isActive = state.activeStep === id;
-  const isDone = state.doneSteps.has(id);
+  function toggle(id) {
+    setDoneSteps((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  }
 
   return (
-    <div
-      data-roadmap-step={id}
-      className={cx(
-        'rounded-2xl border px-4 py-4 md:px-5 md:py-5 transition-colors',
-        isActive ? 'border-white/25 bg-white/10' : 'border-white/12 bg-white/5'
-      )}
-    >
-      <div className="flex items-start gap-3">
-        <div className="shrink-0 pt-0.5">
-          <div
-            className={cx(
-              'w-9 h-9 rounded-2xl border flex items-center justify-center',
-              isDone ? 'border-emerald-300/30 bg-emerald-500/10' : 'border-white/15 bg-white/10'
-            )}
-          >
-            <CheckCircle2 size={18} className={cx(isDone ? 'text-emerald-300' : 'text-white/30')} />
-          </div>
-        </div>
+    <div className="relative">
+      {/* Vertical connecting line */}
+      <div className="absolute left-5 top-5 bottom-5 w-[2px] bg-gradient-to-b from-emerald-400/40 via-violet-400/30 to-white/10 md:left-6" />
 
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 flex-wrap">
-            <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
-            {tag ? <Pill tone={tagTone}>{tag}</Pill> : null}
-          </div>
-          <div className="mt-2 text-sm text-white/70 leading-relaxed">{desc}</div>
-        </div>
+      <div className="space-y-3">
+        {ROADMAP_STEPS.map((step, i) => {
+          const done = doneSteps.has(step.id);
+          const isFree = step.tagTone === 'free';
+
+          return (
+            <div
+              key={step.id}
+              className="relative flex items-start gap-4 md:gap-5"
+              style={{ animationDelay: `${i * 80}ms` }}
+            >
+              {/* Node — clickable */}
+              <button
+                onClick={() => toggle(step.id)}
+                title={done ? 'Als offen markieren' : 'Als erledigt markieren'}
+                className={cx(
+                  'relative z-10 shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-2xl border flex items-center justify-center transition-all duration-300',
+                  done
+                    ? 'border-emerald-300/40 bg-emerald-500/20 shadow-[0_0_18px_rgba(52,211,153,0.25)]'
+                    : isFree
+                      ? 'border-emerald-300/20 bg-emerald-500/8 hover:bg-emerald-500/15'
+                      : 'border-white/15 bg-white/8 hover:bg-white/14'
+                )}
+              >
+                <CheckCircle2
+                  size={20}
+                  className={cx(
+                    'transition-colors duration-300',
+                    done ? 'text-emerald-300' : 'text-white/25'
+                  )}
+                />
+              </button>
+
+              {/* Content */}
+              <div
+                className={cx(
+                  'flex-1 rounded-2xl border px-4 py-4 md:px-5 md:py-5 transition-all duration-300',
+                  done
+                    ? 'border-emerald-300/20 bg-emerald-500/6'
+                    : 'border-white/10 bg-white/5'
+                )}
+              >
+                <div className="flex flex-wrap items-center gap-2 mb-2">
+                  <span className={cx(
+                    'text-sm md:text-base font-semibold transition-colors',
+                    done ? 'text-white/50 line-through' : 'text-white/90'
+                  )}>
+                    {step.title}
+                  </span>
+                  {step.tag && <Pill tone={step.tagTone}>{step.tag}</Pill>}
+                </div>
+                <p className="text-sm text-white/60 leading-relaxed">{step.desc}</p>
+              </div>
+            </div>
+          );
+        })}
       </div>
+
+      <p className="mt-5 text-xs text-white/40 pl-14 md:pl-17">
+        Klick auf den Node um einen Sprint als erledigt zu markieren.
+      </p>
     </div>
   );
 }
@@ -359,15 +402,10 @@ function getRecommendation(amount) {
 /* ---------- PAGE ---------- */
 
 export default function ProzessPage() {
-  // Slider per request:
-  // Range 400–1500, step 50, start 700
   const [amount, setAmount] = useState(700);
 
   const payments = useMemo(() => calcPayments(amount), [amount]);
   const rec = useMemo(() => getRecommendation(amount), [amount]);
-
-  // first two steps are "done" (Kostenlos)
-  const roadmapState = useRoadmapProgress(['sprint0', 'sprint1']);
 
   return (
     <div className="font-proxima text-white min-h-screen">
@@ -380,7 +418,7 @@ export default function ProzessPage() {
 
       <Navbar />
 
-      {/* 1) HERO */}
+      {/* 1) HERO — CHANGE 1: konkreterer Text */}
       <section className="relative px-5 md:px-16 pt-28 md:pt-36 pb-8 md:pb-10">
         <div className="relative max-w-6xl mx-auto">
           <div className="flex flex-col items-center text-center gap-5">
@@ -397,23 +435,23 @@ export default function ProzessPage() {
 
             <Reveal delayMs={90}>
               <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight leading-[1.03]">
-                Du siehst erst
+                Du siehst die erste Version.
                 <span className="block">
-                  <TitleGradient>– dann geht’s weiter.</TitleGradient>
+                  <TitleGradient>Erst dann geht's weiter.</TitleGradient>
                 </span>
               </h1>
             </Reveal>
 
             <Reveal delayMs={160}>
               <p className="max-w-2xl text-base md:text-xl text-white/80 leading-relaxed">
-                Ein klarer Ablauf in Sprints: Nach jedem Sprint gibt’s ein Review. Danach kommt erst das nächste Zahlungsziel.
+                Ein klarer Ablauf in Sprints: Nach jedem Sprint gibt's ein Review. Danach kommt erst das nächste Zahlungsziel.
               </p>
             </Reveal>
           </div>
         </div>
       </section>
 
-      {/* 2) ROADMAP (clean, no side boxes) */}
+      {/* 2) ROADMAP — CHANGE 3 + 4: visuell, abhakbar */}
       <SectionShell id="roadmap" tight>
         <Reveal>
           <div className="text-xs uppercase tracking-wide text-white/55">Roadmap</div>
@@ -430,51 +468,11 @@ export default function ProzessPage() {
 
         <div className="mt-8">
           <Card className="p-5 md:p-6">
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div className="flex flex-wrap gap-2 mb-6">
               <Pill tone="free">Sprint 0: Kostenlos</Pill>
-              <Pill tone="free">Sprint 1: Kostenlos</Pill>
-              <Pill>Danach: Zahlungsziele</Pill>
+              <Pill>Danach: Zahlungsziele nach Review</Pill>
             </div>
-
-            <div className="grid grid-cols-1 gap-3 md:gap-4">
-              <RoadmapItem
-                id="sprint0"
-                title="Sprint 0 — Analyse"
-                desc="Klarheit, Vertrauen, Mobile, Anfrageweg. Du bekommst 3–5 konkrete Punkte."
-                tag="Kostenlos"
-                tagTone="free"
-                state={roadmapState}
-              />
-              <RoadmapItem
-                id="sprint1"
-                title="Sprint 1 — Erster Entwurf"
-                desc="Du siehst einen konkreten Aufbau für eine Seite. Danach entscheiden wir, ob wir weitergehen."
-                tag="Kostenlos"
-                tagTone="free"
-                state={roadmapState}
-              />
-              <RoadmapItem
-                id="sprint2"
-                title="Sprint 2 — Erste Version"
-                desc="Lauffähige Version zum Testen + Feedback. Danach: Zahlungsziel 1 (30%)."
-                tag="Ziel 1 nach Review"
-                state={roadmapState}
-              />
-              <RoadmapItem
-                id="sprint3"
-                title="Sprint 3 — Feinschliff"
-                desc="Änderungen aus dem Review werden umgesetzt. Danach: Zahlungsziel 2 (50%)."
-                tag="Ziel 2 nach Review"
-                state={roadmapState}
-              />
-              <RoadmapItem
-                id="sprint4"
-                title="Sprint 4 — Go-Live & Übergabe"
-                desc="Live stellen, Zugänge & Dateien. Danach: Zahlungsziel 3 (20%)."
-                tag="Ziel 3 nach Übergabe"
-                state={roadmapState}
-              />
-            </div>
+            <RoadmapTimeline />
           </Card>
         </div>
       </SectionShell>
@@ -524,7 +522,7 @@ export default function ProzessPage() {
             <div className="mt-6 rounded-2xl border border-emerald-300/20 bg-emerald-500/10 p-4">
               <div className="text-xs uppercase tracking-wide text-emerald-100/90">Start ist kostenlos</div>
               <div className="mt-2 text-sm text-white/75 leading-relaxed">
-                Sprint 0 (Analyse) und Sprint 1 (Entwurf) sind kostenlos. Danach geht es Sprint für Sprint weiter.
+                Sprint 0 (Analyse + Entwurf) ist kostenlos. Danach geht es Sprint für Sprint weiter.
               </div>
             </div>
           </Card>
@@ -534,7 +532,7 @@ export default function ProzessPage() {
             <div className="mt-3 text-4xl md:text-5xl font-extrabold tracking-tight leading-none">
               {payments.p1} <span className="text-white/55">€</span>
             </div>
-            <div className="mt-1 text-sm text-white/70">Nach Sprint 2 (erste Version gesehen).</div>
+            <div className="mt-1 text-sm text-white/70">Nach Sprint 1 (erste Version gesehen).</div>
 
             <div className="mt-6 space-y-4">
               <div>
@@ -542,7 +540,7 @@ export default function ProzessPage() {
                 <div className="mt-2 text-4xl md:text-5xl font-extrabold tracking-tight">
                   {payments.p2} <span className="text-white/55">€</span>
                 </div>
-                <div className="mt-1 text-sm text-white/70">Nach Sprint 3 (Feinschliff freigegeben).</div>
+                <div className="mt-1 text-sm text-white/70">Nach Sprint 2 (Feinschliff freigegeben).</div>
               </div>
 
               <div>
@@ -550,7 +548,7 @@ export default function ProzessPage() {
                 <div className="mt-2 text-4xl md:text-5xl font-extrabold tracking-tight">
                   {payments.p3} <span className="text-white/55">€</span>
                 </div>
-                <div className="mt-1 text-sm text-white/70">Nach Sprint 4 (Go-Live + Übergabe).</div>
+                <div className="mt-1 text-sm text-white/70">Nach Sprint 3 (Go-Live + Übergabe).</div>
               </div>
             </div>
 
@@ -561,7 +559,7 @@ export default function ProzessPage() {
         </div>
       </SectionShell>
 
-      {/* 4) PAKETE WITH RECOMMENDATION (highlight card) */}
+      {/* 4) PAKETE WITH RECOMMENDATION */}
       <SectionShell id="pakete">
         <Reveal>
           <div className="text-xs uppercase tracking-wide text-white/55">Pakete</div>
@@ -581,7 +579,6 @@ export default function ProzessPage() {
         </div>
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
-          {/* KOMPLETT */}
           <Reveal>
             <Card
               className={cx(
@@ -615,7 +612,6 @@ export default function ProzessPage() {
             </Card>
           </Reveal>
 
-          {/* STANDARD */}
           <Reveal delayMs={80}>
             <Card
               className={cx(
@@ -652,7 +648,6 @@ export default function ProzessPage() {
             </Card>
           </Reveal>
 
-          {/* EINSTIEG */}
           <Reveal delayMs={120}>
             <Card
               className={cx(
@@ -727,20 +722,19 @@ export default function ProzessPage() {
               <Shield size={18} className="text-white/70 mt-0.5" />
               <div>
                 <div className="text-white/90 font-semibold">Was, wenn mein Budget knapp ist?</div>
-                <div className="mt-2 text-sm text-white/70">Wir starten mit zwei kostenlosen Sprints und entscheiden dann passend.</div>
+                <div className="mt-2 text-sm text-white/70">Wir starten mit dem kostenlosen Sprint 0 und entscheiden dann passend.</div>
               </div>
             </div>
           </Card>
         </div>
       </SectionShell>
 
-      {/* 6) CTA (only CTA) */}
+      {/* 6) CTA — CHANGE 2: "Fallback" Label entfernt */}
       <SectionShell id="cta">
         <Reveal>
           <Card className="p-6 md:p-10">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div>
-                <div className="text-xs uppercase tracking-wide text-white/55">Fallback</div>
                 <div className="mt-3 text-2xl md:text-4xl font-extrabold leading-tight">
                   Passt das?
                   <span className="block">
