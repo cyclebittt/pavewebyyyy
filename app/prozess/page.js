@@ -19,13 +19,13 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 const WHATSAPP_E164 = '4916095757167';
 const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_E164}?text=${encodeURIComponent(
-  `Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel (mehr Anfragen / sauberer Auftritt / beides):\n- Deadline:\n- Link zu aktueller Website (falls vorhanden):\n- Budgetrahmen (optional):\n`
+  `Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel (mehr Anfragen / sauberer Auftritt / beides):\n- Deadline:\n- Link zu aktueller Website (falls vorhanden):\n\nDanke!\n`
 )}`;
 
-// Wenn dein Navbar fixed/sticky ist: Offset damit Hero nicht "unter" der Navbar sitzt
+// Wenn Navbar sticky/fixed ist: sorgt dafür, dass Hero nicht "unter" der Navbar sitzt
 const NAV_OFFSET_PX = 96;
 
-/* ---------- SCENE (old vibe) ---------- */
+/* ---------- SCENE (match your existing vibe) ---------- */
 
 const SCENE = {
   base: '#070312',
@@ -70,7 +70,6 @@ function useReveal(ref) {
 function Reveal({ children, delayMs = 0 }) {
   const ref = useRef(null);
   const shown = useReveal(ref);
-
   return (
     <div
       ref={ref}
@@ -139,7 +138,6 @@ function useMousePos() {
 
 function CursorHalo() {
   const { x, y } = useMousePos();
-
   return (
     <div className="hidden md:block fixed inset-0 z-[6] pointer-events-none">
       <div
@@ -350,10 +348,11 @@ function Bullet({ children }) {
   );
 }
 
-/* ---------- ROADMAP (Sprints + Payments, vertical, animated line) ---------- */
+/* ---------- ROADMAP (green checkmarks + active step) ---------- */
 
-function useInViewProgress(stepIds) {
+function useRoadmapState(stepIds) {
   const [done, setDone] = useState(() => new Set());
+  const [active, setActive] = useState(stepIds?.[0] ?? null);
 
   useEffect(() => {
     const els = stepIds.map((id) => document.getElementById(id)).filter(Boolean);
@@ -361,20 +360,28 @@ function useInViewProgress(stepIds) {
 
     const obs = new IntersectionObserver(
       (entries) => {
+        // Active: entry mit höchster Sichtbarkeit
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0));
+
+        if (visible[0]?.target?.id) setActive(visible[0].target.id);
+
+        // Done: sobald ein Step sichtbar war (dezent)
         entries.forEach((e) => {
           if (e.isIntersecting && e.intersectionRatio > 0.35) {
             setDone((prev) => new Set(prev).add(e.target.id));
           }
         });
       },
-      { threshold: [0.2, 0.35, 0.55] }
+      { threshold: [0.15, 0.25, 0.35, 0.55, 0.75] }
     );
 
     els.forEach((el) => obs.observe(el));
     return () => obs.disconnect();
   }, [stepIds]);
 
-  return done;
+  return { done, active };
 }
 
 function Roadmap() {
@@ -384,74 +391,61 @@ function Roadmap() {
         id: 'rm0',
         label: 'Sprint 0 (kostenlos)',
         title: 'Analyse',
-        desc: 'Ich zeige dir 3 konkrete Punkte, die gerade Anfragen verhindern.',
-        badge: 'Kostenlos',
-        icon: <Sparkles size={16} className="text-white/80" />,
+        desc: 'Du bekommst 3 klare Punkte, die Anfragen gerade verhindern.',
+        badge: '0 €',
         pay: null,
-        defaultDone: true, // soll als "abgehakt" wirken
+        defaultDone: true,
+        free: true,
       },
       {
         id: 'rm1',
         label: 'Sprint 0 (kostenlos)',
         title: 'Erster Entwurf',
-        desc: 'Du bekommst einen ersten Seiten-Aufbau (Hero + Struktur + CTA) als Vorschau.',
-        badge: 'Kostenlos',
-        icon: <Wand2 size={16} className="text-white/80" />,
+        desc: 'Du bekommst einen ersten Seiten-Aufbau als Vorschau (Hero + Struktur + CTA).',
+        badge: '0 €',
         pay: null,
-        defaultDone: true, // ebenfalls als kostenloser Einstieg
+        defaultDone: true,
+        free: true,
       },
       {
         id: 'rm2',
         label: 'Sprint 1',
-        title: 'Version 1',
-        desc: 'Ich baue eine lauffähige erste Version. Du klickst sie durch und gibst Feedback.',
+        title: 'Version 1 + Review',
+        desc: 'Du testest eine lauffähige Version. Danach sagst du: „Passt“ oder „ändern“.',
         badge: 'Review',
-        icon: <Circle size={16} className="text-white/70" />,
-        pay: {
-          label: 'Zahlung 1 (40%)',
-          rule: 'nur wenn du sagst: „Passt.“',
-        },
+        pay: { label: 'Zahlung 1 (40%)', rule: 'nur nach deinem „Passt“ nach Sprint 1' },
       },
       {
         id: 'rm3',
         label: 'Sprint 2',
-        title: 'Feinschliff',
-        desc: 'Ich setze Feedback um und mache alles „fertig für live“.',
+        title: 'Feedback umsetzen + Review',
+        desc: 'Ich setze Feedback um. Du prüfst den Zwischenstand.',
         badge: '2. Review',
-        icon: <Circle size={16} className="text-white/70" />,
-        pay: {
-          label: 'Zahlung 2 (40%)',
-          rule: 'nur nach Freigabe des Zwischenstands',
-        },
+        pay: { label: 'Zahlung 2 (40%)', rule: 'nur nach deiner Freigabe nach Sprint 2' },
       },
       {
         id: 'rm4',
         label: 'Sprint 3',
         title: 'Übergabe & Go-Live',
-        desc: 'Du bekommst Zugänge + Dateien. Danach geht es live.',
+        desc: 'Zugänge + Dateien. Danach geht es live.',
         badge: 'Go-Live',
-        icon: <Circle size={16} className="text-white/70" />,
-        pay: {
-          label: 'Zahlung 3 (20%)',
-          rule: 'nur nach Übergabe / live',
-        },
+        pay: { label: 'Zahlung 3 (20%)', rule: 'nur nach Übergabe / live' },
       },
     ],
     []
   );
 
   const ids = useMemo(() => steps.map((s) => s.id), [steps]);
-  const done = useInViewProgress(ids);
+  const { done, active } = useRoadmapState(ids);
 
-  const doneCount = steps.reduce((acc, s) => acc + (s.defaultDone || done.has(s.id) ? 1 : 0), 0);
+  const doneCount = steps.reduce((acc, s) => acc + ((s.defaultDone || done.has(s.id)) ? 1 : 0), 0);
   const linePct = Math.max(0, Math.min(1, (doneCount - 1) / Math.max(1, steps.length - 1)));
 
   return (
     <div className="relative">
-      {/* animated spine */}
       <div className="absolute left-[18px] top-4 bottom-4 w-[2px] bg-white/10 rounded-full" />
       <div
-        className="absolute left-[18px] top-4 w-[2px] bg-gradient-to-b from-violet-200 via-indigo-200 to-cyan-200 rounded-full"
+        className="absolute left-[18px] top-4 w-[2px] bg-gradient-to-b from-emerald-200 via-violet-200 to-cyan-200 rounded-full"
         style={{
           height: `calc(${linePct * 100}% * (100% - 32px))`,
           maxHeight: 'calc(100% - 32px)',
@@ -460,24 +454,40 @@ function Roadmap() {
       />
 
       <div className="space-y-3">
-        {steps.map((s, idx) => {
+        {steps.map((s) => {
           const isDone = s.defaultDone || done.has(s.id);
+          const isActive = active === s.id;
+
+          const nodeClass = s.free
+            ? isActive
+              ? 'border-emerald-300/45 bg-emerald-500/10 ring-1 ring-emerald-300/20'
+              : 'border-emerald-300/35 bg-emerald-500/8'
+            : isActive
+              ? 'border-white/25 bg-white/10 ring-1 ring-white/10'
+              : 'border-white/12 bg-black/20';
+
           return (
             <div id={s.id} key={s.id} className="relative pl-12">
-              {/* node */}
-              <div
-                className={cx(
-                  'absolute left-0 top-4 w-9 h-9 rounded-2xl border flex items-center justify-center',
-                  isDone ? 'border-white/20 bg-white/10' : 'border-white/12 bg-black/20'
-                )}
-              >
-                {isDone ? <CheckCircle2 size={18} className="text-white" /> : s.icon}
+              <div className={cx('absolute left-0 top-4 w-9 h-9 rounded-2xl border flex items-center justify-center', nodeClass)}>
+                {isDone ? <CheckCircle2 size={18} className={cx(s.free ? 'text-emerald-200' : 'text-emerald-200')} /> : <Circle size={16} className="text-white/60" />}
               </div>
 
-              <div className="rounded-2xl border border-white/15 bg-black/15 backdrop-blur-md p-4 md:p-5">
+              <div
+                className={cx(
+                  'rounded-2xl border backdrop-blur-md p-4 md:p-5 transition-colors',
+                  s.free
+                    ? 'border-emerald-300/20 bg-emerald-500/5'
+                    : 'border-white/15 bg-black/15'
+                )}
+              >
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="text-xs uppercase tracking-wide text-white/55">{s.label}</div>
-                  <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs text-white/85 border border-white/15">
+                  <span
+                    className={cx(
+                      'inline-flex items-center rounded-full px-3 py-1 text-xs border',
+                      s.free ? 'bg-emerald-500/10 text-emerald-100 border-emerald-300/20' : 'bg-white/10 text-white/85 border-white/15'
+                    )}
+                  >
                     {s.badge}
                   </span>
                 </div>
@@ -497,8 +507,8 @@ function Roadmap() {
                     </div>
                   </div>
                 ) : (
-                  <div className="mt-3 rounded-xl border border-white/12 bg-black/25 p-3 text-sm text-white/70">
-                    <span className="font-semibold text-white/85">0 €</span> – du bekommst das, bevor überhaupt etwas startet.
+                  <div className="mt-3 rounded-xl border border-emerald-300/20 bg-emerald-500/5 p-3 text-sm text-white/75">
+                    <span className="font-extrabold text-emerald-100">0 €</span> – das bekommst du, bevor irgendwas startet.
                   </div>
                 )}
               </div>
@@ -508,7 +518,7 @@ function Roadmap() {
       </div>
 
       <div className="mt-4 text-xs text-white/55">
-        Kurz gesagt: Du gibst nach jedem Sprint Feedback. Zahlungen passieren nur nach deinem „Go“.
+        Der Ablauf ist sprint-basiert. Du prüfst jeden Stand. Zahlungen passieren nur nach deiner Freigabe.
       </div>
     </div>
   );
@@ -533,6 +543,7 @@ function PackageCard({ title, price, bullets, time, highlight = false }) {
                 <TitleGradient>{price}</TitleGradient>
               </div>
             </div>
+
             {highlight ? (
               <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs text-white/85 border border-white/15">
                 Am häufigsten gewählt
@@ -541,8 +552,8 @@ function PackageCard({ title, price, bullets, time, highlight = false }) {
           </div>
 
           <ul className="mt-4 space-y-2 text-sm md:text-base text-white/80">
-            {bullets.map((b) => (
-              <Bullet key={b}>{b}</Bullet>
+            {bullets.map((b, i) => (
+              <Bullet key={`${title}-${i}`}>{b}</Bullet>
             ))}
           </ul>
 
@@ -555,22 +566,27 @@ function PackageCard({ title, price, bullets, time, highlight = false }) {
   );
 }
 
-/* ---------- RECHNER (dominant value) ---------- */
+/* ---------- RECHNER (bigger numbers) ---------- */
 
 function BigEuro({ value }) {
   return (
     <div className="leading-none">
       <div className={cx('bg-clip-text text-transparent bg-gradient-to-r', SCENE.accent, 'font-extrabold tracking-tight')}>
-        <span className="text-[64px] md:text-[88px]">{value}</span>
-        <span className="text-[40px] md:text-[56px] align-baseline ml-2">€</span>
+        <span className="text-[72px] md:text-[104px]">{value}</span>
+        <span className="text-[44px] md:text-[64px] align-baseline ml-2">€</span>
       </div>
     </div>
   );
 }
 
-function PaymentLine({ label, pct, amount, note }) {
+function PaymentLine({ label, pct, amount, note, emphasize = false }) {
   return (
-    <div className="rounded-2xl border border-white/15 bg-black/15 backdrop-blur-md p-4 md:p-5">
+    <div
+      className={cx(
+        'rounded-2xl border backdrop-blur-md p-4 md:p-5',
+        emphasize ? 'border-white/20 bg-white/5' : 'border-white/15 bg-black/15'
+      )}
+    >
       <div className="text-sm md:text-base font-semibold text-white/90">
         {label} <span className="text-white/55 font-normal">({pct}%)</span>
       </div>
@@ -585,17 +601,34 @@ function PaymentLine({ label, pct, amount, note }) {
 /* ---------- PAGE ---------- */
 
 export default function ProzessPage() {
-  const [amountRaw, setAmountRaw] = useState('700');
+  // Anchor: Startwert MUSS mit erstem sichtbaren Preis harmonieren (Komplett zuerst => 1.100 €)
+  const [amountRaw, setAmountRaw] = useState('1100');
+
+  // Paket-Buttons füllen den Rechner; Eingabe bleibt möglich
+  const [selectedPkg, setSelectedPkg] = useState('komplett'); // 'komplett' | 'standard' | 'einstieg'
+
+  useEffect(() => {
+    // initial: ankern auf komplett
+    setSelectedPkg('komplett');
+    setAmountRaw('1100');
+  }, []);
 
   const amount = useMemo(() => {
     const n = Number(String(amountRaw).replace(',', '.'));
-    if (!Number.isFinite(n) || n <= 0) return 700;
+    if (!Number.isFinite(n) || n <= 0) return 1100;
     return Math.round(n);
   }, [amountRaw]);
 
   const p1 = Math.round(amount * 0.4);
   const p2 = Math.round(amount * 0.4);
   const p3 = Math.round(amount * 0.2);
+
+  const pick = (pkg) => {
+    setSelectedPkg(pkg);
+    if (pkg === 'komplett') setAmountRaw('1100');
+    if (pkg === 'standard') setAmountRaw('700');
+    if (pkg === 'einstieg') setAmountRaw('400');
+  };
 
   return (
     <div className="font-proxima text-white min-h-screen">
@@ -608,13 +641,13 @@ export default function ProzessPage() {
 
       <Navbar />
 
-      {/* HERO: Fix navbar overlap + make "free" obvious + show roadmap immediately */}
+      {/* HERO: Kostenlos extrem klar + Roadmap direkt sichtbar */}
       <SectionShell id="hero" hero>
         <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-8 items-start">
           <div className="flex flex-col gap-5">
             <Reveal>
-              <span className="inline-flex items-center gap-2 text-xs md:text-sm text-white/85 bg-white/10 ring-1 ring-white/15 px-3 py-1 rounded-full">
-                <Sparkles size={16} /> Kostenloser Einstieg: Analyse + erster Entwurf (0 €)
+              <span className="inline-flex items-center gap-2 text-xs md:text-sm text-emerald-100 bg-emerald-500/10 ring-1 ring-emerald-300/20 px-3 py-1 rounded-full">
+                <Sparkles size={16} /> 2× kostenlos: Analyse (0 €) + erster Entwurf (0 €)
               </span>
             </Reveal>
 
@@ -622,25 +655,33 @@ export default function ProzessPage() {
               <h1 className="text-3xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
                 Du siehst zuerst etwas,
                 <span className="block">
-                  <TitleGradient>bevor du irgendwas zahlst.</TitleGradient>
+                  <TitleGradient>bevor du zahlst.</TitleGradient>
                 </span>
               </h1>
             </Reveal>
 
             <Reveal delayMs={160}>
-              <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-5 md:p-6">
-                <div className="text-xs uppercase tracking-wide text-white/55">Was du kostenlos bekommst</div>
-                <ul className="mt-4 space-y-2 text-sm md:text-base text-white/80">
-                  <Bullet>15-Minuten Analyse: 3 klare Punkte, die Anfragen bremsen</Bullet>
-                  <Bullet>Erster Entwurf: ein Beispiel-Aufbau (Hero + Struktur + CTA)</Bullet>
-                  <Bullet>Erst danach entscheidest du: weiter oder nicht</Bullet>
-                </ul>
+              <div className="rounded-3xl border border-emerald-300/20 bg-emerald-500/5 backdrop-blur-md p-5 md:p-6">
+                <div className="text-xs uppercase tracking-wide text-white/55">Kostenloser Einstieg</div>
+                <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="rounded-2xl border border-emerald-300/20 bg-black/20 p-4">
+                    <div className="text-sm font-semibold text-emerald-100">Analyse – 0 €</div>
+                    <div className="mt-1 text-sm text-white/75">3 klare Punkte, die Anfragen gerade verhindern.</div>
+                  </div>
+                  <div className="rounded-2xl border border-emerald-300/20 bg-black/20 p-4">
+                    <div className="text-sm font-semibold text-emerald-100">Erster Entwurf – 0 €</div>
+                    <div className="mt-1 text-sm text-white/75">Ein Beispiel-Aufbau als Vorschau (Hero + Struktur + CTA).</div>
+                  </div>
+                </div>
+                <div className="mt-3 text-sm text-white/70">
+                  Danach entscheidest du: weiter oder nicht. Ohne Diskussion.
+                </div>
               </div>
             </Reveal>
 
             <Reveal delayMs={220}>
               <div className="rounded-2xl border border-white/12 bg-black/25 p-4 text-sm text-white/75 leading-relaxed">
-                Wichtig: Zahlungen sind sprint-basiert. Du zahlst nur nach deinem „Go“ nach dem jeweiligen Sprint.
+                Ablauf in Sprints: Du siehst jeden Stand. Zahlungen passieren nur nach deiner Freigabe.
               </div>
             </Reveal>
           </div>
@@ -652,7 +693,7 @@ export default function ProzessPage() {
                 <Wand2 size={18} className="text-white/55" />
               </div>
               <div className="mt-3 text-xl md:text-2xl font-bold text-white/90">
-                Sprints, Reviews, Zahlungen — <TitleGradient>transparent.</TitleGradient>
+                Sprints, Reviews, Zahlungen — <TitleGradient>ein System.</TitleGradient>
               </div>
               <div className="mt-5">
                 <Roadmap />
@@ -662,7 +703,7 @@ export default function ProzessPage() {
         </div>
       </SectionShell>
 
-      {/* PAKETE (short, but still present) */}
+      {/* PAKETE (Anchor-Reihenfolge: Komplett -> Standard -> Einstieg) */}
       <SectionShell id="pakete">
         <Reveal>
           <div className="text-xs uppercase tracking-wide text-white/55">Pakete</div>
@@ -670,9 +711,9 @@ export default function ProzessPage() {
 
         <Reveal delayMs={90}>
           <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Drei Optionen.
+            Wähle ein Paket.
             <span className="block">
-              <TitleGradient>Du wählst die passende Größe.</TitleGradient>
+              <TitleGradient>Der Ablauf bleibt immer gleich.</TitleGradient>
             </span>
           </h2>
         </Reveal>
@@ -681,73 +722,163 @@ export default function ProzessPage() {
           <PackageCard
             title="Komplett"
             price="ab 1.100 €"
-            bullets={['Website (bis 5 Seiten)', 'Mini-Brandbook (Regeln)', '1 Motion-Asset']}
+            bullets={[
+              'Website (bis 5 Seiten)',
+              'Mini-Brandbook (Regeln)',
+              <>
+                Motion-Asset{' '}
+                <a
+                  href="https://www.leonseitz.com/portfolio/motion-design"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-white/80 hover:text-white underline underline-offset-4"
+                >
+                  Beispiel ansehen <ExternalLink size={14} />
+                </a>
+              </>,
+            ]}
             time="ca. 3 Wochen"
             highlight={false}
           />
+
           <PackageCard
             title="Standard"
             price="ab 700 €"
-            bullets={['Website (bis 5 Seiten)', 'Branding-Grundlage', 'Kontakt + klare CTAs']}
+            bullets={[
+              'Website (bis 5 Seiten)',
+              'Branding-Grundlage (Farben/Schrift/Logo)',
+              <>
+                Klarer Aufbau wie{' '}
+                <a
+                  href="https://www.leonseitz.com/portfolio/kirche-fundraising"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-white/80 hover:text-white underline underline-offset-4"
+                >
+                  dieses Projekt <ExternalLink size={14} />
+                </a>
+              </>,
+            ]}
             time="10–14 Tage"
             highlight
           />
+
           <PackageCard
             title="Einstieg"
             price="ab 400 €"
-            bullets={['1 Landingpage', 'Klarer Aufbau + 1 CTA', 'Mobil optimiert']}
+            bullets={['1 Landingpage', '1 CTA, klare Struktur', 'Mobil optimiert']}
             time="7 Tage"
             highlight={false}
           />
         </div>
+
+        {/* Verbindung Pakete <-> Roadmap (ein mentales Modell) */}
+        <Reveal delayMs={140}>
+          <div className="mt-6 rounded-2xl border border-white/12 bg-black/25 p-4 text-sm text-white/75 leading-relaxed">
+            Der Ablauf ist in allen Paketen identisch: kostenlose Analyse + kostenloser Entwurf, dann Sprint 1/2/3 mit Reviews.
+            Wenn du magst: scrolle kurz zur <a href="#rechner" className="text-white/80 hover:text-white underline underline-offset-4">Zahlungslogik</a>.
+          </div>
+        </Reveal>
       </SectionShell>
 
-      {/* RECHNER (money moment + “value you’d invest”) */}
+      {/* RECHNER (Paket-Buttons füllen vor; Default = 1.100 €; Zahlen dominant) */}
       <SectionShell id="rechner">
         <Card>
           <div className="flex items-center justify-between gap-3">
-            <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsrechner</div>
+            <div className="text-xs uppercase tracking-wide text-white/55">Zahlungslogik</div>
             <Wand2 size={18} className="text-white/55" />
           </div>
 
           <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Trag den Betrag ein,
+            Wähle ein Paket.
             <span className="block">
-              <TitleGradient>den du investieren würdest.</TitleGradient>
+              <TitleGradient>Du siehst sofort, wann was fällig ist.</TitleGradient>
             </span>
           </h2>
 
           <div className="mt-5 rounded-2xl border border-white/12 bg-black/25 p-4 text-sm text-white/75 leading-relaxed">
-            Du zahlst nur weiter, wenn du nach dem Sprint zufrieden bist und „Go“ gibst.
+            Wichtig: Die Zahlung kommt erst nach dem Sprint-Review, wenn du sagst: „Passt.“
           </div>
 
           <div className="mt-6 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-6 md:gap-8 items-start">
             <div className="rounded-3xl border border-white/15 bg-black/15 backdrop-blur-md p-5 md:p-6">
-              <label className="text-sm text-white/70">
-                Projektpreis (dein Wert — einfach testen, live berechnet)
-              </label>
+              <div className="text-sm text-white/70">Paket auswählen</div>
 
+              <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <button
+                  onClick={() => pick('einstieg')}
+                  className={cx(
+                    'px-4 py-3 rounded-2xl border text-sm font-semibold transition-colors',
+                    selectedPkg === 'einstieg'
+                      ? 'border-white/25 bg-white/10 text-white'
+                      : 'border-white/12 bg-black/25 text-white/80 hover:bg-white/5'
+                  )}
+                >
+                  Einstieg (400 €)
+                </button>
+                <button
+                  onClick={() => pick('standard')}
+                  className={cx(
+                    'px-4 py-3 rounded-2xl border text-sm font-semibold transition-colors',
+                    selectedPkg === 'standard'
+                      ? 'border-violet-300/35 bg-violet-500/10 text-white'
+                      : 'border-white/12 bg-black/25 text-white/80 hover:bg-white/5'
+                  )}
+                >
+                  Standard (700 €)
+                </button>
+                <button
+                  onClick={() => pick('komplett')}
+                  className={cx(
+                    'px-4 py-3 rounded-2xl border text-sm font-semibold transition-colors',
+                    selectedPkg === 'komplett'
+                      ? 'border-white/25 bg-white/10 text-white'
+                      : 'border-white/12 bg-black/25 text-white/80 hover:bg-white/5'
+                  )}
+                >
+                  Komplett (1.100 €)
+                </button>
+              </div>
+
+              <div className="mt-5 text-sm text-white/70">Oder Betrag anpassen (optional)</div>
               <div className="mt-3 flex items-center gap-3">
                 <input
                   value={amountRaw}
                   onChange={(e) => setAmountRaw(e.target.value)}
                   inputMode="numeric"
                   className="w-full rounded-2xl border border-white/15 bg-black/35 px-4 py-3 text-white text-lg md:text-xl outline-none focus:border-white/30"
-                  placeholder="z.B. 700"
+                  placeholder="z.B. 1100"
                   aria-label="Projektpreis in Euro"
                 />
                 <div className="text-white/70 font-semibold">€</div>
               </div>
 
-              <div className="mt-5 rounded-2xl border border-white/12 bg-black/25 p-4 text-sm text-white/75 leading-relaxed">
-                Sprint-Logik: Du siehst zuerst die Version. Zahlung kommt erst nach deinem „Passt“.
+              <div className="mt-5 rounded-2xl border border-emerald-300/20 bg-emerald-500/5 p-4 text-sm text-white/75 leading-relaxed">
+                Vor dem ersten Sprint zahlst du <span className="font-extrabold text-emerald-100">zweimal 0 €</span>:
+                Analyse + Entwurf.
               </div>
             </div>
 
             <div className="space-y-3">
-              <PaymentLine label="Zahlung 1 – nach Sprint 1" pct={40} amount={p1} note="Fällig nach Review der Version 1 (nur wenn du freigibst)" />
-              <PaymentLine label="Zahlung 2 – nach Sprint 2" pct={40} amount={p2} note="Fällig nach Freigabe des Zwischenstands (nur wenn du freigibst)" />
-              <PaymentLine label="Zahlung 3 – nach Übergabe" pct={20} amount={p3} note="Fällig nach Go-Live / Übergabe (Zugänge + Dateien)" />
+              <PaymentLine
+                label="Zahlung 1 – nach Sprint 1"
+                pct={40}
+                amount={p1}
+                note="Fällig nach Review der Version 1 (nur wenn du freigibst)"
+                emphasize
+              />
+              <PaymentLine
+                label="Zahlung 2 – nach Sprint 2"
+                pct={40}
+                amount={p2}
+                note="Fällig nach Review des Zwischenstands (nur wenn du freigibst)"
+              />
+              <PaymentLine
+                label="Zahlung 3 – nach Übergabe"
+                pct={20}
+                amount={p3}
+                note="Fällig nach Go-Live / Übergabe (Zugänge + Dateien)"
+              />
             </div>
           </div>
         </Card>
