@@ -458,16 +458,16 @@ export default function ProzessPage() {
 
         <Reveal delayMs={90}>
           <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Slider bewegen.
+            Was würdest du für deine Website investieren?
             <span className="block">
-              <TitleGradient>Du siehst sofort die Zahlungsziele.</TitleGradient>
+              <TitleGradient>Ich zeige dir, was in diesem Rahmen möglich ist.</TitleGradient>
             </span>
           </h2>
         </Reveal>
 
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-4 md:gap-6">
           <Card className="p-6 md:p-7">
-            <div className="text-xs uppercase tracking-wide text-white/55">Betrag</div>
+            <div className="text-xs uppercase tracking-wide text-white/55">Dein ungefähres Budget für die Website</div>
 
             <div className="mt-4">
               <input
@@ -540,9 +540,9 @@ export default function ProzessPage() {
 
         <Reveal delayMs={90}>
           <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Umfang wählen.
+            Was brauchst du wirklich?
             <span className="block">
-              <TitleGradient>Empfehlung ist schon gesetzt.</TitleGradient>
+              <TitleGradient>Schau am besten auf deine Situation. Nicht auf die Features.</TitleGradient>
             </span>
           </h2>
         </Reveal>
