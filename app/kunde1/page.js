@@ -638,7 +638,7 @@ function OverallStats({ project }) {
 
 /* ─── NOTIFICATION TOAST ─────────────────────────────────────────────────────── */
 
-const CLIENT_EMAIL = "kunde@example.com"; // ← Kunden-E-Mail hier eintragen
+const CLIENT_EMAIL = "leonseitz9@gmail.com";
 
 function NotificationToast({ sprint, project, onClose }) {
   if (!sprint) return null;
