@@ -1,47 +1,36 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import {
-  ArrowLeft,
   ArrowRight,
   Sparkles,
-  Globe2,
-  Video,
-  ExternalLink,
   CheckCircle2,
-  Clock,
-  LayoutTemplate,
-  CreditCard,
-  FileText,
+  Play,
+  Wand2,
+  Monitor,
+  Film,
+  BookOpen,
+  Mail,
+  ExternalLink,
 } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 /* ---------- CONFIG ---------- */
 
-const DONATION_URL = 'https://kircheab.de/spenden';
-const YT_EMBED = 'https://www.youtube-nocookie.com/embed/svgNO7ErcKg';
-
 const SECTIONS = [
-  { id: 'hero', label: 'Hero' },
-  { id: 'meta', label: 'Meta' },
-  { id: 'deliverables', label: 'Was geliefert wurde' },
-  { id: 'impact', label: 'Wirkung' },
+  { id: 's1', label: 'Start' },
+  { id: 's2', label: 'Was du bekommst' },
+  { id: 's3', label: 'Leistungen' },
+  { id: 's4', label: 'Proof' },
+  { id: 's5', label: 'Ablauf' },
   { id: 'request', label: 'Anfrage' },
 ];
 
-const SCENES: Record<
-  string,
-  {
-    base: string;
-    g1: string;
-    g2: string;
-    blobs: { cls: string; x: string; y: string; s: string; blur: number }[];
-    accent: string;
-  }
-> = {
-  hero: {
+const SCENES = {
+  s1: {
     base: '#070312',
     g1: `radial-gradient(1200px 700px at 18% 18%, rgba(168,85,247,0.34), transparent 60%),
          radial-gradient(900px 700px at 82% 25%, rgba(56,189,248,0.16), transparent 55%)`,
@@ -53,7 +42,7 @@ const SCENES: Record<
     ],
     accent: 'from-violet-200 via-indigo-200 to-cyan-200',
   },
-  meta: {
+  s2: {
     base: '#021019',
     g1: `radial-gradient(1100px 750px at 22% 20%, rgba(34,211,238,0.26), transparent 60%),
          radial-gradient(900px 700px at 88% 15%, rgba(99,102,241,0.20), transparent 55%)`,
@@ -65,7 +54,7 @@ const SCENES: Record<
     ],
     accent: 'from-cyan-200 via-indigo-200 to-violet-200',
   },
-  deliverables: {
+  s3: {
     base: '#120316',
     g1: `radial-gradient(1200px 750px at 20% 10%, rgba(244,114,182,0.18), transparent 60%),
          radial-gradient(950px 750px at 84% 30%, rgba(168,85,247,0.22), transparent 55%)`,
@@ -77,7 +66,7 @@ const SCENES: Record<
     ],
     accent: 'from-pink-200 via-fuchsia-200 to-indigo-200',
   },
-  impact: {
+  s4: {
     base: '#03110a',
     g1: `radial-gradient(1200px 750px at 18% 10%, rgba(16,185,129,0.13), transparent 60%),
          radial-gradient(900px 700px at 85% 20%, rgba(59,130,246,0.18), transparent 55%)`,
@@ -88,6 +77,18 @@ const SCENES: Record<
       { cls: 'bg-indigo-500/11', x: '18%', y: '82%', s: '48rem', blur: 170 },
     ],
     accent: 'from-emerald-200 via-cyan-200 to-indigo-200',
+  },
+  s5: {
+    base: '#120b02',
+    g1: `radial-gradient(1200px 750px at 15% 10%, rgba(250,204,21,0.10), transparent 60%),
+         radial-gradient(900px 700px at 88% 25%, rgba(236,72,153,0.16), transparent 55%)`,
+    g2: `linear-gradient(135deg, #120b02 0%, #1b0713 55%, #05020a 100%)`,
+    blobs: [
+      { cls: 'bg-amber-400/10', x: '-10%', y: '-14%', s: '56rem', blur: 170 },
+      { cls: 'bg-pink-500/11', x: '74%', y: '10%', s: '56rem', blur: 160 },
+      { cls: 'bg-violet-500/11', x: '18%', y: '82%', s: '48rem', blur: 170 },
+    ],
+    accent: 'from-amber-200 via-pink-200 to-violet-200',
   },
   request: {
     base: '#04040a',
@@ -105,20 +106,20 @@ const SCENES: Record<
 
 /* ---------- UTIL ---------- */
 
-function cx(...xs: (string | false | null | undefined)[]) {
+function cx(...xs) {
   return xs.filter(Boolean).join(' ');
 }
 
-function TitleGradient({ sceneId, children }: { sceneId: string; children: React.ReactNode }) {
-  const scene = SCENES[sceneId] ?? SCENES.hero;
+function TitleGradient({ sceneId, children }) {
+  const scene = SCENES[sceneId] ?? SCENES.s1;
   return <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', scene.accent)}>{children}</span>;
 }
 
-function useActiveSection(sectionIds: string[]) {
+function useActiveSection(sectionIds) {
   const [activeId, setActiveId] = useState(sectionIds[0]);
 
   useEffect(() => {
-    const els = sectionIds.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    const els = sectionIds.map((id) => document.getElementById(id)).filter(Boolean);
     if (!els.length) return;
 
     const obs = new IntersectionObserver(
@@ -138,7 +139,7 @@ function useActiveSection(sectionIds: string[]) {
   return { activeId };
 }
 
-function useReveal(ref: React.RefObject<HTMLElement | null>) {
+function useReveal(ref) {
   const [shown, setShown] = useState(false);
   useEffect(() => {
     const el = ref.current;
@@ -157,6 +158,7 @@ function useReveal(ref: React.RefObject<HTMLElement | null>) {
 
 function useScrollProgress() {
   const [p, setP] = useState(0);
+
   useEffect(() => {
     const onScroll = () => {
       const doc = document.documentElement;
@@ -167,15 +169,16 @@ function useScrollProgress() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
   return p;
 }
 
 function useMousePos() {
   const [pos, setPos] = useState({ x: -9999, y: -9999 });
-  const raf = useRef<number | null>(null);
+  const raf = useRef(null);
 
   useEffect(() => {
-    const onMove = (e: MouseEvent) => {
+    const onMove = (e) => {
       const x = e.clientX;
       const y = e.clientY;
       if (raf.current) cancelAnimationFrame(raf.current);
@@ -193,7 +196,7 @@ function useMousePos() {
 
 /* ---------- GLOBAL BACKGROUND ---------- */
 
-function GlobalBackground({ activeId }: { activeId: string }) {
+function GlobalBackground({ activeId }) {
   return (
     <div className="fixed inset-0 -z-10">
       {Object.keys(SCENES).map((key) => {
@@ -207,7 +210,10 @@ function GlobalBackground({ activeId }: { activeId: string }) {
               'absolute inset-0 transition-[opacity,filter,transform] duration-[1200ms] ease-out will-change-[opacity,filter,transform]',
               on ? 'opacity-100 blur-0 scale-100' : 'opacity-0 blur-[14px] scale-[1.025]'
             )}
-            style={{ backgroundColor: s.base, backgroundImage: `${s.g1}, ${s.g2}` }}
+            style={{
+              backgroundColor: s.base,
+              backgroundImage: `${s.g1}, ${s.g2}`,
+            }}
           />
         );
       })}
@@ -227,7 +233,7 @@ function GlobalBackground({ activeId }: { activeId: string }) {
   );
 }
 
-function GlobalLightLeaks({ activeId }: { activeId: string }) {
+function GlobalLightLeaks({ activeId }) {
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none">
       {Object.keys(SCENES).map((key) => {
@@ -286,8 +292,10 @@ function ScrollProgressBar() {
   );
 }
 
+/* softer cursor halo */
 function CursorHalo() {
   const { x, y } = useMousePos();
+
   return (
     <div className="hidden md:block fixed inset-0 z-[6] pointer-events-none">
       <div
@@ -314,22 +322,14 @@ function CursorHalo() {
   );
 }
 
-function Magnetic({
-  children,
-  strength = 14,
-  className = '',
-}: {
-  children: React.ReactNode;
-  strength?: number;
-  className?: string;
-}) {
-  const ref = useRef<HTMLSpanElement | null>(null);
+function Magnetic({ children, strength = 14, className = '' }) {
+  const ref = useRef(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    const onMove = (e: MouseEvent) => {
+    const onMove = (e) => {
       const r = el.getBoundingClientRect();
       const cx0 = r.left + r.width / 2;
       const cy0 = r.top + r.height / 2;
@@ -359,14 +359,14 @@ function Magnetic({
   );
 }
 
-function TiltCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  const ref = useRef<HTMLDivElement | null>(null);
+function TiltCard({ children, className = '' }) {
+  const ref = useRef(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    const onMove = (e: MouseEvent) => {
+    const onMove = (e) => {
       const r = el.getBoundingClientRect();
       const px = (e.clientX - r.left) / r.width;
       const py = (e.clientY - r.top) / r.height;
@@ -415,17 +415,17 @@ function TiltCard({ children, className = '' }: { children: React.ReactNode; cla
 
 /* ---------- STRUCTURE ---------- */
 
-function Scene({ id, children }: { id: string; children: React.ReactNode }) {
+function Scene({ id, children }) {
   return (
-    <section id={id} className="relative px-5 md:px-16 py-16 md:py-20 scroll-mt-24">
+    <section id={id} className="relative min-h-screen flex items-center px-5 md:px-16 py-16 md:snap-start scroll-mt-24">
       <div className="relative max-w-6xl mx-auto w-full">{children}</div>
     </section>
   );
 }
 
-function Reveal({ children, delayMs = 0 }: { children: React.ReactNode; delayMs?: number }) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const shown = useReveal(ref as unknown as React.RefObject<HTMLElement | null>);
+function Reveal({ children, delayMs = 0 }) {
+  const ref = useRef(null);
+  const shown = useReveal(ref);
 
   return (
     <div
@@ -441,11 +441,38 @@ function Reveal({ children, delayMs = 0 }: { children: React.ReactNode; delayMs?
   );
 }
 
-/* ---------- COUNTUP (for 17.000) ---------- */
+function PrimaryCTA({ label = 'Projekt anfragen' }) {
+  return (
+    <Magnetic>
+      <Link
+        href="/#request"
+        className="group px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center justify-center gap-2"
+      >
+        {label}
+        <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
+      </Link>
+    </Magnetic>
+  );
+}
 
-function useCountUp({ target, durationMs = 900 }: { target: number; durationMs?: number }) {
+function GhostCTA({ href, children }) {
+  return (
+    <Magnetic strength={10}>
+      <Link
+        href={href}
+        className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
+      >
+        {children}
+      </Link>
+    </Magnetic>
+  );
+}
+
+/* ---------- NUMBER ANIMATION ---------- */
+
+function useCountUp({ target, durationMs = 900 }) {
   const [value, setValue] = useState(0);
-  const raf = useRef<number | null>(null);
+  const raf = useRef(null);
 
   const start = useCallback(() => {
     if (raf.current) cancelAnimationFrame(raf.current);
@@ -453,7 +480,7 @@ function useCountUp({ target, durationMs = 900 }: { target: number; durationMs?:
     const from = 0;
     const to = Math.max(0, target);
 
-    const tick = (t: number) => {
+    const tick = (t) => {
       const p = Math.min(1, (t - t0) / durationMs);
       const eased = 1 - Math.pow(1 - p, 3);
       setValue(Math.round(from + (to - from) * eased));
@@ -467,10 +494,31 @@ function useCountUp({ target, durationMs = 900 }: { target: number; durationMs?:
   return { value, start };
 }
 
-function ProofDonateCard({ sceneId }: { sceneId: string }) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const shown = useReveal(ref as unknown as React.RefObject<HTMLElement | null>);
-  const { value, start } = useCountUp({ target: 17000, durationMs: 950 });
+function AnimatedNumber({ value, sceneId, className = '' }) {
+  return (
+    <span className={cx('relative inline-flex items-baseline', className)}>
+      <span className="text-5xl md:text-6xl font-extrabold tracking-tight leading-none">
+        <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', (SCENES[sceneId] ?? SCENES.s1).accent)}>
+          {value}
+        </span>
+      </span>
+      <span
+        className="pointer-events-none absolute -inset-x-4 -inset-y-4 blur-2xl opacity-35"
+        style={{
+          background: 'radial-gradient(220px 120px at 40% 55%, rgba(255,255,255,0.18), transparent 65%)',
+          mixBlendMode: 'screen',
+        }}
+      />
+    </span>
+  );
+}
+
+/* ---------- PROOF STAT ---------- */
+
+function ProofStat({ sceneId, label, target, suffix = '', durationMs = 900 }) {
+  const ref = useRef(null);
+  const shown = useReveal(ref);
+  const { value, start } = useCountUp({ target, durationMs });
 
   useEffect(() => {
     if (shown) start();
@@ -478,57 +526,135 @@ function ProofDonateCard({ sceneId }: { sceneId: string }) {
 
   return (
     <TiltCard className="rounded-3xl">
-      <div
-        ref={ref}
-        className="relative overflow-hidden rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8"
-      >
+      <div ref={ref} className="relative overflow-hidden rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8">
         <div
           className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.08]"
-          style={{ filter: 'blur(46px)', animation: 'shineSoft 5.6s cubic-bezier(.2,.9,.2,1) infinite' }}
+          style={{
+            filter: 'blur(46px)',
+            animation: 'shineSoft 5.6s cubic-bezier(.2,.9,.2,1) infinite',
+          }}
         />
 
-        <div className="flex items-center justify-between gap-3">
-          <div className="text-xs uppercase tracking-wide text-white/55">Spenden in 2 Monaten</div>
-          <div className="inline-flex items-center gap-2 text-xs text-white/60">
-            <Globe2 size={14} className="text-emerald-300" />
-            DE &amp; EN
+        <div className="text-xs uppercase tracking-wide text-white/55">Proof</div>
+
+        <div className="mt-3 flex items-end gap-2 flex-wrap">
+          <AnimatedNumber value={value} sceneId={sceneId} />
+          {suffix ? (
+            <span className="text-white/75 text-xl md:text-2xl font-semibold leading-none pb-[2px]">
+              <TitleGradient sceneId={sceneId}>{suffix}</TitleGradient>
+            </span>
+          ) : null}
+        </div>
+
+        <div className="mt-2 text-sm md:text-base text-white/80">{label}</div>
+      </div>
+    </TiltCard>
+  );
+}
+
+/* ---------- HERO RECTANGLES (UNIFIED) ---------- */
+
+function MiniTile({ icon, title, sub }) {
+  return (
+    <div className="h-full">
+      <div
+        className={cx(
+          'group h-full min-h-[78px] md:min-h-[86px]',
+          'rounded-2xl border border-white/15',
+          'bg-black/18 backdrop-blur-md',
+          'px-4 py-4 md:px-5 md:py-4',
+          'flex items-center gap-3',
+          'transition-[border-color,background-color,transform] duration-300',
+          'hover:border-white/25 hover:bg-black/24 hover:-translate-y-[1px]'
+        )}
+      >
+        <div
+          className={cx(
+            'shrink-0',
+            'w-10 h-10 md:w-11 md:h-11',
+            'rounded-xl',
+            'border border-white/15',
+            'bg-white/10',
+            'flex items-center justify-center',
+            'text-white/90',
+            'transition-colors duration-300',
+            'group-hover:bg-white/14 group-hover:border-white/22'
+          )}
+        >
+          {icon}
+        </div>
+
+        <div className="min-w-0">
+          <div className="text-sm md:text-[15px] font-semibold text-white/92 leading-tight truncate">{title}</div>
+          <div className="mt-1 text-xs md:text-sm text-white/60 leading-tight truncate">{sub}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Stripe({ title, desc, icon }) {
+  return (
+    <div className="rounded-2xl border border-white/15 bg-white/10 p-4 md:p-5 flex items-start gap-3">
+      <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">{icon}</div>
+      <div className="min-w-0">
+        <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
+        <div className="mt-1 text-sm text-white/65 leading-relaxed">{desc}</div>
+      </div>
+    </div>
+  );
+}
+
+function BigService({ sceneId, icon, kicker, title, desc }) {
+  return (
+    <Reveal>
+      <TiltCard className="rounded-3xl">
+        <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8 overflow-hidden relative">
+          <div
+            className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.07]"
+            style={{
+              filter: 'blur(50px)',
+              animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite',
+            }}
+          />
+
+          <div className="flex items-center justify-between gap-4">
+            <div className="inline-flex items-center gap-2 text-xs uppercase tracking-wide text-white/60">
+              <span className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center">{icon}</span>
+              {kicker}
+            </div>
+            <Wand2 size={18} className="text-white/55" />
+          </div>
+
+          <div className="mt-4 text-2xl md:text-4xl font-extrabold leading-tight text-white">
+            {title}
+            <span className="block text-base md:text-lg mt-2">
+              <TitleGradient sceneId={sceneId}>Als System gedacht, nicht als Einzelteil.</TitleGradient>
+            </span>
+          </div>
+
+          <p className="mt-4 text-sm md:text-base text-white/70 leading-relaxed max-w-2xl">{desc}</p>
+
+          <div className="mt-6">
+            <Link href="/#request" className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors font-semibold">
+              Kurz anfragen <ArrowRight size={16} />
+            </Link>
           </div>
         </div>
+      </TiltCard>
+    </Reveal>
+  );
+}
 
-        <div className="mt-4 flex items-end gap-2 flex-wrap">
-          <span className="text-5xl md:text-6xl font-extrabold tracking-tight leading-none">
-            <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', (SCENES[sceneId] ?? SCENES.hero).accent)}>
-              {value.toLocaleString('de-DE')}
-            </span>
-          </span>
-          <span className="text-white/75 text-xl md:text-2xl font-semibold leading-none pb-[2px]">
-            <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', (SCENES[sceneId] ?? SCENES.hero).accent)}>
-              €
-            </span>
-          </span>
+function Step({ n, title, desc }) {
+  return (
+    <TiltCard className="rounded-2xl">
+      <div className="rounded-2xl border border-white/15 bg-black/20 backdrop-blur-md p-4 md:p-5">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center font-extrabold">{n}</div>
+          <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
         </div>
-
-        <p className="mt-3 text-sm md:text-base text-white/80 leading-relaxed">
-          Wir sind sehr dankbar. Aus unserer Sicht wäre das ohne Gott nicht möglich gewesen.
-        </p>
-
-        <div className="mt-5 flex flex-wrap gap-2">
-          <a
-            href={DONATION_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold"
-          >
-            Landingpage ansehen <ExternalLink size={16} />
-          </a>
-
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold text-white"
-          >
-            Ähnliches Projekt anfragen <ArrowRight size={16} />
-          </Link>
-        </div>
+        <div className="mt-2 text-sm text-white/70 leading-relaxed">{desc}</div>
       </div>
     </TiltCard>
   );
@@ -536,9 +662,21 @@ function ProofDonateCard({ sceneId }: { sceneId: string }) {
 
 /* ---------- PAGE ---------- */
 
-export default function KircheFundraisingPage() {
+export default function Home() {
   const sectionIds = useMemo(() => SECTIONS.map((s) => s.id), []);
   const { activeId } = useActiveSection(sectionIds);
+
+  useEffect(() => {
+    const handle = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+      const el = document.querySelector(hash);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    handle();
+    window.addEventListener('hashchange', handle);
+    return () => window.removeEventListener('hashchange', handle);
+  }, []);
 
   return (
     <div className="font-proxima text-white">
@@ -552,377 +690,362 @@ export default function KircheFundraisingPage() {
 
       <Navbar />
 
-      {/* HERO */}
-      <Scene id="hero">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-8 md:gap-10 items-start">
-          <div>
+      <main className="md:snap-y md:snap-mandatory">
+        {/* 01 */}
+        <Scene id="s1">
+          <div className="flex flex-col items-center text-center gap-6">
             <Reveal>
-              <Link href="/portfolio" className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white">
-                <ArrowLeft size={16} /> Zurück zum Portfolio
-              </Link>
-            </Reveal>
-
-            <Reveal delayMs={90}>
-              <span className="mt-6 inline-flex items-center gap-2 text-xs md:text-sm text-white/85 bg-white/10 ring-1 ring-white/15 px-3 py-1 rounded-full">
-                <Sparkles size={16} /> Case Study · Kirche für Aschaffenburg
+              <span className="inline-flex items-center gap-2 text-xs md:text-sm text-white/85 bg-white/10 ring-1 ring-white/15 px-3 py-1 rounded-full">
+                <Sparkles size={16} /> Digital Projects · Campaigns · Content
               </span>
             </Reveal>
 
-            <Reveal delayMs={160}>
-              <h1 className="mt-5 text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.03]">
-                Fundraising-Seite,
+            <Reveal delayMs={90}>
+              <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight leading-[1.03]">
+                Ich setze digitale Projekte um,
                 <span className="block">
-                  <TitleGradient sceneId="hero">klar aufgebaut und schnell live.</TitleGradient>
+                  <TitleGradient sceneId="s1">die sauber wirken und performen.</TitleGradient>
                 </span>
               </h1>
             </Reveal>
 
-            <Reveal delayMs={240}>
-              <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
-                Ziel war eine Seite, die ohne Erklärung funktioniert: Anliegen verstehen, Vertrauen bekommen, Spendenweg
-                wählen. Dazu DE/EN Inhalte, Flyer und ein Projektvideo.
-              </p>
-            </Reveal>
-
-            <Reveal delayMs={320}>
-              <div className="mt-7 flex flex-wrap gap-2">
-                {['Landingpage', 'DE & EN', 'PayPal & Überweisung', 'QR-Codes', 'Flyer', 'Video'].map((t) => (
-                  <span
-                    key={t}
-                    className="inline-flex items-center rounded-full bg-white/10 border border-white/12 px-3 py-1 text-xs md:text-[13px] text-white/85"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </Reveal>
-
-            <Reveal delayMs={390}>
-              <div className="mt-8 flex flex-wrap gap-2">
-                <Magnetic>
-                  <a
-                    href={DONATION_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center justify-center gap-2"
-                  >
-                    Zur Spenden-Seite
-                    <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
-                  </a>
-                </Magnetic>
-
-                <Magnetic strength={10}>
-                  <Link
-                    href="/contact"
-                    className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
-                  >
-                    Ähnliches Projekt anfragen <ArrowRight size={18} />
-                  </Link>
-                </Magnetic>
-              </div>
-            </Reveal>
-          </div>
-
-          {/* Right: Video */}
-          <Reveal delayMs={140}>
-            <TiltCard className="rounded-3xl">
-              <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md overflow-hidden">
-                <div className="p-5 md:p-6 flex items-center justify-between gap-3 border-b border-white/10">
-                  <div className="inline-flex items-center gap-2 text-xs md:text-sm text-white/85">
-                    <Video size={16} className="text-indigo-200" />
-                    Projektvideo
-                  </div>
-                  <div className="inline-flex items-center gap-2 text-xs text-white/60">
-                    <Globe2 size={14} className="text-emerald-300" />
-                    DE &amp; EN
-                  </div>
-                </div>
-
-                <div className="relative w-full aspect-video overflow-hidden bg-black">
-                  <iframe
-                    className="absolute inset-0 w-full h-full"
-                    src={YT_EMBED}
-                    title="Kirche für Aschaffenburg – Fundraising Video"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  />
-                </div>
-
-                <div className="p-5 md:p-6">
-                  <div className="text-xs uppercase tracking-wide text-white/55">Kurzfassung</div>
-                  <p className="mt-2 text-sm md:text-base text-white/75 leading-relaxed">
-                    Story + klare Spendenwege (PayPal/Überweisung) + QR-Codes + Assets (Flyer/Video) → ein sauberer,
-                    reibungsarmer Funnel.
-                  </p>
-
-                  <div className="mt-4">
-                    <a
-                      href={DONATION_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-white/85 hover:text-white font-semibold"
-                    >
-                      Landingpage öffnen <ExternalLink size={16} />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </TiltCard>
-          </Reveal>
-        </div>
-      </Scene>
-
-      {/* META */}
-      <Scene id="meta">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-4">
-          <MetaCard label="Ziel" value="Spenden sammeln" icon={<Sparkles size={16} />} />
-          <MetaCard label="Zeitraum" value="~ 2 Wochen bis live" icon={<Clock size={16} />} />
-          <MetaCard label="Rolle" value="Konzept · Design · Umsetzung" icon={<LayoutTemplate size={16} />} />
-          <MetaCard label="Setup" value="DE/EN · Payments · QR" icon={<CreditCard size={16} />} />
-        </div>
-
-        <div className="mt-6">
-          <ProofDonateCard sceneId="meta" />
-        </div>
-      </Scene>
-
-      {/* DELIVERABLES */}
-      <Scene id="deliverables">
-        <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Was geliefert wurde</div>
-        </Reveal>
-
-        <Reveal delayMs={90}>
-          <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-            Verständlich,
-            <span className="block">
-              <TitleGradient sceneId="deliverables">nicht überdesignt.</TitleGradient>
-            </span>
-          </h2>
-        </Reveal>
-
-        <Reveal delayMs={160}>
-          <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-2xl">
-            Fokus war weniger „schön“, sondern „verständlich und einfach zu nutzen“: klare Story, klare Spendenwege,
-            sauberer Ablauf.
-          </p>
-        </Reveal>
-
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <MiniCard
-            icon={<LayoutTemplate size={18} />}
-            title="Landingpage"
-            bullets={['Story und Struktur', 'Mobile-first Umsetzung', 'Vertrauen und klare CTAs']}
-          />
-          <MiniCard
-            icon={<CreditCard size={18} />}
-            title="Spendenwege"
-            bullets={['PayPal und Überweisung', 'QR-Codes und kurze Links', 'so wenig Reibung wie möglich']}
-          />
-          <MiniCard
-            icon={<FileText size={18} />}
-            title="Content und Medien"
-            bullets={['Texte in DE und EN', '4 Flyer für Verteilung', 'Projektvideo für Reichweite']}
-          />
-        </div>
-
-        <Reveal delayMs={220}>
-          <div className="mt-8 flex flex-wrap gap-2">
-            <Magnetic>
-              <a
-                href={DONATION_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center justify-center gap-2"
-              >
-                Zur Spenden-Seite <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
-              </a>
-            </Magnetic>
-
-            <Magnetic strength={10}>
-              <Link
-                href="/portfolio"
-                className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
-              >
-                Mehr Projekte <ExternalLink size={18} />
-              </Link>
-            </Magnetic>
-          </div>
-        </Reveal>
-      </Scene>
-
-      {/* IMPACT */}
-      <Scene id="impact">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          <div>
-            <Reveal>
-              <div className="text-xs uppercase tracking-wide text-white/55">Wirkung</div>
-            </Reveal>
-
-            <Reveal delayMs={90}>
-              <h3 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                Seite als Funnel,
-                <span className="block">
-                  <TitleGradient sceneId="impact">nicht als Deko.</TitleGradient>
-                </span>
-              </h3>
-            </Reveal>
-
             <Reveal delayMs={160}>
-              <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
-                Die Seite wurde so gebaut, dass Menschen schnell verstehen, worum es geht, und ohne Hürden spenden können.
+              <p className="max-w-2xl text-base md:text-xl text-white/80 leading-relaxed">
+                Brandbooks, Motiondesign, Webdevelopment und Videoediting – als System, damit Kampagnen nicht nur „nice“
+                aussehen, sondern Ergebnisse liefern.
               </p>
             </Reveal>
 
             <Reveal delayMs={240}>
-              <div className="mt-7 flex flex-wrap gap-2">
-                <Magnetic>
-                  <Link
-                    href="/contact"
-                    className="group px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center justify-center gap-2"
-                  >
-                    Ähnliches Projekt anfragen <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
-                  </Link>
-                </Magnetic>
-                <Magnetic strength={10}>
-                  <a
-                    href={DONATION_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
-                  >
-                    Landingpage <ExternalLink size={18} />
-                  </a>
-                </Magnetic>
+              <div className="flex flex-col items-center gap-3">
+                <PrimaryCTA label="Projekt anfragen" />
+                <p className="text-sm md:text-base text-white/65 max-w-xl">Ziel, Deadline, Stand. Dann bekommst du eine klare Einschätzung.</p>
+              </div>
+            </Reveal>
+
+            <Reveal delayMs={310}>
+              <div className="mt-2 grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-3xl items-stretch">
+                <MiniTile icon={<BookOpen size={18} />} title="Brandbook" sub="Guidelines & System" />
+                <MiniTile icon={<Play size={18} />} title="Motion" sub="Hooks & Templates" />
+                <MiniTile icon={<Monitor size={18} />} title="Web" sub="Funnel & UX" />
+                <MiniTile icon={<Film size={18} />} title="Video" sub="Cut & Rhythmus" />
               </div>
             </Reveal>
           </div>
+        </Scene>
 
-          <div className="grid grid-cols-1 gap-3">
-            <ImpactItem text="Anliegen in wenigen Sekunden verständlich durch Story und klare Struktur." />
-            <ImpactItem text="Spendenweg direkt: PayPal oder Überweisung, ergänzt durch QR-Codes." />
-            <ImpactItem text="Einheitliche Assets (Flyer und Video), damit überall auf dasselbe Ziel verlinkt wird." />
-          </div>
-        </div>
-      </Scene>
-
-      {/* REQUEST */}
-      <Scene id="request">
-        <div className="rounded-3xl border border-white/15 bg-black/25 backdrop-blur-md p-6 md:p-10">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 items-start">
+        {/* 02 */}
+        <Scene id="s2">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
               <Reveal>
-                <div className="text-xs uppercase tracking-wide text-white/55">Anfrage</div>
+                <div className="text-xs uppercase tracking-wide text-white/55">02 — Was du bekommst</div>
               </Reveal>
 
               <Reveal delayMs={90}>
-                <h3 className="mt-2 text-2xl md:text-5xl font-extrabold leading-tight">Schick mir kurz dein Vorhaben</h3>
+                <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
+                  Klarer Look.
+                  <span className="block">
+                    <TitleGradient sceneId="s2">Klare Message.</TitleGradient>
+                  </span>
+                </h2>
               </Reveal>
 
               <Reveal delayMs={160}>
-                <p className="mt-4 text-white/80 leading-relaxed max-w-2xl">
-                  Ziel, Deadline, Stand. Danach sage ich dir, ob es passt – und was der sinnvollste nächste Schritt ist.
+                <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
+                  Du bekommst ein Setup, das du wiederholen kannst: Branding → Content → Funnel.
                 </p>
               </Reveal>
 
               <Reveal delayMs={240}>
                 <div className="mt-6 space-y-3">
-                  {['Ziel (was soll passieren?)', 'Deadline (bis wann?)', 'Stand (Material, Beispiele, bestehende Assets?)'].map((t) => (
-                    <div key={t} className="flex items-start gap-2">
-                      <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                      <span className="text-sm md:text-base text-white/80">{t}</span>
-                    </div>
-                  ))}
+                  {['Branding, das sofort einzuordnen ist', 'Content, der auffällt und hängen bleibt', 'Website/Funnel, der Menschen führt'].map(
+                    (t) => (
+                      <div key={t} className="flex items-start gap-2">
+                        <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+                        <span className="text-sm md:text-base text-white/80">{t}</span>
+                      </div>
+                    )
+                  )}
                 </div>
               </Reveal>
 
               <Reveal delayMs={320}>
-                <div className="mt-8">
-                  <Magnetic>
-                    <Link
-                      href="/contact"
-                      className="group px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center justify-center gap-2"
-                    >
-                      Kontakt öffnen <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
-                    </Link>
-                  </Magnetic>
+                <div className="mt-8 flex flex-wrap gap-2">
+                  <PrimaryCTA label="Kurz anfragen" />
+                  <GhostCTA href="/portfolio">
+                    <ExternalLink size={18} /> Portfolio
+                  </GhostCTA>
                 </div>
               </Reveal>
             </div>
 
-            <Reveal delayMs={200}>
+            <Reveal delayMs={140}>
+              <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md overflow-hidden">
+                <div className="p-6 md:p-8">
+                  <div className="text-xs uppercase tracking-wide text-white/55">So sieht das als System aus</div>
+
+                  <div className="mt-5 space-y-3">
+                    <Stripe title="1) Brandbook" desc="Regeln, Look, Tone. Damit alles gleich wirkt." icon={<BookOpen size={18} />} />
+                    <Stripe title="2) Motion & Video" desc="Hook, Tempo, Stil. Damit es hängen bleibt." icon={<Play size={18} />} />
+                    <Stripe title="3) Web & Funnel" desc="Ein klarer Weg bis zur Anfrage." icon={<Monitor size={18} />} />
+                  </div>
+
+                  <div className="mt-6 relative rounded-2xl border border-white/15 overflow-hidden h-40 md:h-48">
+                    <Image
+                      src="/img/home/preview-system.jpg"
+                      alt="Preview – Branding, Content, Funnel"
+                      fill
+                      className="object-cover opacity-75"
+                      sizes="(max-width: 768px) 100vw, 520px"
+                      priority={false}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+                    <div className="absolute bottom-3 left-3 text-sm font-semibold text-white/90">Preview-Image (ersetzen)</div>
+                  </div>
+
+                  <div className="mt-3 text-xs text-white/55">
+                    Bildpfad: <span className="text-white/70">/public/img/home/preview-system.jpg</span>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </Scene>
+
+        {/* 03 */}
+        <Scene id="s3">
+          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 items-start">
+            <div className="lg:sticky lg:top-24">
+              <Reveal>
+                <div className="text-xs uppercase tracking-wide text-white/55">03 — Leistungen</div>
+              </Reveal>
+
+              <Reveal delayMs={90}>
+                <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
+                  Vier Bausteine.
+                  <span className="block">
+                    <TitleGradient sceneId="s3">Ein Ergebnis.</TitleGradient>
+                  </span>
+                </h2>
+              </Reveal>
+
+              <Reveal delayMs={160}>
+                <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed">
+                  Einzelne Bausteine oder als Komplett-Setup – je nachdem, was du brauchst.
+                </p>
+              </Reveal>
+
+              <Reveal delayMs={260}>
+                <div className="mt-8">
+                  <PrimaryCTA label="Passt das?" />
+                </div>
+              </Reveal>
+            </div>
+
+            <div className="space-y-4">
+              <BigService
+                sceneId="s3"
+                icon={<BookOpen size={18} />}
+                kicker="Brandbook"
+                title="Guidelines, die man wirklich nutzt."
+                desc="Farben, Typo, Layoutregeln, Tone of Voice, Beispiele. Damit du konsistent bleibst und skalieren kannst."
+              />
+              <BigService
+                sceneId="s3"
+                icon={<Play size={18} />}
+                kicker="Motiondesign"
+                title="Motion, das im Feed auffällt."
+                desc="Kurzformate, Motion Graphics, Hook-Varianten, Templates. Damit du nicht jedes Mal bei Null anfängst."
+              />
+              <BigService
+                sceneId="s3"
+                icon={<Monitor size={18} />}
+                kicker="Webdevelopment"
+                title="Websites/Funnels, die führen."
+                desc="Klarer Aufbau, klare CTA, wenig Ablenkung. Damit Klicks zu Anfragen werden."
+              />
+              <BigService
+                sceneId="s3"
+                icon={<Film size={18} />}
+                kicker="Videoediting"
+                title="Schnitt mit Rhythmus."
+                desc="Storyline, Timing, Sound, Pace. Damit ein Video nicht nur fertig ist, sondern gut."
+              />
+            </div>
+          </div>
+        </Scene>
+
+        {/* 04 */}
+        <Scene id="s4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div>
+              <Reveal>
+                <div className="text-xs uppercase tracking-wide text-white/55">04 — Proof</div>
+              </Reveal>
+
+              <Reveal delayMs={90}>
+                <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
+                  Zahlen,
+                  <span className="block">
+                    <TitleGradient sceneId="s4">die man einordnen kann.</TitleGradient>
+                  </span>
+                </h2>
+              </Reveal>
+
+              <Reveal delayMs={160}>
+                <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
+                  Wenn du Branding + Content + Funnel als Einheit denkst, sieht man das am Ergebnis.
+                </p>
+              </Reveal>
+
+              <Reveal delayMs={260}>
+                <div className="mt-8 flex flex-wrap gap-2">
+                  <GhostCTA href="/portfolio">
+                    <ExternalLink size={18} /> Portfolio ansehen
+                  </GhostCTA>
+                  <PrimaryCTA label="Anfrage schicken" />
+                </div>
+              </Reveal>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4">
+              <ProofStat sceneId="s4" label="Likes generiert" target={15} suffix="+ Mio" durationMs={900} />
+              <ProofStat sceneId="s4" label="Klicks auf Social Media erzielt" target={10} suffix="+ Mio" durationMs={900} />
+              <ProofStat sceneId="s4" label="Abgeschlossene Projekte" target={100} suffix="+" durationMs={950} />
+            </div>
+          </div>
+        </Scene>
+
+        {/* 05 */}
+        <Scene id="s5">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div>
+              <Reveal>
+                <div className="text-xs uppercase tracking-wide text-white/55">05 — Ablauf</div>
+              </Reveal>
+
+              <Reveal delayMs={90}>
+                <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
+                  Kurzer Start.
+                  <span className="block">
+                    <TitleGradient sceneId="s5">Schnelles Ergebnis.</TitleGradient>
+                  </span>
+                </h2>
+              </Reveal>
+
+              <Reveal delayMs={160}>
+                <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
+                  Du musst nicht alles perfekt vorbereiten. Wir machen es strukturiert – und liefern sauber.
+                </p>
+              </Reveal>
+
+              <Reveal delayMs={260}>
+                <div className="mt-6 space-y-3">
+                  <Step n="1" title="Anfrage" desc="Ziel, Deadline, Stand. (3 Infos reichen)" />
+                  <Step n="2" title="Branding & Plan" desc="Brandbook/Storyline, damit alles konsistent ist." />
+                  <Step n="3" title="Produktion" desc="Motion, Editing, Web – je nach Paket." />
+                  <Step n="4" title="Übergabe" desc="Assets/Files/Setup so, dass du weitermachen kannst." />
+                </div>
+              </Reveal>
+
+              <Reveal delayMs={340}>
+                <div className="mt-8">
+                  <PrimaryCTA label="Okay, lass starten" />
+                </div>
+              </Reveal>
+            </div>
+
+            <Reveal delayMs={140}>
               <TiltCard className="rounded-3xl">
-                <div className="rounded-3xl border border-white/15 bg-black/25 p-6">
-                  <div className="text-sm md:text-base font-semibold text-white/90">Copy/Paste</div>
-                  <div className="mt-3 rounded-2xl border border-white/10 bg-black/30 p-4 text-sm text-white/85 whitespace-pre-wrap leading-relaxed">{`Ziel:
-Deadline:
-Stand:
-Budgetrahmen (optional):
-Link/Beispiele (optional):`}</div>
-                  <div className="mt-4 text-sm text-white/60">Das reicht komplett für eine erste Einschätzung.</div>
+                <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8">
+                  <div className="text-xs uppercase tracking-wide text-white/55">Shortcut</div>
+                  <div className="mt-3 text-xl md:text-3xl font-bold text-white/90">Ein Satz reicht fürs erste.</div>
+                  <p className="mt-3 text-sm md:text-base text-white/70 leading-relaxed">
+                    “Wir wollen X bis Datum Y und haben gerade Z.” Danach klären wir den Rest.
+                  </p>
+                  <div className="mt-6 flex gap-2 flex-wrap">
+                    <GhostCTA href="/portfolio">
+                      <ExternalLink size={18} /> Beispiele
+                    </GhostCTA>
+                    <PrimaryCTA label="Anfrage" />
+                  </div>
                 </div>
               </TiltCard>
             </Reveal>
           </div>
-        </div>
-      </Scene>
+        </Scene>
+
+        {/* 06 */}
+        <Scene id="request">
+          <div className="rounded-3xl border border-white/15 bg-black/25 backdrop-blur-md p-6 md:p-12">
+            <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
+              <div>
+                <Reveal>
+                  <div className="text-xs uppercase tracking-wide text-white/55">Anfrage</div>
+                </Reveal>
+
+                <Reveal delayMs={90}>
+                  <h3 className="mt-2 text-2xl md:text-5xl font-extrabold leading-tight">Schick mir kurz dein Vorhaben</h3>
+                </Reveal>
+
+                <Reveal delayMs={160}>
+                  <p className="mt-4 text-white/80 leading-relaxed max-w-2xl">
+                    Ziel, Deadline, Stand. Danach sage ich dir, ob es passt – und was sinnvoll ist.
+                  </p>
+                </Reveal>
+
+                <Reveal delayMs={240}>
+                  <div className="mt-6 space-y-3">
+                    {['Ziel (was soll passieren?)', 'Deadline (bis wann?)', 'Stand (Branding/Material/Beispiele?)'].map((t) => (
+                      <div key={t} className="flex items-start gap-2">
+                        <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+                        <span className="text-sm md:text-base text-white/80">{t}</span>
+                      </div>
+                    ))}
+                  </div>
+                </Reveal>
+
+                <Reveal delayMs={340}>
+                  <div className="mt-8 flex flex-wrap gap-2">
+                    <Magnetic>
+                      <a
+                        href="mailto:leonseitz25@icloud.com?subject=Projektanfrage&body=Ziel:%0D%0ADeadline:%0D%0AStand:%0D%0A"
+                        className="px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center gap-2"
+                      >
+                        <Mail size={18} /> Per Mail
+                      </a>
+                    </Magnetic>
+
+                    <GhostCTA href="/portfolio">
+                      <ExternalLink size={18} /> Erst Portfolio
+                    </GhostCTA>
+                  </div>
+                </Reveal>
+              </div>
+
+              <Reveal delayMs={200}>
+                <TiltCard className="rounded-3xl">
+                  <div className="rounded-3xl border border-white/15 bg-black/25 p-6">
+                    <div className="text-sm md:text-base font-semibold text-white/90">Copy/Paste</div>
+                    <div className="mt-3 rounded-2xl border border-white/10 bg-black/30 p-4 text-sm text-white/85 whitespace-pre-wrap leading-relaxed">
+{`Ziel:
+Deadline:
+Stand:
+Budgetrahmen (optional):
+Link/Beispiele (optional):`}
+                    </div>
+                    <div className="mt-4 text-sm text-white/60">Das reicht komplett für eine erste Einschätzung.</div>
+                  </div>
+                </TiltCard>
+              </Reveal>
+            </div>
+          </div>
+        </Scene>
+      </main>
 
       <Footer />
     </div>
-  );
-}
-
-/* ---------- SMALL UI ---------- */
-
-function MetaCard({ label, value, icon }: { label: string; value: string; icon?: React.ReactNode }) {
-  return (
-    <TiltCard className="rounded-2xl">
-      <div className="rounded-2xl border border-white/15 bg-black/20 backdrop-blur-md p-4">
-        <div className="text-xs uppercase tracking-wide text-white/55 flex items-center gap-1.5">
-          {icon ? <span className="text-white/70">{icon}</span> : null}
-          {label}
-        </div>
-        <div className="mt-1 text-sm md:text-base text-white/90">{value}</div>
-      </div>
-    </TiltCard>
-  );
-}
-
-function MiniCard({ icon, title, bullets }: { icon: React.ReactNode; title: string; bullets: string[] }) {
-  return (
-    <Reveal>
-      <TiltCard className="rounded-3xl">
-        <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 overflow-hidden relative">
-          <div
-            className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.07]"
-            style={{ filter: 'blur(50px)', animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite' }}
-          />
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center text-white/90">{icon}</div>
-            <h4 className="text-sm md:text-base font-semibold text-white/90">{title}</h4>
-          </div>
-          <ul className="mt-4 space-y-2 text-sm text-white/80">
-            {bullets.map((b) => (
-              <li key={b} className="flex items-start gap-2">
-                <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                <span>{b}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </TiltCard>
-    </Reveal>
-  );
-}
-
-function ImpactItem({ text }: { text: string }) {
-  return (
-    <TiltCard className="rounded-2xl">
-      <div className="rounded-2xl border border-white/15 bg-black/20 backdrop-blur-md p-4 text-sm md:text-base text-white/80">
-        {text}
-      </div>
-    </TiltCard>
   );
 }
 
