@@ -31,16 +31,7 @@ const SECTIONS = [
   { id: 'request', label: 'Anfrage' },
 ];
 
-const SCENES: Record<
-  string,
-  {
-    base: string;
-    g1: string;
-    g2: string;
-    blobs: { cls: string; x: string; y: string; s: string; blur: number }[];
-    accent: string;
-  }
-> = {
+const SCENES = {
   hero: {
     base: '#070312',
     g1: `radial-gradient(1200px 700px at 18% 18%, rgba(168,85,247,0.34), transparent 60%),
@@ -105,20 +96,20 @@ const SCENES: Record<
 
 /* ---------- UTIL ---------- */
 
-function cx(...xs: (string | false | null | undefined)[]) {
+function cx(...xs) {
   return xs.filter(Boolean).join(' ');
 }
 
-function TitleGradient({ sceneId, children }: { sceneId: string; children: React.ReactNode }) {
+function TitleGradient({ sceneId, children }) {
   const scene = SCENES[sceneId] ?? SCENES.hero;
   return <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', scene.accent)}>{children}</span>;
 }
 
-function useActiveSection(sectionIds: string[]) {
+function useActiveSection(sectionIds) {
   const [activeId, setActiveId] = useState(sectionIds[0]);
 
   useEffect(() => {
-    const els = sectionIds.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    const els = sectionIds.map((id) => document.getElementById(id)).filter(Boolean);
     if (!els.length) return;
 
     const obs = new IntersectionObserver(
@@ -138,7 +129,7 @@ function useActiveSection(sectionIds: string[]) {
   return { activeId };
 }
 
-function useReveal(ref: React.RefObject<HTMLElement | null>) {
+function useReveal(ref) {
   const [shown, setShown] = useState(false);
   useEffect(() => {
     const el = ref.current;
@@ -172,10 +163,10 @@ function useScrollProgress() {
 
 function useMousePos() {
   const [pos, setPos] = useState({ x: -9999, y: -9999 });
-  const raf = useRef<number | null>(null);
+  const raf = useRef(null);
 
   useEffect(() => {
-    const onMove = (e: MouseEvent) => {
+    const onMove = (e) => {
       const x = e.clientX;
       const y = e.clientY;
       if (raf.current) cancelAnimationFrame(raf.current);
@@ -193,7 +184,7 @@ function useMousePos() {
 
 /* ---------- GLOBAL BACKGROUND ---------- */
 
-function GlobalBackground({ activeId }: { activeId: string }) {
+function GlobalBackground({ activeId }) {
   return (
     <div className="fixed inset-0 -z-10">
       {Object.keys(SCENES).map((key) => {
@@ -227,7 +218,7 @@ function GlobalBackground({ activeId }: { activeId: string }) {
   );
 }
 
-function GlobalLightLeaks({ activeId }: { activeId: string }) {
+function GlobalLightLeaks({ activeId }) {
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none">
       {Object.keys(SCENES).map((key) => {
@@ -314,22 +305,14 @@ function CursorHalo() {
   );
 }
 
-function Magnetic({
-  children,
-  strength = 14,
-  className = '',
-}: {
-  children: React.ReactNode;
-  strength?: number;
-  className?: string;
-}) {
-  const ref = useRef<HTMLSpanElement | null>(null);
+function Magnetic({ children, strength = 14, className = '' }) {
+  const ref = useRef(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    const onMove = (e: MouseEvent) => {
+    const onMove = (e) => {
       const r = el.getBoundingClientRect();
       const cx0 = r.left + r.width / 2;
       const cy0 = r.top + r.height / 2;
@@ -359,14 +342,14 @@ function Magnetic({
   );
 }
 
-function TiltCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  const ref = useRef<HTMLDivElement | null>(null);
+function TiltCard({ children, className = '' }) {
+  const ref = useRef(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    const onMove = (e: MouseEvent) => {
+    const onMove = (e) => {
       const r = el.getBoundingClientRect();
       const px = (e.clientX - r.left) / r.width;
       const py = (e.clientY - r.top) / r.height;
@@ -415,7 +398,7 @@ function TiltCard({ children, className = '' }: { children: React.ReactNode; cla
 
 /* ---------- STRUCTURE ---------- */
 
-function Scene({ id, children }: { id: string; children: React.ReactNode }) {
+function Scene({ id, children }) {
   return (
     <section id={id} className="relative px-5 md:px-16 py-16 md:py-20 scroll-mt-24">
       <div className="relative max-w-6xl mx-auto w-full">{children}</div>
@@ -423,9 +406,9 @@ function Scene({ id, children }: { id: string; children: React.ReactNode }) {
   );
 }
 
-function Reveal({ children, delayMs = 0 }: { children: React.ReactNode; delayMs?: number }) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const shown = useReveal(ref as unknown as React.RefObject<HTMLElement | null>);
+function Reveal({ children, delayMs = 0 }) {
+  const ref = useRef(null);
+  const shown = useReveal(ref);
 
   return (
     <div
@@ -443,9 +426,9 @@ function Reveal({ children, delayMs = 0 }: { children: React.ReactNode; delayMs?
 
 /* ---------- COUNTUP (for 17.000) ---------- */
 
-function useCountUp({ target, durationMs = 900 }: { target: number; durationMs?: number }) {
+function useCountUp({ target, durationMs = 900 }) {
   const [value, setValue] = useState(0);
-  const raf = useRef<number | null>(null);
+  const raf = useRef(null);
 
   const start = useCallback(() => {
     if (raf.current) cancelAnimationFrame(raf.current);
@@ -453,7 +436,7 @@ function useCountUp({ target, durationMs = 900 }: { target: number; durationMs?:
     const from = 0;
     const to = Math.max(0, target);
 
-    const tick = (t: number) => {
+    const tick = (t) => {
       const p = Math.min(1, (t - t0) / durationMs);
       const eased = 1 - Math.pow(1 - p, 3);
       setValue(Math.round(from + (to - from) * eased));
@@ -467,9 +450,9 @@ function useCountUp({ target, durationMs = 900 }: { target: number; durationMs?:
   return { value, start };
 }
 
-function ProofDonateCard({ sceneId }: { sceneId: string }) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const shown = useReveal(ref as unknown as React.RefObject<HTMLElement | null>);
+function ProofDonateCard({ sceneId }) {
+  const ref = useRef(null);
+  const shown = useReveal(ref);
   const { value, start } = useCountUp({ target: 17000, durationMs: 950 });
 
   useEffect(() => {
@@ -478,10 +461,7 @@ function ProofDonateCard({ sceneId }: { sceneId: string }) {
 
   return (
     <TiltCard className="rounded-3xl">
-      <div
-        ref={ref}
-        className="relative overflow-hidden rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8"
-      >
+      <div ref={ref} className="relative overflow-hidden rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8">
         <div
           className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.08]"
           style={{ filter: 'blur(46px)', animation: 'shineSoft 5.6s cubic-bezier(.2,.9,.2,1) infinite' }}
@@ -579,8 +559,8 @@ export default function KircheFundraisingPage() {
 
             <Reveal delayMs={240}>
               <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
-                Ziel war eine Seite, die ohne Erklärung funktioniert: Anliegen verstehen, Vertrauen bekommen, Spendenweg
-                wählen. Dazu DE/EN Inhalte, Flyer und ein Projektvideo.
+                Ziel war eine Seite, die ohne Erklärung funktioniert: Anliegen verstehen, Vertrauen bekommen, Spendenweg wählen.
+                Dazu DE/EN Inhalte, Flyer und ein Projektvideo.
               </p>
             </Reveal>
 
@@ -652,8 +632,7 @@ export default function KircheFundraisingPage() {
                 <div className="p-5 md:p-6">
                   <div className="text-xs uppercase tracking-wide text-white/55">Kurzfassung</div>
                   <p className="mt-2 text-sm md:text-base text-white/75 leading-relaxed">
-                    Story + klare Spendenwege (PayPal/Überweisung) + QR-Codes + Assets (Flyer/Video) → ein sauberer,
-                    reibungsarmer Funnel.
+                    Story + klare Spendenwege (PayPal/Überweisung) + QR-Codes + Assets (Flyer/Video) → ein sauberer, reibungsarmer Funnel.
                   </p>
 
                   <div className="mt-4">
@@ -704,8 +683,7 @@ export default function KircheFundraisingPage() {
 
         <Reveal delayMs={160}>
           <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-2xl">
-            Fokus war weniger „schön“, sondern „verständlich und einfach zu nutzen“: klare Story, klare Spendenwege,
-            sauberer Ablauf.
+            Fokus war weniger „schön“, sondern „verständlich und einfach zu nutzen“: klare Story, klare Spendenwege, sauberer Ablauf.
           </p>
         </Reveal>
 
@@ -828,12 +806,14 @@ export default function KircheFundraisingPage() {
 
               <Reveal delayMs={240}>
                 <div className="mt-6 space-y-3">
-                  {['Ziel (was soll passieren?)', 'Deadline (bis wann?)', 'Stand (Material, Beispiele, bestehende Assets?)'].map((t) => (
-                    <div key={t} className="flex items-start gap-2">
-                      <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                      <span className="text-sm md:text-base text-white/80">{t}</span>
-                    </div>
-                  ))}
+                  {['Ziel (was soll passieren?)', 'Deadline (bis wann?)', 'Stand (Material, Beispiele, bestehende Assets?)'].map(
+                    (t) => (
+                      <div key={t} className="flex items-start gap-2">
+                        <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+                        <span className="text-sm md:text-base text-white/80">{t}</span>
+                      </div>
+                    )
+                  )}
                 </div>
               </Reveal>
 
@@ -875,7 +855,7 @@ Link/Beispiele (optional):`}</div>
 
 /* ---------- SMALL UI ---------- */
 
-function MetaCard({ label, value, icon }: { label: string; value: string; icon?: React.ReactNode }) {
+function MetaCard({ label, value, icon }) {
   return (
     <TiltCard className="rounded-2xl">
       <div className="rounded-2xl border border-white/15 bg-black/20 backdrop-blur-md p-4">
@@ -889,7 +869,7 @@ function MetaCard({ label, value, icon }: { label: string; value: string; icon?:
   );
 }
 
-function MiniCard({ icon, title, bullets }: { icon: React.ReactNode; title: string; bullets: string[] }) {
+function MiniCard({ icon, title, bullets }) {
   return (
     <Reveal>
       <TiltCard className="rounded-3xl">
@@ -916,7 +896,7 @@ function MiniCard({ icon, title, bullets }: { icon: React.ReactNode; title: stri
   );
 }
 
-function ImpactItem({ text }: { text: string }) {
+function ImpactItem({ text }) {
   return (
     <TiltCard className="rounded-2xl">
       <div className="rounded-2xl border border-white/15 bg-black/20 backdrop-blur-md p-4 text-sm md:text-base text-white/80">
