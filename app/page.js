@@ -15,6 +15,10 @@ import {
   BookOpen,
   Mail,
   ExternalLink,
+  Shield,
+  Repeat,
+  FileText,
+  Eye,
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -736,82 +740,131 @@ export default function Home() {
 
         {/* 02 — WAS DU BEKOMMST */}
         <Scene id="s2">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            <div>
-              <Reveal>
-                <div className="text-xs uppercase tracking-wide text-white/55">02 — Was du bekommst</div>
-              </Reveal>
+          <div className="flex flex-col gap-8">
 
+            {/* Headline */}
+            <div className="max-w-3xl">
+              <Reveal>
+                <div className="text-xs uppercase tracking-wide text-white/55">02 — Warum das anders ist</div>
+              </Reveal>
               <Reveal delayMs={90}>
                 <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
-                  Einmal definiert.
+                  Du zahlst erst,
                   <span className="block">
-                    <TitleGradient sceneId="s2">Immer anwendbar.</TitleGradient>
+                    <TitleGradient sceneId="s2">wenn du es gesehen hast.</TitleGradient>
                   </span>
                 </h2>
               </Reveal>
-
               <Reveal delayMs={160}>
-                <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
-                  Ein Setup, das sich wiederholt: Branding gibt die Richtung, Content setzt es um, der Funnel führt zur Anfrage.
+                <p className="mt-5 text-white/75 text-base md:text-xl leading-relaxed max-w-2xl">
+                  Kein Vorauszahlen auf Vertrauen. Sprint 0 – Analyse und erster Entwurf – ist kostenlos. Danach entscheidest du, ob es weitergeht.
                 </p>
-              </Reveal>
-
-              <Reveal delayMs={240}>
-                <div className="mt-6 space-y-3">
-                  {[
-                    'Branding, das sofort wiedererkannt wird',
-                    'Content, der die Botschaft trägt – nicht nur gut aussieht',
-                    'Website, die zur Anfrage führt',
-                  ].map((t) => (
-                    <div key={t} className="flex items-start gap-2">
-                      <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                      <span className="text-sm md:text-base text-white/80">{t}</span>
-                    </div>
-                  ))}
-                </div>
-              </Reveal>
-
-              <Reveal delayMs={320}>
-                <div className="mt-8 flex flex-wrap gap-2">
-                  <PrimaryCTA label="Anfrage schicken" />
-                  <GhostCTA href="/portfolio">
-                    <ExternalLink size={18} /> Portfolio
-                  </GhostCTA>
-                </div>
               </Reveal>
             </div>
 
-            <Reveal delayMs={140}>
-              <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md overflow-hidden">
-                <div className="p-6 md:p-8">
-                  <div className="text-xs uppercase tracking-wide text-white/55">Drei Schritte, eine Logik</div>
+            {/* Three trust pillars */}
+            <Reveal delayMs={200}>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
 
-                  <div className="mt-5 space-y-3">
-                    <Stripe title="1) Brandbook" desc="Regeln, Look, Ton. Damit alles aus einem Guss wirkt." icon={<BookOpen size={18} />} />
-                    <Stripe title="2) Motion & Video" desc="Hook, Tempo, Schnitt. Damit die Botschaft ankommt." icon={<Play size={18} />} />
-                    <Stripe title="3) Web & Funnel" desc="Klare Struktur, ein Ziel: die Anfrage." icon={<Monitor size={18} />} />
+                <div className="rounded-2xl border border-emerald-300/20 bg-emerald-500/8 p-5 flex flex-col gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-300/20 flex items-center justify-center">
+                    <Eye size={17} className="text-emerald-300" />
                   </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white/90">Erst sehen, dann entscheiden</div>
+                    <p className="mt-1 text-sm text-white/60 leading-relaxed">
+                      Sprint 0 kostenlos: Du bekommst eine strukturierte Analyse und einen ersten Entwurf – bevor eine einzige Zahlung fällig wird.
+                    </p>
+                  </div>
+                  <div className="mt-auto">
+                    <span className="inline-flex items-center rounded-full px-2.5 py-1 text-xs border border-emerald-300/25 bg-emerald-500/10 text-emerald-200">
+                      Kostenlos starten
+                    </span>
+                  </div>
+                </div>
 
-                  <div className="mt-6 relative rounded-2xl border border-white/15 overflow-hidden h-40 md:h-48">
-                    <Image
-                      src="/img/home/preview-system.jpg"
-                      alt="Preview – Branding, Content, Funnel"
-                      fill
-                      className="object-cover opacity-75"
-                      sizes="(max-width: 768px) 100vw, 520px"
-                      priority={false}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
-                    <div className="absolute bottom-3 left-3 text-sm font-semibold text-white/90">Preview-Image (ersetzen)</div>
+                <div className="rounded-2xl border border-white/12 bg-white/5 p-5 flex flex-col gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center">
+                    <Shield size={17} className="text-white/75" />
                   </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white/90">Zahlung nach Review – nicht vorher</div>
+                    <p className="mt-1 text-sm text-white/60 leading-relaxed">
+                      Jedes Zahlungsziel ist an einen Sprint-Review gebunden. Du siehst das Ergebnis, gibst Feedback, gibst frei. Erst dann kommt die nächste Phase.
+                    </p>
+                  </div>
+                  <div className="mt-auto">
+                    <Link href="/prozess" className="text-xs text-white/55 hover:text-white/90 transition-colors inline-flex items-center gap-1 underline underline-offset-4">
+                      Ablauf ansehen <ArrowRight size={12} />
+                    </Link>
+                  </div>
+                </div>
 
-                  <div className="mt-3 text-xs text-white/55">
-                    Bildpfad: <span className="text-white/70">/public/img/home/preview-system.jpg</span>
+                <div className="rounded-2xl border border-white/12 bg-white/5 p-5 flex flex-col gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center">
+                    <FileText size={17} className="text-white/75" />
                   </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white/90">Voller Einblick in den Prozess</div>
+                    <p className="mt-1 text-sm text-white/60 leading-relaxed">
+                      Du siehst den Stand des Projekts jederzeit – kein Warten im Dunkeln. Wie das in der Praxis aussieht: ein echter Projektablauf dokumentiert.
+                    </p>
+                  </div>
+                  <div className="mt-auto">
+                    <a href="https://www.leonseitz.com/kunde1" target="_blank" rel="noopener noreferrer" className="text-xs text-white/55 hover:text-white/90 transition-colors inline-flex items-center gap-1 underline underline-offset-4">
+                      Echtes Projekt ansehen <ExternalLink size={12} />
+                    </a>
+                  </div>
+                </div>
+
+              </div>
+            </Reveal>
+
+            {/* Sprint-Gate strip */}
+            <Reveal delayMs={280}>
+              <div className="rounded-2xl border border-white/10 bg-black/20 backdrop-blur-md p-5 md:p-6">
+                <div className="text-xs uppercase tracking-wide text-white/45 mb-4">So ist der Ablauf gegliedert</div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {[
+                    { label: 'Sprint 0', title: 'Analyse + Entwurf', note: 'Kostenlos', highlight: true },
+                    { label: 'Sprint 1', title: 'Erste lauffähige Version', note: '30 % nach Review', highlight: false },
+                    { label: 'Sprint 2', title: 'Feinschliff', note: '50 % nach Review', highlight: false },
+                    { label: 'Sprint 3', title: 'Go-Live + Übergabe', note: '20 % nach Übergabe', highlight: false },
+                  ].map((s, i) => (
+                    <div
+                      key={s.label}
+                      className={`rounded-xl border px-3 py-3 ${s.highlight ? 'border-emerald-300/25 bg-emerald-500/8' : 'border-white/10 bg-white/4'}`}
+                    >
+                      <div className={`text-xs font-semibold uppercase tracking-wide mb-1 ${s.highlight ? 'text-emerald-300/80' : 'text-white/40'}`}>
+                        {s.label}
+                      </div>
+                      <div className="text-sm text-white/85 font-semibold leading-tight">{s.title}</div>
+                      <div className={`mt-1.5 text-xs ${s.highlight ? 'text-emerald-200/70' : 'text-white/40'}`}>{s.note}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                  <Link href="/prozess" className="text-sm text-white/65 hover:text-white transition-colors inline-flex items-center gap-1.5 font-medium">
+                    Vollständigen Ablauf ansehen <ArrowRight size={14} />
+                  </Link>
+                  <span className="text-white/20 hidden md:inline">·</span>
+                  <a href="https://www.leonseitz.com/kunde1" target="_blank" rel="noopener noreferrer" className="text-sm text-white/65 hover:text-white transition-colors inline-flex items-center gap-1.5 font-medium">
+                    Echtes Projekt als Referenz <ExternalLink size={14} />
+                  </a>
                 </div>
               </div>
             </Reveal>
+
+            {/* Bottom CTA row */}
+            <Reveal delayMs={340}>
+              <div className="flex flex-wrap items-center gap-3">
+                <PrimaryCTA label="Kostenlos starten" />
+                <GhostCTA href="/portfolio">
+                  <ExternalLink size={18} /> Portfolio ansehen
+                </GhostCTA>
+              </div>
+            </Reveal>
+
           </div>
         </Scene>
 
