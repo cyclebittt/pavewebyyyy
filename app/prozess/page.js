@@ -9,6 +9,10 @@ import {
   ExternalLink,
   Shield,
   Sparkles,
+  FileText,
+  MessageSquare,
+  Repeat,
+  Package,
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -86,7 +90,6 @@ function Reveal({ children, delayMs = 0 }) {
 
 function useScrollProgress() {
   const [p, setP] = useState(0);
-
   useEffect(() => {
     const onScroll = () => {
       const doc = document.documentElement;
@@ -97,7 +100,6 @@ function useScrollProgress() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
-
   return p;
 }
 
@@ -118,7 +120,6 @@ function ScrollProgressBar() {
 function useMousePos() {
   const [pos, setPos] = useState({ x: -9999, y: -9999 });
   const raf = useRef(null);
-
   useEffect(() => {
     const onMove = (e) => {
       const x = e.clientX;
@@ -132,13 +133,11 @@ function useMousePos() {
       if (raf.current) cancelAnimationFrame(raf.current);
     };
   }, []);
-
   return pos;
 }
 
 function CursorHalo() {
   const { x, y } = useMousePos();
-
   return (
     <div className="hidden md:block fixed inset-0 z-[6] pointer-events-none">
       <div
@@ -206,13 +205,7 @@ function GlobalLightLeaks() {
                 ? 'animate-[blob2_12s_ease-in-out_infinite]'
                 : 'animate-[blob3_14s_ease-in-out_infinite]'
           )}
-          style={{
-            left: b.x,
-            top: b.y,
-            width: b.s,
-            height: b.s,
-            filter: `blur(${b.blur}px)`,
-          }}
+          style={{ left: b.x, top: b.y, width: b.s, height: b.s, filter: `blur(${b.blur}px)` }}
         />
       ))}
     </div>
@@ -254,49 +247,119 @@ function PackageMetaLink({ href, children }) {
   );
 }
 
-/* ---------- ROADMAP — VISUAL TIMELINE ---------- */
+/* ---------- TRUST BAR ---------- */
+
+const TRUST_ITEMS = [
+  { icon: <Shield size={16} />, label: 'Sprint 0 kostenlos', sub: 'Erst sehen, dann entscheiden' },
+  { icon: <Repeat size={16} />, label: 'Revisionsrunden pro Sprint', sub: '2 Runden inkludiert' },
+  { icon: <FileText size={16} />, label: 'Vollständige Übergabe', sub: 'Alle Dateien, Zugänge, Dokumentation' },
+  { icon: <MessageSquare size={16} />, label: 'Antwort innerhalb 24 h', sub: 'Werktags' },
+];
+
+function TrustBar() {
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {TRUST_ITEMS.map((item) => (
+        <div
+          key={item.label}
+          className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 flex items-start gap-3"
+        >
+          <span className="text-white/60 mt-0.5 shrink-0">{item.icon}</span>
+          <div>
+            <div className="text-sm font-semibold text-white/90 leading-tight">{item.label}</div>
+            <div className="mt-0.5 text-xs text-white/55 leading-tight">{item.sub}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ---------- ROADMAP ---------- */
 
 const ROADMAP_STEPS = [
   {
     id: 'sprint0',
-    title: 'Sprint 0 — Analyse + Entwurf',
-    desc: 'Klarheit, Vertrauen, Mobile, Anfrageweg. Du bekommst 3–5 konkrete Punkte + einen ersten Seiten-Aufbau als Vorschau.',
+    label: 'Sprint 0',
+    title: 'Analyse + Entwurf',
+    duration: '2–3 Tage',
     tag: 'Kostenlos',
     tagTone: 'free',
+    desc: 'Ich schaue mir deine aktuelle Situation an und liefere eine strukturierte Einschätzung: Was funktioniert, was blockiert Anfragen, wie ein sinnvoller Aufbau aussehen könnte.',
+    deliverables: [
+      '3–5 konkrete Optimierungspunkte schriftlich',
+      'Erster Seiten-Aufbau als Entwurf (Wireframe-Ebene)',
+      'Einschätzung, welches Paket zu deinem Ziel passt',
+    ],
+    revisions: null,
+    note: 'Kein Zahlungsziel. Du entscheidest danach, ob du weitermachst.',
+  },
+  {
+    id: 'sprint1',
+    label: 'Sprint 1',
+    title: 'Erste lauffähige Version',
+    duration: '5–7 Tage',
+    tag: 'Zahlungsziel 1 nach Review — 30 %',
+    tagTone: 'neutral',
+    desc: 'Du bekommst eine klickbare Version zum Testen. Aufbau, Navigation, Texte, Design – alles drin. Du klickst sie durch, gibst Feedback, wir besprechen Anpassungen.',
+    deliverables: [
+      'Lauffähige Website (nicht nur Mockup)',
+      'Alle Hauptseiten aufgebaut',
+      'Mobile-Version enthalten',
+    ],
+    revisions: '2 Revisionsrunden nach dem Review inkludiert',
+    note: 'Zahlung erst nach Review – nicht vorher.',
   },
   {
     id: 'sprint2',
-    title: 'Sprint 1 — Erste Version',
-    desc: 'Lauffähige Version zum Testen + Feedback. Du klickst sie durch und gibst Feedback.',
-    tag: 'Zahlungsziel 1 nach Review (30%)',
+    label: 'Sprint 2',
+    title: 'Feinschliff',
+    duration: '3–5 Tage',
+    tag: 'Zahlungsziel 2 nach Review — 50 %',
     tagTone: 'neutral',
+    desc: 'Alle Punkte aus dem ersten Review werden umgesetzt. Texte, Details, Performance, Kleinigkeiten. Danach nochmal ein Review – erst wenn du freigibst, geht es weiter.',
+    deliverables: [
+      'Alle Feedback-Punkte aus Sprint 1 umgesetzt',
+      'SEO-Grundlagen (Titel, Meta, Struktur)',
+      'Ladezeit geprüft und optimiert',
+    ],
+    revisions: '1 weitere Revisionsrunde inkludiert',
+    note: 'Zahlung erst nach deiner Freigabe.',
   },
   {
     id: 'sprint3',
-    title: 'Sprint 2 — Feinschliff',
-    desc: 'Änderungen aus dem Review werden umgesetzt. Alles bereit für Go-Live.',
-    tag: 'Zahlungsziel 2 nach Review (50%)',
+    label: 'Sprint 3',
+    title: 'Go-Live und Übergabe',
+    duration: '1–2 Tage',
+    tag: 'Zahlungsziel 3 nach Übergabe — 20 %',
     tagTone: 'neutral',
-  },
-  {
-    id: 'sprint4',
-    title: 'Sprint 3 — Go-Live & Übergabe',
-    desc: 'Live stellen, Zugänge & Dateien. Danach bist du fertig.',
-    tag: 'Zahlungsziel 3 nach Übergabe (20%)',
-    tagTone: 'neutral',
+    desc: 'Die Website geht live. Du bekommst alle Dateien, Zugänge und eine Dokumentation – so, dass du eigenständig Texte und Bilder anpassen kannst.',
+    deliverables: [
+      'Live-Schaltung auf deiner Domain',
+      'Alle Quelldateien und Zugänge',
+      'Kurze Übergabe-Dokumentation',
+    ],
+    revisions: null,
+    note: 'Letzte Zahlung erst nach vollständiger Übergabe.',
   },
 ];
 
 function RoadmapTimeline() {
+  const [openStep, setOpenStep] = useState(null);
   const [doneSteps, setDoneSteps] = useState(new Set());
 
-  function toggle(id) {
+  function toggleDone(id, e) {
+    e.stopPropagation();
     setDoneSteps((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
       return next;
     });
+  }
+
+  function toggleOpen(id) {
+    setOpenStep((prev) => (prev === id ? null : id));
   }
 
   return (
@@ -306,12 +369,14 @@ function RoadmapTimeline() {
       <div className="space-y-3">
         {ROADMAP_STEPS.map((step, i) => {
           const done = doneSteps.has(step.id);
+          const open = openStep === step.id;
           const isFree = step.tagTone === 'free';
 
           return (
-            <div key={step.id} className="relative flex items-start gap-4 md:gap-5" style={{ animationDelay: `${i * 80}ms` }}>
+            <div key={step.id} className="relative flex items-start gap-4 md:gap-5">
+              {/* Node / done toggle */}
               <button
-                onClick={() => toggle(step.id)}
+                onClick={(e) => toggleDone(step.id, e)}
                 title={done ? 'Als offen markieren' : 'Als erledigt markieren'}
                 className={cx(
                   'relative z-10 shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-2xl border flex items-center justify-center transition-all duration-300',
@@ -325,26 +390,81 @@ function RoadmapTimeline() {
                 <CheckCircle2 size={20} className={cx('transition-colors duration-300', done ? 'text-emerald-300' : 'text-white/25')} />
               </button>
 
+              {/* Card */}
               <div
                 className={cx(
-                  'flex-1 rounded-2xl border px-4 py-4 md:px-5 md:py-5 transition-all duration-300',
-                  done ? 'border-emerald-300/20 bg-emerald-500/6' : 'border-white/10 bg-white/5'
+                  'flex-1 rounded-2xl border transition-all duration-300 overflow-hidden cursor-pointer',
+                  done ? 'border-emerald-300/20 bg-emerald-500/6' : 'border-white/10 bg-white/5',
+                  open ? 'border-white/20 bg-white/8' : ''
                 )}
+                onClick={() => toggleOpen(step.id)}
               >
-                <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <span className={cx('text-sm md:text-base font-semibold transition-colors', done ? 'text-white/50 line-through' : 'text-white/90')}>
-                    {step.title}
-                  </span>
-                  {step.tag && <Pill tone={step.tagTone}>{step.tag}</Pill>}
+                {/* Header row */}
+                <div className="px-4 py-4 md:px-5 md:py-4">
+                  <div className="flex flex-wrap items-center gap-2 mb-1">
+                    <span className={cx('text-xs uppercase tracking-wide font-semibold', isFree ? 'text-emerald-300/80' : 'text-white/45')}>
+                      {step.label}
+                    </span>
+                    {step.tag && <Pill tone={step.tagTone}>{step.tag}</Pill>}
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <span className={cx('text-sm md:text-base font-semibold transition-colors', done ? 'text-white/50 line-through' : 'text-white/90')}>
+                      {step.title}
+                    </span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="text-xs text-white/45 flex items-center gap-1">
+                        <Clock size={13} /> {step.duration}
+                      </span>
+                      <span className={cx('text-white/40 text-xs transition-transform duration-200', open ? 'rotate-180' : '')}>▾</span>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-sm text-white/60 leading-relaxed">{step.desc}</p>
+
+                {/* Expanded detail */}
+                {open && (
+                  <div className="px-4 pb-5 md:px-5 md:pb-5 border-t border-white/8 pt-4 space-y-4">
+                    <p className="text-sm text-white/70 leading-relaxed">{step.desc}</p>
+
+                    <div>
+                      <div className="text-xs uppercase tracking-wide text-white/45 mb-2">Was du bekommst</div>
+                      <ul className="space-y-1.5">
+                        {step.deliverables.map((d) => (
+                          <li key={d} className="flex items-start gap-2 text-sm text-white/80">
+                            <Package size={14} className="mt-0.5 shrink-0 text-white/50" />
+                            {d}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {step.revisions && (
+                      <div className="flex items-start gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5">
+                        <Repeat size={14} className="text-white/50 mt-0.5 shrink-0" />
+                        <span className="text-xs text-white/70">{step.revisions}</span>
+                      </div>
+                    )}
+
+                    {step.note && (
+                      <div className={cx(
+                        'rounded-xl border px-3 py-2.5 text-xs leading-relaxed',
+                        isFree
+                          ? 'border-emerald-300/20 bg-emerald-500/8 text-emerald-100/80'
+                          : 'border-white/10 bg-white/5 text-white/60'
+                      )}>
+                        {step.note}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           );
         })}
       </div>
 
-      <p className="mt-5 text-xs text-white/40 pl-14 md:pl-17">Klick auf den Node um einen Sprint als erledigt zu markieren.</p>
+      <p className="mt-5 text-xs text-white/40 pl-14 md:pl-17">
+        Node anklicken zum Abhaken. Zeile anklicken für Details.
+      </p>
     </div>
   );
 }
@@ -372,6 +492,63 @@ function getRecommendation(amount) {
   return { key: 'komplett', text: 'Für diesen Rahmen passt das Komplett-Paket.' };
 }
 
+/* ---------- FAQ ---------- */
+
+const FAQ_ITEMS = [
+  {
+    q: 'Was, wenn mir die erste Version nicht gefällt?',
+    a: 'Sprint 0 ist kostenlos – du siehst den Entwurf, bevor irgendeine Zahlung fällig wird. In Sprint 1 sind 2 Revisionsrunden inkludiert. Du gibst Feedback, ich setze um. Erst nach deiner Freigabe kommt das nächste Zahlungsziel.',
+  },
+  {
+    q: 'Was passiert, wenn wir uns mitten im Projekt nicht einigen?',
+    a: 'Da jedes Zahlungsziel an ein Review gebunden ist, entstehen keine offenen Posten. Du zahlst nur für das, was du freigegeben hast. Wenn du nach Sprint 1 nicht weitermachen willst, endet das Projekt dort.',
+  },
+  {
+    q: 'Was, wenn ich später etwas ändern will?',
+    a: 'Kleinere Anpassungen nach Go-Live: entweder als kleines Extra-Projekt oder monatliche Betreuung ab 150 €/Monat. Du bekommst bei Übergabe eine Dokumentation, damit du Texte und Bilder selbst anpassen kannst.',
+  },
+  {
+    q: 'Was, wenn mein Budget knapp ist?',
+    a: 'Sprint 0 ist kostenlos. Danach schauen wir gemeinsam, welches Paket sinnvoll ist. Wenn das Budget nicht passt, sage ich das direkt – kein Umweg.',
+  },
+  {
+    q: 'Wie viel muss ich vorbereiten, bevor wir starten?',
+    a: 'Branche, Ziel, Deadline und ein Link zur aktuellen Website. Das reicht für Sprint 0. Alles Weitere – Texte, Bilder, Struktur – klären wir gemeinsam im Prozess.',
+  },
+];
+
+function FAQAccordion() {
+  const [open, setOpen] = useState(null);
+
+  return (
+    <div className="space-y-2">
+      {FAQ_ITEMS.map((item, i) => {
+        const isOpen = open === i;
+        return (
+          <div
+            key={i}
+            className={cx(
+              'rounded-2xl border transition-all duration-200 cursor-pointer',
+              isOpen ? 'border-white/20 bg-white/8' : 'border-white/10 bg-white/5 hover:border-white/15'
+            )}
+            onClick={() => setOpen(isOpen ? null : i)}
+          >
+            <div className="flex items-center justify-between gap-4 px-5 py-4">
+              <span className="text-sm md:text-base font-semibold text-white/90">{item.q}</span>
+              <span className={cx('text-white/40 text-sm shrink-0 transition-transform duration-200', isOpen ? 'rotate-180' : '')}>▾</span>
+            </div>
+            {isOpen && (
+              <div className="px-5 pb-4 text-sm text-white/70 leading-relaxed border-t border-white/8 pt-3">
+                {item.a}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 /* ---------- PAGE ---------- */
 
 export default function ProzessPage() {
@@ -397,10 +574,10 @@ export default function ProzessPage() {
           <div className="flex flex-col items-center text-center gap-5">
             <Reveal>
               <div className="flex flex-wrap items-center justify-center gap-2">
-                <Pill tone="free">Start: Kostenlos (Analyse + Entwurf)</Pill>
+                <Pill tone="free">Sprint 0 kostenlos – erst sehen, dann entscheiden</Pill>
                 <Pill>
                   <span className="inline-flex items-center gap-2">
-                    <Sparkles size={16} /> Sprint-Reviews statt Bauchgefühl
+                    <Sparkles size={16} /> Zahlungsziele nach Review, nicht vorher
                   </span>
                 </Pill>
               </div>
@@ -417,8 +594,12 @@ export default function ProzessPage() {
 
             <Reveal delayMs={160}>
               <p className="max-w-2xl text-base md:text-xl text-white/80 leading-relaxed">
-                Ein klarer Ablauf in Sprints: Nach jedem Sprint gibt&apos;s ein Review. Danach kommt erst das nächste Zahlungsziel.
+                Vier Sprints mit Review-Gates: Du gibst nach jedem Sprint Feedback. Das nächste Zahlungsziel kommt erst nach deiner Freigabe.
               </p>
+            </Reveal>
+
+            <Reveal delayMs={240}>
+              <TrustBar />
             </Reveal>
           </div>
         </div>
@@ -427,27 +608,51 @@ export default function ProzessPage() {
       {/* ROADMAP */}
       <SectionShell id="roadmap" tight>
         <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Roadmap</div>
+          <div className="text-xs uppercase tracking-wide text-white/55">Ablauf</div>
         </Reveal>
 
         <Reveal delayMs={90}>
           <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Ein Ablauf.
+            Vier Sprints.
             <span className="block">
-              <TitleGradient>Sprint → Review → nächster Schritt.</TitleGradient>
+              <TitleGradient>Jeder mit klarem Ergebnis und Review.</TitleGradient>
             </span>
           </h2>
+        </Reveal>
+
+        <Reveal delayMs={140}>
+          <p className="mt-4 text-white/70 text-base max-w-2xl leading-relaxed">
+            Kein Ablauf auf Vertrauensbasis. Jeder Sprint endet mit einem konkreten Ergebnis, das du siehst und bewertest – bevor das nächste Zahlungsziel ausgelöst wird. Klick auf einen Sprint für Details.
+          </p>
         </Reveal>
 
         <div className="mt-8">
           <Card className="p-5 md:p-6">
             <div className="flex flex-wrap gap-2 mb-6">
               <Pill tone="free">Sprint 0: Kostenlos</Pill>
-              <Pill>Danach: Zahlungsziele nach Review</Pill>
+              <Pill>2 Revisionsrunden in Sprint 1</Pill>
+              <Pill>Zahlung immer nach Review</Pill>
             </div>
             <RoadmapTimeline />
           </Card>
         </div>
+
+        {/* Timeline summary strip */}
+        <Reveal delayMs={80}>
+          <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+            {ROADMAP_STEPS.map((step) => (
+              <div key={step.id} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                <div className={cx('text-xs font-semibold uppercase tracking-wide mb-1', step.tagTone === 'free' ? 'text-emerald-300/80' : 'text-white/45')}>
+                  {step.label}
+                </div>
+                <div className="text-sm text-white/80 font-semibold leading-tight">{step.title}</div>
+                <div className="mt-1 text-xs text-white/45 flex items-center gap-1">
+                  <Clock size={11} /> {step.duration}
+                </div>
+              </div>
+            ))}
+          </div>
+        </Reveal>
       </SectionShell>
 
       {/* RECHNER */}
@@ -495,38 +700,38 @@ export default function ProzessPage() {
             <div className="mt-6 rounded-2xl border border-emerald-300/20 bg-emerald-500/10 p-4">
               <div className="text-xs uppercase tracking-wide text-emerald-100/90">Start ist kostenlos</div>
               <div className="mt-2 text-sm text-white/75 leading-relaxed">
-                Sprint 0 (Analyse + Entwurf) ist kostenlos. Danach geht es Sprint für Sprint weiter.
+                Sprint 0 (Analyse + Entwurf) kostet nichts. Danach entscheidest du, ob und mit welchem Paket es weitergeht.
               </div>
             </div>
           </Card>
 
           <Card className="p-6 md:p-7">
-            <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsziel 1 — nach Sprint-Review (30%)</div>
+            <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsziel 1 — nach Sprint-Review (30 %)</div>
             <div className="mt-3 text-4xl md:text-5xl font-extrabold tracking-tight leading-none">
               {payments.p1} <span className="text-white/55">€</span>
             </div>
-            <div className="mt-1 text-sm text-white/70">Nach Sprint 1 (erste Version gesehen).</div>
+            <div className="mt-1 text-sm text-white/70">Fällig nach Sprint 1 – du hast die erste Version gesehen und freigegeben.</div>
 
             <div className="mt-6 space-y-4">
               <div>
-                <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsziel 2 — nach Sprint-Review (50%)</div>
+                <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsziel 2 — nach Sprint-Review (50 %)</div>
                 <div className="mt-2 text-4xl md:text-5xl font-extrabold tracking-tight">
                   {payments.p2} <span className="text-white/55">€</span>
                 </div>
-                <div className="mt-1 text-sm text-white/70">Nach Sprint 2 (Feinschliff freigegeben).</div>
+                <div className="mt-1 text-sm text-white/70">Fällig nach Sprint 2 – Feinschliff abgenommen, alles freigegeben.</div>
               </div>
 
               <div>
-                <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsziel 3 — nach Übergabe (20%)</div>
+                <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsziel 3 — nach Übergabe (20 %)</div>
                 <div className="mt-2 text-4xl md:text-5xl font-extrabold tracking-tight">
                   {payments.p3} <span className="text-white/55">€</span>
                 </div>
-                <div className="mt-1 text-sm text-white/70">Nach Sprint 3 (Go-Live + Übergabe).</div>
+                <div className="mt-1 text-sm text-white/70">Fällig nach Go-Live und vollständiger Datei-Übergabe.</div>
               </div>
             </div>
 
             <div className="mt-6 rounded-2xl border border-white/12 bg-white/5 p-4 text-sm text-white/75">
-              Sprint → Review → nächstes Zahlungsziel. Transparent und Schritt für Schritt.
+              Jedes Zahlungsziel ist an ein Review gebunden. Kein Geld vorab für Leistungen, die du noch nicht gesehen hast.
             </div>
           </Card>
         </div>
@@ -542,13 +747,13 @@ export default function ProzessPage() {
           <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
             Was brauchst du wirklich?
             <span className="block">
-              <TitleGradient>Schau am besten auf deine Situation. Nicht auf die Features.</TitleGradient>
+              <TitleGradient>Schau auf deine Situation, nicht auf die Feature-Liste.</TitleGradient>
             </span>
           </h2>
         </Reveal>
 
         <div className="mt-6 rounded-2xl border border-white/12 bg-white/5 px-4 py-3 text-sm text-white/75">
-          Der Ablauf ist in allen Paketen identisch (Sprints + Reviews). Unterschiede sind nur Umfang und Extras.
+          Der Sprint-Ablauf ist in allen Paketen identisch. Unterschied: Umfang der Seiten und enthaltene Extras.
         </div>
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
@@ -563,7 +768,7 @@ export default function ProzessPage() {
                 <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Brandbook (Farben, Typo, Layoutregeln)</span></li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                  <span>1 Motion-Element <span className="ml-1"><PackageMetaLink href={PORTFOLIO_MOTION}>Beispiel</PackageMetaLink></span></span>
+                  <span>1 Motion-Element – <PackageMetaLink href={PORTFOLIO_MOTION}>Beispiel</PackageMetaLink></span>
                 </li>
               </ul>
               <div className="mt-5 text-sm text-white/70 flex items-center gap-2"><Clock size={16} className="text-white/60" /> ca. 3 Wochen</div>
@@ -584,7 +789,7 @@ export default function ProzessPage() {
                 <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Branding-Grundlage (Farben, Schrift, Logo)</span></li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                  <span>Aufbau wie im Case <span className="ml-1"><PackageMetaLink href={PORTFOLIO_KFA}>Beispiel</PackageMetaLink></span></span>
+                  <span>Aufbau wie im Case – <PackageMetaLink href={PORTFOLIO_KFA}>Beispiel</PackageMetaLink></span>
                 </li>
               </ul>
               <div className="mt-5 text-sm text-white/70 flex items-center gap-2"><Clock size={16} className="text-white/60" /> 10–14 Tage</div>
@@ -599,58 +804,30 @@ export default function ProzessPage() {
               </div>
               <ul className="mt-4 space-y-2 text-sm text-white/80">
                 <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Eine Landingpage</span></li>
-                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Klare Struktur + ein CTA</span></li>
+                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Klare Struktur, ein CTA</span></li>
                 <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Mobil optimiert</span></li>
               </ul>
-              <div className="mt-5 text-sm text-white/70 flex items-center gap-2"><Clock size={16} className="text-white/60" /> ~ 7 Tage</div>
+              <div className="mt-5 text-sm text-white/70 flex items-center gap-2"><Clock size={16} className="text-white/60" /> ~7 Tage</div>
             </Card>
           </Reveal>
         </div>
       </SectionShell>
 
-      {/* EINWÄNDE */}
+      {/* FAQ / EINWÄNDE */}
       <SectionShell id="einwaende" tight>
         <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Sicherheit</div>
+          <div className="text-xs uppercase tracking-wide text-white/55">Häufige Fragen</div>
         </Reveal>
 
         <Reveal delayMs={90}>
           <h2 className="mt-3 text-2xl md:text-4xl font-extrabold leading-tight">
-            Typische Fragen.
-            <span className="block"><TitleGradient>Kurze Antworten.</TitleGradient></span>
+            Was du wissen willst,
+            <span className="block"><TitleGradient>bevor du anfragst.</TitleGradient></span>
           </h2>
         </Reveal>
 
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
-          <Card className="p-5">
-            <div className="flex items-start gap-3">
-              <Shield size={18} className="text-white/70 mt-0.5" />
-              <div>
-                <div className="text-white/90 font-semibold">Was, wenn es mir nicht gefällt?</div>
-                <div className="mt-2 text-sm text-white/70">Du siehst Entwurf und Versionen Sprint für Sprint – danach entscheidest du weiter.</div>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-5">
-            <div className="flex items-start gap-3">
-              <Shield size={18} className="text-white/70 mt-0.5" />
-              <div>
-                <div className="text-white/90 font-semibold">Was, wenn ich später etwas ändern will?</div>
-                <div className="mt-2 text-sm text-white/70">Dann entweder Betreuung ab 150 €/Monat oder ein kleines Extra-Projekt.</div>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-5">
-            <div className="flex items-start gap-3">
-              <Shield size={18} className="text-white/70 mt-0.5" />
-              <div>
-                <div className="text-white/90 font-semibold">Was, wenn mein Budget knapp ist?</div>
-                <div className="mt-2 text-sm text-white/70">Wir starten mit dem kostenlosen Sprint 0 und entscheiden dann passend.</div>
-              </div>
-            </div>
-          </Card>
+        <div className="mt-6">
+          <FAQAccordion />
         </div>
       </SectionShell>
 
@@ -665,7 +842,14 @@ export default function ProzessPage() {
                   <span className="block"><TitleGradient>Schick mir nur die Basics.</TitleGradient></span>
                 </div>
                 <div className="mt-3 text-sm md:text-base text-white/70 max-w-xl">
-                  Branche, Ziel, Deadline, Link zur Website (falls vorhanden). Ich melde mich innerhalb von 24 Stunden.
+                  Branche, Ziel, Deadline, Link zur aktuellen Website. Ich melde mich innerhalb von 24 Stunden mit einer ehrlichen Einschätzung.
+                </div>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  {['Sprint 0 kostenlos', 'Antwort innerhalb 24 h', 'Kein Commitment nötig'].map((t) => (
+                    <span key={t} className="text-xs text-white/60 flex items-center gap-1.5">
+                      <CheckCircle2 size={13} className="text-emerald-400/70" /> {t}
+                    </span>
+                  ))}
                 </div>
               </div>
 
@@ -673,7 +857,7 @@ export default function ProzessPage() {
                 href={WHATSAPP_HREF}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold shrink-0"
               >
                 Per WhatsApp schreiben <ArrowRight size={18} />
               </a>
