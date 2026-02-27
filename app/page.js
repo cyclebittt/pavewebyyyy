@@ -753,125 +753,168 @@ export default function Home() {
           </div>
         </Scene>
 
-        {/* ── 06 ABLAUF + FINALE CTA ── Process + conversion */}
+        {/* ── 06 ABLAUF + FINALE CTA ── */}
         <Scene id="request">
-          <div className="space-y-6">
+          <div className="flex flex-col gap-16">
 
-            <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-10">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-                <div>
-                  <Reveal>
-                    <div className="text-xs uppercase tracking-wide text-white/55">06 — Ablauf</div>
-                  </Reveal>
-                  <Reveal delayMs={90}>
-                    <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-                      Vier Sprints.
-                      <span className="block">
-                        <TitleGradient sceneId="request">Jeder mit Review – keiner ohne Ergebnis.</TitleGradient>
-                      </span>
-                    </h2>
-                  </Reveal>
-                  <Reveal delayMs={160}>
-                    <p className="mt-4 text-white/70 text-base leading-relaxed max-w-xl">
-                      Nach jedem Sprint siehst du das Ergebnis und entscheidest, ob es weitergeht. Zahlung kommt erst nach deiner Freigabe.
-                    </p>
-                  </Reveal>
-                  <Reveal delayMs={240}>
-                    <div className="mt-6 space-y-3">
-                      <Step n="0" highlight title="Analyse + erster Entwurf" desc="Kostenlos. Konkrete Schwachstellen, erster Seitenaufbau, Paketempfehlung." />
-                      <Step n="1" title="Erste lauffähige Version" desc="Du klickst durch, gibst Feedback. 2 Revisionsrunden. Zahlung nach Review (30 %)." />
-                      <Step n="2" title="Feinschliff" desc="Alle Feedbackpunkte umgesetzt. SEO-Basis, Performance. Zahlung nach Freigabe (50 %)." />
-                      <Step n="3" title="Go-Live + Übergabe" desc="Live-Schaltung, alle Dateien, Zugänge, Dokumentation. Zahlung nach Übergabe (20 %)." />
-                    </div>
-                  </Reveal>
-                  <Reveal delayMs={320}>
-                    <div className="mt-5">
-                      <Link href="/prozess" className="text-sm text-white/55 hover:text-white transition-colors inline-flex items-center gap-1.5 font-medium underline underline-offset-4">
-                        Vollständiger Ablauf auf /prozess <ArrowRight size={13} />
-                      </Link>
-                    </div>
-                  </Reveal>
-                </div>
-
-                <Reveal delayMs={160}>
-                  <TiltCard className="rounded-3xl">
-                    <div className="rounded-3xl border border-white/15 bg-black/25 p-6">
-                      <div className="text-xs uppercase tracking-wide text-white/50 mb-3">Pakete</div>
-                      <div className="space-y-3">
-                        {[
-                          { name: 'Einstieg', price: 'ab 400 €', time: '~7 Tage', desc: 'Eine Landingpage, klare Struktur, ein CTA.' },
-                          { name: 'Standard', price: 'ab 700 €', time: '10–14 Tage', desc: 'Website bis 5 Seiten + Branding-Grundlage.', featured: true },
-                          { name: 'Komplett', price: 'ab 1.100 €', time: 'ca. 3 Wochen', desc: 'Website + Brandbook + Motion-Element.' },
-                        ].map((p) => (
-                          <div key={p.name} className={cx('rounded-2xl border px-4 py-3', p.featured ? 'border-white/20 bg-white/8' : 'border-white/10 bg-white/4')}>
-                            <div className="flex items-center justify-between gap-2">
-                              <div>
-                                <span className="text-sm font-semibold text-white/90">{p.name}</span>
-                                {p.featured && <span className="ml-2 text-xs text-white/45">— am häufigsten</span>}
-                              </div>
-                              <span className="text-sm font-semibold text-white/70 shrink-0">{p.price}</span>
-                            </div>
-                            <div className="mt-0.5 flex items-center gap-3 flex-wrap">
-                              <span className="text-xs text-white/50 flex items-center gap-1"><Clock size={11} />{p.time}</span>
-                              <span className="text-xs text-white/45">{p.desc}</span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="mt-4 text-xs text-white/35">Alle Pakete starten mit Sprint 0 – kostenlos.</div>
-                    </div>
-                  </TiltCard>
-                </Reveal>
-              </div>
+            {/* — Kicker + Headline — */}
+            <div className="text-center max-w-2xl mx-auto">
+              <Reveal>
+                <div className="text-xs uppercase tracking-wide text-white/45">06 — Ablauf</div>
+              </Reveal>
+              <Reveal delayMs={80}>
+                <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
+                  Vier Sprints.
+                  <span className="block">
+                    <TitleGradient sceneId="request">Kein Schritt ohne dein Okay.</TitleGradient>
+                  </span>
+                </h2>
+              </Reveal>
+              <Reveal delayMs={150}>
+                <p className="mt-4 text-white/65 text-base md:text-lg leading-relaxed">
+                  Nach jedem Sprint siehst du das Ergebnis. Zahlung erst nach Freigabe – nie vorher.
+                </p>
+              </Reveal>
             </div>
 
-            {/* Final CTA — repeat the zero-risk offer (Recency Effect) */}
-            <Reveal>
-              <div className="rounded-3xl border border-emerald-300/20 bg-emerald-500/6 backdrop-blur-md p-6 md:p-10">
-                <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-10 items-center">
-                  <div>
-                    <div className="text-xs uppercase tracking-wide text-emerald-300/70">Kostenloser Einstieg</div>
-                    <h3 className="mt-2 text-2xl md:text-4xl font-extrabold leading-tight">
-                      Kostenlose Website-Analyse anfragen.
-                      <span className="block mt-1 text-lg md:text-2xl font-semibold">
-                        <TitleGradient sceneId="s3">Kein Risiko. Kein Commitment.</TitleGradient>
-                      </span>
-                    </h3>
-                    <p className="mt-4 text-white/70 leading-relaxed max-w-xl">
-                      Schick mir deine aktuelle Website und was du dir davon erhoffst. Ich melde mich innerhalb von 24 Stunden mit einer ehrlichen Einschätzung – und einem ersten Entwurf, wenn es passt.
-                    </p>
-                    <div className="mt-5 flex flex-wrap gap-4 text-sm text-white/55">
-                      {['Sprint 0 kostenlos', 'Antwort innerhalb 24 h', 'Zahlung nach Review'].map((t) => (
-                        <span key={t} className="flex items-center gap-1.5"><CheckCircle2 size={13} className="text-emerald-400" />{t}</span>
-                      ))}
-                    </div>
-                    <div className="mt-8 flex flex-wrap gap-3">
-                      <Magnetic>
-                        <a href="mailto:leonseitz25@icloud.com?subject=Kostenlose Website-Analyse&body=Meine Website: %0D%0AZiel (mehr Anfragen / sauberer Auftritt / beides): %0D%0ADeadline (optional): %0D%0A"
-                          className="px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center gap-2">
-                          <Mail size={18} /> Analyse anfragen
-                        </a>
-                      </Magnetic>
-                      <GhostCTA href="/portfolio">
-                        <ExternalLink size={18} /> Erst Portfolio ansehen
-                      </GhostCTA>
-                    </div>
-                  </div>
+            {/* — Sprint Timeline — */}
+            <Reveal delayMs={100}>
+              <div className="relative">
+                {/* Connecting line */}
+                <div className="hidden md:block absolute top-[28px] left-[calc(12.5%-0px)] right-[calc(12.5%-0px)] h-px bg-gradient-to-r from-emerald-400/40 via-white/15 to-white/10" />
 
-                  <Reveal delayMs={120}>
-                    <TiltCard className="rounded-3xl">
-                      <div className="rounded-3xl border border-white/15 bg-black/25 p-6">
-                        <div className="text-sm font-semibold text-white/90 mb-3">Copy & schicken</div>
-                        <div className="rounded-2xl border border-white/10 bg-black/30 p-4 text-sm text-white/80 whitespace-pre-wrap leading-relaxed font-mono">
-{`Website: 
-Ziel: 
-Deadline (optional): 
-Budgetrahmen (optional):`}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  {[
+                    { n: '0', label: 'Sprint 0', title: 'Analyse + Entwurf', desc: 'Konkrete Schwachstellen, erster Seitenaufbau, Paketempfehlung.', note: 'Kostenlos', em: true },
+                    { n: '1', label: 'Sprint 1', title: 'Erste Version', desc: 'Du klickst durch, gibst Feedback. 2 Revisionsrunden inklusive.', note: '30 % nach Review', em: false },
+                    { n: '2', label: 'Sprint 2', title: 'Feinschliff', desc: 'Alle Punkte umgesetzt. SEO-Basis und Performance geprüft.', note: '50 % nach Freigabe', em: false },
+                    { n: '3', label: 'Sprint 3', title: 'Go-Live + Übergabe', desc: 'Live-Schaltung, alle Dateien, Zugänge, vollständige Dokumentation.', note: '20 % nach Übergabe', em: false },
+                  ].map((s, i) => (
+                    <TiltCard key={s.n} className="rounded-2xl">
+                      <div className={cx('rounded-2xl border p-5 h-full flex flex-col gap-4 relative overflow-hidden',
+                        s.em ? 'border-emerald-300/30 bg-emerald-500/8' : 'border-white/12 bg-white/[0.04]')}>
+                        {/* Shine */}
+                        <div className="pointer-events-none absolute -left-24 -top-8 h-[130%] w-40 rotate-12 opacity-[0.06]"
+                          style={{ background: 'white', filter: 'blur(36px)', animation: `shineSoft ${5.5 + i * 0.4}s cubic-bezier(.2,.9,.2,1) infinite` }} />
+                        {/* Node */}
+                        <div className="flex items-center gap-3">
+                          <div className={cx('w-10 h-10 rounded-xl flex items-center justify-center font-extrabold text-sm shrink-0 relative z-10',
+                            s.em ? 'bg-emerald-400 text-black shadow-[0_0_20px_rgba(52,211,153,0.4)]' : 'bg-white/15 text-white border border-white/20')}>
+                            {s.n}
+                          </div>
+                          <div className={cx('text-xs font-semibold uppercase tracking-wide', s.em ? 'text-emerald-300/80' : 'text-white/35')}>
+                            {s.label}
+                          </div>
                         </div>
-                        <div className="mt-3 text-xs text-white/40">Das reicht für eine vollständige erste Einschätzung.</div>
+                        {/* Content */}
+                        <div className="flex-1">
+                          <div className="text-sm font-semibold text-white/90 leading-snug">{s.title}</div>
+                          <p className="mt-1.5 text-xs text-white/55 leading-relaxed">{s.desc}</p>
+                        </div>
+                        {/* Payment note */}
+                        <div className={cx('text-xs font-semibold rounded-lg px-2.5 py-1.5 border self-start',
+                          s.em ? 'text-emerald-200 border-emerald-300/30 bg-emerald-500/12' : 'text-white/45 border-white/10 bg-white/4')}>
+                          {s.note}
+                        </div>
                       </div>
                     </TiltCard>
-                  </Reveal>
+                  ))}
+                </div>
+
+                <div className="mt-5 flex justify-center">
+                  <Link href="/prozess" className="text-sm text-white/45 hover:text-white/80 transition-colors inline-flex items-center gap-1.5">
+                    Vollständiger Ablauf auf /prozess <ArrowRight size={13} />
+                  </Link>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* — Pakete — */}
+            <Reveal delayMs={80}>
+              <div>
+                <div className="text-xs uppercase tracking-wide text-white/40 text-center mb-5">Pakete</div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {[
+                    { name: 'Einstieg', price: 'ab 400 €', time: '~7 Tage', items: ['1 Landingpage', 'Klare Struktur', '1 CTA-Fokus'] },
+                    { name: 'Standard', price: 'ab 700 €', time: '10–14 Tage', items: ['Website bis 5 Seiten', 'Branding-Grundlage', '2 Revisionsrunden'], featured: true },
+                    { name: 'Komplett', price: 'ab 1.100 €', time: 'ca. 3 Wochen', items: ['Website + Brandbook', 'Motion-Element', 'Vollständige Übergabe'] },
+                  ].map((p) => (
+                    <TiltCard key={p.name} className="rounded-2xl">
+                      <div className={cx('rounded-2xl border p-5 flex flex-col gap-4 relative overflow-hidden',
+                        p.featured ? 'border-white/25 bg-white/8' : 'border-white/10 bg-white/[0.03]')}>
+                        {p.featured && (
+                          <div className="pointer-events-none absolute -left-20 -top-8 h-[130%] w-48 rotate-12 opacity-[0.07]"
+                            style={{ background: 'white', filter: 'blur(40px)', animation: 'shineSoft 5.8s cubic-bezier(.2,.9,.2,1) infinite' }} />
+                        )}
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <div className="text-base font-bold text-white/90">{p.name}</div>
+                            {p.featured && (
+                              <div className="mt-0.5 text-xs text-white/40">Am häufigsten gewählt</div>
+                            )}
+                          </div>
+                          <div className="text-right shrink-0">
+                            <div className="text-base font-bold text-white/85">{p.price}</div>
+                            <div className="text-xs text-white/40 flex items-center gap-1 justify-end mt-0.5">
+                              <Clock size={10} />{p.time}
+                            </div>
+                          </div>
+                        </div>
+                        <ul className="space-y-1.5">
+                          {p.items.map((item) => (
+                            <li key={item} className="flex items-center gap-2 text-sm text-white/65">
+                              <CheckCircle2 size={13} className="shrink-0 text-white/35" />{item}
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="mt-auto pt-1 text-xs text-white/35">Startet mit Sprint 0 – kostenlos.</div>
+                      </div>
+                    </TiltCard>
+                  ))}
+                </div>
+              </div>
+            </Reveal>
+
+            {/* — Finaler CTA — zentriert, reduziert, fokussiert */}
+            <Reveal delayMs={80}>
+              <div className="relative rounded-3xl border border-emerald-300/20 bg-emerald-500/5 overflow-hidden p-8 md:p-16 text-center">
+                {/* Background glow */}
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                  <div className="w-[600px] h-[300px] rounded-full bg-emerald-500/12"
+                    style={{ filter: 'blur(80px)' }} />
+                </div>
+
+                <div className="relative z-10 max-w-xl mx-auto flex flex-col items-center gap-6">
+                  <div className="text-xs uppercase tracking-widest text-emerald-300/60">Kostenloser Einstieg</div>
+
+                  <h3 className="text-2xl md:text-5xl font-extrabold leading-tight">
+                    Kostenlose Website-Analyse.<br />
+                    <TitleGradient sceneId="s3">Kein Risiko. Kein Commitment.</TitleGradient>
+                  </h3>
+
+                  <p className="text-white/60 text-base leading-relaxed">
+                    Schick mir deine URL und was du dir davon erhoffst. Ich melde mich innerhalb von 24 h mit einer ehrlichen Einschätzung.
+                  </p>
+
+                  <div className="flex flex-wrap justify-center gap-4 text-sm text-white/50">
+                    {['Sprint 0 kostenlos', '24 h Antwortzeit', 'Zahlung nach Review'].map((t) => (
+                      <span key={t} className="flex items-center gap-1.5">
+                        <CheckCircle2 size={13} className="text-emerald-400" />{t}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                    <Magnetic>
+                      <a href="mailto:leonseitz25@icloud.com?subject=Kostenlose Website-Analyse&body=Meine Website: %0D%0AZiel: %0D%0ADeadline (optional): %0D%0A"
+                        className="px-8 py-4 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center gap-2 shadow-[0_0_40px_rgba(255,255,255,0.15)]">
+                        <Mail size={18} /> Analyse anfragen
+                      </a>
+                    </Magnetic>
+                    <GhostCTA href="/portfolio">
+                      <ExternalLink size={17} /> Portfolio ansehen
+                    </GhostCTA>
+                  </div>
                 </div>
               </div>
             </Reveal>
