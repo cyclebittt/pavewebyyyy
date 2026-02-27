@@ -730,14 +730,7 @@ export default function Home() {
               </div>
             </Reveal>
 
-            <Reveal delayMs={310}>
-              <div className="mt-2 grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-3xl items-stretch">
-                <MiniTile icon={<BookOpen size={18} />} title="Brandbook" sub="Guidelines & System" />
-                <MiniTile icon={<Play size={18} />} title="Motion" sub="Hooks & Templates" />
-                <MiniTile icon={<Monitor size={18} />} title="Web" sub="Funnel & UX" />
-                <MiniTile icon={<Film size={18} />} title="Video" sub="Schnitt & Rhythmus" />
-              </div>
-            </Reveal>
+
           </div>
         </Scene>
 
@@ -971,7 +964,7 @@ export default function Home() {
                   <div className="text-xs uppercase tracking-wide text-white/55">Einstieg</div>
                   <div className="mt-3 text-xl md:text-3xl font-bold text-white/90">Drei Felder. Das reicht.</div>
                   <p className="mt-3 text-sm md:text-base text-white/70 leading-relaxed">
-                    "Wir wollen X bis Datum Y erreichen und stehen gerade bei Z." Danach klären wir den Rest.
+                    &ldquo;Wir wollen X bis Datum Y erreichen und stehen gerade bei Z.&rdquo; Danach klären wir den Rest.
                   </p>
                   <div className="mt-6 flex gap-2 flex-wrap">
                     <GhostCTA href="/portfolio">
