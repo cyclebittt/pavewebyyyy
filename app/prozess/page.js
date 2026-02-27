@@ -1,44 +1,111 @@
 'use client';
 
+import Link from 'next/link';
+import Image from 'next/image';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import {
   ArrowRight,
+  Sparkles,
   CheckCircle2,
-  Clock,
+  Play,
+  Wand2,
+  Monitor,
+  Film,
+  BookOpen,
+  Mail,
   ExternalLink,
   Shield,
-  Sparkles,
-  FileText,
-  MessageSquare,
   Repeat,
-  Package,
+  FileText,
+  Eye,
 } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 /* ---------- CONFIG ---------- */
 
-const WHATSAPP_E164 = '4916095757167';
-const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_E164}?text=${encodeURIComponent(
-  `Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel (mehr Anfragen / sauberer Auftritt / beides):\n- Deadline:\n- Link zur aktuellen Website (falls vorhanden):\n\nDanke!`
-)}`;
+const SECTIONS = [
+  { id: 's1', label: 'Start' },
+  { id: 's2', label: 'Was du bekommst' },
+  { id: 's3', label: 'Leistungen' },
+  { id: 's4', label: 'Proof' },
+  { id: 's5', label: 'Ablauf' },
+  { id: 'request', label: 'Anfrage' },
+];
 
-const PORTFOLIO_MOTION = 'https://www.leonseitz.com/portfolio/motion-design';
-const PORTFOLIO_KFA = 'https://www.leonseitz.com/portfolio/kirche-fundraising';
-
-/* ---------- SCENE ---------- */
-
-const SCENE = {
-  base: '#070312',
-  g1: `radial-gradient(1200px 700px at 18% 18%, rgba(168,85,247,0.30), transparent 60%),
-       radial-gradient(900px 700px at 82% 25%, rgba(56,189,248,0.14), transparent 55%)`,
-  g2: `linear-gradient(135deg, #070312 0%, #0b0b1a 50%, #03040e 100%)`,
-  blobs: [
-    { cls: 'bg-violet-500/16', x: '-20%', y: '-18%', s: '56rem', blur: 140 },
-    { cls: 'bg-cyan-500/10', x: '70%', y: '10%', s: '54rem', blur: 150 },
-    { cls: 'bg-fuchsia-500/9', x: '20%', y: '80%', s: '46rem', blur: 150 },
-  ],
-  accent: 'from-violet-200 via-indigo-200 to-cyan-200',
+const SCENES = {
+  s1: {
+    base: '#070312',
+    g1: `radial-gradient(1200px 700px at 18% 18%, rgba(168,85,247,0.34), transparent 60%),
+         radial-gradient(900px 700px at 82% 25%, rgba(56,189,248,0.16), transparent 55%)`,
+    g2: `linear-gradient(135deg, #070312 0%, #0b0b1a 50%, #03040e 100%)`,
+    blobs: [
+      { cls: 'bg-violet-500/18', x: '-20%', y: '-18%', s: '56rem', blur: 140 },
+      { cls: 'bg-cyan-500/12', x: '70%', y: '10%', s: '54rem', blur: 150 },
+      { cls: 'bg-fuchsia-500/10', x: '20%', y: '80%', s: '46rem', blur: 150 },
+    ],
+    accent: 'from-violet-200 via-indigo-200 to-cyan-200',
+  },
+  s2: {
+    base: '#021019',
+    g1: `radial-gradient(1100px 750px at 22% 20%, rgba(34,211,238,0.26), transparent 60%),
+         radial-gradient(900px 700px at 88% 15%, rgba(99,102,241,0.20), transparent 55%)`,
+    g2: `linear-gradient(135deg, #021019 0%, #07102a 55%, #05010b 100%)`,
+    blobs: [
+      { cls: 'bg-cyan-500/16', x: '-10%', y: '-10%', s: '58rem', blur: 150 },
+      { cls: 'bg-indigo-500/14', x: '72%', y: '0%', s: '54rem', blur: 150 },
+      { cls: 'bg-emerald-500/10', x: '10%', y: '75%', s: '46rem', blur: 160 },
+    ],
+    accent: 'from-cyan-200 via-indigo-200 to-violet-200',
+  },
+  s3: {
+    base: '#120316',
+    g1: `radial-gradient(1200px 750px at 20% 10%, rgba(244,114,182,0.18), transparent 60%),
+         radial-gradient(950px 750px at 84% 30%, rgba(168,85,247,0.22), transparent 55%)`,
+    g2: `linear-gradient(135deg, #120316 0%, #1a0714 55%, #040312 100%)`,
+    blobs: [
+      { cls: 'bg-pink-500/12', x: '-18%', y: '-12%', s: '56rem', blur: 160 },
+      { cls: 'bg-violet-500/16', x: '68%', y: '12%', s: '56rem', blur: 150 },
+      { cls: 'bg-cyan-500/10', x: '10%', y: '80%', s: '46rem', blur: 170 },
+    ],
+    accent: 'from-pink-200 via-fuchsia-200 to-indigo-200',
+  },
+  s4: {
+    base: '#03110a',
+    g1: `radial-gradient(1200px 750px at 18% 10%, rgba(16,185,129,0.13), transparent 60%),
+         radial-gradient(900px 700px at 85% 20%, rgba(59,130,246,0.18), transparent 55%)`,
+    g2: `linear-gradient(135deg, #03110a 0%, #0a1020 55%, #04060d 100%)`,
+    blobs: [
+      { cls: 'bg-emerald-500/11', x: '-12%', y: '-16%', s: '54rem', blur: 170 },
+      { cls: 'bg-cyan-500/11', x: '75%', y: '8%', s: '56rem', blur: 160 },
+      { cls: 'bg-indigo-500/11', x: '18%', y: '82%', s: '48rem', blur: 170 },
+    ],
+    accent: 'from-emerald-200 via-cyan-200 to-indigo-200',
+  },
+  s5: {
+    base: '#120b02',
+    g1: `radial-gradient(1200px 750px at 15% 10%, rgba(250,204,21,0.10), transparent 60%),
+         radial-gradient(900px 700px at 88% 25%, rgba(236,72,153,0.16), transparent 55%)`,
+    g2: `linear-gradient(135deg, #120b02 0%, #1b0713 55%, #05020a 100%)`,
+    blobs: [
+      { cls: 'bg-amber-400/10', x: '-10%', y: '-14%', s: '56rem', blur: 170 },
+      { cls: 'bg-pink-500/11', x: '74%', y: '10%', s: '56rem', blur: 160 },
+      { cls: 'bg-violet-500/11', x: '18%', y: '82%', s: '48rem', blur: 170 },
+    ],
+    accent: 'from-amber-200 via-pink-200 to-violet-200',
+  },
+  request: {
+    base: '#04040a',
+    g1: `radial-gradient(1200px 750px at 15% 0%, rgba(99,102,241,0.18), transparent 60%),
+         radial-gradient(900px 700px at 90% 15%, rgba(56,189,248,0.11), transparent 55%)`,
+    g2: `linear-gradient(135deg, #04040a 0%, #07071a 55%, #04030a 100%)`,
+    blobs: [
+      { cls: 'bg-indigo-500/11', x: '-12%', y: '-18%', s: '56rem', blur: 170 },
+      { cls: 'bg-cyan-500/10', x: '76%', y: '8%', s: '56rem', blur: 170 },
+      { cls: 'bg-violet-500/10', x: '18%', y: '82%', s: '48rem', blur: 170 },
+    ],
+    accent: 'from-indigo-200 via-violet-200 to-cyan-200',
+  },
 };
 
 /* ---------- UTIL ---------- */
@@ -47,8 +114,33 @@ function cx(...xs) {
   return xs.filter(Boolean).join(' ');
 }
 
-function TitleGradient({ children }) {
-  return <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', SCENE.accent)}>{children}</span>;
+function TitleGradient({ sceneId, children }) {
+  const scene = SCENES[sceneId] ?? SCENES.s1;
+  return <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', scene.accent)}>{children}</span>;
+}
+
+function useActiveSection(sectionIds) {
+  const [activeId, setActiveId] = useState(sectionIds[0]);
+
+  useEffect(() => {
+    const els = sectionIds.map((id) => document.getElementById(id)).filter(Boolean);
+    if (!els.length) return;
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const best = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0))[0];
+        if (best?.target?.id) setActiveId(best.target.id);
+      },
+      { root: null, rootMargin: '-35% 0px -55% 0px', threshold: [0.12, 0.25, 0.4, 0.55, 0.7] }
+    );
+
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, [sectionIds]);
+
+  return { activeId };
 }
 
 function useReveal(ref) {
@@ -68,28 +160,9 @@ function useReveal(ref) {
   return shown;
 }
 
-function Reveal({ children, delayMs = 0 }) {
-  const ref = useRef(null);
-  const shown = useReveal(ref);
-
-  return (
-    <div
-      ref={ref}
-      className={cx(
-        'transition-all duration-700 will-change-transform',
-        shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-      )}
-      style={{ transitionDelay: `${delayMs}ms` }}
-    >
-      {children}
-    </div>
-  );
-}
-
-/* ---------- PROGRESS + HALO ---------- */
-
 function useScrollProgress() {
   const [p, setP] = useState(0);
+
   useEffect(() => {
     const onScroll = () => {
       const doc = document.documentElement;
@@ -100,8 +173,114 @@ function useScrollProgress() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
   return p;
 }
+
+function useMousePos() {
+  const [pos, setPos] = useState({ x: -9999, y: -9999 });
+  const raf = useRef(null);
+
+  useEffect(() => {
+    const onMove = (e) => {
+      const x = e.clientX;
+      const y = e.clientY;
+      if (raf.current) cancelAnimationFrame(raf.current);
+      raf.current = requestAnimationFrame(() => setPos({ x, y }));
+    };
+    window.addEventListener('mousemove', onMove, { passive: true });
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      if (raf.current) cancelAnimationFrame(raf.current);
+    };
+  }, []);
+
+  return pos;
+}
+
+/* ---------- GLOBAL BACKGROUND ---------- */
+
+function GlobalBackground({ activeId }) {
+  return (
+    <div className="fixed inset-0 -z-10">
+      {Object.keys(SCENES).map((key) => {
+        const s = SCENES[key];
+        const on = key === activeId;
+
+        return (
+          <div
+            key={key}
+            className={cx(
+              'absolute inset-0 transition-[opacity,filter,transform] duration-[1200ms] ease-out will-change-[opacity,filter,transform]',
+              on ? 'opacity-100 blur-0 scale-100' : 'opacity-0 blur-[14px] scale-[1.025]'
+            )}
+            style={{
+              backgroundColor: s.base,
+              backgroundImage: `${s.g1}, ${s.g2}`,
+            }}
+          />
+        );
+      })}
+
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.10] mix-blend-overlay"
+        style={{
+          backgroundImage:
+            'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27320%27 viewBox=%270 0 320 320%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.8%27 numOctaves=%273%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27320%27 height=%27320%27 filter=%27url(%23n)%27 opacity=%270.35%27/%3E%3C/svg%3E")',
+          backgroundSize: '220px 220px',
+          animation: 'noiseMove 7s linear infinite',
+        }}
+      />
+
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_35%,transparent_0%,rgba(0,0,0,0.40)_65%,rgba(0,0,0,0.72)_100%)]" />
+    </div>
+  );
+}
+
+function GlobalLightLeaks({ activeId }) {
+  return (
+    <div className="fixed inset-0 -z-10 pointer-events-none">
+      {Object.keys(SCENES).map((key) => {
+        const scene = SCENES[key];
+        const on = key === activeId;
+
+        return (
+          <div
+            key={key}
+            className={cx(
+              'absolute inset-0 transition-[opacity,filter] duration-[1200ms] ease-out will-change-[opacity,filter]',
+              on ? 'opacity-100 blur-0' : 'opacity-0 blur-[20px]'
+            )}
+          >
+            {scene.blobs.map((b, i) => (
+              <div
+                key={i}
+                className={cx(
+                  'absolute rounded-full',
+                  b.cls,
+                  i === 0
+                    ? 'animate-[blob_10s_ease-in-out_infinite]'
+                    : i === 1
+                      ? 'animate-[blob2_12s_ease-in-out_infinite]'
+                      : 'animate-[blob3_14s_ease-in-out_infinite]'
+                )}
+                style={{
+                  left: b.x,
+                  top: b.y,
+                  width: b.s,
+                  height: b.s,
+                  filter: `blur(${b.blur}px)`,
+                }}
+              />
+            ))}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ---------- UI ADDONS ---------- */
 
 function ScrollProgressBar() {
   const p = useScrollProgress();
@@ -117,27 +296,9 @@ function ScrollProgressBar() {
   );
 }
 
-function useMousePos() {
-  const [pos, setPos] = useState({ x: -9999, y: -9999 });
-  const raf = useRef(null);
-  useEffect(() => {
-    const onMove = (e) => {
-      const x = e.clientX;
-      const y = e.clientY;
-      if (raf.current) cancelAnimationFrame(raf.current);
-      raf.current = requestAnimationFrame(() => setPos({ x, y }));
-    };
-    window.addEventListener('mousemove', onMove, { passive: true });
-    return () => {
-      window.removeEventListener('mousemove', onMove);
-      if (raf.current) cancelAnimationFrame(raf.current);
-    };
-  }, []);
-  return pos;
-}
-
 function CursorHalo() {
   const { x, y } = useMousePos();
+
   return (
     <div className="hidden md:block fixed inset-0 z-[6] pointer-events-none">
       <div
@@ -164,707 +325,779 @@ function CursorHalo() {
   );
 }
 
-/* ---------- GLOBAL BG ---------- */
+function Magnetic({ children, strength = 14, className = '' }) {
+  const ref = useRef(null);
 
-function GlobalBackground() {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const onMove = (e) => {
+      const r = el.getBoundingClientRect();
+      const cx0 = r.left + r.width / 2;
+      const cy0 = r.top + r.height / 2;
+      const dx = e.clientX - cx0;
+      const dy = e.clientY - cy0;
+      const mx = (dx / r.width) * strength;
+      const my = (dy / r.height) * strength;
+      el.style.transform = `translate3d(${mx}px, ${my}px, 0)`;
+    };
+
+    const onLeave = () => {
+      el.style.transform = 'translate3d(0,0,0)';
+    };
+
+    el.addEventListener('mousemove', onMove);
+    el.addEventListener('mouseleave', onLeave);
+    return () => {
+      el.removeEventListener('mousemove', onMove);
+      el.removeEventListener('mouseleave', onLeave);
+    };
+  }, [strength]);
+
   return (
-    <div className="fixed inset-0 -z-10">
+    <span ref={ref} className={cx('inline-flex transition-transform duration-200 ease-out will-change-transform', className)}>
+      {children}
+    </span>
+  );
+}
+
+function TiltCard({ children, className = '' }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const onMove = (e) => {
+      const r = el.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top) / r.height;
+      const rx = (0.5 - py) * 10;
+      const ry = (px - 0.5) * 12;
+
+      el.style.setProperty('--rx', `${rx}deg`);
+      el.style.setProperty('--ry', `${ry}deg`);
+      el.style.setProperty('--hx', `${px * 100}%`);
+      el.style.setProperty('--hy', `${py * 100}%`);
+    };
+
+    const onLeave = () => {
+      el.style.setProperty('--rx', `0deg`);
+      el.style.setProperty('--ry', `0deg`);
+    };
+
+    el.addEventListener('mousemove', onMove);
+    el.addEventListener('mouseleave', onLeave);
+    return () => {
+      el.removeEventListener('mousemove', onMove);
+      el.removeEventListener('mouseleave', onLeave);
+    };
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={cx('relative will-change-transform [transform-style:preserve-3d]', className)}
+      style={{
+        transform: 'perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))',
+        transition: 'transform 180ms ease-out',
+      }}
+    >
       <div
-        className="absolute inset-0"
+        className="pointer-events-none absolute inset-0 rounded-inherit opacity-0 md:opacity-100"
         style={{
-          backgroundColor: SCENE.base,
-          backgroundImage: `${SCENE.g1}, ${SCENE.g2}`,
+          background: 'radial-gradient(520px 380px at var(--hx, 50%) var(--hy, 30%), rgba(255,255,255,0.11), transparent 62%)',
+          mixBlendMode: 'screen',
         }}
       />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.10] mix-blend-overlay"
-        style={{
-          backgroundImage:
-            'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27320%27 viewBox=%270 0 320 320%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.8%27 numOctaves=%273%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27320%27 height=%27320%27 filter=%27url(%23n)%27 opacity=%270.35%27/%3E%3C/svg%3E")',
-          backgroundSize: '220px 220px',
-          animation: 'noiseMove 7s linear infinite',
-        }}
-      />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_35%,transparent_0%,rgba(0,0,0,0.40)_65%,rgba(0,0,0,0.72)_100%)]" />
+      {children}
     </div>
   );
 }
 
-function GlobalLightLeaks() {
-  return (
-    <div className="fixed inset-0 -z-10 pointer-events-none">
-      {SCENE.blobs.map((b, i) => (
-        <div
-          key={i}
-          className={cx(
-            'absolute rounded-full',
-            b.cls,
-            i === 0
-              ? 'animate-[blob_10s_ease-in-out_infinite]'
-              : i === 1
-                ? 'animate-[blob2_12s_ease-in-out_infinite]'
-                : 'animate-[blob3_14s_ease-in-out_infinite]'
-          )}
-          style={{ left: b.x, top: b.y, width: b.s, height: b.s, filter: `blur(${b.blur}px)` }}
-        />
-      ))}
-    </div>
-  );
-}
+/* ---------- STRUCTURE ---------- */
 
-/* ---------- UI ---------- */
-
-function SectionShell({ id, children, tight = false }) {
+function Scene({ id, children }) {
   return (
-    <section id={id} className={cx('relative px-5 md:px-16', tight ? 'py-10 md:py-12' : 'py-12 md:py-16')}>
-      <div className="relative max-w-6xl mx-auto">{children}</div>
+    <section id={id} className="relative min-h-screen flex items-center px-5 md:px-16 py-16 md:snap-start scroll-mt-24">
+      <div className="relative max-w-6xl mx-auto w-full">{children}</div>
     </section>
   );
 }
 
-function Card({ children, className = '' }) {
-  return <div className={cx('rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md', className)}>{children}</div>;
-}
+function Reveal({ children, delayMs = 0 }) {
+  const ref = useRef(null);
+  const shown = useReveal(ref);
 
-function Pill({ children, tone = 'neutral' }) {
-  const toneCls =
-    tone === 'free'
-      ? 'border-emerald-300/25 bg-emerald-500/10 text-emerald-100'
-      : 'border-white/15 bg-white/10 text-white/85';
-  return <span className={cx('inline-flex items-center rounded-full px-3 py-1 text-xs md:text-sm border', toneCls)}>{children}</span>;
-}
-
-function PackageMetaLink({ href, children }) {
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-flex items-center gap-1 underline underline-offset-4 text-white/70 hover:text-white transition-colors"
+    <div
+      ref={ref}
+      className={cx(
+        'transition-all duration-700 will-change-transform',
+        shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+      )}
+      style={{ transitionDelay: `${delayMs}ms` }}
     >
-      {children} <ExternalLink size={14} className="text-white/55" />
-    </a>
+      {children}
+    </div>
   );
 }
 
-/* ---------- TRUST BAR ---------- */
-
-const TRUST_ITEMS = [
-  { icon: <Shield size={16} />, label: 'Sprint 0 kostenlos', sub: 'Erst sehen, dann entscheiden' },
-  { icon: <Repeat size={16} />, label: 'Revisionsrunden pro Sprint', sub: '2 Runden inkludiert' },
-  { icon: <FileText size={16} />, label: 'Vollständige Übergabe', sub: 'Alle Dateien, Zugänge, Dokumentation' },
-  { icon: <MessageSquare size={16} />, label: 'Antwort innerhalb 24 h', sub: 'Werktags' },
-];
-
-function TrustBar() {
+function PrimaryCTA({ label = 'Projekt anfragen' }) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-      {TRUST_ITEMS.map((item) => (
+    <Magnetic>
+      <Link
+        href="/#request"
+        className="group px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center justify-center gap-2"
+      >
+        {label}
+        <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
+      </Link>
+    </Magnetic>
+  );
+}
+
+function GhostCTA({ href, children }) {
+  return (
+    <Magnetic strength={10}>
+      <Link
+        href={href}
+        className="px-6 py-3 rounded-full bg-white/10 border border-white/15 hover:border-white/30 hover:bg-white/12 transition-colors font-semibold inline-flex items-center gap-2"
+      >
+        {children}
+      </Link>
+    </Magnetic>
+  );
+}
+
+/* ---------- NUMBER ANIMATION ---------- */
+
+function useCountUp({ target, durationMs = 900 }) {
+  const [value, setValue] = useState(0);
+  const raf = useRef(null);
+
+  const start = useCallback(() => {
+    if (raf.current) cancelAnimationFrame(raf.current);
+    const t0 = performance.now();
+    const from = 0;
+    const to = Math.max(0, target);
+
+    const tick = (t) => {
+      const p = Math.min(1, (t - t0) / durationMs);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setValue(Math.round(from + (to - from) * eased));
+      if (p < 1) raf.current = requestAnimationFrame(tick);
+    };
+
+    raf.current = requestAnimationFrame(tick);
+  }, [target, durationMs]);
+
+  useEffect(() => () => raf.current && cancelAnimationFrame(raf.current), []);
+  return { value, start };
+}
+
+function AnimatedNumber({ value, sceneId, className = '' }) {
+  return (
+    <span className={cx('relative inline-flex items-baseline', className)}>
+      <span className="text-5xl md:text-6xl font-extrabold tracking-tight leading-none">
+        <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', (SCENES[sceneId] ?? SCENES.s1).accent)}>
+          {value}
+        </span>
+      </span>
+      <span
+        className="pointer-events-none absolute -inset-x-4 -inset-y-4 blur-2xl opacity-35"
+        style={{
+          background: 'radial-gradient(220px 120px at 40% 55%, rgba(255,255,255,0.18), transparent 65%)',
+          mixBlendMode: 'screen',
+        }}
+      />
+    </span>
+  );
+}
+
+/* ---------- PROOF STAT ---------- */
+
+function ProofStat({ sceneId, label, target, suffix = '', durationMs = 900 }) {
+  const ref = useRef(null);
+  const shown = useReveal(ref);
+  const { value, start } = useCountUp({ target, durationMs });
+
+  useEffect(() => {
+    if (shown) start();
+  }, [shown, start]);
+
+  return (
+    <TiltCard className="rounded-3xl">
+      <div ref={ref} className="relative overflow-hidden rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8">
         <div
-          key={item.label}
-          className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 flex items-start gap-3"
+          className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.08]"
+          style={{
+            filter: 'blur(46px)',
+            animation: 'shineSoft 5.6s cubic-bezier(.2,.9,.2,1) infinite',
+          }}
+        />
+
+        <div className="text-xs uppercase tracking-wide text-white/55">Proof</div>
+
+        <div className="mt-3 flex items-end gap-2 flex-wrap">
+          <AnimatedNumber value={value} sceneId={sceneId} />
+          {suffix ? (
+            <span className="text-white/75 text-xl md:text-2xl font-semibold leading-none pb-[2px]">
+              <TitleGradient sceneId={sceneId}>{suffix}</TitleGradient>
+            </span>
+          ) : null}
+        </div>
+
+        <div className="mt-2 text-sm md:text-base text-white/80">{label}</div>
+      </div>
+    </TiltCard>
+  );
+}
+
+/* ---------- HERO RECTANGLES (UNIFIED) ---------- */
+
+function MiniTile({ icon, title, sub }) {
+  return (
+    <div className="h-full">
+      <div
+        className={cx(
+          'group h-full min-h-[78px] md:min-h-[86px]',
+          'rounded-2xl border border-white/15',
+          'bg-black/18 backdrop-blur-md',
+          'px-4 py-4 md:px-5 md:py-4',
+          'flex items-center gap-3',
+          'transition-[border-color,background-color,transform] duration-300',
+          'hover:border-white/25 hover:bg-black/24 hover:-translate-y-[1px]'
+        )}
+      >
+        <div
+          className={cx(
+            'shrink-0',
+            'w-10 h-10 md:w-11 md:h-11',
+            'rounded-xl',
+            'border border-white/15',
+            'bg-white/10',
+            'flex items-center justify-center',
+            'text-white/90',
+            'transition-colors duration-300',
+            'group-hover:bg-white/14 group-hover:border-white/22'
+          )}
         >
-          <span className="text-white/60 mt-0.5 shrink-0">{item.icon}</span>
-          <div>
-            <div className="text-sm font-semibold text-white/90 leading-tight">{item.label}</div>
-            <div className="mt-0.5 text-xs text-white/55 leading-tight">{item.sub}</div>
+          {icon}
+        </div>
+
+        <div className="min-w-0">
+          <div className="text-sm md:text-[15px] font-semibold text-white/92 leading-tight truncate">{title}</div>
+          <div className="mt-1 text-xs md:text-sm text-white/60 leading-tight truncate">{sub}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Stripe({ title, desc, icon }) {
+  return (
+    <div className="rounded-2xl border border-white/15 bg-white/10 p-4 md:p-5 flex items-start gap-3">
+      <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">{icon}</div>
+      <div className="min-w-0">
+        <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
+        <div className="mt-1 text-sm text-white/65 leading-relaxed">{desc}</div>
+      </div>
+    </div>
+  );
+}
+
+// serviceSubline: individuell pro Leistung, nicht generisch wiederholt
+const SERVICE_SUBLINES = {
+  Brandbook: 'Basis für alles Weitere.',
+  Motiondesign: 'Wiederverwendbar, nicht einmalig.',
+  Webdevelopment: 'Kein Design um des Designs willen.',
+  Videoediting: 'Funktion vor Ästhetik.',
+};
+
+function BigService({ sceneId, icon, kicker, title, desc }) {
+  const subline = SERVICE_SUBLINES[kicker] ?? '';
+  return (
+    <Reveal>
+      <TiltCard className="rounded-3xl">
+        <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8 overflow-hidden relative">
+          <div
+            className="pointer-events-none absolute -left-40 -top-12 h-[140%] w-72 rotate-12 bg-white/10 opacity-[0.07]"
+            style={{
+              filter: 'blur(50px)',
+              animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite',
+            }}
+          />
+
+          <div className="flex items-center justify-between gap-4">
+            <div className="inline-flex items-center gap-2 text-xs uppercase tracking-wide text-white/60">
+              <span className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center">{icon}</span>
+              {kicker}
+            </div>
+            <Wand2 size={18} className="text-white/55" />
+          </div>
+
+          <div className="mt-4 text-2xl md:text-4xl font-extrabold leading-tight text-white">
+            {title}
+            <span className="block text-base md:text-lg mt-2">
+              <TitleGradient sceneId={sceneId}>{subline}</TitleGradient>
+            </span>
+          </div>
+
+          <p className="mt-4 text-sm md:text-base text-white/70 leading-relaxed max-w-2xl">{desc}</p>
+
+          <div className="mt-6">
+            <Link href="/#request" className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors font-semibold">
+              Anfrage schicken <ArrowRight size={16} />
+            </Link>
           </div>
         </div>
-      ))}
-    </div>
+      </TiltCard>
+    </Reveal>
   );
 }
 
-/* ---------- ROADMAP ---------- */
-
-const ROADMAP_STEPS = [
-  {
-    id: 'sprint0',
-    label: 'Sprint 0',
-    title: 'Analyse + Entwurf',
-    duration: '2–3 Tage',
-    tag: 'Kostenlos',
-    tagTone: 'free',
-    desc: 'Ich schaue mir deine aktuelle Situation an und liefere eine strukturierte Einschätzung: Was funktioniert, was blockiert Anfragen, wie ein sinnvoller Aufbau aussehen könnte.',
-    deliverables: [
-      '3–5 konkrete Optimierungspunkte schriftlich',
-      'Erster Seiten-Aufbau als Entwurf (Wireframe-Ebene)',
-      'Einschätzung, welches Paket zu deinem Ziel passt',
-    ],
-    revisions: null,
-    note: 'Kein Zahlungsziel. Du entscheidest danach, ob du weitermachst.',
-  },
-  {
-    id: 'sprint1',
-    label: 'Sprint 1',
-    title: 'Erste lauffähige Version',
-    duration: '5–7 Tage',
-    tag: 'Zahlungsziel 1 nach Review — 30 %',
-    tagTone: 'neutral',
-    desc: 'Du bekommst eine klickbare Version zum Testen. Aufbau, Navigation, Texte, Design – alles drin. Du klickst sie durch, gibst Feedback, wir besprechen Anpassungen.',
-    deliverables: [
-      'Lauffähige Website (nicht nur Mockup)',
-      'Alle Hauptseiten aufgebaut',
-      'Mobile-Version enthalten',
-    ],
-    revisions: '2 Revisionsrunden nach dem Review inkludiert',
-    note: 'Zahlung erst nach Review – nicht vorher.',
-  },
-  {
-    id: 'sprint2',
-    label: 'Sprint 2',
-    title: 'Feinschliff',
-    duration: '3–5 Tage',
-    tag: 'Zahlungsziel 2 nach Review — 50 %',
-    tagTone: 'neutral',
-    desc: 'Alle Punkte aus dem ersten Review werden umgesetzt. Texte, Details, Performance, Kleinigkeiten. Danach nochmal ein Review – erst wenn du freigibst, geht es weiter.',
-    deliverables: [
-      'Alle Feedback-Punkte aus Sprint 1 umgesetzt',
-      'SEO-Grundlagen (Titel, Meta, Struktur)',
-      'Ladezeit geprüft und optimiert',
-    ],
-    revisions: '1 weitere Revisionsrunde inkludiert',
-    note: 'Zahlung erst nach deiner Freigabe.',
-  },
-  {
-    id: 'sprint3',
-    label: 'Sprint 3',
-    title: 'Go-Live und Übergabe',
-    duration: '1–2 Tage',
-    tag: 'Zahlungsziel 3 nach Übergabe — 20 %',
-    tagTone: 'neutral',
-    desc: 'Die Website geht live. Du bekommst alle Dateien, Zugänge und eine Dokumentation – so, dass du eigenständig Texte und Bilder anpassen kannst.',
-    deliverables: [
-      'Live-Schaltung auf deiner Domain',
-      'Alle Quelldateien und Zugänge',
-      'Kurze Übergabe-Dokumentation',
-    ],
-    revisions: null,
-    note: 'Letzte Zahlung erst nach vollständiger Übergabe.',
-  },
-];
-
-function RoadmapTimeline() {
-  const [openStep, setOpenStep] = useState(null);
-  const [doneSteps, setDoneSteps] = useState(new Set());
-
-  function toggleDone(id, e) {
-    e.stopPropagation();
-    setDoneSteps((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }
-
-  function toggleOpen(id) {
-    setOpenStep((prev) => (prev === id ? null : id));
-  }
-
+function Step({ n, title, desc }) {
   return (
-    <div className="relative">
-      <div className="absolute left-5 top-5 bottom-5 w-[2px] bg-gradient-to-b from-emerald-400/40 via-violet-400/30 to-white/10 md:left-6" />
-
-      <div className="space-y-3">
-        {ROADMAP_STEPS.map((step, i) => {
-          const done = doneSteps.has(step.id);
-          const open = openStep === step.id;
-          const isFree = step.tagTone === 'free';
-
-          return (
-            <div key={step.id} className="relative flex items-start gap-4 md:gap-5">
-              {/* Node / done toggle */}
-              <button
-                onClick={(e) => toggleDone(step.id, e)}
-                title={done ? 'Als offen markieren' : 'Als erledigt markieren'}
-                className={cx(
-                  'relative z-10 shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-2xl border flex items-center justify-center transition-all duration-300',
-                  done
-                    ? 'border-emerald-300/40 bg-emerald-500/20 shadow-[0_0_18px_rgba(52,211,153,0.25)]'
-                    : isFree
-                      ? 'border-emerald-300/20 bg-emerald-500/8 hover:bg-emerald-500/15'
-                      : 'border-white/15 bg-white/8 hover:bg-white/14'
-                )}
-              >
-                <CheckCircle2 size={20} className={cx('transition-colors duration-300', done ? 'text-emerald-300' : 'text-white/25')} />
-              </button>
-
-              {/* Card */}
-              <div
-                className={cx(
-                  'flex-1 rounded-2xl border transition-all duration-300 overflow-hidden cursor-pointer',
-                  done ? 'border-emerald-300/20 bg-emerald-500/6' : 'border-white/10 bg-white/5',
-                  open ? 'border-white/20 bg-white/8' : ''
-                )}
-                onClick={() => toggleOpen(step.id)}
-              >
-                {/* Header row */}
-                <div className="px-4 py-4 md:px-5 md:py-4">
-                  <div className="flex flex-wrap items-center gap-2 mb-1">
-                    <span className={cx('text-xs uppercase tracking-wide font-semibold', isFree ? 'text-emerald-300/80' : 'text-white/45')}>
-                      {step.label}
-                    </span>
-                    {step.tag && <Pill tone={step.tagTone}>{step.tag}</Pill>}
-                  </div>
-                  <div className="flex items-center justify-between gap-3">
-                    <span className={cx('text-sm md:text-base font-semibold transition-colors', done ? 'text-white/50 line-through' : 'text-white/90')}>
-                      {step.title}
-                    </span>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-xs text-white/45 flex items-center gap-1">
-                        <Clock size={13} /> {step.duration}
-                      </span>
-                      <span className={cx('text-white/40 text-xs transition-transform duration-200', open ? 'rotate-180' : '')}>▾</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Expanded detail */}
-                {open && (
-                  <div className="px-4 pb-5 md:px-5 md:pb-5 border-t border-white/8 pt-4 space-y-4">
-                    <p className="text-sm text-white/70 leading-relaxed">{step.desc}</p>
-
-                    <div>
-                      <div className="text-xs uppercase tracking-wide text-white/45 mb-2">Was du bekommst</div>
-                      <ul className="space-y-1.5">
-                        {step.deliverables.map((d) => (
-                          <li key={d} className="flex items-start gap-2 text-sm text-white/80">
-                            <Package size={14} className="mt-0.5 shrink-0 text-white/50" />
-                            {d}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    {step.revisions && (
-                      <div className="flex items-start gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5">
-                        <Repeat size={14} className="text-white/50 mt-0.5 shrink-0" />
-                        <span className="text-xs text-white/70">{step.revisions}</span>
-                      </div>
-                    )}
-
-                    {step.note && (
-                      <div className={cx(
-                        'rounded-xl border px-3 py-2.5 text-xs leading-relaxed',
-                        isFree
-                          ? 'border-emerald-300/20 bg-emerald-500/8 text-emerald-100/80'
-                          : 'border-white/10 bg-white/5 text-white/60'
-                      )}>
-                        {step.note}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          );
-        })}
+    <TiltCard className="rounded-2xl">
+      <div className="rounded-2xl border border-white/15 bg-black/20 backdrop-blur-md p-4 md:p-5">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center font-extrabold">{n}</div>
+          <div className="text-sm md:text-base font-semibold text-white/90">{title}</div>
+        </div>
+        <div className="mt-2 text-sm text-white/70 leading-relaxed">{desc}</div>
       </div>
-
-      <p className="mt-5 text-xs text-white/40 pl-14 md:pl-17">
-        Node anklicken zum Abhaken. Zeile anklicken für Details.
-      </p>
-    </div>
-  );
-}
-
-/* ---------- CALC ---------- */
-
-function money(n) {
-  const v = Number.isFinite(n) ? n : 0;
-  return Math.round(v);
-}
-
-function calcPayments(total) {
-  const t = Math.max(0, Number(total) || 0);
-  return {
-    p1: money(t * 0.3),
-    p2: money(t * 0.5),
-    p3: money(t * 0.2),
-  };
-}
-
-function getRecommendation(amount) {
-  const a = Number(amount) || 0;
-  if (a <= 550) return { key: 'einstieg', text: 'Für diesen Rahmen passt der Einstieg.' };
-  if (a <= 900) return { key: 'standard', text: 'Für diesen Rahmen passt der Standard.' };
-  return { key: 'komplett', text: 'Für diesen Rahmen passt das Komplett-Paket.' };
-}
-
-/* ---------- FAQ ---------- */
-
-const FAQ_ITEMS = [
-  {
-    q: 'Was, wenn mir die erste Version nicht gefällt?',
-    a: 'Sprint 0 ist kostenlos – du siehst den Entwurf, bevor irgendeine Zahlung fällig wird. In Sprint 1 sind 2 Revisionsrunden inkludiert. Du gibst Feedback, ich setze um. Erst nach deiner Freigabe kommt das nächste Zahlungsziel.',
-  },
-  {
-    q: 'Was passiert, wenn wir uns mitten im Projekt nicht einigen?',
-    a: 'Da jedes Zahlungsziel an ein Review gebunden ist, entstehen keine offenen Posten. Du zahlst nur für das, was du freigegeben hast. Wenn du nach Sprint 1 nicht weitermachen willst, endet das Projekt dort.',
-  },
-  {
-    q: 'Was, wenn ich später etwas ändern will?',
-    a: 'Kleinere Anpassungen nach Go-Live: entweder als kleines Extra-Projekt oder monatliche Betreuung ab 150 €/Monat. Du bekommst bei Übergabe eine Dokumentation, damit du Texte und Bilder selbst anpassen kannst.',
-  },
-  {
-    q: 'Was, wenn mein Budget knapp ist?',
-    a: 'Sprint 0 ist kostenlos. Danach schauen wir gemeinsam, welches Paket sinnvoll ist. Wenn das Budget nicht passt, sage ich das direkt – kein Umweg.',
-  },
-  {
-    q: 'Wie viel muss ich vorbereiten, bevor wir starten?',
-    a: 'Branche, Ziel, Deadline und ein Link zur aktuellen Website. Das reicht für Sprint 0. Alles Weitere – Texte, Bilder, Struktur – klären wir gemeinsam im Prozess.',
-  },
-];
-
-function FAQAccordion() {
-  const [open, setOpen] = useState(null);
-
-  return (
-    <div className="space-y-2">
-      {FAQ_ITEMS.map((item, i) => {
-        const isOpen = open === i;
-        return (
-          <div
-            key={i}
-            className={cx(
-              'rounded-2xl border transition-all duration-200 cursor-pointer',
-              isOpen ? 'border-white/20 bg-white/8' : 'border-white/10 bg-white/5 hover:border-white/15'
-            )}
-            onClick={() => setOpen(isOpen ? null : i)}
-          >
-            <div className="flex items-center justify-between gap-4 px-5 py-4">
-              <span className="text-sm md:text-base font-semibold text-white/90">{item.q}</span>
-              <span className={cx('text-white/40 text-sm shrink-0 transition-transform duration-200', isOpen ? 'rotate-180' : '')}>▾</span>
-            </div>
-            {isOpen && (
-              <div className="px-5 pb-4 text-sm text-white/70 leading-relaxed border-t border-white/8 pt-3">
-                {item.a}
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
+    </TiltCard>
   );
 }
 
 /* ---------- PAGE ---------- */
 
-export default function ProzessPage() {
-  const [amount, setAmount] = useState(700);
+export default function Home() {
+  const sectionIds = useMemo(() => SECTIONS.map((s) => s.id), []);
+  const { activeId } = useActiveSection(sectionIds);
 
-  const payments = useMemo(() => calcPayments(amount), [amount]);
-  const rec = useMemo(() => getRecommendation(amount), [amount]);
+  useEffect(() => {
+    const handle = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+      const el = document.querySelector(hash);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    handle();
+    window.addEventListener('hashchange', handle);
+    return () => window.removeEventListener('hashchange', handle);
+  }, []);
 
   return (
-    <div className="font-proxima text-white min-h-screen">
+    <div className="font-proxima text-white">
       <style>{globalKeyframes}</style>
 
-      <GlobalBackground />
-      <GlobalLightLeaks />
+      <GlobalBackground activeId={activeId} />
+      <GlobalLightLeaks activeId={activeId} />
+
       <ScrollProgressBar />
       <CursorHalo />
 
       <Navbar />
 
-      {/* HERO */}
-      <section className="relative px-5 md:px-16 pt-28 md:pt-36 pb-8 md:pb-10">
-        <div className="relative max-w-6xl mx-auto">
-          <div className="flex flex-col items-center text-center gap-5">
+      <main className="md:snap-y md:snap-mandatory">
+        {/* 01 — HERO */}
+        <Scene id="s1">
+          <div className="flex flex-col items-center text-center gap-6">
             <Reveal>
-              <div className="flex flex-wrap items-center justify-center gap-2">
-                <Pill tone="free">Sprint 0 kostenlos – erst sehen, dann entscheiden</Pill>
-                <Pill>
-                  <span className="inline-flex items-center gap-2">
-                    <Sparkles size={16} /> Zahlungsziele nach Review, nicht vorher
-                  </span>
-                </Pill>
-              </div>
+              <span className="inline-flex items-center gap-2 text-xs md:text-sm text-white/85 bg-white/10 ring-1 ring-white/15 px-3 py-1 rounded-full">
+                <Sparkles size={16} /> Branding · Content · Web
+              </span>
             </Reveal>
 
             <Reveal delayMs={90}>
               <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight leading-[1.03]">
-                Du siehst die erste Version.
+                Branding, Content und Web –
                 <span className="block">
-                  <TitleGradient>Erst dann geht&apos;s weiter.</TitleGradient>
+                  <TitleGradient sceneId="s1">aufeinander abgestimmt, nicht zusammengewürfelt.</TitleGradient>
                 </span>
               </h1>
             </Reveal>
 
             <Reveal delayMs={160}>
               <p className="max-w-2xl text-base md:text-xl text-white/80 leading-relaxed">
-                Vier Sprints mit Review-Gates: Du gibst nach jedem Sprint Feedback. Das nächste Zahlungsziel kommt erst nach deiner Freigabe.
+                Brandbook, Motion, Video, Web – jeder Baustein zahlt auf den nächsten ein. Das Ergebnis ist ein Erscheinungsbild, das konsistent wirkt und Anfragen erzeugt.
               </p>
             </Reveal>
 
             <Reveal delayMs={240}>
-              <TrustBar />
+              <div className="flex flex-col items-center gap-3">
+                <PrimaryCTA label="Projekt anfragen" />
+                <p className="text-sm md:text-base text-white/65 max-w-xl">Ziel, Deadline, Stand – das reicht für eine erste Einschätzung.</p>
+              </div>
             </Reveal>
+
+
           </div>
-        </div>
-      </section>
+        </Scene>
 
-      {/* ROADMAP */}
-      <SectionShell id="roadmap" tight>
-        <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Ablauf</div>
-        </Reveal>
+        {/* 02 — WAS DU BEKOMMST */}
+        <Scene id="s2">
+          <div className="flex flex-col gap-8">
 
-        <Reveal delayMs={90}>
-          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Vier Sprints.
-            <span className="block">
-              <TitleGradient>Jeder mit klarem Ergebnis und Review.</TitleGradient>
-            </span>
-          </h2>
-        </Reveal>
-
-        <Reveal delayMs={140}>
-          <p className="mt-4 text-white/70 text-base max-w-2xl leading-relaxed">
-            Kein Ablauf auf Vertrauensbasis. Jeder Sprint endet mit einem konkreten Ergebnis, das du siehst und bewertest – bevor das nächste Zahlungsziel ausgelöst wird. Klick auf einen Sprint für Details.
-          </p>
-        </Reveal>
-
-        <div className="mt-8">
-          <Card className="p-5 md:p-6">
-            <div className="flex flex-wrap gap-2 mb-6">
-              <Pill tone="free">Sprint 0: Kostenlos</Pill>
-              <Pill>2 Revisionsrunden in Sprint 1</Pill>
-              <Pill>Zahlung immer nach Review</Pill>
-            </div>
-            <RoadmapTimeline />
-          </Card>
-        </div>
-
-        {/* Timeline summary strip */}
-        <Reveal delayMs={80}>
-          <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
-            {ROADMAP_STEPS.map((step) => (
-              <div key={step.id} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-                <div className={cx('text-xs font-semibold uppercase tracking-wide mb-1', step.tagTone === 'free' ? 'text-emerald-300/80' : 'text-white/45')}>
-                  {step.label}
-                </div>
-                <div className="text-sm text-white/80 font-semibold leading-tight">{step.title}</div>
-                <div className="mt-1 text-xs text-white/45 flex items-center gap-1">
-                  <Clock size={11} /> {step.duration}
-                </div>
-              </div>
-            ))}
-          </div>
-        </Reveal>
-      </SectionShell>
-
-      {/* RECHNER */}
-      <SectionShell id="rechner">
-        <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Rahmen wählen</div>
-        </Reveal>
-
-        <Reveal delayMs={90}>
-          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Was würdest du für deine Website investieren?
-            <span className="block">
-              <TitleGradient>Ich zeige dir, was in diesem Rahmen möglich ist.</TitleGradient>
-            </span>
-          </h2>
-        </Reveal>
-
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-4 md:gap-6">
-          <Card className="p-6 md:p-7">
-            <div className="text-xs uppercase tracking-wide text-white/55">Dein ungefähres Budget für die Website</div>
-
-            <div className="mt-4">
-              <input
-                type="range"
-                min={400}
-                max={1500}
-                step={50}
-                value={amount}
-                onChange={(e) => setAmount(Number(e.target.value))}
-                className="w-full accent-white"
-              />
-              <div className="mt-2 flex items-center justify-between text-xs text-white/45">
-                <span>400 €</span>
-                <span>1.500 €</span>
-              </div>
+            {/* Headline */}
+            <div className="max-w-3xl">
+              <Reveal>
+                <div className="text-xs uppercase tracking-wide text-white/55">02 — Warum das anders ist</div>
+              </Reveal>
+              <Reveal delayMs={90}>
+                <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
+                  Du zahlst erst,
+                  <span className="block">
+                    <TitleGradient sceneId="s2">wenn du es gesehen hast.</TitleGradient>
+                  </span>
+                </h2>
+              </Reveal>
+              <Reveal delayMs={160}>
+                <p className="mt-5 text-white/75 text-base md:text-xl leading-relaxed max-w-2xl">
+                  Kein Vorauszahlen auf Vertrauen. Sprint 0 – Analyse und erster Entwurf – ist kostenlos. Danach entscheidest du, ob es weitergeht.
+                </p>
+              </Reveal>
             </div>
 
-            <div className="mt-5">
-              <div className="text-[76px] md:text-[92px] font-extrabold tracking-tight leading-none">
-                {amount} <span className="text-white/55">€</span>
-              </div>
-              <div className="mt-2 text-base md:text-lg text-white/80 font-semibold">{rec.text}</div>
-            </div>
+            {/* Three trust pillars */}
+            <Reveal delayMs={200}>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
 
-            <div className="mt-6 rounded-2xl border border-emerald-300/20 bg-emerald-500/10 p-4">
-              <div className="text-xs uppercase tracking-wide text-emerald-100/90">Start ist kostenlos</div>
-              <div className="mt-2 text-sm text-white/75 leading-relaxed">
-                Sprint 0 (Analyse + Entwurf) kostet nichts. Danach entscheidest du, ob und mit welchem Paket es weitergeht.
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6 md:p-7">
-            <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsziel 1 — nach Sprint-Review (30 %)</div>
-            <div className="mt-3 text-4xl md:text-5xl font-extrabold tracking-tight leading-none">
-              {payments.p1} <span className="text-white/55">€</span>
-            </div>
-            <div className="mt-1 text-sm text-white/70">Fällig nach Sprint 1 – du hast die erste Version gesehen und freigegeben.</div>
-
-            <div className="mt-6 space-y-4">
-              <div>
-                <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsziel 2 — nach Sprint-Review (50 %)</div>
-                <div className="mt-2 text-4xl md:text-5xl font-extrabold tracking-tight">
-                  {payments.p2} <span className="text-white/55">€</span>
-                </div>
-                <div className="mt-1 text-sm text-white/70">Fällig nach Sprint 2 – Feinschliff abgenommen, alles freigegeben.</div>
-              </div>
-
-              <div>
-                <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsziel 3 — nach Übergabe (20 %)</div>
-                <div className="mt-2 text-4xl md:text-5xl font-extrabold tracking-tight">
-                  {payments.p3} <span className="text-white/55">€</span>
-                </div>
-                <div className="mt-1 text-sm text-white/70">Fällig nach Go-Live und vollständiger Datei-Übergabe.</div>
-              </div>
-            </div>
-
-            <div className="mt-6 rounded-2xl border border-white/12 bg-white/5 p-4 text-sm text-white/75">
-              Jedes Zahlungsziel ist an ein Review gebunden. Kein Geld vorab für Leistungen, die du noch nicht gesehen hast.
-            </div>
-          </Card>
-        </div>
-      </SectionShell>
-
-      {/* PAKETE */}
-      <SectionShell id="pakete">
-        <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Pakete</div>
-        </Reveal>
-
-        <Reveal delayMs={90}>
-          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Was brauchst du wirklich?
-            <span className="block">
-              <TitleGradient>Schau auf deine Situation, nicht auf die Feature-Liste.</TitleGradient>
-            </span>
-          </h2>
-        </Reveal>
-
-        <div className="mt-6 rounded-2xl border border-white/12 bg-white/5 px-4 py-3 text-sm text-white/75">
-          Der Sprint-Ablauf ist in allen Paketen identisch. Unterschied: Umfang der Seiten und enthaltene Extras.
-        </div>
-
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
-          <Reveal>
-            <Card className={cx('p-6 md:p-7 transition-all', rec.key === 'komplett' ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100' : 'opacity-55')}>
-              <div className="text-xs uppercase tracking-wide text-white/55">Komplett</div>
-              <div className="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-white">
-                ab 1.100 <span className="text-white/55">€</span>
-              </div>
-              <ul className="mt-4 space-y-2 text-sm text-white/80">
-                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Website bis 5 Seiten</span></li>
-                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Brandbook (Farben, Typo, Layoutregeln)</span></li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                  <span>1 Motion-Element – <PackageMetaLink href={PORTFOLIO_MOTION}>Beispiel</PackageMetaLink></span>
-                </li>
-              </ul>
-              <div className="mt-5 text-sm text-white/70 flex items-center gap-2"><Clock size={16} className="text-white/60" /> ca. 3 Wochen</div>
-            </Card>
-          </Reveal>
-
-          <Reveal delayMs={80}>
-            <Card className={cx('p-6 md:p-7 transition-all', rec.key === 'standard' ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100' : 'opacity-55')}>
-              <div className="flex items-center justify-between gap-3">
-                <div className="text-xs uppercase tracking-wide text-white/55">Standard</div>
-                <Pill>Wird am häufigsten gewählt</Pill>
-              </div>
-              <div className="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-white">
-                ab 700 <span className="text-white/55">€</span>
-              </div>
-              <ul className="mt-4 space-y-2 text-sm text-white/80">
-                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Website bis 5 Seiten</span></li>
-                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Branding-Grundlage (Farben, Schrift, Logo)</span></li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                  <span>Aufbau wie im Case – <PackageMetaLink href={PORTFOLIO_KFA}>Beispiel</PackageMetaLink></span>
-                </li>
-              </ul>
-              <div className="mt-5 text-sm text-white/70 flex items-center gap-2"><Clock size={16} className="text-white/60" /> 10–14 Tage</div>
-            </Card>
-          </Reveal>
-
-          <Reveal delayMs={120}>
-            <Card className={cx('p-6 md:p-7 transition-all', rec.key === 'einstieg' ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100' : 'opacity-55')}>
-              <div className="text-xs uppercase tracking-wide text-white/55">Einstieg</div>
-              <div className="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-white">
-                ab 400 <span className="text-white/55">€</span>
-              </div>
-              <ul className="mt-4 space-y-2 text-sm text-white/80">
-                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Eine Landingpage</span></li>
-                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Klare Struktur, ein CTA</span></li>
-                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Mobil optimiert</span></li>
-              </ul>
-              <div className="mt-5 text-sm text-white/70 flex items-center gap-2"><Clock size={16} className="text-white/60" /> ~7 Tage</div>
-            </Card>
-          </Reveal>
-        </div>
-      </SectionShell>
-
-      {/* FAQ / EINWÄNDE */}
-      <SectionShell id="einwaende" tight>
-        <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Häufige Fragen</div>
-        </Reveal>
-
-        <Reveal delayMs={90}>
-          <h2 className="mt-3 text-2xl md:text-4xl font-extrabold leading-tight">
-            Was du wissen willst,
-            <span className="block"><TitleGradient>bevor du anfragst.</TitleGradient></span>
-          </h2>
-        </Reveal>
-
-        <div className="mt-6">
-          <FAQAccordion />
-        </div>
-      </SectionShell>
-
-      {/* CTA */}
-      <SectionShell id="cta">
-        <Reveal>
-          <Card className="p-6 md:p-10">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-              <div>
-                <div className="mt-3 text-2xl md:text-4xl font-extrabold leading-tight">
-                  Passt das?
-                  <span className="block"><TitleGradient>Schick mir nur die Basics.</TitleGradient></span>
-                </div>
-                <div className="mt-3 text-sm md:text-base text-white/70 max-w-xl">
-                  Branche, Ziel, Deadline, Link zur aktuellen Website. Ich melde mich innerhalb von 24 Stunden mit einer ehrlichen Einschätzung.
-                </div>
-                <div className="mt-4 flex flex-wrap gap-3">
-                  {['Sprint 0 kostenlos', 'Antwort innerhalb 24 h', 'Kein Commitment nötig'].map((t) => (
-                    <span key={t} className="text-xs text-white/60 flex items-center gap-1.5">
-                      <CheckCircle2 size={13} className="text-emerald-400/70" /> {t}
+                <div className="rounded-2xl border border-emerald-300/20 bg-emerald-500/8 p-5 flex flex-col gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-300/20 flex items-center justify-center">
+                    <Eye size={17} className="text-emerald-300" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white/90">Erst sehen, dann entscheiden</div>
+                    <p className="mt-1 text-sm text-white/60 leading-relaxed">
+                      Sprint 0 kostenlos: Du bekommst eine strukturierte Analyse und einen ersten Entwurf – bevor eine einzige Zahlung fällig wird.
+                    </p>
+                  </div>
+                  <div className="mt-auto">
+                    <span className="inline-flex items-center rounded-full px-2.5 py-1 text-xs border border-emerald-300/25 bg-emerald-500/10 text-emerald-200">
+                      Kostenlos starten
                     </span>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-white/12 bg-white/5 p-5 flex flex-col gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center">
+                    <Shield size={17} className="text-white/75" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white/90">Zahlung nach Review – nicht vorher</div>
+                    <p className="mt-1 text-sm text-white/60 leading-relaxed">
+                      Jedes Zahlungsziel ist an einen Sprint-Review gebunden. Du siehst das Ergebnis, gibst Feedback, gibst frei. Erst dann kommt die nächste Phase.
+                    </p>
+                  </div>
+                  <div className="mt-auto">
+                    <Link href="/prozess" className="text-xs text-white/55 hover:text-white/90 transition-colors inline-flex items-center gap-1 underline underline-offset-4">
+                      Ablauf ansehen <ArrowRight size={12} />
+                    </Link>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-white/12 bg-white/5 p-5 flex flex-col gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center">
+                    <FileText size={17} className="text-white/75" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white/90">Voller Einblick in den Prozess</div>
+                    <p className="mt-1 text-sm text-white/60 leading-relaxed">
+                      Du siehst den Stand des Projekts jederzeit – kein Warten im Dunkeln. Wie das in der Praxis aussieht: ein echter Projektablauf dokumentiert.
+                    </p>
+                  </div>
+                  <div className="mt-auto">
+                    <a href="https://www.leonseitz.com/kunde1" target="_blank" rel="noopener noreferrer" className="text-xs text-white/55 hover:text-white/90 transition-colors inline-flex items-center gap-1 underline underline-offset-4">
+                      Echtes Projekt ansehen <ExternalLink size={12} />
+                    </a>
+                  </div>
+                </div>
+
+              </div>
+            </Reveal>
+
+            {/* Sprint-Gate strip */}
+            <Reveal delayMs={280}>
+              <div className="rounded-2xl border border-white/10 bg-black/20 backdrop-blur-md p-5 md:p-6">
+                <div className="text-xs uppercase tracking-wide text-white/45 mb-4">So ist der Ablauf gegliedert</div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {[
+                    { label: 'Sprint 0', title: 'Analyse + Entwurf', note: 'Kostenlos', highlight: true },
+                    { label: 'Sprint 1', title: 'Erste lauffähige Version', note: '30 % nach Review', highlight: false },
+                    { label: 'Sprint 2', title: 'Feinschliff', note: '50 % nach Review', highlight: false },
+                    { label: 'Sprint 3', title: 'Go-Live + Übergabe', note: '20 % nach Übergabe', highlight: false },
+                  ].map((s, i) => (
+                    <div
+                      key={s.label}
+                      className={`rounded-xl border px-3 py-3 ${s.highlight ? 'border-emerald-300/25 bg-emerald-500/8' : 'border-white/10 bg-white/4'}`}
+                    >
+                      <div className={`text-xs font-semibold uppercase tracking-wide mb-1 ${s.highlight ? 'text-emerald-300/80' : 'text-white/40'}`}>
+                        {s.label}
+                      </div>
+                      <div className="text-sm text-white/85 font-semibold leading-tight">{s.title}</div>
+                      <div className={`mt-1.5 text-xs ${s.highlight ? 'text-emerald-200/70' : 'text-white/40'}`}>{s.note}</div>
+                    </div>
                   ))}
                 </div>
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                  <Link href="/prozess" className="text-sm text-white/65 hover:text-white transition-colors inline-flex items-center gap-1.5 font-medium">
+                    Vollständigen Ablauf ansehen <ArrowRight size={14} />
+                  </Link>
+                  <span className="text-white/20 hidden md:inline">·</span>
+                  <a href="https://www.leonseitz.com/kunde1" target="_blank" rel="noopener noreferrer" className="text-sm text-white/65 hover:text-white transition-colors inline-flex items-center gap-1.5 font-medium">
+                    Echtes Projekt als Referenz <ExternalLink size={14} />
+                  </a>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Bottom CTA row */}
+            <Reveal delayMs={340}>
+              <div className="flex flex-wrap items-center gap-3">
+                <PrimaryCTA label="Kostenlos starten" />
+                <GhostCTA href="/portfolio">
+                  <ExternalLink size={18} /> Portfolio ansehen
+                </GhostCTA>
+              </div>
+            </Reveal>
+
+          </div>
+        </Scene>
+
+        {/* 03 — LEISTUNGEN */}
+        <Scene id="s3">
+          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 items-start">
+            <div className="lg:sticky lg:top-24">
+              <Reveal>
+                <div className="text-xs uppercase tracking-wide text-white/55">03 — Leistungen</div>
+              </Reveal>
+
+              <Reveal delayMs={90}>
+                <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
+                  Vier Bereiche.
+                  <span className="block">
+                    <TitleGradient sceneId="s3">Einer greift in den nächsten.</TitleGradient>
+                  </span>
+                </h2>
+              </Reveal>
+
+              <Reveal delayMs={160}>
+                <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed">
+                  Einzeln buchbar oder als komplettes Setup – je nachdem, wo du gerade stehst.
+                </p>
+              </Reveal>
+
+              <Reveal delayMs={260}>
+                <div className="mt-8">
+                  <PrimaryCTA label="Anfrage schicken" />
+                </div>
+              </Reveal>
+            </div>
+
+            <div className="space-y-4">
+              <BigService
+                sceneId="s3"
+                icon={<BookOpen size={18} />}
+                kicker="Brandbook"
+                title="Guidelines, die man wirklich nutzt."
+                desc="Farben, Typo, Layoutregeln, Tone of Voice, Beispiele. Damit du und dein Team konsistent kommunizieren – ohne jedes Mal neu entscheiden zu müssen."
+              />
+              <BigService
+                sceneId="s3"
+                icon={<Play size={18} />}
+                kicker="Motiondesign"
+                title="Motion, der im Feed auffällt."
+                desc="Kurzformate, Motion Graphics, Hook-Varianten, Templates. Damit du skalieren kannst, ohne jedes Format neu zu entwickeln."
+              />
+              <BigService
+                sceneId="s3"
+                icon={<Monitor size={18} />}
+                kicker="Webdevelopment"
+                title="Websites und Funnels mit einer Richtung."
+                desc="Klarer Aufbau, klare CTA, wenig Ablenkung. Damit ein Besucher weiß, was als nächstes passieren soll."
+              />
+              <BigService
+                sceneId="s3"
+                icon={<Film size={18} />}
+                kicker="Videoediting"
+                title="Schnitt mit Rhythmus."
+                desc="Storyline, Timing, Sound, Pace. Damit ein Video nicht nur fertig ist, sondern die Botschaft trägt."
+              />
+            </div>
+          </div>
+        </Scene>
+
+        {/* 04 — PROOF */}
+        <Scene id="s4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div>
+              <Reveal>
+                <div className="text-xs uppercase tracking-wide text-white/55">04 — Proof</div>
+              </Reveal>
+
+              <Reveal delayMs={90}>
+                <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
+                  Zahlen,
+                  <span className="block">
+                    <TitleGradient sceneId="s4">die man einordnen kann.</TitleGradient>
+                  </span>
+                </h2>
+              </Reveal>
+
+              <Reveal delayMs={160}>
+                <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
+                  Wenn Branding, Content und Funnel aufeinander abgestimmt sind, zeigt sich das in den Ergebnissen.
+                </p>
+              </Reveal>
+
+              <Reveal delayMs={260}>
+                <div className="mt-8 flex flex-wrap gap-2">
+                  <GhostCTA href="/portfolio">
+                    <ExternalLink size={18} /> Portfolio ansehen
+                  </GhostCTA>
+                  <PrimaryCTA label="Anfrage schicken" />
+                </div>
+              </Reveal>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4">
+              <ProofStat sceneId="s4" label="Likes generiert" target={15} suffix="+ Mio" durationMs={900} />
+              <ProofStat sceneId="s4" label="Klicks auf Social Media erzielt" target={10} suffix="+ Mio" durationMs={900} />
+              <ProofStat sceneId="s4" label="Abgeschlossene Projekte" target={100} suffix="+" durationMs={950} />
+            </div>
+          </div>
+        </Scene>
+
+        {/* 05 — ABLAUF */}
+        <Scene id="s5">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div>
+              <Reveal>
+                <div className="text-xs uppercase tracking-wide text-white/55">05 — Ablauf</div>
+              </Reveal>
+
+              <Reveal delayMs={90}>
+                <h2 className="mt-3 text-3xl md:text-6xl font-extrabold leading-[1.05]">
+                  Drei Infos zum Einstieg.
+                  <span className="block">
+                    <TitleGradient sceneId="s5">Den Rest klären wir gemeinsam.</TitleGradient>
+                  </span>
+                </h2>
+              </Reveal>
+
+              <Reveal delayMs={160}>
+                <p className="mt-5 text-white/80 text-base md:text-xl leading-relaxed max-w-xl">
+                  Ziel, Deadline, aktueller Stand. Das reicht für eine erste Einschätzung – alles Weitere besprechen wir strukturiert.
+                </p>
+              </Reveal>
+
+              <Reveal delayMs={240}>
+                <div className="mt-6 space-y-3">
+                  <Step n="1" title="Anfrage" desc="Ziel, Deadline, aktueller Stand. Drei Sätze genügen." />
+                  <Step n="2" title="Strategie & Branding" desc="Brandbook oder Storyline – damit alle Maßnahmen auf dasselbe Ziel einzahlen." />
+                  <Step n="3" title="Produktion" desc="Motion, Editing, Web – je nach Umfang einzeln oder kombiniert." />
+                  <Step n="4" title="Übergabe" desc="Dateien, Assets, Setup – so dokumentiert, dass du eigenständig weitermachen kannst." />
+                </div>
+              </Reveal>
+
+              <Reveal delayMs={340}>
+                <div className="mt-8">
+                  <PrimaryCTA label="Projekt anfragen" />
+                </div>
+              </Reveal>
+            </div>
+
+            <Reveal delayMs={140}>
+              <TiltCard className="rounded-3xl">
+                <div className="rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md p-6 md:p-8">
+                  <div className="text-xs uppercase tracking-wide text-white/55">Einstieg</div>
+                  <div className="mt-3 text-xl md:text-3xl font-bold text-white/90">Drei Felder. Das reicht.</div>
+                  <p className="mt-3 text-sm md:text-base text-white/70 leading-relaxed">
+                    &ldquo;Wir wollen X bis Datum Y erreichen und stehen gerade bei Z.&rdquo; Danach klären wir den Rest.
+                  </p>
+                  <div className="mt-6 flex gap-2 flex-wrap">
+                    <GhostCTA href="/portfolio">
+                      <ExternalLink size={18} /> Beispiele ansehen
+                    </GhostCTA>
+                    <PrimaryCTA label="Anfrage schicken" />
+                  </div>
+                </div>
+              </TiltCard>
+            </Reveal>
+          </div>
+        </Scene>
+
+        {/* 06 — ANFRAGE */}
+        <Scene id="request">
+          <div className="rounded-3xl border border-white/15 bg-black/25 backdrop-blur-md p-6 md:p-12">
+            <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
+              <div>
+                <Reveal>
+                  <div className="text-xs uppercase tracking-wide text-white/55">Anfrage</div>
+                </Reveal>
+
+                <Reveal delayMs={90}>
+                  <h3 className="mt-2 text-2xl md:text-5xl font-extrabold leading-tight">Drei Felder – dann weißt du, ob es passt.</h3>
+                </Reveal>
+
+                <Reveal delayMs={160}>
+                  <p className="mt-4 text-white/80 leading-relaxed max-w-2xl">
+                    Was du vorhast, bis wann du es brauchst und wo du gerade stehst. Danach bekommst du eine ehrliche Einschätzung.
+                  </p>
+                </Reveal>
+
+                <Reveal delayMs={240}>
+                  <div className="mt-6 space-y-3">
+                    {['Ziel: Was soll am Ende stehen?', 'Deadline: Bis wann?', 'Stand: Bestehendes Branding, Material, Beispiele?'].map((t) => (
+                      <div key={t} className="flex items-start gap-2">
+                        <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
+                        <span className="text-sm md:text-base text-white/80">{t}</span>
+                      </div>
+                    ))}
+                  </div>
+                </Reveal>
+
+                <Reveal delayMs={340}>
+                  <div className="mt-8 flex flex-wrap gap-2">
+                    <Magnetic>
+                      <a
+                        href="mailto:leonseitz25@icloud.com?subject=Projektanfrage&body=Ziel:%0D%0ADeadline:%0D%0AStand:%0D%0A"
+                        className="px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold inline-flex items-center gap-2"
+                      >
+                        <Mail size={18} /> Per Mail anfragen
+                      </a>
+                    </Magnetic>
+
+                    <GhostCTA href="/portfolio">
+                      <ExternalLink size={18} /> Erst Portfolio ansehen
+                    </GhostCTA>
+                  </div>
+                </Reveal>
               </div>
 
-              <a
-                href={WHATSAPP_HREF}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold shrink-0"
-              >
-                Per WhatsApp schreiben <ArrowRight size={18} />
-              </a>
+              <Reveal delayMs={200}>
+                <TiltCard className="rounded-3xl">
+                  <div className="rounded-3xl border border-white/15 bg-black/25 p-6">
+                    <div className="text-sm md:text-base font-semibold text-white/90">Copy & schicken</div>
+                    <div className="mt-3 rounded-2xl border border-white/10 bg-black/30 p-4 text-sm text-white/85 whitespace-pre-wrap leading-relaxed">
+{`Ziel:
+Deadline:
+Stand:
+Budgetrahmen (optional):
+Link/Beispiele (optional):`}
+                    </div>
+                    <div className="mt-4 text-sm text-white/60">Das reicht für eine vollständige erste Einschätzung.</div>
+                  </div>
+                </TiltCard>
+              </Reveal>
             </div>
-          </Card>
-        </Reveal>
-      </SectionShell>
+          </div>
+        </Scene>
+      </main>
 
       <Footer />
     </div>
@@ -887,10 +1120,19 @@ const globalKeyframes = `
   100% { transform: translate3d(0px, 0px, 0) scale(1); }
 }
 @keyframes blob3 {
-  0% { transform: translate3d(0px, 0px, 0) scale(1.10); }
+  0% { transform: translate3d(0px, 0px, 0) scale(1); }
   45% { transform: translate3d(35px, 25px, 0) scale(1.10); }
   85% { transform: translate3d(-30px, -18px, 0) scale(0.94); }
   100% { transform: translate3d(0px, 0px, 0) scale(1); }
+}
+@keyframes shineSoft {
+  0%   { transform: translateX(-220px) rotate(12deg) scale(1);    opacity: 0.00; }
+  12%  { opacity: 0.08; }
+  32%  { transform: translateX(120px) rotate(12deg) scale(1.02);  opacity: 0.06; }
+  46%  { transform: translateX(220px) rotate(12deg) scale(1.01);  opacity: 0.03; }
+  62%  { transform: translateX(220px) rotate(12deg) scale(1.01);  opacity: 0.01; }
+  78%  { transform: translateX(520px) rotate(12deg) scale(1.02);  opacity: 0.05; }
+  100% { transform: translateX(980px) rotate(12deg) scale(1.00);  opacity: 0.00; }
 }
 @keyframes noiseMove {
   0% { transform: translate3d(0,0,0); }
