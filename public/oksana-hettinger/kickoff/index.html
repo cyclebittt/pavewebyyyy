@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kickoff – profiplanet.de</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#070312;color:white;min-height:100vh;padding:2rem 1rem}
+.container{max-width:660px;margin:0 auto}
+.header{text-align:center;margin-bottom:2rem}
+h1{font-size:1.6rem;font-weight:800;margin-bottom:.3rem}
+.subtitle{font-size:.8rem;color:rgba(255,255,255,.4)}
+.lang-row{display:flex;gap:.4rem;justify-content:center;margin:1.2rem 0}
+.lb{padding:.35rem 1rem;border-radius:999px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.45);font-size:.75rem;cursor:pointer;transition:all .15s}
+.lb.on{background:rgba(255,255,255,.12);color:white;border-color:rgba(255,255,255,.3)}
+.prog{height:3px;background:rgba(255,255,255,.07);border-radius:999px;margin-bottom:1.8rem;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#a855f7,#22d3ee);border-radius:999px;transition:width .3s;width:0%}
+.card{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:1.3rem 1.4rem;margin-bottom:1rem}
+.card.hi{border-color:rgba(139,92,246,.35)}
+.qn{font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(139,92,246,.85);font-weight:700;margin-bottom:.25rem}
+.qde{font-size:.95rem;font-weight:700;color:rgba(255,255,255,.9);line-height:1.4;margin-bottom:.15rem}
+.qru{font-size:.82rem;color:rgba(255,255,255,.42);font-style:italic;margin-bottom:.9rem;line-height:1.35}
+.opts{display:flex;flex-direction:column;gap:.4rem}
+.opt{display:flex;align-items:flex-start;gap:.7rem;padding:.65rem .9rem;border:1px solid rgba(255,255,255,.09);border-radius:11px;cursor:pointer;transition:all .15s}
+.opt:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.18)}
+.opt.sel{background:rgba(139,92,246,.1);border-color:rgba(139,92,246,.38)}
+.opt input{width:15px;height:15px;margin-top:2px;accent-color:#a855f7;flex-shrink:0}
+.ot{font-size:.83rem;color:rgba(255,255,255,.8);line-height:1.35}
+.os{font-size:.72rem;color:rgba(255,255,255,.38);font-style:italic}
+textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.11);border-radius:11px;padding:.7rem .9rem;color:white;font-size:.83rem;resize:vertical;outline:none;font-family:inherit;transition:border-color .2s;min-height:75px}
+textarea:focus{border-color:rgba(139,92,246,.45)}
+.note{font-size:.7rem;color:rgba(255,255,255,.3);margin:.4rem 0 .7rem}
+.btn{display:block;width:100%;padding:.9rem;background:linear-gradient(135deg,rgba(139,92,246,.75),rgba(34,211,238,.65));border:none;border-radius:13px;color:white;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:1.2rem;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.sum-title{font-size:.75rem;color:rgba(110,231,183,.9);font-weight:700;margin-bottom:.7rem}
+.sum-row{display:flex;gap:.5rem;margin-bottom:.3rem;font-size:.82rem}
+.sum-key{color:rgba(255,255,255,.38);min-width:160px}
+.footer{text-align:center;margin-top:1.5rem;font-size:.7rem;color:rgba(255,255,255,.18)}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+  <div style="display:inline-flex;align-items:center;gap:.6rem;margin-bottom:1rem">
+    <div style="width:28px;height:28px;background:linear-gradient(135deg,#a855f7,#22d3ee);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem">P</div>
+    <span style="font-size:.8rem;font-weight:700;color:rgba(255,255,255,.8)">Paveo · Leon Seitz</span>
+  </div>
+  <h1>Kickoff · profiplanet.de</h1>
+  <p class="subtitle">04. März 2026 · 17:00–17:45</p>
+  <div class="lang-row">
+    <button class="lb on" onclick="setLang('both',this)">DE + RU</button>
+    <button class="lb" onclick="setLang('de',this)">Nur Deutsch</button>
+    <button class="lb" onclick="setLang('ru',this)">Только рус.</button>
+  </div>
+</div>
+<div class="prog"><div class="prog-fill" id="pf"></div></div>
+
+<div class="card hi">
+  <div class="qn">1 / 7</div>
+  <div class="qde">Welchen Look soll der Shop haben?</div>
+  <div class="qru">Какой стиль должен быть у магазина?</div>
+  <div class="opts">
+    <label class="opt" onclick="sel(this,'q1')"><input type="radio" name="q1"><span class="ot">Clean &amp; Minimal — weiss, viel Luft<div class="os">Чисто и минималистично — белый, много воздуха</div></span></label>
+    <label class="opt" onclick="sel(this,'q1')"><input type="radio" name="q1"><span class="ot">Dark &amp; Premium — dunkler Hintergrund<div class="os">Тёмный и премиальный — тёмный фон</div></span></label>
+    <label class="opt" onclick="sel(this,'q1')"><input type="radio" name="q1"><span class="ot">Warm &amp; Feminin — Rosé, Nude, weiche Töne<div class="os">Тёплый и женственный — розовый, нюдовые оттенки</div></span></label>
+    <label class="opt" onclick="sel(this,'q1')"><input type="radio" name="q1"><span class="ot">Bold &amp; Bunt — kräftige Farben<div class="os">Яркий — насыщенные цвета</div></span></label>
+  </div>
+</div>
+
+<div class="card">
+  <div class="qn">2 / 7</div>
+  <div class="qde">Logo — hast du eines, oder soll ich einen Vorschlag machen?</div>
+  <div class="qru">Логотип — есть у тебя, или я предложу вариант?</div>
+  <div class="opts">
+    <label class="opt" onclick="sel(this,'q2')"><input type="radio" name="q2"><span class="ot">Ja, habe ich / Да, есть</span></label>
+    <label class="opt" onclick="sel(this,'q2')"><input type="radio" name="q2"><span class="ot">Bitte Vorschlag machen / Предложи вариант</span></label>
+    <label class="opt" onclick="sel(this,'q2')"><input type="radio" name="q2"><span class="ot">Später, erst mal ohne / Позже, пока без</span></label>
+  </div>
+</div>
+
+<div class="card">
+  <div class="qn">3 / 7</div>
+  <div class="qde">Welche Zahlungsmethoden sollen aktiv sein?</div>
+  <div class="qru">Какие способы оплаты нужны в магазине?</div>
+  <p class="note">Mehrfachauswahl / Можно несколько</p>
+  <div class="opts">
+    <label class="opt" onclick="tog(this)"><input type="checkbox" name="q3"><span class="ot">PayPal</span></label>
+    <label class="opt" onclick="tog(this)"><input type="checkbox" name="q3"><span class="ot">Kreditkarte / Кредитная карта (Visa, Mastercard)</span></label>
+    <label class="opt" onclick="tog(this)"><input type="checkbox" name="q3"><span class="ot">Klarna (Ratenzahlung / рассрочка)</span></label>
+    <label class="opt" onclick="tog(this)"><input type="checkbox" name="q3"><span class="ot">SEPA / Überweisung</span></label>
+  </div>
+</div>
+
+<div class="card">
+  <div class="qn">4 / 7</div>
+  <div class="qde">Wohin wird versandt?</div>
+  <div class="qru">Куда планируется доставка?</div>
+  <div class="opts">
+    <label class="opt" onclick="sel(this,'q4')"><input type="radio" name="q4"><span class="ot">Nur Deutschland / Только Германия</span></label>
+    <label class="opt" onclick="sel(this,'q4')"><input type="radio" name="q4"><span class="ot">DACH (DE + Österreich + Schweiz)</span></label>
+    <label class="opt" onclick="sel(this,'q4')"><input type="radio" name="q4"><span class="ot">EU / ganz Europa</span></label>
+  </div>
+</div>
+
+<div class="card">
+  <div class="qn">5 / 7</div>
+  <div class="qde">In welchem Format kommen Produktdaten nach der Messe?</div>
+  <div class="qru">В каком формате ты передашь данные о товарах после выставки?</div>
+  <div class="opts">
+    <label class="opt" onclick="sel(this,'q5')"><input type="radio" name="q5"><span class="ot">Excel / Google Tabelle</span></label>
+    <label class="opt" onclick="sel(this,'q5')"><input type="radio" name="q5"><span class="ot">Fotos + WhatsApp / Фото + WhatsApp</span></label>
+    <label class="opt" onclick="sel(this,'q5')"><input type="radio" name="q5"><span class="ot">CSV-Datei vom Lieferanten / CSV от поставщика</span></label>
+    <label class="opt" onclick="sel(this,'q5')"><input type="radio" name="q5"><span class="ot">Noch unklar / Пока не знаю</span></label>
+  </div>
+</div>
+
+<div class="card">
+  <div class="qn">6 / 7</div>
+  <div class="qde">Wie kommunizieren wir während des Projekts?</div>
+  <div class="qru">Как нам лучше общаться по ходу проекта?</div>
+  <div class="opts">
+    <label class="opt" onclick="sel(this,'q6')"><input type="radio" name="q6"><span class="ot">WhatsApp — wie bisher / как сейчас</span></label>
+    <label class="opt" onclick="sel(this,'q6')"><input type="radio" name="q6"><span class="ot">E-Mail für Meilensteine + WhatsApp für Kurzes</span></label>
+    <label class="opt" onclick="sel(this,'q6')"><input type="radio" name="q6"><span class="ot">Video-Call bei jedem Sprint-Ende</span></label>
+  </div>
+</div>
+
+<div class="card">
+  <div class="qn">7 / 7</div>
+  <div class="qde">Gibt es etwas Wichtiges, das ich noch nicht weiss?</div>
+  <div class="qru">Есть ли что-то важное, чего я пока не знаю?</div>
+  <textarea placeholder="Notizen / Заметки..." oninput="upd()"></textarea>
+</div>
+
+<div class="card" id="sumcard" style="display:none;border-color:rgba(52,211,153,.3);background:rgba(52,211,153,.05)">
+  <div class="sum-title">ZUSAMMENFASSUNG / ИТОГ</div>
+  <div id="sumcontent"></div>
+</div>
+
+<button class="btn" onclick="showSum()">Zusammenfassung anzeigen / Показать итог</button>
+<div class="footer">Leon Seitz · leonseitz.com · Kickoff profiplanet.de</div>
+</div>
+<script>
+function setLang(l,btn){document.querySelectorAll('.lb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.querySelectorAll('.qru').forEach(el=>el.style.display=(l==='de'?'none':''));document.querySelectorAll('.qde').forEach(el=>el.style.display=(l==='ru'?'none':''));}
+function sel(el,n){document.querySelectorAll('[name="'+n+'"]').forEach(r=>r.closest('.opt').classList.remove('sel'));el.classList.add('sel');upd();}
+function tog(el){el.classList.toggle('sel');upd();}
+function upd(){let n=0;['q1','q2','q4','q5','q6'].forEach(q=>{if(document.querySelector('[name="'+q+'"]:checked'))n++;});if(document.querySelectorAll('[name="q3"]:checked').length>0)n++;if(document.querySelector('textarea').value.trim().length>2)n++;document.getElementById('pf').style.width=Math.round(n/7*100)+'%';}
+const QL={q1:['Clean & Minimal','Dark & Premium','Warm & Feminin','Bold & Bunt'],q2:['Logo vorhanden','Vorschlag erwünscht','Später'],q4:['Nur DE','DACH','EU'],q5:['Excel','Fotos+WhatsApp','CSV','Unklar'],q6:['WhatsApp','E-Mail+WA','Video-Call']};
+function getV(n){const els=document.querySelectorAll('[name="'+n+'"]');for(let i=0;i<els.length;i++){if(els[i].checked)return QL[n]?.[i]??'—';}return '—';}
+function showSum(){const pay=[...document.querySelectorAll('[name="q3"]:checked')].map((_,i)=>['PayPal','Kreditkarte','Klarna','SEPA'][i]).join(', ')||'—';const notes=document.querySelector('textarea').value.trim()||'—';const rows=[['Look',getV('q1')],['Logo',getV('q2')],['Zahlung / Оплата',pay],['Versand / Доставка',getV('q4')],['Produktdaten',getV('q5')],['Kommunikation',getV('q6')],['Notizen',notes]];document.getElementById('sumcontent').innerHTML=rows.map(([k,v])=>'<div class="sum-row"><span class="sum-key">'+k+'</span><span>'+v+'</span></div>').join('');const sc=document.getElementById('sumcard');sc.style.display='block';sc.scrollIntoView({behavior:'smooth'});}
+</script>
+</body>
+</html>
