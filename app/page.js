@@ -134,7 +134,7 @@ function TitleGradient({ sceneId, children }) {
   );
 }
 
-function useActiveSection(sectionIds[]) {
+function useActiveSection(sectionIds) {
   const [activeId, setActiveId] = useState(sectionIds[0]);
   useEffect(() => {
     const els = sectionIds.map((id) => document.getElementById(id)).filter(Boolean);
