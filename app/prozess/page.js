@@ -319,7 +319,7 @@ function IterationTimeline() {
 ───────────────────────────────────── */
 function AufwandRechner() {
   const [hours, setHours] = useState(12);
-  const rate = 35;
+  const rate = 50;
   const total = hours * rate;
 
   const fmt = n => n.toLocaleString('de-DE');
@@ -380,7 +380,7 @@ function AufwandRechner() {
           background: 'rgba(232,168,0,0.08)', border: '1px solid rgba(232,168,0,0.20)',
           fontSize: 13, color: 'rgba(14,12,8,0.65)', lineHeight: 1.6,
         }}>
-          Stundensatz: <strong style={{ color: B.black }}>35 €/h</strong> — dieser Wert gilt für alle Arbeiten. Das finale Angebot vor jedem Projekt legt die geschätzte Stundenzahl verbindlich fest.
+          Stundensatz: <strong style={{ color: B.black }}>50 €/h</strong> — dieser Wert gilt für alle Arbeiten. Das finale Angebot vor jedem Projekt legt die geschätzte Stundenzahl verbindlich fest.
         </div>
       </div>
 
