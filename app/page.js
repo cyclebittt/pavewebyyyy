@@ -231,6 +231,7 @@ function Sec({ id, dark = true, children, pad = '80px 20px' }) {
       background: dark ? B.black : B.cream,
       color: dark ? B.cream : B.black,
       padding: pad, position: 'relative',
+      overflowX: 'hidden', width: '100%',
     }}>
       <div style={{ maxWidth: 920, margin: '0 auto', width: '100%', textAlign: 'center' }}>
         {children}
@@ -286,7 +287,7 @@ function RoadMap() {
   ];
 
   return (
-    <div ref={ref} style={{ maxWidth: 560, margin: '52px auto 0', textAlign: 'left', padding: '0 4px' }}>
+    <div ref={ref} style={{ maxWidth: '100%', width: '100%', margin: '52px auto 0', textAlign: 'left', padding: '0 4px', boxSizing: 'border-box' }}>
 
       {/* Start marker */}
       <div style={{
@@ -363,13 +364,13 @@ function RoadMap() {
             </div>
             <p style={{
               fontSize: 13, color: 'rgba(245,242,235,0.50)',
-              lineHeight: 1.65, marginBottom: 10, maxWidth: 380,
+              lineHeight: 1.65, marginBottom: 10, maxWidth: '100%',
             }}>
               {s.desc}
             </p>
             {/* Note badge */}
             <span style={{
-              display: 'inline-flex', alignItems: 'center', gap: 5,
+              display: 'inline-flex', alignItems: 'center', gap: 5, flexWrap: 'wrap',
               padding: '4px 12px', borderRadius: 100, fontSize: 12, fontWeight: 700,
               background: s.highlight ? B.yellow : 'rgba(245,242,235,0.06)',
               border: s.highlight ? 'none' : '1px solid rgba(245,242,235,0.10)',
@@ -548,7 +549,7 @@ function CalendlyWidget() {
         <div
           className="calendly-inline-widget"
           data-url="https://calendly.com/hello-leonseitz/30min?hide_event_type_details=1&hide_gdpr_banner=1&primary_color=e8a800"
-          style={{ minWidth: 0, height: 700, width: '100%' }}
+          style={{ height: 700, width: '100%', minWidth: '1px' }}
         />
       </div>
     </Reveal>
@@ -563,11 +564,12 @@ export default function Home() {
   const heroShown = useReveal(heroRef, 0.01);
 
   return (
-    <div style={{ fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif" }}>
+    <div style={{ fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif", overflowX: 'hidden', position: 'relative', maxWidth: '100vw' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=DM+Serif+Display:ital@1&display=swap');
         *{box-sizing:border-box;margin:0;padding:0}
-        html,body{scroll-behavior:smooth;overflow-x:hidden;max-width:100vw}
+        html,body{scroll-behavior:smooth;overflow-x:hidden;max-width:100%;width:100%}
+        *{min-width:0}
         img,svg{max-width:100%}
       `}</style>
 
@@ -615,7 +617,7 @@ export default function Home() {
           <p style={{
             marginTop: 28, fontSize: 'clamp(1rem,2vw,1.15rem)',
             color: 'rgba(245,242,235,0.58)', lineHeight: 1.72,
-            maxWidth: 520, margin: '28px auto 0',
+            maxWidth: '100%', margin: '28px auto 0',
           }}>
             Ich analysiere wie dein Betrieb aktuell nach außen wirkt — Website, Social Media,
             Flyer, Speisekarte, Ladenauftritt. Und zeige konkret, wo Potenzial liegt.
@@ -662,7 +664,7 @@ export default function Home() {
         </Reveal>
 
         <Reveal delay={220}>
-          <div style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: 14 }}>
+          <div style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(260px,100%),1fr))', gap: 14 }}>
             {[
               {
                 icon: (
@@ -775,7 +777,7 @@ export default function Home() {
         </Reveal>
 
         <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))',
+          display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(280px,100%),1fr))',
           gap: 20, alignItems: 'start', textAlign: 'left',
         }}>
           <Reveal delay={80}><ProofCard /></Reveal>
@@ -827,7 +829,7 @@ export default function Home() {
           </p>
         </Reveal>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: 14 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(260px,100%),1fr))', gap: 14 }}>
           {[
             { icon: <Icon.Web />,       kicker: 'Digitaler Auftritt', title: 'Website, Social, Online-Präsenz.', desc: 'Klarer Aufbau, klare Botschaft. Damit ein Besucher in fünf Sekunden versteht, was du machst — und warum er bleiben soll.' },
             { icon: <Icon.Brandbook />, kicker: 'Print & Branding',   title: 'Flyer, Speisekarten, Materialien.', desc: 'Visitenkarte, Flyer, Speisekarte, Broschüre — konsistent, professionell, erkennbar. Alles was dein Betrieb anfasst, sollte gut aussehen.' },
