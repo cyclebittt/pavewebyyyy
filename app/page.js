@@ -266,21 +266,21 @@ function RoadMap() {
 
   const steps = [
     {
-      n: '0', label: 'Phase 0', sub: 'Analyse — kostenlos',
+      n: '0', label: 'Iteration 0', sub: 'Analyse — kostenlos',
       note: '✓ Kostenlos, kein Commitment',
       desc: 'Ich schaue mir deinen gesamten Auftritt an: Website, Print, Social, Prozesse, Ladenauftritt. Du bekommst eine ehrliche Einschätzung — was funktioniert, was nicht, und wo ich ansetzen würde.',
       highlight: true,
     },
     {
-      n: '1', label: 'Phase 1', sub: 'Erste Umsetzung',
+      n: '1', label: 'Iteration 1', sub: 'Erste Umsetzung',
       note: 'Zahlung nur wenn es dir gefällt',
       desc: 'Ich setze den ersten konkreten Schritt um — ein neues Design, ein überarbeitetes Material, ein digitaler Prozess. Du siehst das Ergebnis und entscheidest dann.',
       highlight: false,
     },
     {
-      n: '2', label: 'Phase 2+', sub: 'Weiteres nach Bedarf',
+      n: '2', label: 'Iteration 2+', sub: 'Weiteres nach Bedarf',
       note: 'Immer erst nach Fertigstellung',
-      desc: 'Jede weitere Phase baut auf der vorherigen auf. Kein langer Vertrag, kein Paket — wir arbeiten so lange zusammen wie es sinnvoll ist.',
+      desc: 'Jede weitere Iteration baut auf der vorherigen auf. Kein langer Vertrag, kein Paket — wir arbeiten so lange zusammen wie es sinnvoll ist.',
       highlight: false,
     },
   ];
@@ -437,7 +437,7 @@ function ProofCard() {
       <p style={{ marginTop: 10, fontSize: 13, color: 'rgba(14,12,8,0.60)', lineHeight: 1.65, maxWidth: 360 }}>
         Kein Werbebudget. Nur Konzept, Branding, Landing Page und eine klare Botschaft.
       </p>
-      <a href="/portfolio" style={{
+      <a href="https://www.instagram.com/leonseitz" target="_blank" rel="noopener noreferrer" style={{
         display: 'inline-flex', alignItems: 'center', gap: 6,
         marginTop: 20, fontSize: 13, fontWeight: 700,
         color: B.ocker, textDecoration: 'none',
@@ -624,7 +624,6 @@ export default function Home() {
         <Reveal delay={230}>
           <div style={{ marginTop: 44, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <BtnPrimary label="Kostenlose Analyse anfragen" href="/#request" lg />
-            <BtnGhost label="Portfolio ansehen" href="/portfolio" />
           </div>
         </Reveal>
         <Reveal delay={500}>
@@ -734,7 +733,7 @@ export default function Home() {
             marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
             fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.cream,
           }}>
-            Phase 0 ist kostenlos.
+            Iteration 0 ist kostenlos.
             <br />
             Du zahlst nur, wenn es dir <SerifAccent col={B.cream}>gefällt.</SerifAccent>
           </h2>
@@ -788,7 +787,7 @@ export default function Home() {
 
         <Reveal delay={300}>
           <div style={{ marginTop: 44, display: 'flex', justifyContent: 'center' }}>
-            <BtnPrimary label="Portfolio ansehen" href="/portfolio" />
+            <BtnPrimary label="Instagram ansehen" href="https://www.instagram.com/leonseitz" />
           </div>
         </Reveal>
 
@@ -870,7 +869,7 @@ export default function Home() {
           }}>
             Ich schaue mir deinen Betrieb an — digital und vor Ort wenn nötig —
             und sage dir ehrlich, wo ich Potenzial sehe. Kein Paket, kein Commitment.
-            Phase 0 ist kostenlos.
+            Iteration 0 ist kostenlos.
           </p>
         </Reveal>
 
@@ -954,7 +953,7 @@ export default function Home() {
           }}>
             <span style={{ fontSize: 14, fontWeight: 900, color: B.black }}>Leon Seitz</span>
             <div style={{ display: 'flex', gap: 20, fontSize: 13, color: 'rgba(14,12,8,0.40)' }}>
-              {[['Portfolio', '/portfolio'], ['Prozess', '/prozess'], ['Impressum', '/impressum'], ['Datenschutz', '/datenschutz']].map(([l, h]) => (
+              {[['Instagram', 'https://www.instagram.com/leonseitz'], ['Prozess', '/prozess'], ['Impressum', '/impressum'], ['Datenschutz', '/datenschutz']].map(([l, h]) => (
                 <a key={l} href={h} style={{ color: 'inherit', textDecoration: 'none' }}>{l}</a>
               ))}
             </div>
