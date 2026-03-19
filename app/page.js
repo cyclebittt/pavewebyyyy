@@ -225,7 +225,7 @@ function BtnGhost({ label, href, dark = true }) {
 }
 
 /* ─── SECTION ─── */
-function Sec({ id, dark = true, children, pad = '100px 24px' }) {
+function Sec({ id, dark = true, children, pad = '80px 20px' }) {
   return (
     <section id={id} style={{
       background: dark ? B.black : B.cream,
@@ -286,7 +286,7 @@ function RoadMap() {
   ];
 
   return (
-    <div ref={ref} style={{ maxWidth: 560, margin: '52px auto 0', textAlign: 'left' }}>
+    <div ref={ref} style={{ maxWidth: 560, margin: '52px auto 0', textAlign: 'left', padding: '0 4px' }}>
 
       {/* Start marker */}
       <div style={{
@@ -426,7 +426,7 @@ function ProofCard() {
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: B.yellow }} />
       <div style={{ marginBottom: 12 }}><Tag light>Echtes Ergebnis</Tag></div>
       <div style={{
-        fontSize: 'clamp(2.2rem,5vw,3.5rem)', fontWeight: 900,
+        fontSize: 'clamp(1.8rem,6vw,3.5rem)', fontWeight: 900,
         color: B.ocker, lineHeight: 1, letterSpacing: '-0.03em',
       }}>
         {fmt(v)} €
@@ -548,7 +548,7 @@ function CalendlyWidget() {
         <div
           className="calendly-inline-widget"
           data-url="https://calendly.com/hello-leonseitz/30min?hide_event_type_details=1&hide_gdpr_banner=1&primary_color=e8a800"
-          style={{ minWidth: 320, height: 700 }}
+          style={{ minWidth: 0, height: 700, width: '100%' }}
         />
       </div>
     </Reveal>
@@ -567,7 +567,8 @@ export default function Home() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=DM+Serif+Display:ital@1&display=swap');
         *{box-sizing:border-box;margin:0;padding:0}
-        html{scroll-behavior:smooth}
+        html,body{scroll-behavior:smooth;overflow-x:hidden;max-width:100vw}
+        img,svg{max-width:100%}
       `}</style>
 
       <ScrollBar />
@@ -575,7 +576,7 @@ export default function Home() {
       {/* ── HEADER ── */}
       <div style={{
         position: 'fixed', top: 3, left: 0, right: 0, zIndex: 50,
-        padding: '14px 28px', display: 'flex', justifyContent: 'space-between',
+        padding: '14px 20px', display: 'flex', justifyContent: 'space-between',
         alignItems: 'center', pointerEvents: 'none',
       }}>
         <span style={{
@@ -596,12 +597,12 @@ export default function Home() {
       </div>
 
       {/* ── S1: HERO ── */}
-      <Sec id="s1" dark pad="130px 24px 100px">
+      <Sec id="s1" dark pad="110px 20px 80px">
         <Reveal>
           <div ref={heroRef} style={{
-            fontSize: 'clamp(2.4rem,6.5vw,5rem)', fontWeight: 900,
-            lineHeight: 1.04, letterSpacing: '-0.03em',
-            color: B.cream, maxWidth: 780, margin: '0 auto',
+            fontSize: 'clamp(2rem,7vw,4.8rem)', fontWeight: 900,
+            lineHeight: 1.06, letterSpacing: '-0.025em',
+            color: B.cream, maxWidth: 780, margin: '0 auto', wordBreak: 'break-word',
           }}>
             Dein Betrieb verdient einen Auftritt,
             der{' '}
@@ -641,8 +642,8 @@ export default function Home() {
         <Reveal><Tag light>Das eigentliche Problem</Tag></Reveal>
         <Reveal delay={80}>
           <h2 style={{
-            marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
-            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.black,
+            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
+            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: B.black,
           }}>
             Viele Betriebe sind gut.
             <br />
@@ -661,7 +662,7 @@ export default function Home() {
         </Reveal>
 
         <Reveal delay={220}>
-          <div style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
+          <div style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: 14 }}>
             {[
               {
                 icon: (
@@ -730,8 +731,8 @@ export default function Home() {
         <Reveal><Tag>Wie wir arbeiten</Tag></Reveal>
         <Reveal delay={80}>
           <h2 style={{
-            marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
-            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.cream,
+            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
+            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: B.cream,
           }}>
             Iteration 0 ist kostenlos.
             <br />
@@ -751,7 +752,7 @@ export default function Home() {
         <RoadMap />
 
         <Reveal delay={100}>
-          <div style={{ marginTop: 52, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div style={{ marginTop: 52, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', padding: '0 4px' }}>
             <BtnPrimary label="Kostenlose Analyse anfragen" href="/#request" />
             <BtnGhost label="Ablauf im Detail" href="/prozess" />
           </div>
@@ -766,15 +767,15 @@ export default function Home() {
         <Reveal delay={80}>
           <h2 style={{
             marginTop: 20, marginBottom: 48,
-            fontSize: 'clamp(1.8rem,4vw,3rem)', fontWeight: 900,
-            lineHeight: 1.1, letterSpacing: '-0.025em', color: B.black,
+            fontSize: 'clamp(1.6rem,5vw,3rem)', fontWeight: 900,
+            lineHeight: 1.1, letterSpacing: '-0.02em', color: B.black,
           }}>
             Zahlen, die man <SerifAccent col={B.ocker}>einordnen</SerifAccent> kann.
           </h2>
         </Reveal>
 
         <div style={{
-          display: 'grid', gridTemplateColumns: '1.2fr 1fr',
+          display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))',
           gap: 20, alignItems: 'start', textAlign: 'left',
         }}>
           <Reveal delay={80}><ProofCard /></Reveal>
@@ -811,8 +812,8 @@ export default function Home() {
         <Reveal><Tag>Leistungen</Tag></Reveal>
         <Reveal delay={80}>
           <h2 style={{
-            marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
-            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.cream,
+            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
+            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: B.cream,
           }}>
             Was ich analysiere <SerifAccent col={B.cream}>und umsetze.</SerifAccent>
           </h2>
@@ -826,7 +827,7 @@ export default function Home() {
           </p>
         </Reveal>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 14 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: 14 }}>
           {[
             { icon: <Icon.Web />,       kicker: 'Digitaler Auftritt', title: 'Website, Social, Online-Präsenz.', desc: 'Klarer Aufbau, klare Botschaft. Damit ein Besucher in fünf Sekunden versteht, was du machst — und warum er bleiben soll.' },
             { icon: <Icon.Brandbook />, kicker: 'Print & Branding',   title: 'Flyer, Speisekarten, Materialien.', desc: 'Visitenkarte, Flyer, Speisekarte, Broschüre — konsistent, professionell, erkennbar. Alles was dein Betrieb anfasst, sollte gut aussehen.' },
@@ -849,15 +850,15 @@ export default function Home() {
       <Div from={true} />
 
       {/* ── S6: ANFRAGE + CALENDLY ── */}
-      <Sec id="request" dark={false} pad="96px 24px 80px">
+      <Sec id="request" dark={false} pad="80px 20px 64px">
         {/* Tagesstreifen */}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: B.yellow }} />
 
         <Reveal><Tag light>Einstieg</Tag></Reveal>
         <Reveal delay={80}>
           <h2 style={{
-            marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
-            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.black,
+            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
+            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: B.black,
           }}>
             Lass uns reden. <SerifAccent col={B.ocker}>Kostenlos.</SerifAccent>
           </h2>
@@ -878,7 +879,7 @@ export default function Home() {
 
         {/* Alt contact */}
         <Reveal delay={280}>
-          <div style={{ marginTop: 28, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div style={{ marginTop: 28, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', padding: '0 4px' }}>
             <a
               href="https://wa.me/4916095757167?text=Hi%20Leon%2C%0A%0AZiel%3A%0ADeadline%3A%0AStand%3A%0A%0AKurzer%20Kontext%3A"
               target="_blank" rel="noopener noreferrer"
@@ -921,7 +922,7 @@ export default function Home() {
             marginTop: 56, padding: '24px 28px', borderRadius: 16,
             border: '1px solid rgba(14,12,8,0.09)', background: '#E8E5DC',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            flexWrap: 'wrap', gap: 16, maxWidth: 560, margin: '56px auto 0',
+            flexWrap: 'wrap', gap: 16, maxWidth: 560, margin: '56px auto 0', textAlign: 'left',
           }}>
             <div style={{ textAlign: 'left' }}>
               <div style={{ fontSize: 14, fontWeight: 800, color: B.black, marginBottom: 4 }}>
@@ -949,7 +950,7 @@ export default function Home() {
             marginTop: 72, paddingTop: 28,
             borderTop: '1px solid rgba(14,12,8,0.07)',
             display: 'flex', justifyContent: 'space-between',
-            alignItems: 'center', flexWrap: 'wrap', gap: 16,
+            alignItems: 'center', flexWrap: 'wrap', gap: 12,
           }}>
             <span style={{ fontSize: 14, fontWeight: 900, color: B.black }}>Leon Seitz</span>
             <div style={{ display: 'flex', gap: 20, fontSize: 13, color: 'rgba(14,12,8,0.40)' }}>
