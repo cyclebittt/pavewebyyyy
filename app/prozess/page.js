@@ -1,715 +1,833 @@
 'use client';
 
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import {
-  ArrowRight,
-  CheckCircle2,
-  Clock,
-  ExternalLink,
-  Shield,
-  Sparkles,
-} from 'lucide-react';
+import { ArrowRight, CheckCircle2, Shield, Mail } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-/* ---------- CONFIG ---------- */
-
-const WHATSAPP_E164 = '4916095757167';
-const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_E164}?text=${encodeURIComponent(
-  `Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel (mehr Anfragen / sauberer Auftritt / beides):\n- Deadline:\n- Link zur aktuellen Website (falls vorhanden):\n\nDanke!`
-)}`;
-
-const PORTFOLIO_MOTION = 'https://www.leonseitz.com/portfolio/motion-design';
-const PORTFOLIO_KFA = 'https://www.leonseitz.com/portfolio/kirche-fundraising';
-
-/* ---------- SCENE ---------- */
-
-const SCENE = {
-  base: '#070312',
-  g1: `radial-gradient(1200px 700px at 18% 18%, rgba(168,85,247,0.30), transparent 60%),
-       radial-gradient(900px 700px at 82% 25%, rgba(56,189,248,0.14), transparent 55%)`,
-  g2: `linear-gradient(135deg, #070312 0%, #0b0b1a 50%, #03040e 100%)`,
-  blobs: [
-    { cls: 'bg-violet-500/16', x: '-20%', y: '-18%', s: '56rem', blur: 140 },
-    { cls: 'bg-cyan-500/10', x: '70%', y: '10%', s: '54rem', blur: 150 },
-    { cls: 'bg-fuchsia-500/9', x: '20%', y: '80%', s: '46rem', blur: 150 },
-  ],
-  accent: 'from-violet-200 via-indigo-200 to-cyan-200',
+/* ─── TOKENS ─── */
+const B = {
+  yellow: '#E8A800', ocker: '#C68F00',
+  black:  '#0E0C08', cream: '#F5F2EB', dark: '#2A2720',
 };
 
-/* ---------- UTIL ---------- */
+/* ─── WHATSAPP ─── */
+const WA_HREF = `https://wa.me/4916095757167?text=${encodeURIComponent(
+  'Hi Leon,\n\nKurz zu meinem Vorhaben:\n- Branche:\n- Ziel:\n- Deadline:\n- Aktueller Auftritt (Website / Social / Flyer):\n\nDanke!'
+)}`;
 
-function cx(...xs) {
-  return xs.filter(Boolean).join(' ');
-}
-
-function TitleGradient({ children }) {
-  return <span className={cx('bg-clip-text text-transparent bg-gradient-to-r', SCENE.accent)}>{children}</span>;
-}
-
-function useReveal(ref) {
+/* ─── HOOKS ─── */
+function useReveal(ref, threshold = 0.08) {
   const [shown, setShown] = useState(false);
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+    const el = ref.current; if (!el) return;
     const obs = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) setShown(true);
-      },
-      { threshold: 0.2 }
+      e => { if (e.some(x => x.isIntersecting)) setShown(true); },
+      { threshold }
     );
     obs.observe(el);
     return () => obs.disconnect();
-  }, [ref]);
+  }, [ref, threshold]);
   return shown;
 }
 
-function Reveal({ children, delayMs = 0 }) {
+function useScrollProgress() {
+  const [p, setP] = useState(0);
+  useEffect(() => {
+    const fn = () => {
+      const d = document.documentElement;
+      setP(d.scrollTop / Math.max(1, d.scrollHeight - d.clientHeight));
+    };
+    fn();
+    window.addEventListener('scroll', fn, { passive: true });
+    return () => window.removeEventListener('scroll', fn);
+  }, []);
+  return p;
+}
+
+/* ─── PRIMITIVES ─── */
+function Reveal({ children, delay = 0 }) {
   const ref = useRef(null);
   const shown = useReveal(ref);
-
   return (
-    <div
-      ref={ref}
-      className={cx(
-        'transition-all duration-700 will-change-transform',
-        shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-      )}
-      style={{ transitionDelay: `${delayMs}ms` }}
-    >
+    <div ref={ref} style={{
+      opacity: shown ? 1 : 0,
+      transform: shown ? 'none' : 'translateY(20px)',
+      transition: `opacity .65s ease ${delay}ms, transform .65s ease ${delay}ms`,
+    }}>
       {children}
     </div>
   );
 }
 
-/* ---------- PROGRESS + HALO ---------- */
-
-function useScrollProgress() {
-  const [p, setP] = useState(0);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const doc = document.documentElement;
-      const max = Math.max(1, doc.scrollHeight - doc.clientHeight);
-      setP(doc.scrollTop / max);
-    };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  return p;
+function Tag({ children, light = false }) {
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 5,
+      padding: '3px 12px', borderRadius: 100, fontSize: 11,
+      fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase',
+      background: light ? B.black : B.yellow,
+      color: light ? B.cream : B.black,
+    }}>
+      {children}
+    </span>
+  );
 }
 
-function ScrollProgressBar() {
+function SerifAccent({ children, col }) {
+  return (
+    <em style={{
+      fontFamily: "'DM Serif Display',Georgia,serif",
+      fontStyle: 'italic', fontWeight: 400,
+      color: col || 'inherit',
+    }}>
+      {children}
+    </em>
+  );
+}
+
+function ScrollBar() {
   const p = useScrollProgress();
   return (
-    <div className="fixed top-0 left-0 right-0 z-[60] pointer-events-none">
-      <div className="h-[2px] bg-white/10">
-        <div
-          className="h-full bg-gradient-to-r from-violet-300 via-cyan-300 to-emerald-300"
-          style={{ width: `${Math.round(p * 100)}%`, transition: 'width 80ms linear' }}
-        />
+    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 60, pointerEvents: 'none' }}>
+      <div style={{ height: 3, background: 'rgba(232,168,0,0.15)' }}>
+        <div style={{ height: '100%', width: `${Math.round(p * 100)}%`, background: B.yellow, transition: 'width 80ms linear' }} />
       </div>
     </div>
   );
 }
 
-function useMousePos() {
-  const [pos, setPos] = useState({ x: -9999, y: -9999 });
-  const raf = useRef(null);
-
-  useEffect(() => {
-    const onMove = (e) => {
-      const x = e.clientX;
-      const y = e.clientY;
-      if (raf.current) cancelAnimationFrame(raf.current);
-      raf.current = requestAnimationFrame(() => setPos({ x, y }));
-    };
-    window.addEventListener('mousemove', onMove, { passive: true });
-    return () => {
-      window.removeEventListener('mousemove', onMove);
-      if (raf.current) cancelAnimationFrame(raf.current);
-    };
-  }, []);
-
-  return pos;
-}
-
-function CursorHalo() {
-  const { x, y } = useMousePos();
-
+function BtnPrimary({ label, href, target }) {
+  const [h, setH] = useState(false);
   return (
-    <div className="hidden md:block fixed inset-0 z-[6] pointer-events-none">
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(800px 600px at ${x}px ${y}px, rgba(255,255,255,0.045), transparent 70%)`,
-          filter: 'blur(18px)',
-          opacity: 0.6,
-          mixBlendMode: 'screen',
-          transition: 'background 80ms linear',
-        }}
-      />
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(1400px 1050px at ${x}px ${y}px, rgba(99,102,241,0.035), transparent 78%)`,
-          filter: 'blur(34px)',
-          opacity: 0.55,
-          mixBlendMode: 'screen',
-          transition: 'background 80ms linear',
-        }}
-      />
-    </div>
-  );
-}
-
-/* ---------- GLOBAL BG ---------- */
-
-function GlobalBackground() {
-  return (
-    <div className="fixed inset-0 -z-10">
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundColor: SCENE.base,
-          backgroundImage: `${SCENE.g1}, ${SCENE.g2}`,
-        }}
-      />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.10] mix-blend-overlay"
-        style={{
-          backgroundImage:
-            'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27320%27 viewBox=%270 0 320 320%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.8%27 numOctaves=%273%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27320%27 height=%27320%27 filter=%27url(%23n)%27 opacity=%270.35%27/%3E%3C/svg%3E")',
-          backgroundSize: '220px 220px',
-          animation: 'noiseMove 7s linear infinite',
-        }}
-      />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_35%,transparent_0%,rgba(0,0,0,0.40)_65%,rgba(0,0,0,0.72)_100%)]" />
-    </div>
-  );
-}
-
-function GlobalLightLeaks() {
-  return (
-    <div className="fixed inset-0 -z-10 pointer-events-none">
-      {SCENE.blobs.map((b, i) => (
-        <div
-          key={i}
-          className={cx(
-            'absolute rounded-full',
-            b.cls,
-            i === 0
-              ? 'animate-[blob_10s_ease-in-out_infinite]'
-              : i === 1
-                ? 'animate-[blob2_12s_ease-in-out_infinite]'
-                : 'animate-[blob3_14s_ease-in-out_infinite]'
-          )}
-          style={{
-            left: b.x,
-            top: b.y,
-            width: b.s,
-            height: b.s,
-            filter: `blur(${b.blur}px)`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-/* ---------- UI ---------- */
-
-function SectionShell({ id, children, tight = false }) {
-  return (
-    <section id={id} className={cx('relative px-5 md:px-16', tight ? 'py-10 md:py-12' : 'py-12 md:py-16')}>
-      <div className="relative max-w-6xl mx-auto">{children}</div>
-    </section>
-  );
-}
-
-function Card({ children, className = '' }) {
-  return <div className={cx('rounded-3xl border border-white/15 bg-black/20 backdrop-blur-md', className)}>{children}</div>;
-}
-
-function Pill({ children, tone = 'neutral' }) {
-  const toneCls =
-    tone === 'free'
-      ? 'border-emerald-300/25 bg-emerald-500/10 text-emerald-100'
-      : 'border-white/15 bg-white/10 text-white/85';
-  return <span className={cx('inline-flex items-center rounded-full px-3 py-1 text-xs md:text-sm border', toneCls)}>{children}</span>;
-}
-
-function PackageMetaLink({ href, children }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-flex items-center gap-1 underline underline-offset-4 text-white/70 hover:text-white transition-colors"
-    >
-      {children} <ExternalLink size={14} className="text-white/55" />
+    <a href={href} target={target} rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+      onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: 8,
+        padding: '14px 30px', borderRadius: 100,
+        background: h ? B.ocker : B.yellow,
+        color: B.black, fontWeight: 800, fontSize: 15,
+        textDecoration: 'none', transition: 'background .18s',
+        letterSpacing: '-0.01em',
+      }}>
+      {label} <ArrowRight size={16} />
     </a>
   );
 }
 
-/* ---------- ROADMAP — VISUAL TIMELINE ---------- */
+function BtnGhost({ label, href, dark = true }) {
+  const [h, setH] = useState(false);
+  return (
+    <a href={href}
+      onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: 8,
+        padding: '14px 26px', borderRadius: 100,
+        border: `1px solid ${h
+          ? (dark ? 'rgba(245,242,235,.45)' : 'rgba(14,12,8,.40)')
+          : (dark ? 'rgba(245,242,235,.20)' : 'rgba(14,12,8,.18)')}`,
+        color: dark ? B.cream : B.black,
+        fontWeight: 600, fontSize: 14, textDecoration: 'none',
+        transition: 'border-color .18s',
+      }}>
+      {label}
+    </a>
+  );
+}
 
-const ROADMAP_STEPS = [
-  {
-    id: 'sprint0',
-    title: 'Sprint 0 — Analyse + Entwurf',
-    desc: 'Klarheit, Vertrauen, Mobile, Anfrageweg. Du bekommst 3–5 konkrete Punkte + einen ersten Seiten-Aufbau als Vorschau.',
-    tag: 'Kostenlos',
-    tagTone: 'free',
-  },
-  {
-    id: 'sprint2',
-    title: 'Sprint 1 — Erste Version',
-    desc: 'Lauffähige Version zum Testen + Feedback. Du klickst sie durch und gibst Feedback.',
-    tag: 'Zahlungsziel 1 nach Review (30%)',
-    tagTone: 'neutral',
-  },
-  {
-    id: 'sprint3',
-    title: 'Sprint 2 — Feinschliff',
-    desc: 'Änderungen aus dem Review werden umgesetzt. Alles bereit für Go-Live.',
-    tag: 'Zahlungsziel 2 nach Review (50%)',
-    tagTone: 'neutral',
-  },
-  {
-    id: 'sprint4',
-    title: 'Sprint 3 — Go-Live & Übergabe',
-    desc: 'Live stellen, Zugänge & Dateien. Danach bist du fertig.',
-    tag: 'Zahlungsziel 3 nach Übergabe (20%)',
-    tagTone: 'neutral',
-  },
-];
+/* ─── SECTION WRAPPER ─── */
+function Sec({ id, dark = true, children, pad = '96px 24px' }) {
+  return (
+    <section id={id} style={{
+      background: dark ? B.black : B.cream,
+      color: dark ? B.cream : B.black,
+      padding: pad, position: 'relative',
+    }}>
+      <div style={{ maxWidth: 920, margin: '0 auto', width: '100%', textAlign: 'center' }}>
+        {children}
+      </div>
+    </section>
+  );
+}
 
-function RoadmapTimeline() {
-  const [doneSteps, setDoneSteps] = useState(new Set());
+function Div({ from }) {
+  return (
+    <div style={{ background: from ? B.black : B.cream, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{
+        width: 1, height: 48,
+        background: from
+          ? 'linear-gradient(to bottom,rgba(232,168,0,0),rgba(232,168,0,.40))'
+          : 'linear-gradient(to bottom,rgba(14,12,8,0),rgba(14,12,8,.22))',
+      }} />
+    </div>
+  );
+}
 
-  function toggle(id) {
-    setDoneSteps((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }
+/* ─────────────────────────────────────
+   ITERATION TIMELINE  (vertical)
+───────────────────────────────────── */
+function IterationTimeline() {
+  const ref = useRef(null);
+  const shown = useReveal(ref, 0.04);
+
+  const iterations = [
+    {
+      n: '0',
+      label: 'Iteration 0',
+      sub: 'Analyse — kostenlos',
+      note: '✓ Kostenlos · Kein Commitment',
+      noteHighlight: true,
+      desc: 'Ich schaue mir deinen gesamten Auftritt an: Website, Flyer, Social Media, Speisekarte, Prozesse, Ladenauftritt. Du bekommst eine ehrliche Einschätzung — was funktioniert, was nicht, und wo ich konkret ansetzen würde. Kein Angebot ins Blaue.',
+      highlight: true,
+    },
+    {
+      n: '1',
+      label: 'Iteration 1',
+      sub: 'Erste Umsetzung',
+      note: 'Zahlung nur wenn es dir gefällt',
+      noteHighlight: false,
+      desc: 'Ich setze den ersten konkreten Schritt um — ein neues Design, ein überarbeitetes Werbematerial, eine digitalisierte Abfolge. Du siehst das fertige Ergebnis. Gefällt es dir, zahlst du. Wenn nicht, bist du nichts schuldig.',
+      highlight: false,
+    },
+    {
+      n: '2',
+      label: 'Iteration 2+',
+      sub: 'Weiteres nach Bedarf',
+      note: 'Immer erst nach Fertigstellung',
+      noteHighlight: false,
+      desc: 'Jede weitere Runde baut auf der vorherigen auf. Kein langer Vertrag, kein Paketdruck — wir arbeiten so lange zusammen wie es sinnvoll ist. Du entscheidest nach jeder Iteration ob es weitergeht.',
+      highlight: false,
+    },
+  ];
 
   return (
-    <div className="relative">
-      <div className="absolute left-5 top-5 bottom-5 w-[2px] bg-gradient-to-b from-emerald-400/40 via-violet-400/30 to-white/10 md:left-6" />
+    <div ref={ref} style={{ maxWidth: 600, margin: '0 auto', textAlign: 'left' }}>
 
-      <div className="space-y-3">
-        {ROADMAP_STEPS.map((step, i) => {
-          const done = doneSteps.has(step.id);
-          const isFree = step.tagTone === 'free';
-
-          return (
-            <div key={step.id} className="relative flex items-start gap-4 md:gap-5" style={{ animationDelay: `${i * 80}ms` }}>
-              <button
-                onClick={() => toggle(step.id)}
-                title={done ? 'Als offen markieren' : 'Als erledigt markieren'}
-                className={cx(
-                  'relative z-10 shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-2xl border flex items-center justify-center transition-all duration-300',
-                  done
-                    ? 'border-emerald-300/40 bg-emerald-500/20 shadow-[0_0_18px_rgba(52,211,153,0.25)]'
-                    : isFree
-                      ? 'border-emerald-300/20 bg-emerald-500/8 hover:bg-emerald-500/15'
-                      : 'border-white/15 bg-white/8 hover:bg-white/14'
-                )}
-              >
-                <CheckCircle2 size={20} className={cx('transition-colors duration-300', done ? 'text-emerald-300' : 'text-white/25')} />
-              </button>
-
-              <div
-                className={cx(
-                  'flex-1 rounded-2xl border px-4 py-4 md:px-5 md:py-5 transition-all duration-300',
-                  done ? 'border-emerald-300/20 bg-emerald-500/6' : 'border-white/10 bg-white/5'
-                )}
-              >
-                <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <span className={cx('text-sm md:text-base font-semibold transition-colors', done ? 'text-white/50 line-through' : 'text-white/90')}>
-                    {step.title}
-                  </span>
-                  {step.tag && <Pill tone={step.tagTone}>{step.tag}</Pill>}
-                </div>
-                <p className="text-sm text-white/60 leading-relaxed">{step.desc}</p>
-              </div>
-            </div>
-          );
-        })}
+      {/* Start dot */}
+      <div style={{
+        opacity: shown ? 1 : 0, transition: 'opacity .5s ease 80ms',
+        display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6,
+      }}>
+        <div style={{ width: 48, display: 'flex', justifyContent: 'center' }}>
+          <div style={{
+            width: 10, height: 10, borderRadius: '50%', background: B.yellow,
+            boxShadow: '0 0 0 4px rgba(232,168,0,0.20)',
+          }} />
+        </div>
+        <span style={{
+          fontSize: 11, fontWeight: 700, letterSpacing: '0.08em',
+          textTransform: 'uppercase', color: 'rgba(245,242,235,0.35)',
+        }}>
+          Einstieg
+        </span>
       </div>
 
-      <p className="mt-5 text-xs text-white/40 pl-14 md:pl-17">Klick auf den Node um einen Sprint als erledigt zu markieren.</p>
-    </div>
-  );
-}
+      {iterations.map((it, i) => (
+        <div key={i} style={{
+          display: 'flex', gap: 0,
+          opacity: shown ? 1 : 0,
+          transform: shown ? 'none' : 'translateY(16px)',
+          transition: `opacity .55s ease ${160 + i * 130}ms, transform .55s ease ${160 + i * 130}ms`,
+        }}>
+          {/* Line + node column */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 48, flexShrink: 0 }}>
+            <div style={{
+              width: 1, height: i === 0 ? 0 : 28,
+              background: it.highlight
+                ? `linear-gradient(to bottom,rgba(232,168,0,.20),${B.yellow})`
+                : 'rgba(245,242,235,0.08)',
+            }} />
+            <div style={{
+              width: it.highlight ? 48 : 40,
+              height: it.highlight ? 48 : 40,
+              borderRadius: '50%',
+              background: it.highlight ? B.yellow : 'rgba(245,242,235,0.06)',
+              border: it.highlight ? 'none' : '1px solid rgba(245,242,235,0.14)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontWeight: 900, fontSize: it.highlight ? 18 : 15,
+              color: it.highlight ? B.black : 'rgba(245,242,235,0.45)',
+              flexShrink: 0,
+              boxShadow: it.highlight ? '0 0 0 8px rgba(232,168,0,0.12)' : 'none',
+            }}>
+              {it.n}
+            </div>
+            {i < iterations.length - 1 && (
+              <div style={{
+                width: 1, flex: 1, minHeight: 32,
+                background: 'rgba(245,242,235,0.07)',
+              }} />
+            )}
+          </div>
 
-/* ---------- CALC ---------- */
-
-function money(n) {
-  const v = Number.isFinite(n) ? n : 0;
-  return Math.round(v);
-}
-
-function calcPayments(total) {
-  const t = Math.max(0, Number(total) || 0);
-  return {
-    p1: money(t * 0.3),
-    p2: money(t * 0.5),
-    p3: money(t * 0.2),
-  };
-}
-
-function getRecommendation(amount) {
-  const a = Number(amount) || 0;
-  if (a <= 550) return { key: 'einstieg', text: 'Für diesen Rahmen passt der Einstieg.' };
-  if (a <= 900) return { key: 'standard', text: 'Für diesen Rahmen passt der Standard.' };
-  return { key: 'komplett', text: 'Für diesen Rahmen passt das Komplett-Paket.' };
-}
-
-/* ---------- PAGE ---------- */
-
-export default function ProzessPage() {
-  const [amount, setAmount] = useState(700);
-
-  const payments = useMemo(() => calcPayments(amount), [amount]);
-  const rec = useMemo(() => getRecommendation(amount), [amount]);
-
-  return (
-    <div className="font-proxima text-white min-h-screen">
-      <style>{globalKeyframes}</style>
-
-      <GlobalBackground />
-      <GlobalLightLeaks />
-      <ScrollProgressBar />
-      <CursorHalo />
-
-      <Navbar />
-
-      {/* HERO */}
-      <section className="relative px-5 md:px-16 pt-28 md:pt-36 pb-8 md:pb-10">
-        <div className="relative max-w-6xl mx-auto">
-          <div className="flex flex-col items-center text-center gap-5">
-            <Reveal>
-              <div className="flex flex-wrap items-center justify-center gap-2">
-                <Pill tone="free">Start: Kostenlos (Analyse + Entwurf)</Pill>
-                <Pill>
-                  <span className="inline-flex items-center gap-2">
-                    <Sparkles size={16} /> Sprint-Reviews statt Bauchgefühl
-                  </span>
-                </Pill>
-              </div>
-            </Reveal>
-
-            <Reveal delayMs={90}>
-              <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight leading-[1.03]">
-                Du siehst die erste Version.
-                <span className="block">
-                  <TitleGradient>Erst dann geht&apos;s weiter.</TitleGradient>
-                </span>
-              </h1>
-            </Reveal>
-
-            <Reveal delayMs={160}>
-              <p className="max-w-2xl text-base md:text-xl text-white/80 leading-relaxed">
-                Ein klarer Ablauf in Sprints: Nach jedem Sprint gibt&apos;s ein Review. Danach kommt erst das nächste Zahlungsziel.
-              </p>
-            </Reveal>
+          {/* Content */}
+          <div style={{ paddingLeft: 20, paddingBottom: i < iterations.length - 1 ? 40 : 0, paddingTop: 6 }}>
+            <div style={{
+              fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase',
+              color: it.highlight ? B.yellow : 'rgba(245,242,235,0.28)', marginBottom: 4,
+            }}>
+              {it.label}
+            </div>
+            <div style={{
+              fontSize: 20, fontWeight: 800, color: B.cream,
+              letterSpacing: '-0.01em', marginBottom: 8,
+            }}>
+              {it.sub}
+            </div>
+            <p style={{
+              fontSize: 14, color: 'rgba(245,242,235,0.52)',
+              lineHeight: 1.7, marginBottom: 12, maxWidth: 440,
+            }}>
+              {it.desc}
+            </p>
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              padding: '5px 14px', borderRadius: 100, fontSize: 12, fontWeight: 700,
+              background: it.highlight ? B.yellow : 'rgba(245,242,235,0.06)',
+              border: it.highlight ? 'none' : '1px solid rgba(245,242,235,0.10)',
+              color: it.highlight ? B.black : 'rgba(245,242,235,0.40)',
+            }}>
+              {it.note}
+            </span>
           </div>
         </div>
-      </section>
+      ))}
 
-      {/* ROADMAP */}
-      <SectionShell id="roadmap" tight>
-        <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Roadmap</div>
-        </Reveal>
-
-        <Reveal delayMs={90}>
-          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Ein Ablauf.
-            <span className="block">
-              <TitleGradient>Sprint → Review → nächster Schritt.</TitleGradient>
-            </span>
-          </h2>
-        </Reveal>
-
-        <div className="mt-8">
-          <Card className="p-5 md:p-6">
-            <div className="flex flex-wrap gap-2 mb-6">
-              <Pill tone="free">Sprint 0: Kostenlos</Pill>
-              <Pill>Danach: Zahlungsziele nach Review</Pill>
-            </div>
-            <RoadmapTimeline />
-          </Card>
+      {/* End dot */}
+      <div style={{
+        opacity: shown ? 1 : 0, transition: 'opacity .5s ease 700ms',
+        display: 'flex', alignItems: 'center', gap: 12,
+        marginTop: 8, paddingLeft: 14,
+      }}>
+        <div style={{
+          width: 20, height: 20, borderRadius: '50%',
+          border: `2px solid ${B.yellow}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: B.yellow }} />
         </div>
-      </SectionShell>
-
-      {/* RECHNER */}
-      <SectionShell id="rechner">
-        <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Rahmen wählen</div>
-        </Reveal>
-
-        <Reveal delayMs={90}>
-          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Was würdest du für deine Website investieren?
-            <span className="block">
-              <TitleGradient>Ich zeige dir, was in diesem Rahmen möglich ist.</TitleGradient>
-            </span>
-          </h2>
-        </Reveal>
-
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-4 md:gap-6">
-          <Card className="p-6 md:p-7">
-            <div className="text-xs uppercase tracking-wide text-white/55">Dein ungefähres Budget für die Website</div>
-
-            <div className="mt-4">
-              <input
-                type="range"
-                min={400}
-                max={1500}
-                step={50}
-                value={amount}
-                onChange={(e) => setAmount(Number(e.target.value))}
-                className="w-full accent-white"
-              />
-              <div className="mt-2 flex items-center justify-between text-xs text-white/45">
-                <span>400 €</span>
-                <span>1.500 €</span>
-              </div>
-            </div>
-
-            <div className="mt-5">
-              <div className="text-[76px] md:text-[92px] font-extrabold tracking-tight leading-none">
-                {amount} <span className="text-white/55">€</span>
-              </div>
-              <div className="mt-2 text-base md:text-lg text-white/80 font-semibold">{rec.text}</div>
-            </div>
-
-            <div className="mt-6 rounded-2xl border border-emerald-300/20 bg-emerald-500/10 p-4">
-              <div className="text-xs uppercase tracking-wide text-emerald-100/90">Start ist kostenlos</div>
-              <div className="mt-2 text-sm text-white/75 leading-relaxed">
-                Sprint 0 (Analyse + Entwurf) ist kostenlos. Danach geht es Sprint für Sprint weiter.
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6 md:p-7">
-            <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsziel 1 — nach Sprint-Review (30%)</div>
-            <div className="mt-3 text-4xl md:text-5xl font-extrabold tracking-tight leading-none">
-              {payments.p1} <span className="text-white/55">€</span>
-            </div>
-            <div className="mt-1 text-sm text-white/70">Nach Sprint 1 (erste Version gesehen).</div>
-
-            <div className="mt-6 space-y-4">
-              <div>
-                <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsziel 2 — nach Sprint-Review (50%)</div>
-                <div className="mt-2 text-4xl md:text-5xl font-extrabold tracking-tight">
-                  {payments.p2} <span className="text-white/55">€</span>
-                </div>
-                <div className="mt-1 text-sm text-white/70">Nach Sprint 2 (Feinschliff freigegeben).</div>
-              </div>
-
-              <div>
-                <div className="text-xs uppercase tracking-wide text-white/55">Zahlungsziel 3 — nach Übergabe (20%)</div>
-                <div className="mt-2 text-4xl md:text-5xl font-extrabold tracking-tight">
-                  {payments.p3} <span className="text-white/55">€</span>
-                </div>
-                <div className="mt-1 text-sm text-white/70">Nach Sprint 3 (Go-Live + Übergabe).</div>
-              </div>
-            </div>
-
-            <div className="mt-6 rounded-2xl border border-white/12 bg-white/5 p-4 text-sm text-white/75">
-              Sprint → Review → nächstes Zahlungsziel. Transparent und Schritt für Schritt.
-            </div>
-          </Card>
-        </div>
-      </SectionShell>
-
-      {/* PAKETE */}
-      <SectionShell id="pakete">
-        <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Pakete</div>
-        </Reveal>
-
-        <Reveal delayMs={90}>
-          <h2 className="mt-3 text-2xl md:text-5xl font-extrabold leading-tight">
-            Was brauchst du wirklich?
-            <span className="block">
-              <TitleGradient>Schau am besten auf deine Situation. Nicht auf die Features.</TitleGradient>
-            </span>
-          </h2>
-        </Reveal>
-
-        <div className="mt-6 rounded-2xl border border-white/12 bg-white/5 px-4 py-3 text-sm text-white/75">
-          Der Ablauf ist in allen Paketen identisch (Sprints + Reviews). Unterschiede sind nur Umfang und Extras.
-        </div>
-
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
-          <Reveal>
-            <Card className={cx('p-6 md:p-7 transition-all', rec.key === 'komplett' ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100' : 'opacity-55')}>
-              <div className="text-xs uppercase tracking-wide text-white/55">Komplett</div>
-              <div className="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-white">
-                ab 1.100 <span className="text-white/55">€</span>
-              </div>
-              <ul className="mt-4 space-y-2 text-sm text-white/80">
-                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Website bis 5 Seiten</span></li>
-                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Brandbook (Farben, Typo, Layoutregeln)</span></li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                  <span>1 Motion-Element <span className="ml-1"><PackageMetaLink href={PORTFOLIO_MOTION}>Beispiel</PackageMetaLink></span></span>
-                </li>
-              </ul>
-              <div className="mt-5 text-sm text-white/70 flex items-center gap-2"><Clock size={16} className="text-white/60" /> ca. 3 Wochen</div>
-            </Card>
-          </Reveal>
-
-          <Reveal delayMs={80}>
-            <Card className={cx('p-6 md:p-7 transition-all', rec.key === 'standard' ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100' : 'opacity-55')}>
-              <div className="flex items-center justify-between gap-3">
-                <div className="text-xs uppercase tracking-wide text-white/55">Standard</div>
-                <Pill>Wird am häufigsten gewählt</Pill>
-              </div>
-              <div className="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-white">
-                ab 700 <span className="text-white/55">€</span>
-              </div>
-              <ul className="mt-4 space-y-2 text-sm text-white/80">
-                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Website bis 5 Seiten</span></li>
-                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Branding-Grundlage (Farben, Schrift, Logo)</span></li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" />
-                  <span>Aufbau wie im Case <span className="ml-1"><PackageMetaLink href={PORTFOLIO_KFA}>Beispiel</PackageMetaLink></span></span>
-                </li>
-              </ul>
-              <div className="mt-5 text-sm text-white/70 flex items-center gap-2"><Clock size={16} className="text-white/60" /> 10–14 Tage</div>
-            </Card>
-          </Reveal>
-
-          <Reveal delayMs={120}>
-            <Card className={cx('p-6 md:p-7 transition-all', rec.key === 'einstieg' ? 'ring-1 ring-inset ring-violet-300/35 border-white/20 opacity-100' : 'opacity-55')}>
-              <div className="text-xs uppercase tracking-wide text-white/55">Einstieg</div>
-              <div className="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-white">
-                ab 400 <span className="text-white/55">€</span>
-              </div>
-              <ul className="mt-4 space-y-2 text-sm text-white/80">
-                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Eine Landingpage</span></li>
-                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Klare Struktur + ein CTA</span></li>
-                <li className="flex items-start gap-2"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-white" /><span>Mobil optimiert</span></li>
-              </ul>
-              <div className="mt-5 text-sm text-white/70 flex items-center gap-2"><Clock size={16} className="text-white/60" /> ~ 7 Tage</div>
-            </Card>
-          </Reveal>
-        </div>
-      </SectionShell>
-
-      {/* EINWÄNDE */}
-      <SectionShell id="einwaende" tight>
-        <Reveal>
-          <div className="text-xs uppercase tracking-wide text-white/55">Sicherheit</div>
-        </Reveal>
-
-        <Reveal delayMs={90}>
-          <h2 className="mt-3 text-2xl md:text-4xl font-extrabold leading-tight">
-            Typische Fragen.
-            <span className="block"><TitleGradient>Kurze Antworten.</TitleGradient></span>
-          </h2>
-        </Reveal>
-
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
-          <Card className="p-5">
-            <div className="flex items-start gap-3">
-              <Shield size={18} className="text-white/70 mt-0.5" />
-              <div>
-                <div className="text-white/90 font-semibold">Was, wenn es mir nicht gefällt?</div>
-                <div className="mt-2 text-sm text-white/70">Du siehst Entwurf und Versionen Sprint für Sprint – danach entscheidest du weiter.</div>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-5">
-            <div className="flex items-start gap-3">
-              <Shield size={18} className="text-white/70 mt-0.5" />
-              <div>
-                <div className="text-white/90 font-semibold">Was, wenn ich später etwas ändern will?</div>
-                <div className="mt-2 text-sm text-white/70">Dann entweder Betreuung ab 150 €/Monat oder ein kleines Extra-Projekt.</div>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-5">
-            <div className="flex items-start gap-3">
-              <Shield size={18} className="text-white/70 mt-0.5" />
-              <div>
-                <div className="text-white/90 font-semibold">Was, wenn mein Budget knapp ist?</div>
-                <div className="mt-2 text-sm text-white/70">Wir starten mit dem kostenlosen Sprint 0 und entscheiden dann passend.</div>
-              </div>
-            </div>
-          </Card>
-        </div>
-      </SectionShell>
-
-      {/* CTA */}
-      <SectionShell id="cta">
-        <Reveal>
-          <Card className="p-6 md:p-10">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-              <div>
-                <div className="mt-3 text-2xl md:text-4xl font-extrabold leading-tight">
-                  Passt das?
-                  <span className="block"><TitleGradient>Schick mir nur die Basics.</TitleGradient></span>
-                </div>
-                <div className="mt-3 text-sm md:text-base text-white/70 max-w-xl">
-                  Branche, Ziel, Deadline, Link zur Website (falls vorhanden). Ich melde mich innerhalb von 24 Stunden.
-                </div>
-              </div>
-
-              <a
-                href={WHATSAPP_HREF}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors font-semibold"
-              >
-                Per WhatsApp schreiben <ArrowRight size={18} />
-              </a>
-            </div>
-          </Card>
-        </Reveal>
-      </SectionShell>
-
-      <Footer />
+        <span style={{
+          fontSize: 12, fontWeight: 700, letterSpacing: '0.06em',
+          textTransform: 'uppercase', color: B.yellow,
+        }}>
+          Dein Auftritt ist fertig.
+        </span>
+      </div>
     </div>
   );
 }
 
-/* ---------- KEYFRAMES ---------- */
+/* ─────────────────────────────────────
+   AUFWAND RECHNER
+───────────────────────────────────── */
+function AufwandRechner() {
+  const [hours, setHours] = useState(12);
+  const rate = 35;
+  const total = hours * rate;
 
-const globalKeyframes = `
-@keyframes blob {
-  0% { transform: translate3d(0px, 0px, 0) scale(1); }
-  35% { transform: translate3d(40px, -30px, 0) scale(1.08); }
-  70% { transform: translate3d(-30px, 20px, 0) scale(0.96); }
-  100% { transform: translate3d(0px, 0px, 0) scale(1); }
+  const fmt = n => n.toLocaleString('de-DE');
+
+  const examples = [
+    { h: 4,  label: 'Neue Speisekarte' },
+    { h: 8,  label: 'Social-Content-Paket' },
+    { h: 12, label: 'Landingpage' },
+    { h: 20, label: 'Website + Branding' },
+    { h: 30, label: 'Komplett-Setup' },
+  ];
+
+  return (
+    <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'left' }}>
+
+      {/* Slider */}
+      <div style={{
+        padding: '28px 28px 24px',
+        borderRadius: 20,
+        border: '1px solid rgba(14,12,8,0.09)',
+        background: '#E0DDD4',
+        marginBottom: 16,
+      }}>
+        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', color: 'rgba(14,12,8,0.40)', marginBottom: 20 }}>
+          Geschätzter Aufwand
+        </div>
+
+        <input
+          type="range" min={2} max={40} step={1} value={hours}
+          onChange={e => setHours(Number(e.target.value))}
+          style={{ width: '100%', accentColor: B.yellow, marginBottom: 6, cursor: 'pointer' }}
+        />
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'rgba(14,12,8,0.35)', marginBottom: 24 }}>
+          <span>2 h</span><span>40 h</span>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 16, flexWrap: 'wrap' }}>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', color: 'rgba(14,12,8,0.40)', marginBottom: 4 }}>
+              Aufwand
+            </div>
+            <div style={{ fontSize: 52, fontWeight: 900, lineHeight: 1, letterSpacing: '-0.03em', color: B.black }}>
+              {hours} <span style={{ fontSize: 24, fontWeight: 700, color: 'rgba(14,12,8,0.45)' }}>Stunden</span>
+            </div>
+          </div>
+          <div style={{ paddingBottom: 6 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', color: 'rgba(14,12,8,0.40)', marginBottom: 4 }}>
+              Gesamt
+            </div>
+            <div style={{ fontSize: 36, fontWeight: 900, lineHeight: 1, letterSpacing: '-0.02em', color: B.ocker }}>
+              {fmt(total)} €
+            </div>
+          </div>
+        </div>
+
+        <div style={{
+          marginTop: 20, padding: '12px 16px', borderRadius: 12,
+          background: 'rgba(232,168,0,0.08)', border: '1px solid rgba(232,168,0,0.20)',
+          fontSize: 13, color: 'rgba(14,12,8,0.65)', lineHeight: 1.6,
+        }}>
+          Stundensatz: <strong style={{ color: B.black }}>35 €/h</strong> — dieser Wert gilt für alle Arbeiten. Das finale Angebot vor jedem Projekt legt die geschätzte Stundenzahl verbindlich fest.
+        </div>
+      </div>
+
+      {/* Zahlungsaufteilung */}
+      <div style={{
+        padding: '24px 28px',
+        borderRadius: 20,
+        border: '1px solid rgba(14,12,8,0.09)',
+        background: '#E8E5DC',
+      }}>
+        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', color: 'rgba(14,12,8,0.40)', marginBottom: 16 }}>
+          Wie läuft die Zahlung?
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {[
+            { label: 'Iteration 0', note: 'Analyse & erster Entwurf', amount: 'Kostenlos', highlight: true },
+            { label: 'Iteration 1', note: 'Erste Umsetzung — zahlen nur wenn gefällt', amount: null, highlight: false },
+            { label: 'Iteration 2+', note: 'Jede weitere Runde, erst nach Fertigstellung', amount: null, highlight: false },
+          ].map((row, i) => (
+            <div key={i} style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              gap: 12, padding: '10px 14px', borderRadius: 12,
+              background: row.highlight ? 'rgba(232,168,0,0.08)' : 'rgba(14,12,8,0.04)',
+              border: row.highlight ? '1px solid rgba(232,168,0,0.22)' : '1px solid rgba(14,12,8,0.06)',
+            }}>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 800, color: B.black }}>{row.label}</div>
+                <div style={{ fontSize: 12, color: 'rgba(14,12,8,0.50)', marginTop: 2 }}>{row.note}</div>
+              </div>
+              <div style={{
+                fontSize: 13, fontWeight: 800,
+                color: row.highlight ? B.ocker : 'rgba(14,12,8,0.40)',
+                textAlign: 'right', flexShrink: 0,
+              }}>
+                {row.highlight ? 'Kostenlos' : 'Nach Abschluss'}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Example projects */}
+      <div style={{ marginTop: 16 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', color: 'rgba(14,12,8,0.35)', marginBottom: 10, paddingLeft: 4 }}>
+          Typische Projektgrößen
+        </div>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {examples.map(ex => (
+            <button key={ex.h}
+              onClick={() => setHours(ex.h)}
+              style={{
+                padding: '7px 14px', borderRadius: 100, fontSize: 12, fontWeight: 700,
+                border: hours === ex.h ? `1px solid ${B.yellow}` : '1px solid rgba(14,12,8,0.12)',
+                background: hours === ex.h ? 'rgba(232,168,0,0.08)' : '#E8E5DC',
+                color: hours === ex.h ? B.ocker : 'rgba(14,12,8,0.55)',
+                cursor: 'pointer', transition: 'all .15s',
+              }}>
+              {ex.label} · {ex.h} h
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
-@keyframes blob2 {
-  0% { transform: translate3d(0px, 0px, 0) scale(1); }
-  40% { transform: translate3d(-45px, 35px, 0) scale(1.06); }
-  80% { transform: translate3d(25px, -20px, 0) scale(0.96); }
-  100% { transform: translate3d(0px, 0px, 0) scale(1); }
+
+/* ─────────────────────────────────────
+   FAQ ITEMS
+───────────────────────────────────── */
+function FaqItem({ q, a, dark }) {
+  const [open, setOpen] = useState(false);
+  const borderCol = dark ? 'rgba(245,242,235,0.08)' : 'rgba(14,12,8,0.08)';
+  const textCol = dark ? B.cream : B.black;
+  const mutedCol = dark ? 'rgba(245,242,235,0.52)' : 'rgba(14,12,8,0.55)';
+
+  return (
+    <div style={{ borderBottom: `1px solid ${borderCol}` }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          width: '100%', padding: '18px 0',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          gap: 16, background: 'none', border: 'none', cursor: 'pointer',
+          textAlign: 'left',
+        }}>
+        <span style={{ fontSize: 15, fontWeight: 700, color: textCol }}>{q}</span>
+        <span style={{
+          width: 24, height: 24, borderRadius: '50%', flexShrink: 0,
+          border: `1px solid ${dark ? 'rgba(245,242,235,0.20)' : 'rgba(14,12,8,0.15)'}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: mutedCol, fontSize: 16, transition: 'transform .2s',
+          transform: open ? 'rotate(45deg)' : 'none',
+        }}>+</span>
+      </button>
+      {open && (
+        <div style={{ paddingBottom: 18, fontSize: 14, color: mutedCol, lineHeight: 1.7, maxWidth: 600, textAlign: 'left' }}>
+          {a}
+        </div>
+      )}
+    </div>
+  );
 }
-@keyframes blob3 {
-  0% { transform: translate3d(0px, 0px, 0) scale(1.10); }
-  45% { transform: translate3d(35px, 25px, 0) scale(1.10); }
-  85% { transform: translate3d(-30px, -18px, 0) scale(0.94); }
-  100% { transform: translate3d(0px, 0px, 0) scale(1); }
+
+/* ─────────────────────────────────────
+   PAGE
+───────────────────────────────────── */
+export default function ProzessPage() {
+
+  return (
+    <div style={{ fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=DM+Serif+Display:ital@1&display=swap');
+        *{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        input[type=range]{height:4px}
+      `}</style>
+
+      <ScrollBar />
+
+      {/* ── MINI HEADER ── */}
+      <div style={{
+        position: 'fixed', top: 3, left: 0, right: 0, zIndex: 50,
+        padding: '14px 28px', display: 'flex', justifyContent: 'space-between',
+        alignItems: 'center', pointerEvents: 'none',
+      }}>
+        <a href="/" style={{
+          fontSize: 15, fontWeight: 900, color: B.cream,
+          letterSpacing: '-0.01em', mixBlendMode: 'difference',
+          pointerEvents: 'auto', textDecoration: 'none',
+        }}>
+          Leon Seitz
+        </a>
+        <a href="/#request" style={{
+          pointerEvents: 'auto', fontSize: 13, fontWeight: 700,
+          color: B.yellow, textDecoration: 'none',
+          padding: '8px 18px', borderRadius: 100,
+          border: '1px solid rgba(232,168,0,0.28)',
+          background: 'rgba(14,12,8,0.65)', backdropFilter: 'blur(8px)',
+        }}>
+          Termin buchen
+        </a>
+      </div>
+
+      {/* ── S1: HERO ── dark ── */}
+      <Sec id="s1" dark pad="130px 24px 96px">
+        <Reveal>
+          <Tag>Wie wir arbeiten</Tag>
+        </Reveal>
+        <Reveal delay={80}>
+          <h1 style={{
+            marginTop: 20, fontSize: 'clamp(2.4rem,6vw,4.8rem)',
+            fontWeight: 900, lineHeight: 1.04, letterSpacing: '-0.03em',
+            color: B.cream, maxWidth: 780, margin: '20px auto 0',
+          }}>
+            Kein Paket. Kein Fixpreis.
+            <br />
+            <SerifAccent col={B.cream}>Schritt für Schritt.</SerifAccent>
+          </h1>
+        </Reveal>
+        <Reveal delay={160}>
+          <p style={{
+            marginTop: 24, fontSize: 'clamp(1rem,2vw,1.15rem)',
+            color: 'rgba(245,242,235,0.58)', lineHeight: 1.72,
+            maxWidth: 520, margin: '24px auto 0',
+          }}>
+            Wir starten kostenlos. Du siehst das Ergebnis jeder Iteration
+            bevor du entscheidest ob es weitergeht — und bevor du zahlst.
+          </p>
+        </Reveal>
+        <Reveal delay={240}>
+          <div style={{ marginTop: 40, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <BtnPrimary label="Kostenlose Analyse anfragen" href="/#request" />
+            <BtnGhost label="Zurück zur Startseite" href="/" />
+          </div>
+        </Reveal>
+      </Sec>
+
+      <Div from={true} />
+
+      {/* ── S2: WAS ICH ANALYSIERE ── light ── */}
+      <Sec id="analyse" dark={false} pad="96px 24px">
+        <Reveal><Tag light>Was ich analysiere</Tag></Reveal>
+        <Reveal delay={80}>
+          <h2 style={{
+            marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
+            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.black,
+          }}>
+            Nicht nur die Website.
+            <br />
+            <span style={{ color: B.ocker }}>Alles, was dein Betrieb nach außen zeigt.</span>
+          </h2>
+        </Reveal>
+        <Reveal delay={150}>
+          <p style={{
+            marginTop: 20, fontSize: 15, color: 'rgba(14,12,8,0.58)',
+            lineHeight: 1.72, maxWidth: 500, margin: '20px auto 0',
+          }}>
+            Iteration 0 ist eine vollständige Außenanalyse — digital und physisch.
+            Du bekommst konkrete Befunde, keine vagen Empfehlungen.
+          </p>
+        </Reveal>
+
+        <Reveal delay={220}>
+          <div style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
+            {[
+              {
+                icon: (
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={B.ocker} strokeWidth="1.8" strokeLinecap="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+                  </svg>
+                ),
+                title: 'Website & Social Media',
+                desc: 'Struktur, Botschaft, CTA, mobile Darstellung, Konsistenz zwischen den Kanälen.',
+              },
+              {
+                icon: (
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={B.ocker} strokeWidth="1.8" strokeLinecap="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+                  </svg>
+                ),
+                title: 'Print & Werbematerialien',
+                desc: 'Flyer, Speisekarte, Visitenkarte, Broschüre — Gestaltung, Lesbarkeit, Markenkonsistenz.',
+              },
+              {
+                icon: (
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={B.ocker} strokeWidth="1.8" strokeLinecap="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+                  </svg>
+                ),
+                title: 'Ladenauftritt & Prozesse',
+                desc: 'Beschilderung, Erscheinungsbild vor Ort, Abläufe die sich digitalisieren oder vereinfachen lassen.',
+              },
+            ].map((c, i) => (
+              <div key={i} style={{
+                padding: '24px 22px', borderRadius: 16,
+                border: '1px solid rgba(14,12,8,0.09)',
+                background: '#E8E5DC', textAlign: 'left',
+              }}>
+                <div style={{ marginBottom: 14 }}>{c.icon}</div>
+                <div style={{ fontSize: 14, fontWeight: 800, color: B.black, marginBottom: 8 }}>{c.title}</div>
+                <p style={{ fontSize: 13, color: 'rgba(14,12,8,0.55)', lineHeight: 1.65 }}>{c.desc}</p>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+
+        <Reveal delay={300}>
+          <div style={{
+            marginTop: 32, padding: '18px 24px', borderRadius: 14,
+            border: '1px solid rgba(232,168,0,0.25)', background: 'rgba(232,168,0,0.05)',
+            fontSize: 14, color: 'rgba(14,12,8,0.65)', lineHeight: 1.65,
+            maxWidth: 560, margin: '32px auto 0', textAlign: 'left',
+          }}>
+            <strong style={{ color: B.black }}>Das Ergebnis von Iteration 0:</strong> Du bekommst 3–5 konkrete Befunde schriftlich, eine Einschätzung wo ich beginnen würde — und erst dann entscheidest du ob wir weitermachen.
+          </div>
+        </Reveal>
+      </Sec>
+
+      <Div from={false} />
+
+      {/* ── S3: ITERATION TIMELINE ── dark ── */}
+      <Sec id="ablauf" dark pad="96px 24px">
+        <Reveal><Tag>Der Ablauf</Tag></Reveal>
+        <Reveal delay={80}>
+          <h2 style={{
+            marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
+            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.cream,
+          }}>
+            Iteration 0 ist kostenlos.
+            <br />
+            Du zahlst nur, wenn es dir <SerifAccent col={B.cream}>gefällt.</SerifAccent>
+          </h2>
+        </Reveal>
+        <Reveal delay={150}>
+          <p style={{
+            marginTop: 20, fontSize: 15, color: 'rgba(245,242,235,0.55)',
+            lineHeight: 1.72, maxWidth: 480, margin: '20px auto 0',
+          }}>
+            Kein Vertrag im Voraus. Du committeest dich immer nur zum nächsten Schritt.
+          </p>
+        </Reveal>
+
+        <div style={{ marginTop: 56 }}>
+          <IterationTimeline />
+        </div>
+
+        <Reveal delay={100}>
+          <div style={{ marginTop: 56, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <BtnPrimary label="Kostenlose Analyse anfragen" href="/#request" />
+            <BtnGhost label="Termin buchen" href="/#request" />
+          </div>
+        </Reveal>
+      </Sec>
+
+      <Div from={true} />
+
+      {/* ── S4: AUFWAND & PREIS ── light ── */}
+      <Sec id="preis" dark={false} pad="96px 24px">
+        <Reveal><Tag light>Aufwand & Preis</Tag></Reveal>
+        <Reveal delay={80}>
+          <h2 style={{
+            marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
+            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.black,
+          }}>
+            Ein Stundensatz.
+            <br />
+            <SerifAccent col={B.ocker}>Transparent kalkuliert.</SerifAccent>
+          </h2>
+        </Reveal>
+        <Reveal delay={150}>
+          <p style={{
+            marginTop: 20, fontSize: 15, color: 'rgba(14,12,8,0.58)',
+            lineHeight: 1.72, maxWidth: 480, margin: '20px auto 0',
+          }}>
+            Kein Paketdruck. Vor jedem Projekt bekommst du ein Angebot mit der geschätzten Stundenzahl.
+            So weißt du vorher, was auf dich zukommt.
+          </p>
+        </Reveal>
+
+        <div style={{ marginTop: 48 }}>
+          <Reveal delay={100}>
+            <AufwandRechner />
+          </Reveal>
+        </div>
+      </Sec>
+
+      <Div from={false} />
+
+      {/* ── S5: FAQ ── dark ── */}
+      <Sec id="faq" dark pad="96px 24px">
+        <Reveal><Tag>Häufige Fragen</Tag></Reveal>
+        <Reveal delay={80}>
+          <h2 style={{
+            marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
+            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.cream,
+          }}>
+            Kurze Antworten.
+            <br />
+            <SerifAccent col={B.cream}>Keine Floskeln.</SerifAccent>
+          </h2>
+        </Reveal>
+
+        <Reveal delay={180}>
+          <div style={{ marginTop: 48, maxWidth: 640, margin: '48px auto 0', textAlign: 'left' }}>
+            {[
+              {
+                q: 'Was, wenn es mir nach Iteration 1 nicht gefällt?',
+                a: 'Dann zahlst du nichts. Das ist kein Marketing-Versprechen — es ist die tatsächliche Struktur. Du siehst das Ergebnis zuerst, danach entscheidest du. Wenn es nicht passt, trennst du dich ohne Kosten.',
+              },
+              {
+                q: 'Wie verbindlich ist das Stundenschätzung im Angebot?',
+                a: 'Sehr verbindlich. Wenn ich im Laufe eines Projekts merke, dass der Aufwand größer wird, spreche ich das vorher an — nie nachher. Du wirst nie mit einer unerwarteten Nachforderung konfrontiert.',
+              },
+              {
+                q: 'Kommt Leon wirklich vor Ort?',
+                a: 'Ja. Besonders bei der Analyse in Iteration 0 ist ein Vor-Ort-Termin sinnvoll — ich sehe dann Flyer, Speisekarte, Ladenauftritt direkt. Das kostet dich nichts extra, das gehört zur kostenlosen Analyse.',
+              },
+              {
+                q: 'Was passiert nach dem Projekt — wer pflegt die Website?',
+                a: 'Du bekommst alle Zugänge und Dateien. Für laufende Pflege oder Updates gibt es auf Wunsch eine monatliche Betreuungspauschale oder wir rechnen einzelne Anpassungen nach Aufwand ab.',
+              },
+              {
+                q: 'Macht Leon nur Websites oder auch Print / Social?',
+                a: 'Beides und mehr. Ich schaue zuerst was bei dir den größten Unterschied macht — das kann eine neue Speisekarte sein, ein Social-Content-Template, eine digitalisierte Bestellstrecke oder eine Website. Oder alles zusammen, iterativ.',
+              },
+            ].map((item, i) => (
+              <FaqItem key={i} q={item.q} a={item.a} dark={true} />
+            ))}
+          </div>
+        </Reveal>
+      </Sec>
+
+      <Div from={true} />
+
+      {/* ── S6: CTA ── light ── */}
+      <Sec id="cta" dark={false} pad="96px 24px 80px">
+        {/* Tagesstreifen */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: B.yellow }} />
+
+        <Reveal><Tag light>Einstieg</Tag></Reveal>
+        <Reveal delay={80}>
+          <h2 style={{
+            marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
+            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.black,
+          }}>
+            Lass uns starten.
+            <br />
+            <SerifAccent col={B.ocker}>Iteration 0 kostet nichts.</SerifAccent>
+          </h2>
+        </Reveal>
+        <Reveal delay={140}>
+          <p style={{
+            marginTop: 16, fontSize: 15, color: 'rgba(14,12,8,0.58)',
+            lineHeight: 1.72, maxWidth: 440, margin: '16px auto 0',
+          }}>
+            Schreib mir kurz: Branche, was du verbessern willst, ob es eine Deadline gibt.
+            Ich schaue mir deinen Betrieb an und melde mich innerhalb von 24 h.
+          </p>
+        </Reveal>
+
+        <Reveal delay={220}>
+          <div style={{ marginTop: 40, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <a href={WA_HREF} target="_blank" rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 10,
+                padding: '14px 28px', borderRadius: 100,
+                background: '#25D366', color: '#fff',
+                fontWeight: 800, fontSize: 15, textDecoration: 'none',
+              }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              WhatsApp schreiben
+            </a>
+            <a href="mailto:hello@leonseitz.com?subject=Kostenlose Analyse&body=Branche: %0D%0AZiel: %0D%0ADeadline: %0D%0AAktueller Auftritt: %0D%0A"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 10,
+                padding: '14px 26px', borderRadius: 100,
+                border: '1px solid rgba(14,12,8,0.18)', color: 'rgba(14,12,8,0.65)',
+                fontWeight: 700, fontSize: 14, textDecoration: 'none',
+              }}>
+              <Mail size={16} /> E-Mail schreiben
+            </a>
+          </div>
+          <p style={{ marginTop: 12, fontSize: 12, color: 'rgba(14,12,8,0.35)', textAlign: 'center' }}>
+            Oder Termin buchen: <a href="/#request" style={{ color: B.ocker, textDecoration: 'none', fontWeight: 700 }}>leonseitz.com/#request</a>
+          </p>
+        </Reveal>
+
+        {/* Footer */}
+        <Reveal delay={300}>
+          <div style={{
+            marginTop: 72, paddingTop: 28,
+            borderTop: '1px solid rgba(14,12,8,0.07)',
+            display: 'flex', justifyContent: 'space-between',
+            alignItems: 'center', flexWrap: 'wrap', gap: 16,
+          }}>
+            <a href="/" style={{ fontSize: 14, fontWeight: 900, color: B.black, textDecoration: 'none' }}>Leon Seitz</a>
+            <div style={{ display: 'flex', gap: 20, fontSize: 13, color: 'rgba(14,12,8,0.40)' }}>
+              {[['Startseite', '/'], ['Portfolio', '/portfolio'], ['Impressum', '/impressum'], ['Datenschutz', '/datenschutz']].map(([l, h]) => (
+                <a key={l} href={h} style={{ color: 'inherit', textDecoration: 'none' }}>{l}</a>
+              ))}
+            </div>
+            <span style={{ fontSize: 12, color: 'rgba(14,12,8,0.28)' }}>© 2026</span>
+          </div>
+        </Reveal>
+      </Sec>
+    </div>
+  );
 }
-@keyframes noiseMove {
-  0% { transform: translate3d(0,0,0); }
-  100% { transform: translate3d(90px,60px,0); }
-}
-`;
