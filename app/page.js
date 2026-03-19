@@ -267,21 +267,21 @@ function RoadMap() {
 
   const steps = [
     {
-      n: '0', label: 'Iteration 0', sub: 'Analyse — kostenlos',
+      n: '0', label: 'Phase 0', sub: 'Analyse — kostenlos',
       note: '✓ Kostenlos, kein Commitment',
       desc: 'Ich schaue mir deinen gesamten Auftritt an: Website, Print, Social, Prozesse, Ladenauftritt. Du bekommst eine ehrliche Einschätzung — was funktioniert, was nicht, und wo ich ansetzen würde.',
       highlight: true,
     },
     {
-      n: '1', label: 'Iteration 1', sub: 'Erste Umsetzung',
+      n: '1', label: 'Phase 1', sub: 'Erste Umsetzung',
       note: 'Zahlung nur wenn es dir gefällt',
       desc: 'Ich setze den ersten konkreten Schritt um — ein neues Design, ein überarbeitetes Material, ein digitaler Prozess. Du siehst das Ergebnis und entscheidest dann.',
       highlight: false,
     },
     {
-      n: '2', label: 'Iteration 2+', sub: 'Weiteres nach Bedarf',
+      n: '2', label: 'Phase 2+', sub: 'Weiteres nach Bedarf',
       note: 'Immer erst nach Fertigstellung',
-      desc: 'Jede weitere Iteration baut auf der vorherigen auf. Kein langer Vertrag, kein Paket — wir arbeiten so lange zusammen wie es sinnvoll ist.',
+      desc: 'Jede weitere Phase baut auf der vorherigen auf. Kein langer Vertrag, kein Paket — wir arbeiten so lange zusammen wie es sinnvoll ist.',
       highlight: false,
     },
   ];
@@ -736,7 +736,7 @@ export default function Home() {
             marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
             fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: B.cream,
           }}>
-            Iteration 0 ist kostenlos.
+            Phase 0 ist kostenlos.
             <br />
             Du zahlst nur, wenn es dir <SerifAccent col={B.cream}>gefällt.</SerifAccent>
           </h2>
@@ -872,7 +872,7 @@ export default function Home() {
           }}>
             Ich schaue mir deinen Betrieb an — digital und vor Ort wenn nötig —
             und sage dir ehrlich, wo ich Potenzial sehe. Kein Paket, kein Commitment.
-            Iteration 0 ist kostenlos.
+            Phase 0 ist kostenlos.
           </p>
         </Reveal>
 
