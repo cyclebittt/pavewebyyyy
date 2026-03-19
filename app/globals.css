@@ -3,64 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
-
-/* styles/globals.css */
-@font-face {
-  font-family: 'Proxima Nova';
-  src: url('./fonts/ProximaNovaRegular.otf');
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Proxima Nova';
-  src: url('./fonts/ProximaNovaMedium.otf');
-  font-weight: 500;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Proxima Nova';
-  src: url('./fonts/ProximaNovaBold.otf');
-  font-weight: 700;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Proxima Nova';
-  src: url('./fonts/ProximaNovaExtrabold.otf');
-  font-weight: 800;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Proxima Nova';
-  src: url('./fonts/ProximaNovaBlack.otf');
-  font-weight: 900;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Proxima Nova';
-  src: url('./fonts/ProximaNovaSemibold.otf');
-  font-weight: 600;
-  font-style: normal;
+  --background: #0E0C08;
+  --foreground: #F5F2EB;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  /* font-family: Arial, Helvetica, sans-serif; */
 }
 
 @layer utilities {
@@ -69,38 +18,7 @@ body {
   }
 }
 
-.scroll-text {
-  /* animation properties */
-  -moz-transform: translateX(150%);
-  -webkit-transform: translateX(150%);
-  transform: translateX(150%);
-  
-  -moz-animation: scroll-text-animation 15s linear infinite;
-  -webkit-animation: scroll-text-animation 15s linear infinite;
-  animation: scroll-text-animation 15s linear infinite;
-}
-
-/* for Firefox */
-@-moz-keyframes scroll-text-animation {
-  from { -moz-transform: translateX(150%); }
-  to { -moz-transform: translateX(-150%); }
-}
-
-/* for Chrome */
-@-webkit-keyframes scroll-text-animation {
-  from { -webkit-transform: translateX(150%); }
-  to { -webkit-transform: translateX(-150%); }
-}
-
-@keyframes scroll-text-animation {
-  from {
-    -moz-transform: translateX(150%);
-    -webkit-transform: translateX(150%);
-    transform: translateX(150%);
-  }
-  to {
-    -moz-transform: translateX(-150%);
-    -webkit-transform: translateX(-150%);
-    transform: translateX(-150%);
-  }
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
 }
