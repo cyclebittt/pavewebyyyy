@@ -437,7 +437,7 @@ function ProofCard() {
       <p style={{ marginTop: 10, fontSize: 13, color: 'rgba(14,12,8,0.60)', lineHeight: 1.65, maxWidth: 360 }}>
         Kein Werbebudget. Nur Konzept, Branding, Landing Page und eine klare Botschaft.
       </p>
-      <a href="https://www.instagram.com/leonseitz" target="_blank" rel="noopener noreferrer" style={{
+      <a href="/kunde1" style={{
         display: 'inline-flex', alignItems: 'center', gap: 6,
         marginTop: 20, fontSize: 13, fontWeight: 700,
         color: B.ocker, textDecoration: 'none',
@@ -787,7 +787,7 @@ export default function Home() {
 
         <Reveal delay={300}>
           <div style={{ marginTop: 44, display: 'flex', justifyContent: 'center' }}>
-            <BtnPrimary label="Instagram ansehen" href="https://www.instagram.com/leonseitz" />
+            <BtnPrimary label="Instagram ansehen" href="https://www.instagram.com/leonseitz" target="_blank" />
           </div>
         </Reveal>
 
