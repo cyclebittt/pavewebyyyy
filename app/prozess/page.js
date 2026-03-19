@@ -165,14 +165,14 @@ function Div({ from }) {
 /* ─────────────────────────────────────
    ITERATION TIMELINE  (vertical)
 ───────────────────────────────────── */
-function IterationTimeline() {
+function PhaseTimeline() {
   const ref = useRef(null);
   const shown = useReveal(ref, 0.04);
 
-  const iterations = [
+  const phases = [
     {
       n: '0',
-      label: 'Iteration 0',
+      label: 'Phase 0',
       sub: 'Analyse — kostenlos',
       note: '✓ Kostenlos · Kein Commitment',
       noteHighlight: true,
@@ -181,7 +181,7 @@ function IterationTimeline() {
     },
     {
       n: '1',
-      label: 'Iteration 1',
+      label: 'Phase 1',
       sub: 'Erste Umsetzung',
       note: 'Zahlung nur wenn es dir gefällt',
       noteHighlight: false,
@@ -190,11 +190,11 @@ function IterationTimeline() {
     },
     {
       n: '2',
-      label: 'Iteration 2+',
+      label: 'Phase 2+',
       sub: 'Weiteres nach Bedarf',
       note: 'Immer erst nach Fertigstellung',
       noteHighlight: false,
-      desc: 'Jede weitere Runde baut auf der vorherigen auf. Kein langer Vertrag, kein Paketdruck — wir arbeiten so lange zusammen wie es sinnvoll ist. Du entscheidest nach jeder Iteration ob es weitergeht.',
+      desc: 'Jede weitere Runde baut auf der vorherigen auf. Kein langer Vertrag, kein Paketdruck — wir arbeiten so lange zusammen wie es sinnvoll ist. Du entscheidest nach jeder Phase ob es weitergeht.',
       highlight: false,
     },
   ];
@@ -221,7 +221,7 @@ function IterationTimeline() {
         </span>
       </div>
 
-      {iterations.map((it, i) => (
+      {phases.map((it, i) => (
         <div key={i} style={{
           display: 'flex', gap: 0,
           opacity: shown ? 1 : 0,
@@ -250,7 +250,7 @@ function IterationTimeline() {
             }}>
               {it.n}
             </div>
-            {i < iterations.length - 1 && (
+            {i < phases.length - 1 && (
               <div style={{
                 width: 1, flex: 1, minHeight: 32,
                 background: 'rgba(245,242,235,0.07)',
@@ -259,7 +259,7 @@ function IterationTimeline() {
           </div>
 
           {/* Content */}
-          <div style={{ paddingLeft: 20, paddingBottom: i < iterations.length - 1 ? 40 : 0, paddingTop: 6 }}>
+          <div style={{ paddingLeft: 20, paddingBottom: i < phases.length - 1 ? 40 : 0, paddingTop: 6 }}>
             <div style={{
               fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase',
               color: it.highlight ? B.yellow : 'rgba(245,242,235,0.28)', marginBottom: 4,
@@ -397,9 +397,9 @@ function AufwandRechner() {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {[
-            { label: 'Iteration 0', note: 'Analyse & erster Entwurf', amount: 'Kostenlos', highlight: true },
-            { label: 'Iteration 1', note: 'Erste Umsetzung — zahlen nur wenn gefällt', amount: null, highlight: false },
-            { label: 'Iteration 2+', note: 'Jede weitere Runde, erst nach Fertigstellung', amount: null, highlight: false },
+            { label: 'Phase 0', note: 'Analyse & erster Entwurf', amount: 'Kostenlos', highlight: true },
+            { label: 'Phase 1', note: 'Erste Umsetzung — zahlen nur wenn gefällt', amount: null, highlight: false },
+            { label: 'Phase 2+', note: 'Jede weitere Runde, erst nach Fertigstellung', amount: null, highlight: false },
           ].map((row, i) => (
             <div key={i} style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -548,7 +548,7 @@ export default function ProzessPage() {
             color: 'rgba(245,242,235,0.58)', lineHeight: 1.72,
             maxWidth: 520, margin: '24px auto 0',
           }}>
-            Wir starten kostenlos. Du siehst das Ergebnis jeder Iteration
+            Wir starten kostenlos. Du siehst das Ergebnis jeder Phase
             bevor du entscheidest ob es weitergeht — und bevor du zahlst.
           </p>
         </Reveal>
@@ -580,7 +580,7 @@ export default function ProzessPage() {
             marginTop: 20, fontSize: 15, color: 'rgba(14,12,8,0.58)',
             lineHeight: 1.72, maxWidth: 500, margin: '20px auto 0',
           }}>
-            Iteration 0 ist eine vollständige Außenanalyse — digital und physisch.
+            Phase 0 ist eine vollständige Außenanalyse — digital und physisch.
             Du bekommst konkrete Befunde, keine vagen Empfehlungen.
           </p>
         </Reveal>
@@ -636,7 +636,7 @@ export default function ProzessPage() {
             fontSize: 14, color: 'rgba(14,12,8,0.65)', lineHeight: 1.65,
             maxWidth: '100%', margin: '32px auto 0', textAlign: 'left',
           }}>
-            <strong style={{ color: B.black }}>Das Ergebnis von Iteration 0:</strong> Du bekommst 3–5 konkrete Befunde schriftlich, eine Einschätzung wo ich beginnen würde — und erst dann entscheidest du ob wir weitermachen.
+            <strong style={{ color: B.black }}>Das Ergebnis von Phase 0:</strong> Du bekommst 3–5 konkrete Befunde schriftlich, eine Einschätzung wo ich beginnen würde — und erst dann entscheidest du ob wir weitermachen.
           </div>
         </Reveal>
       </Sec>
@@ -651,7 +651,7 @@ export default function ProzessPage() {
             marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
             fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.cream,
           }}>
-            Iteration 0 ist kostenlos.
+            Phase 0 ist kostenlos.
             <br />
             Du zahlst nur, wenn es dir <SerifAccent col={B.cream}>gefällt.</SerifAccent>
           </h2>
@@ -666,7 +666,7 @@ export default function ProzessPage() {
         </Reveal>
 
         <div style={{ marginTop: 56 }}>
-          <IterationTimeline />
+          <PhaseTimeline />
         </div>
 
         <Reveal delay={100}>
@@ -729,7 +729,7 @@ export default function ProzessPage() {
           <div style={{ marginTop: 48, maxWidth: '100%', width: '100%', margin: '48px auto 0', textAlign: 'left', boxSizing: 'border-box' }}>
             {[
               {
-                q: 'Was, wenn es mir nach Iteration 1 nicht gefällt?',
+                q: 'Was, wenn es mir nach Phase 1 nicht gefällt?',
                 a: 'Dann zahlst du nichts. Das ist kein Marketing-Versprechen — es ist die tatsächliche Struktur. Du siehst das Ergebnis zuerst, danach entscheidest du. Wenn es nicht passt, trennst du dich ohne Kosten.',
               },
               {
@@ -738,7 +738,7 @@ export default function ProzessPage() {
               },
               {
                 q: 'Kommt Leon wirklich vor Ort?',
-                a: 'Ja. Besonders bei der Analyse in Iteration 0 ist ein Vor-Ort-Termin sinnvoll — ich sehe dann Flyer, Speisekarte, Ladenauftritt direkt. Das kostet dich nichts extra, das gehört zur kostenlosen Analyse.',
+                a: 'Ja. Besonders bei der Analyse in Phase 0 ist ein Vor-Ort-Termin sinnvoll — ich sehe dann Flyer, Speisekarte, Ladenauftritt direkt. Das kostet dich nichts extra, das gehört zur kostenlosen Analyse.',
               },
               {
                 q: 'Was passiert nach dem Projekt — wer pflegt die Website?',
@@ -770,7 +770,7 @@ export default function ProzessPage() {
           }}>
             Lass uns starten.
             <br />
-            <SerifAccent col={B.ocker}>Iteration 0 kostet nichts.</SerifAccent>
+            <SerifAccent col={B.ocker}>Phase 0 kostet nichts.</SerifAccent>
           </h2>
         </Reveal>
         <Reveal delay={140}>
