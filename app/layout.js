@@ -1,65 +1,54 @@
-import Head from "next/head";
 import "./globals.css";
 
 export const metadata = {
-  title: "Leon Seitz - Webdesign & digitale Lösungen",
-  description: "Design, Content & Strategie – Wir machen Marken sichtbar, professionell & psychologisch wirkungsvoll.",
-  keywords: "Branding, Webdesign, Motion Design, Social Media & Videoediting für dein digitales Projekt",
+  title: "Leon Seitz — Digitaler Auftritt für lokale Betriebe",
+  description: "Ich analysiere wie dein Betrieb nach außen wirkt — Website, Flyer, Social, Prozesse. Kostenlose Analyse, kein Commitment.",
+  keywords: "Webdesign, Branding, Flyer, Speisekarte, Social Media, Digitalisierung, Aschaffenburg, Obernburg, lokale Betriebe",
+  metadataBase: new URL("https://www.leonseitz.com"),
   openGraph: {
-    type: 'website',
-    locale: 'de_DE',
-    url: 'https://www.leonseitz.com/',
-    title: 'Leon Seitz',
-    description: 'Branding, Content und Website für deine Idee. Maßgeschneidert an deine Bedürfnisse.',
-    site_name: 'Leon Seitz - Webdesign & digitale Lösungen',
+    type: "website",
+    locale: "de_DE",
+    url: "https://www.leonseitz.com/",
+    title: "Leon Seitz — Digitaler Auftritt für lokale Betriebe",
+    description: "Kostenlose Analyse deines Auftritts — Website, Print, Social, Prozesse. Zahlung erst wenn es dir gefällt.",
+    siteName: "Leon Seitz",
     images: [
       {
-        url: '/logo-paveo.ico', // dein neues Logo als Vorschau
+        url: "/logo-paveo.ico",
         width: 512,
         height: 512,
-        alt: 'Paveo Logo',
+        alt: "Leon Seitz",
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Leon Seitz — Digitaler Auftritt für lokale Betriebe",
+    description: "Kostenlose Analyse deines Auftritts — Website, Print, Social, Prozesse.",
+    images: ["/logo-paveo.ico"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "https://www.leonseitz.com/",
+  },
+  icons: {
+    icon: "/logo-paveo.ico",
+    apple: "/logo-paveo.ico",
+  },
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="de">
-      <Head>
-        {/* Titel + Meta */}
-        <title>{metadata.title}</title>
-        <meta name="description" content={metadata.description} />
-        <meta name="keywords" content={metadata.keywords} />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="robots" content="index, follow" />
-        <meta charSet="UTF-8" />
-
-        {/* OpenGraph für Social Media */}
-        <meta property="og:title" content={metadata.openGraph.title} />
-        <meta property="og:description" content={metadata.openGraph.description} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={metadata.openGraph.url} />
-        <meta property="og:image" content={metadata.openGraph.images[0].url} />
-        <meta property="og:locale" content={metadata.openGraph.locale} />
-
-        {/* Twitter Cards */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={metadata.openGraph.title} />
-        <meta name="twitter:description" content={metadata.openGraph.description} />
-        <meta name="twitter:image" content={metadata.openGraph.images[0].url} />
-        <meta name="twitter:site" content="@Paveo" />
-
-        {/* Canonical */}
-        <link rel="canonical" href="https://www.leonseitz.com/" />
-
-        {/* Neues Favicon */}
-        <link rel="icon" href="/logo-paveo.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/logo-paveo.ico" />
-      </Head>
-      <body>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
