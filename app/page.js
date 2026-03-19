@@ -441,7 +441,7 @@ function ProofCard() {
         In 2 Monaten — <SerifAccent col={B.ocker}>durch eine Fundraising-Kampagne.</SerifAccent>
       </div>
       <p style={{ marginTop: 10, fontSize: 13, color: 'rgba(14,12,8,0.60)', lineHeight: 1.65, maxWidth: 360 }}>
-        Konzept, Branding, Landing Page und eine klare Botschaft. (Und Gebet)
+        Kein Werbebudget. Nur Konzept, Branding, Landing Page und eine klare Botschaft.
       </p>
       <a href="/portfolio" style={{
         display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -528,6 +528,36 @@ function ServiceCard({ icon, kicker, title, desc, dark }) {
         {desc}
       </p>
     </div>
+  );
+}
+
+/* ─── CALENDLY ─── */
+function CalendlyWidget() {
+  useEffect(() => {
+    const existing = document.querySelector('script[src*="calendly"]');
+    if (!existing) {
+      const script = document.createElement('script');
+      script.src = 'https://assets.calendly.com/assets/external/widget.js';
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  }, []);
+
+  return (
+    <Reveal delay={200}>
+      <div style={{
+        marginTop: 48, borderRadius: 20,
+        border: '1px solid rgba(14,12,8,0.10)',
+        background: '#E0DDD4', overflow: 'hidden',
+        maxWidth: 720, margin: '48px auto 0',
+      }}>
+        <div
+          className="calendly-inline-widget"
+          data-url="https://calendly.com/hello-leonseitz/30min?hide_event_type_details=1&hide_gdpr_banner=1&primary_color=e8a800"
+          style={{ minWidth: 320, height: 700 }}
+        />
+      </div>
+    </Reveal>
   );
 }
 
@@ -846,21 +876,7 @@ export default function Home() {
         </Reveal>
 
         {/* Calendly */}
-        <Reveal delay={200}>
-          <div style={{
-            marginTop: 48, borderRadius: 20,
-            border: '1px solid rgba(14,12,8,0.10)',
-            background: '#E0DDD4', overflow: 'hidden',
-            maxWidth: 720, margin: '48px auto 0',
-          }}>
-            <div
-              className="calendly-inline-widget"
-              data-url="https://calendly.com/hello-leonseitz/30min?hide_event_type_details=1&hide_gdpr_banner=1&primary_color=e8a800"
-              style={{ minWidth: 320, height: 700 }}
-            />
-            <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async />
-          </div>
-        </Reveal>
+        <CalendlyWidget />
 
         {/* Alt contact */}
         <Reveal delay={280}>
