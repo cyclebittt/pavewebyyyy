@@ -790,7 +790,7 @@ export default function Home() {
 
         <Reveal delay={300}>
           <div style={{ marginTop: 44, display: 'flex', justifyContent: 'center' }}>
-            <BtnPrimary label="Instagram ansehen" href="https://www.instagram.com/leonseitz" target="_blank" />
+            <BtnPrimary label="Instagram ansehen" href="https://www.instagram.com/leonnseitz" target="_blank" />
           </div>
         </Reveal>
 
