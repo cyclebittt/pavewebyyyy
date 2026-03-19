@@ -441,7 +441,7 @@ function ProofCard() {
         In 2 Monaten — <SerifAccent col={B.ocker}>durch eine Fundraising-Kampagne.</SerifAccent>
       </div>
       <p style={{ marginTop: 10, fontSize: 13, color: 'rgba(14,12,8,0.60)', lineHeight: 1.65, maxWidth: 360 }}>
-        Kein Werbebudget. Nur Konzept, Branding, Landing Page und eine klare Botschaft.
+        Konzept, Branding, Landing Page und eine klare Botschaft. (Und Gebet)
       </p>
       <a href="/portfolio" style={{
         display: 'inline-flex', alignItems: 'center', gap: 6,
