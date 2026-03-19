@@ -114,40 +114,6 @@ function Underline({ children, active }) {
   );
 }
 
-/* ─── HAND-DRAWN ARROW SVG ─── */
-function HandArrow({ style = {} }) {
-  return (
-    <svg viewBox="0 0 180 120" fill="none" xmlns="http://www.w3.org/2000/svg"
-      style={{ width: 120, height: 80, ...style }}>
-      <path
-        d="M20 30 C40 10, 90 10, 110 40 C125 60, 120 80, 145 95"
-        stroke={B.yellow} strokeWidth="2.5" strokeLinecap="round" fill="none"
-        strokeDasharray="220" strokeDashoffset="0"
-      />
-      <path
-        d="M135 100 L145 95 L138 85"
-        stroke={B.yellow} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"
-      />
-    </svg>
-  );
-}
-
-function HandArrowLeft({ style = {} }) {
-  return (
-    <svg viewBox="0 0 180 120" fill="none" xmlns="http://www.w3.org/2000/svg"
-      style={{ width: 120, height: 80, transform: 'scaleX(-1)', ...style }}>
-      <path
-        d="M20 30 C40 10, 90 10, 110 40 C125 60, 120 80, 145 95"
-        stroke={B.yellow} strokeWidth="2.5" strokeLinecap="round" fill="none"
-      />
-      <path
-        d="M135 100 L145 95 L138 85"
-        stroke={B.yellow} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"
-      />
-    </svg>
-  );
-}
-
 /* ─── CUSTOM SVG ICONS ─── */
 const Icon = {
   Analyse: () => (
@@ -292,142 +258,155 @@ function Div({ from }) {
 }
 
 /* ──────────────────────────────────────────
-   WINDING ROAD ROADMAP
+   VERTICAL ROADMAP
 ────────────────────────────────────────── */
 function RoadMap() {
   const ref = useRef(null);
   const shown = useReveal(ref, 0.04);
 
-  const milestones = [
-    { x: 72,  y: 198, n: '0', label: 'Sprint 0', sub: 'Analyse + Entwurf', note: 'Kostenlos', above: false, left: true  },
-    { x: 278, y: 118, n: '1', label: 'Sprint 1', sub: 'Erste Version',      note: '30 % nach Review',    above: true,  left: false },
-    { x: 490, y: 198, n: '2', label: 'Sprint 2', sub: 'Feinschliff',        note: '50 % nach Freigabe',  above: false, left: true  },
-    { x: 706, y: 118, n: '3', label: 'Sprint 3', sub: 'Go-Live + Übergabe', note: '20 % nach Übergabe',  above: true,  left: false },
+  const steps = [
+    {
+      n: '0', label: 'Sprint 0', sub: 'Analyse + Entwurf',
+      note: 'Kostenlos — kein Commitment',
+      desc: 'Ich analysiere deine Website, benenne konkrete Schwachstellen und liefere einen ersten Seitenaufbau.',
+      highlight: true,
+    },
+    {
+      n: '1', label: 'Sprint 1', sub: 'Erste Version',
+      note: 'Zahlung nach Review',
+      desc: 'Du klickst durch die erste Version, gibst Feedback. 2 Revisionsrunden sind inklusive.',
+      highlight: false,
+    },
+    {
+      n: '2', label: 'Sprint 2', sub: 'Feinschliff',
+      note: 'Zahlung nach Freigabe',
+      desc: 'Alle Feedback-Punkte umgesetzt. SEO-Basis und Performance werden geprüft.',
+      highlight: false,
+    },
+    {
+      n: '3', label: 'Sprint 3', sub: 'Go-Live + Übergabe',
+      note: 'Zahlung nach Übergabe',
+      desc: 'Live-Schaltung, alle Dateien, Zugänge und vollständige Dokumentation.',
+      highlight: false,
+    },
   ];
 
   return (
-    <div ref={ref} style={{ width: '100%', marginTop: 52, overflowX: 'auto' }}>
-      <svg viewBox="0 0 780 340" xmlns="http://www.w3.org/2000/svg"
-        style={{ width: '100%', minWidth: 520, display: 'block' }}>
+    <div ref={ref} style={{ maxWidth: 560, margin: '52px auto 0', textAlign: 'left' }}>
 
-        {/* ── Road path (dark band) ── */}
-        <path
-          d="M 0 220 C 60 220, 100 140, 180 130 C 260 120, 300 180, 380 190 C 460 200, 500 130, 580 120 C 660 110, 700 170, 780 160"
-          fill="none" stroke={B.dark} strokeWidth="44" strokeLinecap="round"
-        />
-        {/* Road centre dashes */}
-        <path
-          d="M 0 220 C 60 220, 100 140, 180 130 C 260 120, 300 180, 380 190 C 460 200, 500 130, 580 120 C 660 110, 700 170, 780 160"
-          fill="none" stroke="rgba(232,168,0,0.20)" strokeWidth="2"
-          strokeDasharray="18 14" strokeLinecap="round"
-        />
-        {/* Road highlight (top edge) */}
-        <path
-          d="M 0 220 C 60 220, 100 140, 180 130 C 260 120, 300 180, 380 190 C 460 200, 500 130, 580 120 C 660 110, 700 170, 780 160"
-          fill="none" stroke="rgba(245,242,235,0.06)" strokeWidth="20"
-          strokeLinecap="round"
-          style={{ transform: 'translateY(-12px)' }}
-        />
+      {/* Start marker */}
+      <div style={{
+        opacity: shown ? 1 : 0,
+        transition: 'opacity .5s ease 100ms',
+        display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8,
+      }}>
+        <div style={{
+          width: 10, height: 10, borderRadius: '50%',
+          background: B.yellow,
+          boxShadow: '0 0 0 4px rgba(232,168,0,0.20)',
+        }} />
+        <span style={{
+          fontSize: 11, fontWeight: 700, letterSpacing: '0.08em',
+          textTransform: 'uppercase', color: 'rgba(245,242,235,0.35)',
+        }}>Start</span>
+      </div>
 
-        {/* ── Milestones ── */}
-        {milestones.map((m, i) => {
-          const isHighlight = i === 0;
-          const lineY1 = m.above ? m.y - 24 : m.y + 24;
-          const textY  = m.above ? m.y - 36 : m.y + 36;
-          const delay  = 300 + i * 180;
-
-          return (
-            <g key={i} style={{
-              opacity: shown ? 1 : 0,
-              transition: `opacity .55s ease ${delay}ms`,
+      {steps.map((s, i) => (
+        <div key={i} style={{
+          opacity: shown ? 1 : 0,
+          transform: shown ? 'none' : 'translateY(16px)',
+          transition: `opacity .55s ease ${150 + i * 120}ms, transform .55s ease ${150 + i * 120}ms`,
+          display: 'flex', gap: 0,
+        }}>
+          {/* Left: line + node */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 48, flexShrink: 0 }}>
+            {/* Connector line in */}
+            <div style={{
+              width: 1, height: i === 0 ? 0 : 24,
+              background: s.highlight
+                ? `linear-gradient(to bottom,rgba(232,168,0,0.25),${B.yellow})`
+                : 'rgba(245,242,235,0.10)',
+            }} />
+            {/* Node circle */}
+            <div style={{
+              width: s.highlight ? 48 : 40,
+              height: s.highlight ? 48 : 40,
+              borderRadius: '50%',
+              background: s.highlight ? B.yellow : 'rgba(245,242,235,0.06)',
+              border: s.highlight ? 'none' : '1px solid rgba(245,242,235,0.14)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontWeight: 900, fontSize: s.highlight ? 18 : 15,
+              color: s.highlight ? B.black : 'rgba(245,242,235,0.50)',
+              flexShrink: 0,
+              boxShadow: s.highlight ? '0 0 0 8px rgba(232,168,0,0.12)' : 'none',
             }}>
-              {/* Stem line */}
-              <line
-                x1={m.x} y1={lineY1}
-                x2={m.x} y2={m.above ? m.y - 60 : m.y + 60}
-                stroke={isHighlight ? B.yellow : 'rgba(245,242,235,0.25)'}
-                strokeWidth="1.5" strokeDasharray="4 3"
-              />
+              {s.n}
+            </div>
+            {/* Connector line out */}
+            {i < steps.length - 1 && (
+              <div style={{
+                width: 1, flex: 1, minHeight: 32,
+                background: 'rgba(245,242,235,0.08)',
+              }} />
+            )}
+          </div>
 
-              {/* Circle */}
-              <circle
-                cx={m.x} cy={m.y} r="22"
-                fill={isHighlight ? B.yellow : B.dark}
-                stroke={isHighlight ? B.yellow : 'rgba(245,242,235,0.20)'}
-                strokeWidth="2"
-                style={{ filter: isHighlight ? 'drop-shadow(0 0 12px rgba(232,168,0,0.50))' : 'none' }}
-              />
-              {/* Number in circle */}
-              <text x={m.x} y={m.y + 5} textAnchor="middle"
-                fill={isHighlight ? B.black : B.cream}
-                fontSize="13" fontWeight="900"
-                fontFamily="'Plus Jakarta Sans',system-ui,sans-serif">
-                {m.n}
-              </text>
+          {/* Right: content */}
+          <div style={{ paddingLeft: 20, paddingBottom: i < steps.length - 1 ? 36 : 0, paddingTop: 6 }}>
+            <div style={{
+              fontSize: 11, fontWeight: 700, letterSpacing: '0.07em',
+              textTransform: 'uppercase',
+              color: s.highlight ? B.yellow : 'rgba(245,242,235,0.30)',
+              marginBottom: 4,
+            }}>
+              {s.label}
+            </div>
+            <div style={{
+              fontSize: 18, fontWeight: 800,
+              color: B.cream, letterSpacing: '-0.01em', marginBottom: 6,
+            }}>
+              {s.sub}
+            </div>
+            <p style={{
+              fontSize: 13, color: 'rgba(245,242,235,0.50)',
+              lineHeight: 1.65, marginBottom: 10, maxWidth: 380,
+            }}>
+              {s.desc}
+            </p>
+            {/* Note badge */}
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              padding: '4px 12px', borderRadius: 100, fontSize: 12, fontWeight: 700,
+              background: s.highlight ? B.yellow : 'rgba(245,242,235,0.06)',
+              border: s.highlight ? 'none' : '1px solid rgba(245,242,235,0.10)',
+              color: s.highlight ? B.black : 'rgba(245,242,235,0.40)',
+            }}>
+              {s.highlight && <span style={{ fontSize: 10 }}>✓</span>}
+              {s.note}
+            </span>
+          </div>
+        </div>
+      ))}
 
-              {/* Label block */}
-              <text x={m.x} y={m.above ? m.y - 72 : m.y + 72}
-                textAnchor="middle"
-                fill={isHighlight ? B.yellow : 'rgba(245,242,235,0.55)'}
-                fontSize="9.5" fontWeight="700" letterSpacing="0.06em"
-                fontFamily="'Plus Jakarta Sans',system-ui,sans-serif"
-                style={{ textTransform: 'uppercase' }}>
-                {m.label}
-              </text>
-              <text x={m.x} y={m.above ? m.y - 57 : m.y + 87}
-                textAnchor="middle"
-                fill={B.cream}
-                fontSize="11.5" fontWeight="800"
-                fontFamily="'Plus Jakarta Sans',system-ui,sans-serif">
-                {m.sub}
-              </text>
-              {/* Payment badge */}
-              <rect
-                x={m.x - 44} y={m.above ? m.y - 50 : m.y + 100}
-                width="88" height="18" rx="9"
-                fill={isHighlight ? B.yellow : 'rgba(245,242,235,0.08)'}
-                stroke={isHighlight ? 'none' : 'rgba(245,242,235,0.12)'}
-                strokeWidth="1"
-              />
-              <text
-                x={m.x} y={m.above ? m.y - 37 : m.y + 113}
-                textAnchor="middle"
-                fill={isHighlight ? B.black : 'rgba(245,242,235,0.50)'}
-                fontSize="9" fontWeight="700"
-                fontFamily="'Plus Jakarta Sans',system-ui,sans-serif">
-                {m.note}
-              </text>
-            </g>
-          );
-        })}
-
-        {/* ── Payment bar at bottom ── */}
-        <g style={{ opacity: shown ? 1 : 0, transition: 'opacity .7s ease 1s' }}>
-          <text x="390" y="300" textAnchor="middle"
-            fill="rgba(245,242,235,0.28)" fontSize="9" fontWeight="700" letterSpacing="0.07em"
-            fontFamily="'Plus Jakarta Sans',system-ui,sans-serif">
-            ZAHLUNGSSTRUKTUR
-          </text>
-          {/* Bar */}
-          <rect x="100" y="310" width="582" height="6" rx="3" fill="rgba(245,242,235,0.06)" />
-          <rect x="100" y="310" width="174" height="6" rx="3" fill="rgba(232,168,0,0.45)" />
-          <rect x="277" y="310" width="290" height="6" fill="rgba(232,168,0,0.65)" />
-          <rect x="570" y="310" width="112" height="6" rx="3" fill={B.yellow} />
-          {/* Labels */}
-          {[
-            { x: 100, label: 'Kostenlos', col: B.yellow },
-            { x: 188, label: '30 %', col: 'rgba(245,242,235,0.45)' },
-            { x: 422, label: '50 %', col: 'rgba(245,242,235,0.45)' },
-            { x: 626, label: '20 %', col: 'rgba(245,242,235,0.45)' },
-          ].map((b, i) => (
-            <text key={i} x={b.x} y={325} textAnchor="middle"
-              fill={b.col} fontSize="8.5" fontWeight="700"
-              fontFamily="'Plus Jakarta Sans',system-ui,sans-serif">
-              {b.label}
-            </text>
-          ))}
-        </g>
-      </svg>
+      {/* End marker */}
+      <div style={{
+        opacity: shown ? 1 : 0,
+        transition: 'opacity .5s ease 700ms',
+        display: 'flex', alignItems: 'center', gap: 12,
+        marginTop: 8, paddingLeft: 14,
+      }}>
+        <div style={{
+          width: 20, height: 20, borderRadius: '50%',
+          border: `2px solid ${B.yellow}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: B.yellow }} />
+        </div>
+        <span style={{
+          fontSize: 12, fontWeight: 700, letterSpacing: '0.06em',
+          textTransform: 'uppercase', color: B.yellow,
+        }}>Deine Website ist live.</span>
+      </div>
     </div>
   );
 }
@@ -742,56 +721,7 @@ export default function Home() {
           </p>
         </Reveal>
 
-        {/* Hand arrow pointing to roadmap */}
-        <div style={{ position: 'relative', marginTop: 8 }}>
-          <HandArrow style={{ position: 'absolute', right: '8%', top: 10, opacity: 0.7 }} />
-        </div>
-
         <RoadMap />
-
-        {/* Process steps below road */}
-        <Reveal delay={200}>
-          <div style={{
-            marginTop: 48, display: 'flex', justifyContent: 'center',
-            gap: 0, flexWrap: 'wrap',
-          }}>
-            {[
-              { icon: <Icon.Anfrage />, label: 'Anfrage' },
-              { icon: <Icon.Analyse />, label: 'Analyse' },
-              { icon: <Icon.Entwurf />, label: 'Entwurf' },
-              { icon: <Icon.Review />, label: 'Review' },
-              { icon: <Icon.Launch />, label: 'Go-Live' },
-            ].map((s, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '0 8px' }}>
-                  <div style={{
-                    width: 48, height: 48, borderRadius: 13,
-                    background: i === 0 ? B.yellow : 'rgba(245,242,235,0.06)',
-                    border: i === 0 ? 'none' : '1px solid rgba(245,242,235,0.12)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: i === 0 ? B.black : 'rgba(245,242,235,0.55)',
-                    boxShadow: i === 0 ? '0 0 22px rgba(232,168,0,0.30)' : 'none',
-                  }}>
-                    {s.icon}
-                  </div>
-                  <span style={{
-                    fontSize: 10, fontWeight: 700, letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    color: i === 0 ? B.yellow : 'rgba(245,242,235,0.35)',
-                  }}>
-                    {s.label}
-                  </span>
-                </div>
-                {i < 4 && (
-                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-                    <div style={{ width: 24, height: 1, background: 'linear-gradient(to right,rgba(232,168,0,0.35),rgba(232,168,0,0.10))' }} />
-                    <ArrowRight size={11} style={{ color: 'rgba(232,168,0,0.25)', marginLeft: -2 }} />
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </Reveal>
 
         <Reveal delay={100}>
           <div style={{ marginTop: 52, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -895,14 +825,6 @@ export default function Home() {
       <Sec id="request" dark={false} pad="96px 24px 80px">
         {/* Tagesstreifen */}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: B.yellow }} />
-
-        {/* Decorative hand arrow */}
-        <div style={{ position: 'relative' }}>
-          <HandArrowLeft style={{
-            position: 'absolute', left: '5%', top: 60,
-            opacity: 0.5, transform: 'rotate(-20deg)',
-          }} />
-        </div>
 
         <Reveal><Tag light>Einstieg</Tag></Reveal>
         <Reveal delay={80}>
