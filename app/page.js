@@ -1,13 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import {
+  ArrowDown,
   ArrowRight,
   CheckCircle2,
   Play,
-  Wand2,
   Monitor,
   Film,
   BookOpen,
@@ -18,79 +17,49 @@ import {
   FileText,
   AlertCircle,
   Clock,
-  MapPin,
+  TrendingUp,
+  Calendar,
 } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /* ─────────────────────────────────────────────
-   BRAND TOKENS  (Brandbook v1)
+   BRAND TOKENS
 ───────────────────────────────────────────── */
 const B = {
-  yellow:    '#E8A800',
-  ocker:     '#C68F00',
-  black:     '#0E0C08',
-  cream:     '#F5F2EB',
-  dark:      '#2A2720',
-  cream60:   'rgba(245,242,235,0.60)',
-  cream45:   'rgba(245,242,235,0.45)',
-  cream30:   'rgba(245,242,235,0.30)',
-  yellow15:  'rgba(232,168,0,0.15)',
-  yellow08:  'rgba(232,168,0,0.08)',
-  yellow25:  'rgba(232,168,0,0.25)',
+  yellow:  '#E8A800',
+  ocker:   '#C68F00',
+  black:   '#0E0C08',
+  cream:   '#F5F2EB',
+  dark:    '#2A2720',
 };
 
-/* ─────────────────────────────────────────────
-   SECTIONS
-───────────────────────────────────────────── */
-const SECTIONS = [
-  { id: 's1', label: 'Start' },
-  { id: 's2', label: 'Problem' },
-  { id: 's3', label: 'Angebot' },
-  { id: 's4', label: 'Proof' },
-  { id: 's5', label: 'Leistungen' },
-  { id: 'request', label: 'Ablauf & Anfrage' },
-];
-
-/* ─────────────────────────────────────────────
-   BACKGROUND — warm amber glow, shifts per section
-───────────────────────────────────────────── */
-const SCENES = {
-  s1:      { gx: '18%', gy: '22%', intensity: 0.22 },
-  s2:      { gx: '80%', gy: '15%', intensity: 0.12 },
-  s3:      { gx: '22%', gy: '18%', intensity: 0.20 },
-  s4:      { gx: '75%', gy: '25%', intensity: 0.16 },
-  s5:      { gx: '20%', gy: '12%', intensity: 0.24 },
-  request: { gx: '15%', gy: '5%',  intensity: 0.18 },
+// Section theme: alternates between dark and light
+const THEMES = {
+  dark: {
+    bg:      B.black,
+    text:    B.cream,
+    muted:   'rgba(245,242,235,0.55)',
+    faint:   'rgba(245,242,235,0.30)',
+    card:    B.dark,
+    cardBorder: 'rgba(232,168,0,0.12)',
+    tag:     { bg: B.yellow, color: B.black },
+  },
+  light: {
+    bg:      B.cream,
+    text:    B.black,
+    muted:   'rgba(14,12,8,0.60)',
+    faint:   'rgba(14,12,8,0.35)',
+    card:    '#E8E5DC',
+    cardBorder: 'rgba(14,12,8,0.10)',
+    tag:     { bg: B.black, color: B.cream },
+  },
 };
 
-/* ─────────────────────────────────────────────
-   UTIL
-───────────────────────────────────────────── */
-function cx(...xs) { return xs.filter(Boolean).join(' '); }
+const SECTION_THEMES = ['dark', 'light', 'dark', 'light', 'dark', 'light'];
 
 /* ─────────────────────────────────────────────
    HOOKS
 ───────────────────────────────────────────── */
-function useActiveSection(ids) {
-  const [activeId, setActiveId] = useState(ids[0]);
-  useEffect(() => {
-    const els = ids.map(id => document.getElementById(id)).filter(Boolean);
-    if (!els.length) return;
-    const obs = new IntersectionObserver(
-      entries => {
-        const best = entries
-          .filter(e => e.isIntersecting)
-          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0))[0];
-        if (best?.target?.id) setActiveId(best.target.id);
-      },
-      { rootMargin: '-35% 0px -55% 0px', threshold: [0.12, 0.25, 0.4, 0.55, 0.7] }
-    );
-    els.forEach(el => obs.observe(el));
-    return () => obs.disconnect();
-  }, [ids]);
-  return activeId;
-}
-
 function useReveal(ref) {
   const [shown, setShown] = useState(false);
   useEffect(() => {
@@ -98,7 +67,7 @@ function useReveal(ref) {
     if (!el) return;
     const obs = new IntersectionObserver(
       entries => { if (entries.some(e => e.isIntersecting)) setShown(true); },
-      { threshold: 0.12 }
+      { threshold: 0.10 }
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -120,21 +89,7 @@ function useScrollProgress() {
   return p;
 }
 
-function useMousePos() {
-  const [pos, setPos] = useState({ x: -9999, y: -9999 });
-  const raf = useRef(null);
-  useEffect(() => {
-    const fn = e => {
-      if (raf.current) cancelAnimationFrame(raf.current);
-      raf.current = requestAnimationFrame(() => setPos({ x: e.clientX, y: e.clientY }));
-    };
-    window.addEventListener('mousemove', fn, { passive: true });
-    return () => { window.removeEventListener('mousemove', fn); if (raf.current) cancelAnimationFrame(raf.current); };
-  }, []);
-  return pos;
-}
-
-function useCountUp({ target, durationMs = 900 }) {
+function useCountUp({ target, durationMs = 1000 }) {
   const [value, setValue] = useState(0);
   const raf = useRef(null);
   const start = useCallback(() => {
@@ -152,48 +107,29 @@ function useCountUp({ target, durationMs = 900 }) {
 }
 
 /* ─────────────────────────────────────────────
-   BRANDBOOK COMPONENTS
+   BRAND COMPONENTS
 ───────────────────────────────────────────── */
 
-/**
- * SerifAccent — DM Serif Display italic for the semantic-weight word
- * Brandbook rule: exactly one word per headline, never decorative
- */
-function SerifAccent({ children }) {
+function SerifAccent({ children, color }) {
   return (
-    <em style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontStyle: 'italic', fontWeight: 400, color: B.cream }}>
+    <em style={{
+      fontFamily: "'DM Serif Display', Georgia, serif",
+      fontStyle: 'italic',
+      fontWeight: 400,
+      color: color || 'inherit',
+    }}>
       {children}
     </em>
   );
 }
 
-/**
- * YellowAccent — inline span in brand yellow, for single word emphasis in body
- */
-function YellowWord({ children }) {
-  return <span style={{ color: B.yellow }}>{children}</span>;
-}
-
-/**
- * UnderlineAnnotation — SVG yellow 2px line drawn on scroll (Brandbook: gelbe Annotation)
- * Wraps a word or short phrase in the headline.
- */
-function UnderlineAnnotation({ children }) {
-  const ref = useRef(null);
-  const shown = useReveal(ref);
+function UnderlineAnnotation({ children, shown }) {
   return (
-    <span ref={ref} style={{ position: 'relative', display: 'inline-block' }}>
+    <span style={{ position: 'relative', display: 'inline-block' }}>
       {children}
       <svg
         aria-hidden="true"
-        style={{
-          position: 'absolute',
-          left: 0,
-          bottom: '-4px',
-          width: '100%',
-          height: '6px',
-          overflow: 'visible',
-        }}
+        style={{ position: 'absolute', left: 0, bottom: '-3px', width: '100%', height: '6px', overflow: 'visible' }}
       >
         <line
           x1="0" y1="4" x2="100%" y2="4"
@@ -202,171 +138,10 @@ function UnderlineAnnotation({ children }) {
           strokeLinecap="round"
           strokeDasharray="100%"
           strokeDashoffset={shown ? '0' : '100%'}
-          style={{ transition: shown ? 'stroke-dashoffset 0.55s cubic-bezier(0.4,0,0.2,1) 0.1s' : 'none' }}
+          style={{ transition: shown ? 'stroke-dashoffset 0.6s cubic-bezier(0.4,0,0.2,1) 0.2s' : 'none' }}
         />
       </svg>
     </span>
-  );
-}
-
-/**
- * Tag — Brandbook pill: yellow bg / black text, or yellow border / yellow text
- */
-function Tag({ children, variant = 'solid' }) {
-  const solid = variant === 'solid';
-  return (
-    <span style={{
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '6px',
-      padding: '3px 10px',
-      borderRadius: '100px',
-      fontSize: '11px',
-      fontWeight: 700,
-      letterSpacing: '0.06em',
-      textTransform: 'uppercase',
-      background: solid ? B.yellow : 'transparent',
-      color: solid ? B.black : B.yellow,
-      border: solid ? 'none' : `1px solid ${B.yellow}`,
-      fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
-    }}>
-      {children}
-    </span>
-  );
-}
-
-/* ─────────────────────────────────────────────
-   LAYOUT & CHROME
-───────────────────────────────────────────── */
-
-function GlobalBackground({ activeId }) {
-  const scene = SCENES[activeId] ?? SCENES.s1;
-  return (
-    <div className="fixed inset-0 -z-10" style={{ backgroundColor: B.black }}>
-      {/* Warm amber glow — shifts position on section change */}
-      <div
-        className="absolute inset-0 transition-all duration-[1400ms] ease-out"
-        style={{
-          background: `radial-gradient(900px 700px at ${scene.gx} ${scene.gy}, rgba(232,168,0,${scene.intensity}), transparent 65%)`,
-        }}
-      />
-      {/* Secondary subtle glow opposite corner */}
-      <div
-        className="absolute inset-0 transition-all duration-[1600ms] ease-out"
-        style={{
-          background: `radial-gradient(600px 500px at ${scene.gx === '18%' ? '82%' : '20%'} ${scene.gy === '22%' ? '75%' : '80%'}, rgba(198,143,0,0.06), transparent 60%)`,
-        }}
-      />
-      {/* Grain */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.14] mix-blend-overlay"
-        style={{
-          backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27320%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.8%27 numOctaves=%273%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27320%27 height=%27320%27 filter=%27url(%23n)%27 opacity=%270.35%27/%3E%3C/svg%3E")',
-          backgroundSize: '220px 220px',
-          animation: 'noiseMove 7s linear infinite',
-        }}
-      />
-      {/* Radial vignette */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_35%,transparent_0%,rgba(14,12,8,0.45)_65%,rgba(14,12,8,0.80)_100%)]" />
-    </div>
-  );
-}
-
-/** Tagesstreifen: always-visible 3px yellow bar + scroll progress */
-function ScrollProgressBar() {
-  const p = useScrollProgress();
-  return (
-    <div className="fixed top-0 left-0 right-0 z-[60] pointer-events-none">
-      <div style={{ height: '3px', background: `rgba(232,168,0,0.18)` }}>
-        <div
-          style={{
-            height: '100%',
-            width: `${Math.round(p * 100)}%`,
-            background: B.yellow,
-            transition: 'width 80ms linear',
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
-function CursorHalo() {
-  const { x, y } = useMousePos();
-  return (
-    <div className="hidden md:block fixed inset-0 z-[6] pointer-events-none">
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(600px 450px at ${x}px ${y}px, rgba(232,168,0,0.04), transparent 70%)`,
-          filter: 'blur(16px)',
-          mixBlendMode: 'screen',
-          transition: 'background 80ms linear',
-        }}
-      />
-    </div>
-  );
-}
-
-function Magnetic({ children, strength = 12 }) {
-  const ref = useRef(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const onMove = e => {
-      const r = el.getBoundingClientRect();
-      el.style.transform = `translate3d(${((e.clientX - r.left - r.width / 2) / r.width) * strength}px,${((e.clientY - r.top - r.height / 2) / r.height) * strength}px,0)`;
-    };
-    const onLeave = () => { el.style.transform = 'translate3d(0,0,0)'; };
-    el.addEventListener('mousemove', onMove);
-    el.addEventListener('mouseleave', onLeave);
-    return () => { el.removeEventListener('mousemove', onMove); el.removeEventListener('mouseleave', onLeave); };
-  }, [strength]);
-  return <span ref={ref} className="inline-flex transition-transform duration-200 ease-out will-change-transform">{children}</span>;
-}
-
-function TiltCard({ children, className = '' }) {
-  const ref = useRef(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const onMove = e => {
-      const r = el.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width;
-      const py = (e.clientY - r.top) / r.height;
-      el.style.setProperty('--rx', `${(0.5 - py) * 8}deg`);
-      el.style.setProperty('--ry', `${(px - 0.5) * 10}deg`);
-      el.style.setProperty('--hx', `${px * 100}%`);
-      el.style.setProperty('--hy', `${py * 100}%`);
-    };
-    const onLeave = () => {
-      el.style.setProperty('--rx', '0deg');
-      el.style.setProperty('--ry', '0deg');
-    };
-    el.addEventListener('mousemove', onMove);
-    el.addEventListener('mouseleave', onLeave);
-    return () => { el.removeEventListener('mousemove', onMove); el.removeEventListener('mouseleave', onLeave); };
-  }, []);
-  return (
-    <div
-      ref={ref}
-      className={cx('relative will-change-transform [transform-style:preserve-3d]', className)}
-      style={{ transform: 'perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))', transition: 'transform 180ms ease-out' }}
-    >
-      <div
-        className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 md:opacity-100"
-        style={{ background: 'radial-gradient(440px 300px at var(--hx,50%) var(--hy,30%),rgba(232,168,0,0.06),transparent 60%)', mixBlendMode: 'screen' }}
-      />
-      {children}
-    </div>
-  );
-}
-
-function Scene({ id, children }) {
-  return (
-    <section id={id} className="relative min-h-screen flex items-center px-5 md:px-16 py-16 md:snap-start scroll-mt-24">
-      <div className="relative max-w-6xl mx-auto w-full">{children}</div>
-    </section>
   );
 }
 
@@ -376,11 +151,10 @@ function Reveal({ children, delayMs = 0 }) {
   return (
     <div
       ref={ref}
-      className="transition-all duration-700 will-change-transform"
       style={{
         opacity: shown ? 1 : 0,
-        transform: shown ? 'translateY(0)' : 'translateY(20px)',
-        transitionDelay: `${delayMs}ms`,
+        transform: shown ? 'translateY(0)' : 'translateY(18px)',
+        transition: `opacity 0.65s ease ${delayMs}ms, transform 0.65s ease ${delayMs}ms`,
       }}
     >
       {children}
@@ -388,154 +162,358 @@ function Reveal({ children, delayMs = 0 }) {
   );
 }
 
-/* ─── CTAs ─── */
-
-/** Primary CTA — solid yellow, black text (Brandbook: gelber Button) */
-function PrimaryCTA({ label = 'Kostenlose Analyse anfragen', href = '/#request' }) {
+/* ─────────────────────────────────────────────
+   SCROLL PROGRESS
+───────────────────────────────────────────── */
+function ScrollBar() {
+  const p = useScrollProgress();
   return (
-    <Magnetic>
-      <Link
-        href={href}
-        className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-bold transition-colors"
-        style={{
-          background: B.yellow,
-          color: B.black,
-          fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
-        }}
-        onMouseEnter={e => e.currentTarget.style.background = B.ocker}
-        onMouseLeave={e => e.currentTarget.style.background = B.yellow}
-      >
-        {label}
-        <ArrowRight size={17} className="transition-transform group-hover:translate-x-0.5" />
-      </Link>
-    </Magnetic>
-  );
-}
-
-/** Ghost CTA — yellow border, cream text */
-function GhostCTA({ href, children, external = false }) {
-  const cls = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '11px 22px',
-    borderRadius: '100px',
-    border: `1px solid rgba(232,168,0,0.28)`,
-    background: 'rgba(232,168,0,0.05)',
-    color: B.cream,
-    fontWeight: 600,
-    fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
-    transition: 'border-color 0.18s, background 0.18s',
-    fontSize: '14px',
-  };
-  const hover = e => { e.currentTarget.style.borderColor = 'rgba(232,168,0,0.55)'; e.currentTarget.style.background = 'rgba(232,168,0,0.10)'; };
-  const leave = e => { e.currentTarget.style.borderColor = 'rgba(232,168,0,0.28)'; e.currentTarget.style.background = 'rgba(232,168,0,0.05)'; };
-
-  if (external) return (
-    <Magnetic strength={10}>
-      <a href={href} target="_blank" rel="noopener noreferrer" style={cls} onMouseEnter={hover} onMouseLeave={leave}>{children}</a>
-    </Magnetic>
-  );
-  return (
-    <Magnetic strength={10}>
-      <Link href={href} style={cls} onMouseEnter={hover} onMouseLeave={leave}>{children}</Link>
-    </Magnetic>
+    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 60, pointerEvents: 'none' }}>
+      <div style={{ height: '3px', background: 'rgba(232,168,0,0.15)' }}>
+        <div style={{ height: '100%', width: `${Math.round(p * 100)}%`, background: B.yellow, transition: 'width 80ms linear' }} />
+      </div>
+    </div>
   );
 }
 
 /* ─────────────────────────────────────────────
-   SECTION COMPONENTS
+   SECTION DIVIDER — animated arrow guides visitor down
 ───────────────────────────────────────────── */
-
-function ProofStat({ label, target, suffix = '', durationMs = 900 }) {
-  const ref = useRef(null);
-  const shown = useReveal(ref);
-  const { value, start } = useCountUp({ target, durationMs });
-  useEffect(() => { if (shown) start(); }, [shown, start]);
+function SectionArrow({ fromTheme }) {
+  // Arrow sits at the boundary, color adapts to next section
+  const arrowColor = fromTheme === 'dark' ? B.cream : B.black;
   return (
-    <TiltCard className="rounded-2xl">
-      <div
-        ref={ref}
-        className="relative overflow-hidden rounded-2xl p-6 md:p-8"
-        style={{ border: `1px solid rgba(232,168,0,0.15)`, background: B.dark }}
-      >
-        <div
-          className="pointer-events-none absolute -left-32 -top-10 h-[140%] w-56 rotate-12"
-          style={{ background: B.yellow, filter: 'blur(48px)', opacity: 0.05, animation: 'shineSoft 5.6s cubic-bezier(.2,.9,.2,1) infinite' }}
-        />
-        <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: B.yellow, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
-          Proof
-        </div>
-        <div className="mt-3 flex items-end gap-2 flex-wrap">
-          <span style={{ fontSize: 'clamp(2.5rem,6vw,3.5rem)', fontWeight: 800, lineHeight: 1, color: B.cream, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
-            {value}
-          </span>
-          {suffix && (
-            <span style={{ fontSize: '1.25rem', fontWeight: 600, color: B.yellow, paddingBottom: '2px', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
-              {suffix}
-            </span>
-          )}
-        </div>
-        <div style={{ marginTop: '6px', fontSize: '14px', color: B.cream60, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
-          {label}
-        </div>
-      </div>
-    </TiltCard>
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: '24px 0',
+      background: fromTheme === 'dark' ? B.black : B.cream,
+    }}>
+      <div style={{
+        width: '2px',
+        height: '40px',
+        background: `linear-gradient(to bottom, ${arrowColor}00, ${arrowColor}60)`,
+        marginBottom: '-2px',
+      }} />
+    </div>
   );
 }
 
-function BigService({ icon, kicker, title, accentWord, desc }) {
+/* ─────────────────────────────────────────────
+   SECTION WRAPPER
+───────────────────────────────────────────── */
+function Section({ id, themeKey, children, fullHeight = true }) {
+  const t = THEMES[themeKey];
+  return (
+    <section
+      id={id}
+      style={{
+        background: t.bg,
+        color: t.text,
+        minHeight: fullHeight ? '100vh' : 'auto',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '96px 20px',
+        scrollMarginTop: '0px',
+      }}
+    >
+      <div style={{ maxWidth: '1024px', margin: '0 auto', width: '100%' }}>
+        {children}
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   CTA COMPONENTS
+───────────────────────────────────────────── */
+function PrimaryCTA({ label, href = '/#request', size = 'md' }) {
+  const [hov, setHov] = useState(false);
+  const pad = size === 'lg' ? '18px 36px' : '13px 28px';
+  const fs  = size === 'lg' ? '16px' : '14px';
+  return (
+    <a
+      href={href}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '8px',
+        padding: pad,
+        borderRadius: '100px',
+        background: hov ? B.ocker : B.yellow,
+        color: B.black,
+        fontWeight: 800,
+        fontSize: fs,
+        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+        textDecoration: 'none',
+        transition: 'background 0.18s',
+        letterSpacing: '-0.01em',
+      }}
+    >
+      {label}
+      <ArrowRight size={fs === '16px' ? 18 : 16} />
+    </a>
+  );
+}
+
+function GhostCTA({ label, href, dark = true }) {
+  const [hov, setHov] = useState(false);
+  const border = dark ? 'rgba(245,242,235,0.25)' : 'rgba(14,12,8,0.20)';
+  const borderH = dark ? 'rgba(245,242,235,0.50)' : 'rgba(14,12,8,0.45)';
+  const color = dark ? B.cream : B.black;
+  return (
+    <a
+      href={href}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '8px',
+        padding: '13px 24px',
+        borderRadius: '100px',
+        border: `1px solid ${hov ? borderH : border}`,
+        color,
+        fontWeight: 600,
+        fontSize: '14px',
+        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+        textDecoration: 'none',
+        transition: 'border-color 0.18s',
+      }}
+    >
+      {label}
+    </a>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   TAG
+───────────────────────────────────────────── */
+function Tag({ children, theme }) {
+  const t = THEMES[theme] ?? THEMES.dark;
+  return (
+    <span style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '5px',
+      padding: '3px 10px',
+      borderRadius: '100px',
+      fontSize: '11px',
+      fontWeight: 700,
+      letterSpacing: '0.07em',
+      textTransform: 'uppercase',
+      background: t.tag.bg,
+      color: t.tag.color,
+      fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+    }}>
+      {children}
+    </span>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   STAT COUNTER
+───────────────────────────────────────────── */
+function StatCounter({ prefix = '', target, suffix = '', label, theme }) {
+  const t = THEMES[theme];
+  const ref = useRef(null);
+  const shown = useReveal(ref);
+  const { value, start } = useCountUp({ target, durationMs: 1200 });
+  useEffect(() => { if (shown) start(); }, [shown, start]);
+
+  return (
+    <div ref={ref} style={{ textAlign: 'center' }}>
+      <div style={{
+        fontSize: 'clamp(2.8rem,7vw,5rem)',
+        fontWeight: 800,
+        lineHeight: 1,
+        color: B.yellow,
+        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+        letterSpacing: '-0.03em',
+      }}>
+        {prefix}{value.toLocaleString('de-DE')}{suffix}
+      </div>
+      <div style={{ marginTop: '8px', fontSize: '14px', color: t.muted, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+        {label}
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   PROOF CARD — 21k highlight
+───────────────────────────────────────────── */
+function BigProofCard({ theme }) {
+  const t = THEMES[theme];
+  const ref = useRef(null);
+  const shown = useReveal(ref);
+  const { value, start } = useCountUp({ target: 21000, durationMs: 1400 });
+  useEffect(() => { if (shown) start(); }, [shown, start]);
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        borderRadius: '20px',
+        border: `1px solid rgba(232,168,0,0.28)`,
+        background: theme === 'dark' ? B.dark : '#E0DDD4',
+        padding: '32px',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Yellow accent strip top */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: B.yellow }} />
+
+      <div style={{ marginBottom: '12px' }}>
+        <Tag theme={theme}>Echtes Ergebnis</Tag>
+      </div>
+
+      <div style={{
+        fontSize: 'clamp(2.5rem,6vw,4rem)',
+        fontWeight: 800,
+        color: B.yellow,
+        lineHeight: 1,
+        letterSpacing: '-0.03em',
+        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+      }}>
+        {value >= 1000 ? `${Math.floor(value / 1000)}.${String(value % 1000).padStart(3, '0')}` : value} €
+      </div>
+
+      <div style={{ marginTop: '10px', fontSize: '15px', fontWeight: 700, color: t.text, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+        In 2 Monaten eingenommen —
+        {' '}<SerifAccent color={t.text}>durch eine Fundraising-Kampagne.</SerifAccent>
+      </div>
+
+      <p style={{ marginTop: '12px', fontSize: '13px', color: t.muted, lineHeight: 1.65, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", maxWidth: '420px' }}>
+        Konzept, Branding, Landing Page und Kommunikation. Kein Budget für Werbung.
+        Allein durch Struktur und eine klare Botschaft.
+      </p>
+
+      <div style={{ marginTop: '20px' }}>
+        <a
+          href="/portfolio"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            fontSize: '13px',
+            fontWeight: 700,
+            color: B.yellow,
+            textDecoration: 'none',
+            fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+          }}
+        >
+          Mehr zum Projekt <ArrowRight size={14} />
+        </a>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   SERVICE ROW
+───────────────────────────────────────────── */
+function ServiceRow({ icon, kicker, title, desc, theme }) {
+  const t = THEMES[theme];
   return (
     <Reveal>
-      <TiltCard className="rounded-2xl">
-        <div
-          className="rounded-2xl p-6 md:p-8 overflow-hidden relative"
-          style={{ border: `1px solid rgba(232,168,0,0.12)`, background: B.dark }}
-        >
-          <div
-            className="pointer-events-none absolute -left-32 -top-10 h-[140%] w-56 rotate-12"
-            style={{ background: B.yellow, filter: 'blur(52px)', opacity: 0.04, animation: 'shineSoft 6.2s cubic-bezier(.2,.9,.2,1) infinite' }}
-          />
-          <div className="flex items-center justify-between gap-4">
-            <div className="inline-flex items-center gap-2" style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: B.cream45, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
-              <span
-                className="w-9 h-9 rounded-xl flex items-center justify-center"
-                style={{ background: B.yellow15, border: `1px solid rgba(232,168,0,0.20)`, color: B.yellow }}
-              >
-                {icon}
-              </span>
-              {kicker}
-            </div>
-            <Wand2 size={16} style={{ color: 'rgba(232,168,0,0.35)' }} />
+      <div style={{
+        display: 'flex',
+        gap: '20px',
+        alignItems: 'flex-start',
+        padding: '24px 0',
+        borderBottom: `1px solid ${t.cardBorder}`,
+      }}>
+        <div style={{
+          width: '40px',
+          height: '40px',
+          borderRadius: '10px',
+          background: 'rgba(232,168,0,0.12)',
+          border: '1px solid rgba(232,168,0,0.20)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: B.yellow,
+          flexShrink: 0,
+          marginTop: '2px',
+        }}>
+          {icon}
+        </div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', color: B.yellow, marginBottom: '6px', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+            {kicker}
           </div>
-          <div
-            className="mt-5"
-            style={{ fontSize: 'clamp(1.25rem,3vw,2rem)', fontWeight: 800, lineHeight: 1.15, color: B.cream, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}
-          >
-            {title.replace(accentWord, '')}
-            <SerifAccent>{accentWord}</SerifAccent>
-            {title.endsWith(accentWord) ? '' : title.slice(title.indexOf(accentWord) + accentWord.length)}
+          <div style={{ fontSize: '18px', fontWeight: 800, color: t.text, marginBottom: '8px', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", letterSpacing: '-0.01em' }}>
+            {title}
           </div>
-          <p
-            className="mt-4 leading-relaxed max-w-2xl"
-            style={{ fontSize: '14px', color: B.cream60, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}
-          >
+          <p style={{ fontSize: '14px', color: t.muted, lineHeight: 1.65, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", maxWidth: '600px' }}>
             {desc}
           </p>
-          <div className="mt-6">
-            <Link
-              href="/#request"
-              className="inline-flex items-center gap-2 font-semibold transition-colors"
-              style={{ color: 'rgba(232,168,0,0.75)', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", fontSize: '14px' }}
-              onMouseEnter={e => e.currentTarget.style.color = B.yellow}
-              onMouseLeave={e => e.currentTarget.style.color = 'rgba(232,168,0,0.75)'}
-            >
-              Anfrage schicken <ArrowRight size={15} />
-            </Link>
-          </div>
         </div>
-      </TiltCard>
+        <a href="/#request" style={{ color: B.yellow, flexShrink: 0, marginTop: '4px', opacity: 0.7 }}>
+          <ArrowRight size={18} />
+        </a>
+      </div>
     </Reveal>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   SPRINT STEP
+───────────────────────────────────────────── */
+function SprintStep({ n, title, desc, note, highlight, theme }) {
+  const t = THEMES[theme];
+  return (
+    <div style={{
+      display: 'flex',
+      gap: '16px',
+      alignItems: 'flex-start',
+      padding: '20px 0',
+      borderBottom: `1px solid ${t.cardBorder}`,
+    }}>
+      <div style={{
+        width: '36px',
+        height: '36px',
+        borderRadius: '10px',
+        background: highlight ? B.yellow : 'transparent',
+        border: highlight ? 'none' : `1px solid ${t.cardBorder}`,
+        color: highlight ? B.black : t.muted,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontWeight: 800,
+        fontSize: '13px',
+        flexShrink: 0,
+        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+        boxShadow: highlight ? '0 0 16px rgba(232,168,0,0.25)' : 'none',
+      }}>
+        {n}
+      </div>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontSize: '15px', fontWeight: 700, color: t.text, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+          {title}
+        </div>
+        <p style={{ marginTop: '4px', fontSize: '13px', color: t.muted, lineHeight: 1.6, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+          {desc}
+        </p>
+      </div>
+      <div style={{
+        fontSize: '11px',
+        fontWeight: 700,
+        color: highlight ? B.yellow : t.faint,
+        flexShrink: 0,
+        marginTop: '2px',
+        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+        textAlign: 'right',
+        minWidth: '90px',
+      }}>
+        {note}
+      </div>
+    </div>
   );
 }
 
@@ -543,602 +521,599 @@ function BigService({ icon, kicker, title, accentWord, desc }) {
    PAGE
 ───────────────────────────────────────────── */
 export default function Home() {
-  const sectionIds = useMemo(() => SECTIONS.map(s => s.id), []);
-  const activeId = useActiveSection(sectionIds);
-
-  useEffect(() => {
-    const handle = () => {
-      const hash = window.location.hash;
-      if (!hash) return;
-      const el = document.querySelector(hash);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    };
-    handle();
-    window.addEventListener('hashchange', handle);
-    return () => window.removeEventListener('hashchange', handle);
-  }, []);
+  const heroRef = useRef(null);
+  const heroShown = useReveal(heroRef);
 
   return (
-    <div style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", color: B.cream }}>
+    <div style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Serif+Display:ital@1&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=DM+Serif+Display:ital@1&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
         ${globalKeyframes}
       `}</style>
 
-      <GlobalBackground activeId={activeId} />
-      <ScrollProgressBar />
-      <CursorHalo />
-      <Navbar />
+      <ScrollBar />
 
-      <main className="md:snap-y md:snap-mandatory">
+      {/* Minimal logo-only header */}
+      <div style={{
+        position: 'fixed',
+        top: '3px',
+        left: 0,
+        right: 0,
+        zIndex: 50,
+        padding: '16px 32px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        pointerEvents: 'none',
+      }}>
+        <span style={{
+          fontSize: '15px',
+          fontWeight: 800,
+          color: B.cream,
+          letterSpacing: '-0.01em',
+          mixBlendMode: 'difference',
+          pointerEvents: 'auto',
+        }}>
+          Leon Seitz
+        </span>
+        <a
+          href="/#request"
+          style={{
+            fontSize: '13px',
+            fontWeight: 700,
+            color: B.yellow,
+            textDecoration: 'none',
+            pointerEvents: 'auto',
+            padding: '8px 18px',
+            borderRadius: '100px',
+            border: `1px solid rgba(232,168,0,0.30)`,
+            background: 'rgba(14,12,8,0.60)',
+            backdropFilter: 'blur(8px)',
+          }}
+        >
+          Termin buchen
+        </a>
+      </div>
 
-        {/* ── 01 HERO ── */}
-        <Scene id="s1">
-          <div className="flex flex-col items-center text-center gap-6">
+      {/* ── S1: HERO — dark ── */}
+      <Section id="s1" themeKey="dark">
+        <div style={{ maxWidth: '760px' }}>
+          <Reveal>
+            <div ref={heroRef} style={{
+              fontSize: 'clamp(2.4rem,6.5vw,4.8rem)',
+              fontWeight: 800,
+              lineHeight: 1.05,
+              letterSpacing: '-0.02em',
+              color: B.cream,
+            }}>
+              Mehr Anfragen durch eine Website, die{' '}
+              <UnderlineAnnotation shown={heroShown}>klar ist</UnderlineAnnotation>
+              {' '}– nicht nur{' '}
+              <SerifAccent color={B.cream}>schön.</SerifAccent>
+            </div>
+          </Reveal>
 
+          <Reveal delayMs={120}>
+            <p style={{
+              marginTop: '28px',
+              fontSize: 'clamp(1rem,2vw,1.15rem)',
+              color: 'rgba(245,242,235,0.60)',
+              lineHeight: 1.7,
+              maxWidth: '560px',
+            }}>
+              Ich analysiere deine aktuelle Website kostenlos, zeige konkret was nicht funktioniert –
+              und liefere einen ersten Entwurf. Ohne Risiko, ohne Commitment.
+            </p>
+          </Reveal>
+
+          <Reveal delayMs={240}>
+            <div style={{ marginTop: '40px', display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
+              <PrimaryCTA label="Kostenlose Analyse anfragen" href="/#request" size="lg" />
+              <GhostCTA label="Portfolio ansehen" href="/portfolio" dark={true} />
+            </div>
+          </Reveal>
+        </div>
+
+        {/* Scroll cue */}
+        <Reveal delayMs={600}>
+          <div style={{
+            marginTop: '80px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            color: 'rgba(245,242,235,0.30)',
+            fontSize: '12px',
+            fontWeight: 600,
+            letterSpacing: '0.06em',
+            textTransform: 'uppercase',
+          }}>
+            <div style={{ width: '1px', height: '32px', background: 'rgba(232,168,0,0.30)' }} />
+            Scrollen
+            <ArrowDown size={14} style={{ color: 'rgba(232,168,0,0.50)' }} />
+          </div>
+        </Reveal>
+      </Section>
+
+      <SectionArrow fromTheme="dark" />
+
+      {/* ── S2: PROBLEM — light ── */}
+      <Section id="s2" themeKey="light">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'center' }}>
+
+          <div>
             <Reveal>
-              {/* Brandbook: Tag pill, region anchor */}
-              <Tag variant="solid">
-                <MapPin size={12} /> Aschaffenburg · Obernburg
-              </Tag>
+              <Tag theme="light">Das eigentliche Problem</Tag>
             </Reveal>
-
             <Reveal delayMs={80}>
-              <h1
-                className="leading-[1.05]"
-                style={{ fontSize: 'clamp(2rem,6.5vw,4.5rem)', fontWeight: 800, maxWidth: '820px' }}
-              >
-                Mehr Anfragen durch eine Website,{' '}
-                <br className="hidden md:block" />
-                die{' '}
-                <UnderlineAnnotation>klar ist</UnderlineAnnotation>
-                {' '}– nicht nur{' '}
-                <SerifAccent>schön.</SerifAccent>
-              </h1>
+              <h2 style={{
+                marginTop: '20px',
+                fontSize: 'clamp(1.8rem,4vw,3rem)',
+                fontWeight: 800,
+                lineHeight: 1.1,
+                letterSpacing: '-0.02em',
+                color: B.black,
+              }}>
+                Viele Websites sehen gut aus.
+                <br />
+                <span style={{ color: B.ocker }}>Und erzeugen trotzdem keine Anfragen.</span>
+              </h2>
             </Reveal>
-
             <Reveal delayMs={160}>
-              <p
-                className="max-w-2xl leading-relaxed"
-                style={{ fontSize: 'clamp(1rem,2vw,1.2rem)', color: B.cream60 }}
+              <p style={{ marginTop: '20px', fontSize: '15px', color: 'rgba(14,12,8,0.60)', lineHeight: 1.7, maxWidth: '400px' }}>
+                Das liegt selten am Design. Branding, Botschaft und Seitenstruktur sind nicht aufeinander abgestimmt.
+                Der Besucher kommt — und weiß nicht, was er tun soll.
+              </p>
+            </Reveal>
+            <Reveal delayMs={240}>
+              <div style={{ marginTop: '32px' }}>
+                <PrimaryCTA label="Kostenlos prüfen lassen" href="/#request" />
+              </div>
+            </Reveal>
+          </div>
+
+          <div>
+            <Reveal delayMs={100}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {[
+                  { title: 'Kein klarer Auftrag an den Besucher', desc: 'Der CTA fehlt oder ist versteckt. Der Besucher weiß nicht, was als nächstes passieren soll.' },
+                  { title: 'Kein konsistentes Erscheinungsbild', desc: 'Website, Social und Print wirken wie von drei verschiedenen Personen. Das kostet Vertrauen.' },
+                  { title: 'Botschaft zu allgemein', desc: 'In fünf Sekunden wird nicht klar, warum der Besucher bleiben sollte.' },
+                ].map((item, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      padding: '16px 20px',
+                      borderRadius: '14px',
+                      border: '1px solid rgba(14,12,8,0.10)',
+                      background: '#E8E5DC',
+                      display: 'flex',
+                      gap: '12px',
+                      alignItems: 'flex-start',
+                    }}
+                  >
+                    <AlertCircle size={15} style={{ color: B.ocker, marginTop: '2px', flexShrink: 0 }} />
+                    <div>
+                      <div style={{ fontSize: '14px', fontWeight: 700, color: B.black }}>{item.title}</div>
+                      <p style={{ marginTop: '4px', fontSize: '13px', color: 'rgba(14,12,8,0.55)', lineHeight: 1.6 }}>{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+
+        </div>
+
+        {/* Section guide arrow */}
+        <div style={{ marginTop: '64px', display: 'flex', justifyContent: 'center' }}>
+          <Reveal>
+            <a href="#s3" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', color: 'rgba(14,12,8,0.30)', textDecoration: 'none', fontSize: '11px', fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+              Das Angebot
+              <ArrowDown size={18} style={{ color: B.ocker }} />
+            </a>
+          </Reveal>
+        </div>
+      </Section>
+
+      <SectionArrow fromTheme="light" />
+
+      {/* ── S3: ANGEBOT — dark ── */}
+      <Section id="s3" themeKey="dark">
+        <div style={{ maxWidth: '760px', marginBottom: '48px' }}>
+          <Reveal>
+            <Tag theme="dark">Das Angebot</Tag>
+          </Reveal>
+          <Reveal delayMs={80}>
+            <h2 style={{
+              marginTop: '20px',
+              fontSize: 'clamp(1.8rem,4vw,3rem)',
+              fontWeight: 800,
+              lineHeight: 1.1,
+              letterSpacing: '-0.02em',
+              color: B.cream,
+            }}>
+              Du siehst den Entwurf.
+              <br />
+              Erst dann <SerifAccent color={B.cream}>entscheidest</SerifAccent> du.
+            </h2>
+          </Reveal>
+          <Reveal delayMs={160}>
+            <p style={{ marginTop: '20px', fontSize: '15px', color: 'rgba(245,242,235,0.60)', lineHeight: 1.7, maxWidth: '520px' }}>
+              Sprint 0 ist kostenlos: Ich analysiere deine Situation, benenne konkrete Schwachstellen
+              und liefere einen ersten Seitenaufbau. Kein Angebot ins Blaue.
+            </p>
+          </Reveal>
+        </div>
+
+        <Reveal delayMs={180}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px', marginBottom: '32px' }}>
+            {[
+              { icon: <Eye size={16} />, title: 'Was du bekommst', items: ['3–5 konkrete Optimierungspunkte', 'Erster Seitenaufbau als Entwurf', 'Einschätzung, welches Paket passt'], em: true },
+              { icon: <Shield size={16} />, title: 'Zahlung nach Review', body: 'Jedes Zahlungsziel ist an einen Sprint-Review gebunden. Erst wenn du freigibst, kommt die nächste Phase.', em: false },
+              { icon: <FileText size={16} />, title: 'Transparenz im Prozess', body: 'Du siehst den Projektstand jederzeit — vollständig dokumentiert von Anfang bis Übergabe.', em: false },
+            ].map((card, i) => (
+              <div
+                key={i}
+                style={{
+                  borderRadius: '16px',
+                  border: card.em ? '1px solid rgba(232,168,0,0.28)' : '1px solid rgba(245,242,235,0.08)',
+                  background: card.em ? 'rgba(232,168,0,0.07)' : B.dark,
+                  padding: '22px',
+                }}
               >
-                Ich analysiere deine aktuelle Website kostenlos, zeige konkret was nicht funktioniert –
-                und liefere einen ersten Entwurf. Ohne Risiko, ohne Commitment.
+                <div style={{ color: B.yellow, marginBottom: '12px' }}>{card.icon}</div>
+                <div style={{ fontSize: '14px', fontWeight: 700, color: B.cream, marginBottom: '10px' }}>{card.title}</div>
+                {card.items ? (
+                  <ul style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}>
+                    {card.items.map(item => (
+                      <li key={item} style={{ display: 'flex', gap: '8px', fontSize: '13px', color: 'rgba(245,242,235,0.60)', lineHeight: 1.5 }}>
+                        <CheckCircle2 size={13} style={{ color: B.yellow, flexShrink: 0, marginTop: '2px' }} />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p style={{ fontSize: '13px', color: 'rgba(245,242,235,0.55)', lineHeight: 1.65 }}>{card.body}</p>
+                )}
+                {card.em && (
+                  <div style={{ marginTop: '16px' }}>
+                    <Tag theme="dark">Kostenlos · Kein Commitment</Tag>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </Reveal>
+
+        {/* Sprint steps */}
+        <Reveal delayMs={260}>
+          <div style={{ borderTop: '1px solid rgba(245,242,235,0.07)', paddingTop: '32px' }}>
+            <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(245,242,235,0.30)', marginBottom: '4px' }}>
+              Projektablauf
+            </div>
+            {[
+              { n: '0', title: 'Sprint 0 — Analyse + Entwurf', desc: 'Konkrete Schwachstellen, erster Seitenaufbau, Paketempfehlung.', note: 'Kostenlos', highlight: true },
+              { n: '1', title: 'Sprint 1 — Erste Version', desc: 'Du klickst durch, gibst Feedback. 2 Revisionsrunden inklusive.', note: '30 % nach Review', highlight: false },
+              { n: '2', title: 'Sprint 2 — Feinschliff', desc: 'Alle Punkte umgesetzt. SEO-Basis und Performance geprüft.', note: '50 % nach Freigabe', highlight: false },
+              { n: '3', title: 'Sprint 3 — Go-Live + Übergabe', desc: 'Live-Schaltung, Dateien, Zugänge, vollständige Dokumentation.', note: '20 % nach Übergabe', highlight: false },
+            ].map(s => (
+              <SprintStep key={s.n} {...s} theme="dark" />
+            ))}
+          </div>
+        </Reveal>
+
+        <Reveal delayMs={320}>
+          <div style={{ marginTop: '40px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <PrimaryCTA label="Kostenlose Analyse anfragen" href="/#request" />
+            <GhostCTA label="Ablauf im Detail" href="/prozess" dark={true} />
+          </div>
+        </Reveal>
+      </Section>
+
+      <SectionArrow fromTheme="dark" />
+
+      {/* ── S4: PROOF — light ── */}
+      <Section id="s4" themeKey="light">
+        <Reveal>
+          <Tag theme="light">Ergebnisse</Tag>
+        </Reveal>
+        <Reveal delayMs={80}>
+          <h2 style={{
+            marginTop: '20px',
+            marginBottom: '48px',
+            fontSize: 'clamp(1.8rem,4vw,3rem)',
+            fontWeight: 800,
+            lineHeight: 1.1,
+            letterSpacing: '-0.02em',
+            color: B.black,
+            maxWidth: '600px',
+          }}>
+            Zahlen, die man{' '}
+            <SerifAccent color={B.ocker}>einordnen</SerifAccent> kann.
+          </h2>
+        </Reveal>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', alignItems: 'start' }}>
+
+          {/* Big proof card */}
+          <Reveal delayMs={100}>
+            <BigProofCard theme="light" />
+          </Reveal>
+
+          {/* Supporting stats */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <Reveal delayMs={140}>
+              <div style={{
+                padding: '24px',
+                borderRadius: '16px',
+                border: '1px solid rgba(14,12,8,0.10)',
+                background: '#E8E5DC',
+              }}>
+                <StatCounter target={15} suffix="+ Mio" label="Likes auf erstellten Inhalten" theme="light" />
+              </div>
+            </Reveal>
+            <Reveal delayMs={200}>
+              <div style={{
+                padding: '24px',
+                borderRadius: '16px',
+                border: '1px solid rgba(14,12,8,0.10)',
+                background: '#E8E5DC',
+              }}>
+                <StatCounter target={10} suffix="+ Mio" label="Klicks über Social Media generiert" theme="light" />
+              </div>
+            </Reveal>
+            <Reveal delayMs={260}>
+              <div style={{
+                padding: '24px',
+                borderRadius: '16px',
+                border: '1px solid rgba(14,12,8,0.10)',
+                background: '#E8E5DC',
+              }}>
+                <StatCounter target={100} suffix="+" label="Abgeschlossene Projekte" theme="light" />
+              </div>
+            </Reveal>
+          </div>
+        </div>
+
+        <Reveal delayMs={300}>
+          <div style={{ marginTop: '40px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <PrimaryCTA label="Portfolio ansehen" href="/portfolio" />
+          </div>
+        </Reveal>
+
+        <div style={{ marginTop: '64px', display: 'flex', justifyContent: 'center' }}>
+          <Reveal>
+            <a href="#s5" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', color: 'rgba(14,12,8,0.30)', textDecoration: 'none', fontSize: '11px', fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+              Leistungen
+              <ArrowDown size={18} style={{ color: B.ocker }} />
+            </a>
+          </Reveal>
+        </div>
+      </Section>
+
+      <SectionArrow fromTheme="light" />
+
+      {/* ── S5: LEISTUNGEN — dark ── */}
+      <Section id="s5" themeKey="dark">
+        <Reveal>
+          <Tag theme="dark">Leistungen</Tag>
+        </Reveal>
+        <Reveal delayMs={80}>
+          <h2 style={{
+            marginTop: '20px',
+            marginBottom: '8px',
+            fontSize: 'clamp(1.8rem,4vw,3rem)',
+            fontWeight: 800,
+            lineHeight: 1.1,
+            letterSpacing: '-0.02em',
+            color: B.cream,
+          }}>
+            Vier Bereiche.{' '}
+            <SerifAccent color={B.cream}>Einer</SerifAccent> greift in den nächsten.
+          </h2>
+        </Reveal>
+        <Reveal delayMs={120}>
+          <p style={{ fontSize: '15px', color: 'rgba(245,242,235,0.55)', lineHeight: 1.7, maxWidth: '480px', marginBottom: '8px' }}>
+            Einzeln buchbar oder als komplettes Setup.
+          </p>
+        </Reveal>
+
+        <div style={{ marginTop: '8px' }}>
+          <ServiceRow icon={<BookOpen size={17} />} kicker="Brandbook" theme="dark"
+            title="Guidelines, die man wirklich nutzt."
+            desc="Farben, Typo, Layoutregeln, Tone of Voice, Beispiele. Damit du und dein Team konsistent kommunizieren — ohne jedes Mal neu entscheiden zu müssen." />
+          <ServiceRow icon={<Play size={17} />} kicker="Motiondesign" theme="dark"
+            title="Motion, der im Feed auffällt."
+            desc="Kurzformate, Motion Graphics, Hook-Varianten, Templates. Damit du skalieren kannst, ohne jedes Format neu zu entwickeln." />
+          <ServiceRow icon={<Monitor size={17} />} kicker="Webdevelopment" theme="dark"
+            title="Websites mit einer Richtung."
+            desc="Klarer Aufbau, klare CTA, wenig Ablenkung. Damit ein Besucher weiß, was als nächstes passieren soll." />
+          <ServiceRow icon={<Film size={17} />} kicker="Videoediting" theme="dark"
+            title="Schnitt mit Rhythmus."
+            desc="Storyline, Timing, Sound, Pace. Damit ein Video nicht nur fertig ist, sondern die Botschaft trägt." />
+        </div>
+
+        <Reveal>
+          <div style={{ marginTop: '40px' }}>
+            <PrimaryCTA label="Kostenlos starten" href="/#request" />
+          </div>
+        </Reveal>
+      </Section>
+
+      <SectionArrow fromTheme="dark" />
+
+      {/* ── S6: REQUEST + CALENDLY — light ── */}
+      <Section id="request" themeKey="light">
+
+        {/* Tagesstreifen */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: B.yellow }} />
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'start' }}>
+
+          <div>
+            <Reveal>
+              <Tag theme="light">Einstieg</Tag>
+            </Reveal>
+            <Reveal delayMs={80}>
+              <h2 style={{
+                marginTop: '20px',
+                fontSize: 'clamp(1.8rem,4vw,3rem)',
+                fontWeight: 800,
+                lineHeight: 1.1,
+                letterSpacing: '-0.02em',
+                color: B.black,
+              }}>
+                Termin buchen.
+                <br />
+                <SerifAccent color={B.ocker}>Kostenlos.</SerifAccent>
+              </h2>
+            </Reveal>
+            <Reveal delayMs={140}>
+              <p style={{ marginTop: '20px', fontSize: '15px', color: 'rgba(14,12,8,0.60)', lineHeight: 1.7, maxWidth: '400px' }}>
+                Ich schaue mir deine Website an und sage dir ehrlich, was nicht funktioniert.
+                Kein Commitment, bevor du das Ergebnis gesehen hast.
               </p>
             </Reveal>
 
-            <Reveal delayMs={240}>
-              <div className="flex flex-col items-center gap-3">
-                <PrimaryCTA label="Kostenlose Analyse anfragen" />
-                <p style={{ fontSize: '13px', color: B.cream30 }}>
-                  Sprint 0 ist kostenlos. Keine Zahlung, bevor du das Ergebnis gesehen hast.
-                </p>
-              </div>
-            </Reveal>
-
-            <Reveal delayMs={310}>
-              <div className="flex flex-wrap justify-center gap-5" style={{ fontSize: '13px', color: B.cream45 }}>
-                {['Analyse kostenlos', 'Erster Entwurf kostenlos', 'Zahlung erst nach Review', 'Antwort innerhalb 24 h'].map(t => (
-                  <span key={t} className="flex items-center gap-1.5">
-                    <CheckCircle2 size={13} style={{ color: B.yellow }} />{t}
-                  </span>
-                ))}
-              </div>
-            </Reveal>
-
-          </div>
-        </Scene>
-
-        {/* ── 02 PROBLEM ── */}
-        <Scene id="s2">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            <div>
-              <Reveal>
-                <Tag variant="outline">02 — Problem</Tag>
-              </Reveal>
-              <Reveal delayMs={90}>
-                <h2
-                  className="mt-5 leading-[1.05]"
-                  style={{ fontSize: 'clamp(1.75rem,4.5vw,3.5rem)', fontWeight: 800 }}
-                >
-                  Viele Websites sehen gut aus.
-                  <br />
-                  <YellowWord>Und erzeugen trotzdem keine Anfragen.</YellowWord>
-                </h2>
-              </Reveal>
-              <Reveal delayMs={160}>
-                <p className="mt-5 leading-relaxed max-w-xl" style={{ color: B.cream60, fontSize: '16px' }}>
-                  Das liegt selten am Design. Es liegt daran, dass Branding, Botschaft und Seitenstruktur
-                  nicht aufeinander abgestimmt sind. Der Besucher kommt – und weiß nicht, was er tun soll.
-                </p>
-              </Reveal>
-              <Reveal delayMs={260}>
-                <div className="mt-8">
-                  <PrimaryCTA label="Kostenlos prüfen lassen" />
-                </div>
-              </Reveal>
-            </div>
-
-            <Reveal delayMs={140}>
-              <div className="space-y-3">
-                {[
-                  { title: 'Kein klarer Auftrag an den Besucher', desc: 'Der CTA fehlt oder ist versteckt. Der Besucher weiß nicht, was als nächstes passieren soll.' },
-                  { title: 'Kein konsistentes Erscheinungsbild', desc: 'Website, Social Media und Print wirken wie von drei verschiedenen Personen. Das kostet Vertrauen.' },
-                  { title: 'Botschaft unklar oder zu allgemein', desc: 'Wer auf die Website kommt, versteht in fünf Sekunden nicht, warum er bleiben sollte.' },
-                ].map(item => (
-                  <TiltCard key={item.title} className="rounded-2xl">
-                    <div
-                      className="rounded-2xl p-4 md:p-5 flex items-start gap-3"
-                      style={{ border: `1px solid rgba(232,168,0,0.10)`, background: B.dark }}
-                    >
-                      <AlertCircle size={15} style={{ color: 'rgba(232,168,0,0.55)', marginTop: '2px', flexShrink: 0 }} />
-                      <div>
-                        <div style={{ fontSize: '14px', fontWeight: 700, color: B.cream }}>{item.title}</div>
-                        <p style={{ marginTop: '4px', fontSize: '13px', color: B.cream45, lineHeight: 1.6 }}>{item.desc}</p>
-                      </div>
-                    </div>
-                  </TiltCard>
-                ))}
-              </div>
-            </Reveal>
-          </div>
-        </Scene>
-
-        {/* ── 03 ANGEBOT ── */}
-        <Scene id="s3">
-          <div className="flex flex-col gap-8">
-            <div className="max-w-3xl">
-              <Reveal>
-                <Tag variant="outline">03 — Das Angebot</Tag>
-              </Reveal>
-              <Reveal delayMs={90}>
-                <h2
-                  className="mt-5 leading-[1.05]"
-                  style={{ fontSize: 'clamp(1.75rem,4.5vw,3.5rem)', fontWeight: 800 }}
-                >
-                  Du siehst den{' '}
-                  <UnderlineAnnotation>Entwurf.</UnderlineAnnotation>
-                  <br />
-                  Erst dann <SerifAccent>entscheidest</SerifAccent> du.
-                </h2>
-              </Reveal>
-              <Reveal delayMs={160}>
-                <p className="mt-5 leading-relaxed max-w-2xl" style={{ color: B.cream60, fontSize: '16px' }}>
-                  Sprint 0 ist kostenlos: Ich analysiere deine Situation, benenne konkrete Schwachstellen
-                  und liefere einen ersten Seitenaufbau als Entwurf. Kein Angebot ins Blaue.
-                </p>
-              </Reveal>
-            </div>
-
             <Reveal delayMs={200}>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {/* Sprint 0 card */}
-                <div
-                  className="rounded-2xl p-5 flex flex-col gap-3"
-                  style={{ border: `1px solid rgba(232,168,0,0.30)`, background: 'rgba(232,168,0,0.06)' }}
-                >
-                  <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center"
-                    style={{ background: B.yellow15, border: `1px solid rgba(232,168,0,0.25)` }}
-                  >
-                    <Eye size={16} style={{ color: B.yellow }} />
+              <div style={{ marginTop: '32px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {[
+                  'Sprint 0 kostenlos',
+                  'Antwort innerhalb 24 h',
+                  'Zahlung erst nach Freigabe',
+                ].map(t => (
+                  <div key={t} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', color: 'rgba(14,12,8,0.65)', fontWeight: 500 }}>
+                    <CheckCircle2 size={15} style={{ color: B.yellow, flexShrink: 0 }} />
+                    {t}
                   </div>
-                  <div>
-                    <div style={{ fontSize: '14px', fontWeight: 700, color: B.cream }}>Was du in Sprint 0 bekommst</div>
-                    <ul className="mt-2 space-y-1.5" style={{ fontSize: '13px', color: B.cream60 }}>
-                      {['3–5 konkrete Optimierungspunkte schriftlich', 'Erster Seitenaufbau als Entwurf', 'Einschätzung, welches Paket passt'].map(item => (
-                        <li key={item} className="flex items-start gap-1.5">
-                          <CheckCircle2 size={12} style={{ color: B.yellow, marginTop: '2px', flexShrink: 0 }} />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="mt-auto">
-                    <Tag variant="solid">Kostenlos · Kein Commitment</Tag>
-                  </div>
-                </div>
-
-                {/* Zahlung card */}
-                <div
-                  className="rounded-2xl p-5 flex flex-col gap-3"
-                  style={{ border: `1px solid rgba(245,242,235,0.08)`, background: B.dark }}
-                >
-                  <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center"
-                    style={{ background: 'rgba(245,242,235,0.06)', border: `1px solid rgba(245,242,235,0.10)` }}
-                  >
-                    <Shield size={16} style={{ color: B.cream60 }} />
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '14px', fontWeight: 700, color: B.cream }}>Zahlung nach Review – nicht vorher</div>
-                    <p style={{ marginTop: '8px', fontSize: '13px', color: B.cream45, lineHeight: 1.6 }}>
-                      Jedes Zahlungsziel ist an einen Sprint-Review gebunden. Du siehst das Ergebnis,
-                      gibst Feedback, gibst frei.
-                    </p>
-                  </div>
-                  <div className="mt-auto">
-                    <Link
-                      href="/prozess"
-                      className="inline-flex items-center gap-1"
-                      style={{ fontSize: '12px', color: 'rgba(232,168,0,0.60)', textDecoration: 'underline', textUnderlineOffset: '4px' }}
-                    >
-                      Vollständigen Ablauf ansehen <ArrowRight size={11} />
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Transparenz card */}
-                <div
-                  className="rounded-2xl p-5 flex flex-col gap-3"
-                  style={{ border: `1px solid rgba(245,242,235,0.08)`, background: B.dark }}
-                >
-                  <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center"
-                    style={{ background: 'rgba(245,242,235,0.06)', border: `1px solid rgba(245,242,235,0.10)` }}
-                  >
-                    <FileText size={16} style={{ color: B.cream60 }} />
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '14px', fontWeight: 700, color: B.cream }}>Transparenz im Prozess</div>
-                    <p style={{ marginTop: '8px', fontSize: '13px', color: B.cream45, lineHeight: 1.6 }}>
-                      Du siehst den Projektstand jederzeit — dokumentiert von Anfang bis Übergabe.
-                    </p>
-                  </div>
-                  <div className="mt-auto">
-                    <a
-                      href="https://www.leonseitz.com/kunde1"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1"
-                      style={{ fontSize: '12px', color: 'rgba(232,168,0,0.60)', textDecoration: 'underline', textUnderlineOffset: '4px' }}
-                    >
-                      Echtes Projekt ansehen <ExternalLink size={11} />
-                    </a>
-                  </div>
-                </div>
+                ))}
               </div>
             </Reveal>
 
-            {/* Sprint mini-timeline */}
-            <Reveal delayMs={260}>
+            <Reveal delayMs={280}>
+              <div style={{ marginTop: '40px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <a
+                  href="https://wa.me/4916095757167?text=Hi%20Leon%2C%0A%0AZiel%3A%0ADeadline%3A%0AStand%3A%0A%0AKurzer%20Kontext%3A"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    fontSize: '13px',
+                    color: 'rgba(14,12,8,0.55)',
+                    textDecoration: 'none',
+                    fontWeight: 600,
+                  }}
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style={{ color: '#25D366', flexShrink: 0 }}>
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                  </svg>
+                  WhatsApp: +49 160 9575 7167
+                </a>
+                <a
+                  href="mailto:hello@leonseitz.com?subject=Kostenlose Website-Analyse&body=Meine Website: %0D%0AZiel: %0D%0ADeadline (optional): %0D%0A"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    fontSize: '13px',
+                    color: 'rgba(14,12,8,0.45)',
+                    textDecoration: 'none',
+                    fontWeight: 600,
+                  }}
+                >
+                  <Mail size={14} />
+                  E-Mail: hello@leonseitz.com
+                </a>
+              </div>
+            </Reveal>
+          </div>
+
+          {/* Calendly embed */}
+          <Reveal delayMs={120}>
+            <div style={{
+              borderRadius: '20px',
+              border: '1px solid rgba(14,12,8,0.10)',
+              background: '#E8E5DC',
+              overflow: 'hidden',
+              minHeight: '600px',
+            }}>
+              {/* Calendly inline widget */}
               <div
-                className="rounded-2xl p-5 md:p-6"
-                style={{ border: `1px solid rgba(245,242,235,0.07)`, background: `rgba(14,12,8,0.70)`, backdropFilter: 'blur(8px)' }}
-              >
-                <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: B.cream30, marginBottom: '16px' }}>
-                  So läuft ein Projekt ab
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {[
-                    { label: 'Sprint 0', title: 'Analyse + Entwurf', note: 'Kostenlos', em: true },
-                    { label: 'Sprint 1', title: 'Erste Version',      note: '30 % nach Review' },
-                    { label: 'Sprint 2', title: 'Feinschliff',        note: '50 % nach Review' },
-                    { label: 'Sprint 3', title: 'Go-Live + Übergabe', note: '20 % nach Übergabe' },
-                  ].map(s => (
-                    <div
-                      key={s.label}
-                      className="rounded-xl px-3 py-3"
-                      style={{
-                        border: s.em ? `1px solid rgba(232,168,0,0.30)` : `1px solid rgba(245,242,235,0.07)`,
-                        background: s.em ? 'rgba(232,168,0,0.07)' : 'rgba(245,242,235,0.02)',
-                      }}
-                    >
-                      <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: s.em ? B.yellow : B.cream30, marginBottom: '4px' }}>
-                        {s.label}
-                      </div>
-                      <div style={{ fontSize: '13px', fontWeight: 700, color: B.cream }}>{s.title}</div>
-                      <div style={{ marginTop: '6px', fontSize: '12px', color: s.em ? B.yellow : B.cream30, fontWeight: s.em ? 600 : 400 }}>{s.note}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-4 flex flex-wrap items-center gap-4">
-                  <Link href="/prozess" className="inline-flex items-center gap-1.5 font-medium" style={{ fontSize: '13px', color: B.cream45 }}>
-                    Ablauf im Detail <ArrowRight size={12} />
-                  </Link>
-                  <a href="https://www.leonseitz.com/kunde1" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-medium" style={{ fontSize: '13px', color: B.cream45 }}>
-                    Echtes Projekt ansehen <ExternalLink size={12} />
-                  </a>
-                </div>
-              </div>
-            </Reveal>
-
-            <Reveal delayMs={320}>
-              <div className="flex flex-wrap gap-3">
-                <PrimaryCTA label="Kostenlose Analyse anfragen" />
-                <GhostCTA href="/portfolio"><ExternalLink size={16} /> Portfolio ansehen</GhostCTA>
-              </div>
-            </Reveal>
-          </div>
-        </Scene>
-
-        {/* ── 04 PROOF ── */}
-        <Scene id="s4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            <div>
-              <Reveal>
-                <Tag variant="outline">04 — Proof</Tag>
-              </Reveal>
-              <Reveal delayMs={90}>
-                <h2
-                  className="mt-5 leading-[1.05]"
-                  style={{ fontSize: 'clamp(1.75rem,4.5vw,3.5rem)', fontWeight: 800 }}
-                >
-                  Zahlen,{' '}
-                  <br />
-                  die man{' '}
-                  <UnderlineAnnotation>einordnen</UnderlineAnnotation>{' '}
-                  kann.
-                </h2>
-              </Reveal>
-              <Reveal delayMs={160}>
-                <p className="mt-5 max-w-xl leading-relaxed" style={{ color: B.cream60, fontSize: '16px' }}>
-                  Wenn Branding, Content und Funnel aufeinander einzahlen, zeigt sich das in den
-                  Ergebnissen – nicht nur im Look.
-                </p>
-              </Reveal>
-              <Reveal delayMs={260}>
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <GhostCTA href="/portfolio"><ExternalLink size={16} /> Portfolio ansehen</GhostCTA>
-                  <GhostCTA href="https://www.leonseitz.com/kunde1" external><ExternalLink size={16} /> Echtes Projekt</GhostCTA>
-                </div>
-              </Reveal>
+                className="calendly-inline-widget"
+                data-url="https://calendly.com/leonseitz/30min?hide_event_type_details=1&hide_gdpr_banner=1&primary_color=e8a800"
+                style={{ minWidth: '320px', height: '630px' }}
+              />
+              <script
+                type="text/javascript"
+                src="https://assets.calendly.com/assets/external/widget.js"
+                async
+              />
             </div>
-            <div className="grid grid-cols-1 gap-4">
-              <ProofStat label="Likes auf erstellten Inhalten"      target={15}  suffix="+ Mio" durationMs={900} />
-              <ProofStat label="Klicks über Social Media generiert"  target={10}  suffix="+ Mio" durationMs={900} />
-              <ProofStat label="Abgeschlossene Projekte"            target={100} suffix="+"     durationMs={950} />
-            </div>
-          </div>
-        </Scene>
+          </Reveal>
 
-        {/* ── 05 LEISTUNGEN ── */}
-        <Scene id="s5">
-          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 items-start">
-            <div className="lg:sticky lg:top-24">
-              <Reveal>
-                <Tag variant="outline">05 — Leistungen</Tag>
-              </Reveal>
-              <Reveal delayMs={90}>
-                <h2
-                  className="mt-5 leading-[1.05]"
-                  style={{ fontSize: 'clamp(1.75rem,4.5vw,3.5rem)', fontWeight: 800 }}
-                >
-                  Vier Bereiche.
-                  <br />
-                  <SerifAccent>Einer</SerifAccent>{' '}greift in den nächsten.
-                </h2>
-              </Reveal>
-              <Reveal delayMs={160}>
-                <p className="mt-5 leading-relaxed" style={{ color: B.cream60, fontSize: '16px' }}>
-                  Einzeln buchbar oder als komplettes Setup – je nachdem, wo du gerade stehst.
-                </p>
-              </Reveal>
-              <Reveal delayMs={260}>
-                <div className="mt-8">
-                  <PrimaryCTA label="Kostenlos starten" />
-                </div>
-              </Reveal>
-            </div>
-            <div className="space-y-4">
-              <BigService icon={<BookOpen size={17} />} kicker="Brandbook"      title="Guidelines, die man wirklich nutzt." accentWord="wirklich"     desc="Farben, Typo, Layoutregeln, Tone of Voice, Beispiele. Damit du und dein Team konsistent kommunizieren – ohne jedes Mal neu entscheiden zu müssen." />
-              <BigService icon={<Play size={17} />}     kicker="Motiondesign"   title="Motion, der im Feed auffällt."       accentWord="auffällt."    desc="Kurzformate, Motion Graphics, Hook-Varianten, Templates. Damit du skalieren kannst, ohne jedes Format neu zu entwickeln." />
-              <BigService icon={<Monitor size={17} />}  kicker="Webdevelopment" title="Websites mit einer Richtung."        accentWord="Richtung."    desc="Klarer Aufbau, klare CTA, wenig Ablenkung. Damit ein Besucher weiß, was als nächstes passieren soll." />
-              <BigService icon={<Film size={17} />}     kicker="Videoediting"   title="Schnitt mit Rhythmus."               accentWord="Rhythmus."    desc="Storyline, Timing, Sound, Pace. Damit ein Video nicht nur fertig ist, sondern die Botschaft trägt." />
-            </div>
-          </div>
-        </Scene>
+        </div>
 
-        {/* ── 06 ABLAUF + CTA ── */}
-        <Scene id="request">
-          <div className="flex flex-col gap-16">
-
-            <div className="text-center max-w-2xl mx-auto">
-              <Reveal>
-                <Tag variant="outline">06 — Ablauf</Tag>
-              </Reveal>
-              <Reveal delayMs={80}>
-                <h2
-                  className="mt-5 leading-[1.05]"
-                  style={{ fontSize: 'clamp(1.75rem,4.5vw,3.5rem)', fontWeight: 800 }}
-                >
-                  Vier Sprints.
-                  <br />
-                  Kein Schritt ohne{' '}
-                  <UnderlineAnnotation>dein Okay.</UnderlineAnnotation>
-                </h2>
-              </Reveal>
-              <Reveal delayMs={150}>
-                <p className="mt-4 leading-relaxed" style={{ color: B.cream45, fontSize: '16px' }}>
-                  Nach jedem Sprint siehst du das Ergebnis. Zahlung erst nach Freigabe – nie vorher.
-                </p>
-              </Reveal>
+        {/* Pakete */}
+        <Reveal delayMs={200}>
+          <div style={{ marginTop: '80px' }}>
+            <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(14,12,8,0.30)', marginBottom: '20px', textAlign: 'center' }}>
+              Pakete
             </div>
-
-            {/* Sprint Timeline */}
-            <Reveal delayMs={100}>
-              <div className="relative">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+              {[
+                { name: 'Einstieg', price: 'ab 400 €', time: '~7 Tage', items: ['1 Landingpage', 'Klare Struktur', '1 CTA-Fokus'], featured: false },
+                { name: 'Standard', price: 'ab 700 €', time: '10–14 Tage', items: ['Website bis 5 Seiten', 'Branding-Grundlage', '2 Revisionsrunden'], featured: true },
+                { name: 'Komplett', price: 'ab 1.100 €', time: 'ca. 3 Wochen', items: ['Website + Brandbook', 'Motion-Element', 'Vollständige Übergabe'], featured: false },
+              ].map(p => (
                 <div
-                  className="hidden md:block absolute top-[28px] left-[calc(12.5%)] right-[calc(12.5%)] h-px"
-                  style={{ background: `linear-gradient(to right, ${B.yellow}55, rgba(232,168,0,0.10))` }}
-                />
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  {[
-                    { n: '0', label: 'Sprint 0', title: 'Analyse + Entwurf',   desc: 'Konkrete Schwachstellen, erster Seitenaufbau, Paketempfehlung.',    note: 'Kostenlos',          em: true },
-                    { n: '1', label: 'Sprint 1', title: 'Erste Version',        desc: 'Du klickst durch, gibst Feedback. 2 Revisionsrunden inklusive.',     note: '30 % nach Review',   em: false },
-                    { n: '2', label: 'Sprint 2', title: 'Feinschliff',          desc: 'Alle Punkte umgesetzt. SEO-Basis und Performance geprüft.',          note: '50 % nach Freigabe', em: false },
-                    { n: '3', label: 'Sprint 3', title: 'Go-Live + Übergabe',   desc: 'Live-Schaltung, Dateien, Zugänge, vollständige Dokumentation.',      note: '20 % nach Übergabe', em: false },
-                  ].map((s, i) => (
-                    <TiltCard key={s.n} className="rounded-2xl">
-                      <div
-                        className="rounded-2xl p-5 h-full flex flex-col gap-4 relative overflow-hidden"
-                        style={{
-                          border: s.em ? `1px solid rgba(232,168,0,0.30)` : `1px solid rgba(245,242,235,0.08)`,
-                          background: s.em ? 'rgba(232,168,0,0.07)' : 'rgba(245,242,235,0.02)',
-                        }}
-                      >
-                        <div
-                          className="pointer-events-none absolute -left-20 -top-8 h-[130%] w-36 rotate-12"
-                          style={{ background: B.yellow, filter: 'blur(36px)', opacity: 0.04, animation: `shineSoft ${5.5 + i * 0.4}s cubic-bezier(.2,.9,.2,1) infinite` }}
-                        />
-                        <div className="flex items-center gap-3">
-                          <div
-                            className="w-10 h-10 rounded-xl flex items-center justify-center font-extrabold text-sm shrink-0 relative z-10"
-                            style={{
-                              background: s.em ? B.yellow : 'rgba(245,242,235,0.10)',
-                              color: s.em ? B.black : B.cream,
-                              border: s.em ? 'none' : `1px solid rgba(245,242,235,0.15)`,
-                              boxShadow: s.em ? `0 0 20px rgba(232,168,0,0.30)` : 'none',
-                            }}
-                          >
-                            {s.n}
-                          </div>
-                          <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: s.em ? B.yellow : B.cream30 }}>
-                            {s.label}
-                          </div>
-                        </div>
-                        <div className="flex-1">
-                          <div style={{ fontSize: '14px', fontWeight: 700, color: B.cream, lineHeight: 1.3 }}>{s.title}</div>
-                          <p style={{ marginTop: '6px', fontSize: '12px', color: B.cream45, lineHeight: 1.6 }}>{s.desc}</p>
-                        </div>
-                        <div
-                          className="self-start rounded-lg px-2.5 py-1.5"
-                          style={{
-                            fontSize: '12px',
-                            fontWeight: 700,
-                            border: s.em ? `1px solid rgba(232,168,0,0.30)` : `1px solid rgba(245,242,235,0.07)`,
-                            background: s.em ? 'rgba(232,168,0,0.10)' : 'rgba(245,242,235,0.03)',
-                            color: s.em ? B.yellow : B.cream30,
-                          }}
-                        >
-                          {s.note}
-                        </div>
-                      </div>
-                    </TiltCard>
-                  ))}
-                </div>
-                <div className="mt-5 flex justify-center">
-                  <Link href="/prozess" className="inline-flex items-center gap-1.5" style={{ fontSize: '13px', color: B.cream30 }}>
-                    Vollständiger Ablauf auf /prozess <ArrowRight size={12} />
-                  </Link>
-                </div>
-              </div>
-            </Reveal>
-
-            {/* Pakete */}
-            <Reveal delayMs={80}>
-              <div>
-                <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: B.cream30, textAlign: 'center', marginBottom: '20px' }}>
-                  Pakete
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  {[
-                    { name: 'Einstieg', price: 'ab 400 €', time: '~7 Tage',       items: ['1 Landingpage', 'Klare Struktur', '1 CTA-Fokus'],                             featured: false },
-                    { name: 'Standard', price: 'ab 700 €', time: '10–14 Tage',    items: ['Website bis 5 Seiten', 'Branding-Grundlage', '2 Revisionsrunden'],             featured: true },
-                    { name: 'Komplett', price: 'ab 1.100 €', time: 'ca. 3 Wochen', items: ['Website + Brandbook', 'Motion-Element', 'Vollständige Übergabe'],             featured: false },
-                  ].map(p => (
-                    <TiltCard key={p.name} className="rounded-2xl">
-                      <div
-                        className="rounded-2xl p-5 flex flex-col gap-4 relative overflow-hidden"
-                        style={{
-                          border: p.featured ? `1px solid rgba(232,168,0,0.28)` : `1px solid rgba(245,242,235,0.07)`,
-                          background: p.featured ? 'rgba(232,168,0,0.05)' : 'rgba(245,242,235,0.02)',
-                        }}
-                      >
-                        {p.featured && (
-                          <div
-                            className="pointer-events-none absolute -left-16 -top-8 h-[130%] w-40 rotate-12"
-                            style={{ background: B.yellow, filter: 'blur(42px)', opacity: 0.05, animation: 'shineSoft 5.8s cubic-bezier(.2,.9,.2,1) infinite' }}
-                          />
-                        )}
-                        <div className="flex items-start justify-between gap-2">
-                          <div>
-                            <div style={{ fontSize: '15px', fontWeight: 800, color: B.cream }}>{p.name}</div>
-                            {p.featured && <div style={{ marginTop: '2px', fontSize: '11px', color: 'rgba(232,168,0,0.65)' }}>Am häufigsten gewählt</div>}
-                          </div>
-                          <div className="text-right shrink-0">
-                            <div style={{ fontSize: '15px', fontWeight: 800, color: B.cream }}>{p.price}</div>
-                            <div className="flex items-center gap-1 justify-end mt-1" style={{ fontSize: '11px', color: B.cream30 }}>
-                              <Clock size={10} />{p.time}
-                            </div>
-                          </div>
-                        </div>
-                        <ul className="space-y-1.5">
-                          {p.items.map(item => (
-                            <li key={item} className="flex items-center gap-2" style={{ fontSize: '13px', color: B.cream60 }}>
-                              <CheckCircle2 size={12} style={{ flexShrink: 0, color: p.featured ? B.yellow : B.cream30 }} />{item}
-                            </li>
-                          ))}
-                        </ul>
-                        <div style={{ marginTop: 'auto', paddingTop: '4px', fontSize: '11px', color: B.cream30 }}>
-                          Startet mit Sprint 0 – kostenlos.
-                        </div>
-                      </div>
-                    </TiltCard>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
-
-            {/* Finaler CTA */}
-            <Reveal delayMs={80}>
-              <div
-                className="relative rounded-2xl overflow-hidden p-8 md:p-16 text-center"
-                style={{ border: `1px solid rgba(232,168,0,0.22)`, background: 'rgba(232,168,0,0.04)' }}
-              >
-                {/* Tagesstreifen am oberen Rand */}
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: B.yellow }} />
-                <div
-                  className="pointer-events-none absolute inset-0 flex items-center justify-center"
+                  key={p.name}
+                  style={{
+                    padding: '20px',
+                    borderRadius: '16px',
+                    border: p.featured ? `2px solid ${B.yellow}` : '1px solid rgba(14,12,8,0.10)',
+                    background: p.featured ? 'rgba(232,168,0,0.05)' : '#E8E5DC',
+                  }}
                 >
-                  <div style={{ width: '500px', height: '260px', borderRadius: '50%', background: 'rgba(232,168,0,0.08)', filter: 'blur(80px)' }} />
-                </div>
-                <div className="relative z-10 max-w-xl mx-auto flex flex-col items-center gap-6">
-                  <Tag variant="solid">Kostenloser Einstieg</Tag>
-                  <h3 style={{ fontSize: 'clamp(1.5rem,4vw,3rem)', fontWeight: 800, lineHeight: 1.1, color: B.cream }}>
-                    Kostenlose Website-Analyse.
-                    <br />
-                    <SerifAccent>Kein Risiko.</SerifAccent> Kein Commitment.
-                  </h3>
-                  <p style={{ color: B.cream45, fontSize: '15px', lineHeight: 1.7, maxWidth: '440px' }}>
-                    Schick mir deine URL und was du dir davon erhoffst. Ich melde mich innerhalb von 24 h
-                    mit einer ehrlichen Einschätzung.
-                  </p>
-                  <div className="flex flex-wrap justify-center gap-4" style={{ fontSize: '13px', color: B.cream45 }}>
-                    {['Sprint 0 kostenlos', '24 h Antwortzeit', 'Zahlung nach Review'].map(t => (
-                      <span key={t} className="flex items-center gap-1.5">
-                        <CheckCircle2 size={13} style={{ color: B.yellow }} />{t}
-                      </span>
+                  <div style={{ fontSize: '15px', fontWeight: 800, color: B.black, marginBottom: '2px' }}>{p.name}</div>
+                  {p.featured && <div style={{ fontSize: '11px', color: B.ocker, fontWeight: 700, marginBottom: '8px' }}>Meistgewählt</div>}
+                  <div style={{ fontSize: '18px', fontWeight: 800, color: p.featured ? B.ocker : B.black, marginBottom: '12px' }}>{p.price}</div>
+                  <ul style={{ display: 'flex', flexDirection: 'column', gap: '7px', marginBottom: '12px' }}>
+                    {p.items.map(item => (
+                      <li key={item} style={{ display: 'flex', gap: '7px', fontSize: '13px', color: 'rgba(14,12,8,0.65)' }}>
+                        <CheckCircle2 size={12} style={{ color: p.featured ? B.ocker : 'rgba(14,12,8,0.35)', flexShrink: 0, marginTop: '2px' }} />
+                        {item}
+                      </li>
                     ))}
-                  </div>
-                  <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                    <Magnetic>
-                      <a
-                        href="mailto:hello@leonseitz.com?subject=Kostenlose Website-Analyse&body=Meine Website: %0D%0AZiel: %0D%0ADeadline (optional): %0D%0A"
-                        className="inline-flex items-center gap-2 font-bold px-8 py-4 rounded-full transition-colors"
-                        style={{
-                          background: B.yellow,
-                          color: B.black,
-                          fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
-                          boxShadow: '0 0 40px rgba(232,168,0,0.18)',
-                        }}
-                        onMouseEnter={e => e.currentTarget.style.background = B.ocker}
-                        onMouseLeave={e => e.currentTarget.style.background = B.yellow}
-                      >
-                        <Mail size={17} /> Analyse anfragen
-                      </a>
-                    </Magnetic>
-                    <GhostCTA href="/portfolio"><ExternalLink size={16} /> Portfolio ansehen</GhostCTA>
+                  </ul>
+                  <div style={{ fontSize: '11px', color: 'rgba(14,12,8,0.35)', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <Clock size={10} /> {p.time}
                   </div>
                 </div>
-              </div>
-            </Reveal>
-
+              ))}
+            </div>
           </div>
-        </Scene>
+        </Reveal>
 
-      </main>
-      <Footer />
+        {/* Footer link */}
+        <Reveal delayMs={300}>
+          <div style={{ marginTop: '80px', paddingTop: '32px', borderTop: '1px solid rgba(14,12,8,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+            <span style={{ fontSize: '14px', fontWeight: 800, color: B.black }}>Leon Seitz</span>
+            <div style={{ display: 'flex', gap: '24px', fontSize: '13px', color: 'rgba(14,12,8,0.45)' }}>
+              <a href="/portfolio" style={{ color: 'inherit', textDecoration: 'none' }}>Portfolio</a>
+              <a href="/prozess" style={{ color: 'inherit', textDecoration: 'none' }}>Ablauf</a>
+              <a href="/impressum" style={{ color: 'inherit', textDecoration: 'none' }}>Impressum</a>
+              <a href="/datenschutz" style={{ color: 'inherit', textDecoration: 'none' }}>Datenschutz</a>
+            </div>
+            <span style={{ fontSize: '12px', color: 'rgba(14,12,8,0.30)' }}>© 2026 Leon Seitz</span>
+          </div>
+        </Reveal>
+
+      </Section>
+
     </div>
   );
 }
@@ -1147,20 +1122,6 @@ export default function Home() {
    KEYFRAMES
 ───────────────────────────────────────────── */
 const globalKeyframes = `
-@keyframes blob {
-  0%   { transform: translate3d(0px,0px,0) scale(1); }
-  35%  { transform: translate3d(40px,-30px,0) scale(1.08); }
-  70%  { transform: translate3d(-30px,20px,0) scale(0.96); }
-  100% { transform: translate3d(0px,0px,0) scale(1); }
-}
-@keyframes shineSoft {
-  0%   { transform: translateX(-180px) rotate(12deg); opacity:0.00; }
-  14%  { opacity:0.07; }
-  38%  { transform: translateX(100px) rotate(12deg); opacity:0.05; }
-  55%  { transform: translateX(220px) rotate(12deg); opacity:0.02; }
-  78%  { transform: translateX(480px) rotate(12deg); opacity:0.04; }
-  100% { transform: translateX(900px) rotate(12deg); opacity:0.00; }
-}
 @keyframes noiseMove {
   0%   { transform: translate3d(0,0,0); }
   100% { transform: translate3d(90px,60px,0); }
