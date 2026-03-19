@@ -266,27 +266,21 @@ function RoadMap() {
 
   const steps = [
     {
-      n: '0', label: 'Sprint 0', sub: 'Analyse + Entwurf',
-      note: 'Kostenlos — kein Commitment',
-      desc: 'Ich analysiere deine Website, benenne konkrete Schwachstellen und liefere einen ersten Seitenaufbau.',
+      n: '0', label: 'Iteration 0', sub: 'Analyse — kostenlos',
+      note: '✓ Kostenlos, kein Commitment',
+      desc: 'Ich schaue mir deinen gesamten Auftritt an: Website, Print, Social, Prozesse, Ladenauftritt. Du bekommst eine ehrliche Einschätzung — was funktioniert, was nicht, und wo ich ansetzen würde.',
       highlight: true,
     },
     {
-      n: '1', label: 'Sprint 1', sub: 'Erste Version',
-      note: 'Zahlung nach Review',
-      desc: 'Du klickst durch die erste Version, gibst Feedback. 2 Revisionsrunden sind inklusive.',
+      n: '1', label: 'Iteration 1', sub: 'Erste Umsetzung',
+      note: 'Zahlung nur wenn es dir gefällt',
+      desc: 'Ich setze den ersten konkreten Schritt um — ein neues Design, ein überarbeitetes Material, ein digitaler Prozess. Du siehst das Ergebnis und entscheidest dann.',
       highlight: false,
     },
     {
-      n: '2', label: 'Sprint 2', sub: 'Feinschliff',
-      note: 'Zahlung nach Freigabe',
-      desc: 'Alle Feedback-Punkte umgesetzt. SEO-Basis und Performance werden geprüft.',
-      highlight: false,
-    },
-    {
-      n: '3', label: 'Sprint 3', sub: 'Go-Live + Übergabe',
-      note: 'Zahlung nach Übergabe',
-      desc: 'Live-Schaltung, alle Dateien, Zugänge und vollständige Dokumentation.',
+      n: '2', label: 'Iteration 2+', sub: 'Weiteres nach Bedarf',
+      note: 'Immer erst nach Fertigstellung',
+      desc: 'Jede weitere Iteration baut auf der vorherigen auf. Kein langer Vertrag, kein Paket — wir arbeiten so lange zusammen wie es sinnvoll ist.',
       highlight: false,
     },
   ];
@@ -405,7 +399,7 @@ function RoadMap() {
         <span style={{
           fontSize: 12, fontWeight: 700, letterSpacing: '0.06em',
           textTransform: 'uppercase', color: B.yellow,
-        }}>Deine Website ist live.</span>
+        }}>Dein Auftritt ist fertig.</span>
       </div>
     </div>
   );
@@ -609,10 +603,11 @@ export default function Home() {
             lineHeight: 1.04, letterSpacing: '-0.03em',
             color: B.cream, maxWidth: 780, margin: '0 auto',
           }}>
-            Mehr Anfragen durch eine Website, die{' '}
-            <Underline active={heroShown}>klar ist</Underline>
-            {' '}– nicht nur{' '}
-            <SerifAccent col={B.cream}>schön.</SerifAccent>
+            Dein Betrieb verdient einen Auftritt,
+            der{' '}
+            <Underline active={heroShown}>wirkt</Underline>
+            {' '}– digital{' '}
+            <SerifAccent col={B.cream}>und vor Ort.</SerifAccent>
           </div>
         </Reveal>
         <Reveal delay={110}>
@@ -621,8 +616,9 @@ export default function Home() {
             color: 'rgba(245,242,235,0.58)', lineHeight: 1.72,
             maxWidth: 520, margin: '28px auto 0',
           }}>
-            Ich analysiere deine aktuelle Website kostenlos, zeige konkret was nicht funktioniert –
-            und liefere einen ersten Entwurf. Ohne Risiko, ohne Commitment.
+            Ich analysiere wie dein Betrieb aktuell nach außen wirkt — Website, Social Media,
+            Flyer, Speisekarte, Ladenauftritt. Und zeige konkret, wo Potenzial liegt.
+            Kostenlos. Ohne Commitment.
           </p>
         </Reveal>
         <Reveal delay={230}>
@@ -649,9 +645,9 @@ export default function Home() {
             marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
             fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.black,
           }}>
-            Viele Websites sehen gut aus.
+            Viele Betriebe sind gut.
             <br />
-            <span style={{ color: B.ocker }}>Und erzeugen trotzdem keine Anfragen.</span>
+            <span style={{ color: B.ocker }}>Aber nach außen wirkt es nicht so.</span>
           </h2>
         </Reveal>
         <Reveal delay={160}>
@@ -659,8 +655,9 @@ export default function Home() {
             marginTop: 20, fontSize: 15, color: 'rgba(14,12,8,0.58)',
             lineHeight: 1.72, maxWidth: 500, margin: '20px auto 0',
           }}>
-            Das liegt selten am Design. Branding, Botschaft und Seitenstruktur sind nicht aufeinander abgestimmt.
-            Der Besucher kommt — und weiß nicht, was er tun soll.
+            Ein guter Laden, ein gutes Produkt — aber die Visitenkarte, der Flyer,
+            die Website und der Instagram-Auftritt erzählen alle eine andere Geschichte.
+            Das kostet Vertrauen und Aufträge, die nie ankommen.
           </p>
         </Reveal>
 
@@ -710,7 +707,7 @@ export default function Home() {
 
         <Reveal delay={320}>
           <div style={{ marginTop: 44, display: 'flex', justifyContent: 'center' }}>
-            <BtnPrimary label="Kostenlos prüfen lassen" href="/#request" />
+            <BtnPrimary label="Kostenlose Analyse anfragen" href="/#request" />
           </div>
         </Reveal>
 
@@ -721,7 +718,7 @@ export default function Home() {
               textDecoration: 'none', color: 'rgba(14,12,8,0.28)',
               fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase',
             }}>
-              Der Ablauf <ArrowDown size={16} style={{ color: B.ocker }} />
+              Wie wir arbeiten <ArrowDown size={16} style={{ color: B.ocker }} />
             </a>
           </div>
         </Reveal>
@@ -731,15 +728,15 @@ export default function Home() {
 
       {/* ── S3: ROADMAP ── */}
       <Sec id="s3" dark pad="96px 24px">
-        <Reveal><Tag>Der Ablauf</Tag></Reveal>
+        <Reveal><Tag>Wie wir arbeiten</Tag></Reveal>
         <Reveal delay={80}>
           <h2 style={{
             marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
             fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.cream,
           }}>
-            Du siehst den Entwurf.
+            Iteration 0 ist kostenlos.
             <br />
-            Erst dann <SerifAccent col={B.cream}>entscheidest</SerifAccent> du.
+            Du zahlst nur, wenn es dir <SerifAccent col={B.cream}>gefällt.</SerifAccent>
           </h2>
         </Reveal>
         <Reveal delay={150}>
@@ -747,7 +744,8 @@ export default function Home() {
             marginTop: 20, fontSize: 15, color: 'rgba(245,242,235,0.55)',
             lineHeight: 1.72, maxWidth: 480, margin: '20px auto 0',
           }}>
-            Sprint 0 ist kostenlos. Kein Angebot ins Blaue — du siehst das Ergebnis bevor du zahlst.
+            Kein Paket, kein Festpreis im Voraus. Wir arbeiten iterativ — Schritt für Schritt,
+            und du entscheidest nach jeder Runde ob es weitergeht.
           </p>
         </Reveal>
 
@@ -817,7 +815,7 @@ export default function Home() {
             marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
             fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.cream,
           }}>
-            Vier Bereiche. <SerifAccent col={B.cream}>Einer</SerifAccent> greift in den nächsten.
+            Was ich analysiere <SerifAccent col={B.cream}>und umsetze.</SerifAccent>
           </h2>
         </Reveal>
         <Reveal delay={130}>
@@ -825,16 +823,16 @@ export default function Home() {
             fontSize: 15, color: 'rgba(245,242,235,0.55)',
             maxWidth: 400, margin: '12px auto 48px', lineHeight: 1.7,
           }}>
-            Einzeln buchbar oder als komplettes Setup.
+            Je nachdem wo dein Betrieb steht — ich schaue zuerst, dann machen wir.
           </p>
         </Reveal>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 14 }}>
           {[
-            { icon: <Icon.Brandbook />, kicker: 'Brandbook',     title: 'Guidelines, die man wirklich nutzt.', desc: 'Farben, Typo, Layoutregeln, Tone of Voice. Damit du konsistent kommunizierst — ohne jedes Mal neu entscheiden zu müssen.' },
-            { icon: <Icon.Motion />,    kicker: 'Motiondesign',  title: 'Motion, der im Feed auffällt.',       desc: 'Kurzformate, Motion Graphics, Hook-Varianten, Templates. Skalierbar ohne jedes Format neu zu entwickeln.' },
-            { icon: <Icon.Web />,       kicker: 'Webdevelopment',title: 'Websites mit einer Richtung.',        desc: 'Klarer Aufbau, klare CTA, wenig Ablenkung. Damit ein Besucher weiß, was als nächstes passieren soll.' },
-            { icon: <Icon.Video />,     kicker: 'Videoediting',  title: 'Schnitt mit Rhythmus.',               desc: 'Storyline, Timing, Sound, Pace. Damit ein Video nicht nur fertig ist, sondern die Botschaft trägt.' },
+            { icon: <Icon.Web />,       kicker: 'Digitaler Auftritt', title: 'Website, Social, Online-Präsenz.', desc: 'Klarer Aufbau, klare Botschaft. Damit ein Besucher in fünf Sekunden versteht, was du machst — und warum er bleiben soll.' },
+            { icon: <Icon.Brandbook />, kicker: 'Print & Branding',   title: 'Flyer, Speisekarten, Materialien.', desc: 'Visitenkarte, Flyer, Speisekarte, Broschüre — konsistent, professionell, erkennbar. Alles was dein Betrieb anfasst, sollte gut aussehen.' },
+            { icon: <Icon.Motion />,    kicker: 'Content & Motion',   title: 'Social Content, der auffällt.',     desc: 'Kurzvideos, Reels, Motion Graphics. Damit du regelmäßig sichtbar bist — ohne jedes Format von null aufzubauen.' },
+            { icon: <Icon.Video />,     kicker: 'Prozesse',           title: 'Abläufe, die Zeit sparen.',         desc: 'Bestellungen, Kommunikation, interne Abläufe — ich schaue was sich digitalisieren oder vereinfachen lässt. Konkret, umsetzbar.' },
           ].map((s, i) => (
             <Reveal key={i} delay={i * 80}>
               <ServiceCard {...s} dark={true} />
@@ -844,7 +842,7 @@ export default function Home() {
 
         <Reveal delay={320}>
           <div style={{ marginTop: 48, display: 'flex', justifyContent: 'center' }}>
-            <BtnPrimary label="Kostenlos starten" href="/#request" />
+            <BtnPrimary label="Kostenlose Analyse anfragen" href="/#request" />
           </div>
         </Reveal>
       </Sec>
@@ -862,7 +860,7 @@ export default function Home() {
             marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
             fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.black,
           }}>
-            Termin buchen. <SerifAccent col={B.ocker}>Kostenlos.</SerifAccent>
+            Lass uns reden. <SerifAccent col={B.ocker}>Kostenlos.</SerifAccent>
           </h2>
         </Reveal>
         <Reveal delay={140}>
@@ -870,8 +868,9 @@ export default function Home() {
             marginTop: 16, fontSize: 15, color: 'rgba(14,12,8,0.58)',
             lineHeight: 1.72, maxWidth: 440, margin: '16px auto 0',
           }}>
-            Ich schaue mir deine Website an und sage dir ehrlich, was nicht funktioniert.
-            Kein Commitment, bevor du das Ergebnis gesehen hast.
+            Ich schaue mir deinen Betrieb an — digital und vor Ort wenn nötig —
+            und sage dir ehrlich, wo ich Potenzial sehe. Kein Paket, kein Commitment.
+            Iteration 0 ist kostenlos.
           </p>
         </Reveal>
 
@@ -880,19 +879,41 @@ export default function Home() {
 
         {/* Alt contact */}
         <Reveal delay={280}>
-          <div style={{ marginTop: 24, display: 'flex', gap: 28, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div style={{ marginTop: 28, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <a
               href="https://wa.me/4916095757167?text=Hi%20Leon%2C%0A%0AZiel%3A%0ADeadline%3A%0AStand%3A%0A%0AKurzer%20Kontext%3A"
               target="_blank" rel="noopener noreferrer"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'rgba(14,12,8,0.50)', textDecoration: 'none', fontWeight: 600 }}>
-              <Icon.WA /> WhatsApp
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 10,
+                padding: '13px 24px', borderRadius: 100,
+                background: '#25D366', color: '#fff',
+                fontSize: 14, fontWeight: 700, textDecoration: 'none',
+                transition: 'opacity .18s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.opacity = '0.88'}
+              onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+            >
+              <Icon.WA /> WhatsApp schreiben
             </a>
             <a
               href="mailto:hello@leonseitz.com?subject=Kostenlose Website-Analyse&body=Meine Website: %0D%0AZiel: %0D%0ADeadline (optional): %0D%0A"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'rgba(14,12,8,0.50)', textDecoration: 'none', fontWeight: 600 }}>
-              <Mail size={14} /> E-Mail
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 10,
+                padding: '13px 24px', borderRadius: 100,
+                border: '1px solid rgba(14,12,8,0.18)',
+                background: 'transparent', color: 'rgba(14,12,8,0.65)',
+                fontSize: 14, fontWeight: 700, textDecoration: 'none',
+                transition: 'border-color .18s, color .18s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(14,12,8,0.40)'; e.currentTarget.style.color = B.black; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(14,12,8,0.18)'; e.currentTarget.style.color = 'rgba(14,12,8,0.65)'; }}
+            >
+              <Mail size={16} /> E-Mail schreiben
             </a>
           </div>
+          <p style={{ marginTop: 12, fontSize: 12, color: 'rgba(14,12,8,0.35)', textAlign: 'center' }}>
+            Oder direkt: <strong style={{ color: 'rgba(14,12,8,0.55)' }}>hello@leonseitz.com</strong>
+          </p>
         </Reveal>
 
         {/* Prozess link instead of Pakete */}
