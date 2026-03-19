@@ -121,7 +121,7 @@ const SCENES = {
 
 /* ---------- UTIL ---------- */
 
-function cx(...xs: (string | boolean | undefined | null)[]) {
+function cx(...xs) {
   return xs.filter(Boolean).join(' ');
 }
 
