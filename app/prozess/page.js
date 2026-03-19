@@ -134,12 +134,13 @@ function BtnGhost({ label, href, dark = true }) {
 }
 
 /* ─── SECTION WRAPPER ─── */
-function Sec({ id, dark = true, children, pad = '96px 24px' }) {
+function Sec({ id, dark = true, children, pad = '80px 20px' }) {
   return (
     <section id={id} style={{
       background: dark ? B.black : B.cream,
       color: dark ? B.cream : B.black,
       padding: pad, position: 'relative',
+      overflowX: 'hidden', width: '100%',
     }}>
       <div style={{ maxWidth: 920, margin: '0 auto', width: '100%', textAlign: 'center' }}>
         {children}
@@ -199,7 +200,7 @@ function IterationTimeline() {
   ];
 
   return (
-    <div ref={ref} style={{ maxWidth: 600, margin: '0 auto', textAlign: 'left' }}>
+    <div ref={ref} style={{ maxWidth: '100%', width: '100%', margin: '0 auto', textAlign: 'left', boxSizing: 'border-box' }}>
 
       {/* Start dot */}
       <div style={{
@@ -273,7 +274,7 @@ function IterationTimeline() {
             </div>
             <p style={{
               fontSize: 14, color: 'rgba(245,242,235,0.52)',
-              lineHeight: 1.7, marginBottom: 12, maxWidth: 440,
+              lineHeight: 1.7, marginBottom: 12, maxWidth: '100%',
             }}>
               {it.desc}
             </p>
@@ -333,7 +334,7 @@ function AufwandRechner() {
   ];
 
   return (
-    <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'left' }}>
+    <div style={{ maxWidth: '100%', width: '100%', margin: '0 auto', textAlign: 'left', boxSizing: 'border-box' }}>
 
       {/* Slider */}
       <div style={{
@@ -490,11 +491,12 @@ function FaqItem({ q, a, dark }) {
 export default function ProzessPage() {
 
   return (
-    <div style={{ fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif" }}>
+    <div style={{ fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif", overflowX: 'hidden', position: 'relative', maxWidth: '100vw' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=DM+Serif+Display:ital@1&display=swap');
         *{box-sizing:border-box;margin:0;padding:0}
-        html{scroll-behavior:smooth}
+        html,body{scroll-behavior:smooth;overflow-x:hidden;max-width:100%;width:100%}
+        *{min-width:0;box-sizing:border-box}
         input[type=range]{height:4px}
       `}</style>
 
@@ -503,7 +505,7 @@ export default function ProzessPage() {
       {/* ── MINI HEADER ── */}
       <div style={{
         position: 'fixed', top: 3, left: 0, right: 0, zIndex: 50,
-        padding: '14px 28px', display: 'flex', justifyContent: 'space-between',
+        padding: '14px 20px', display: 'flex', justifyContent: 'space-between',
         alignItems: 'center', pointerEvents: 'none',
       }}>
         <a href="/" style={{
@@ -525,15 +527,15 @@ export default function ProzessPage() {
       </div>
 
       {/* ── S1: HERO ── dark ── */}
-      <Sec id="s1" dark pad="130px 24px 96px">
+      <Sec id="s1" dark pad="110px 20px 80px">
         <Reveal>
           <Tag>Wie wir arbeiten</Tag>
         </Reveal>
         <Reveal delay={80}>
           <h1 style={{
-            marginTop: 20, fontSize: 'clamp(2.4rem,6vw,4.8rem)',
-            fontWeight: 900, lineHeight: 1.04, letterSpacing: '-0.03em',
-            color: B.cream, maxWidth: 780, margin: '20px auto 0',
+            marginTop: 20, fontSize: 'clamp(2rem,7vw,4.8rem)',
+            fontWeight: 900, lineHeight: 1.06, letterSpacing: '-0.025em',
+            color: B.cream, maxWidth: '100%', margin: '20px auto 0', wordBreak: 'break-word',
           }}>
             Kein Paket. Kein Fixpreis.
             <br />
@@ -551,7 +553,7 @@ export default function ProzessPage() {
           </p>
         </Reveal>
         <Reveal delay={240}>
-          <div style={{ marginTop: 40, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div style={{ marginTop: 40, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', padding: '0 4px' }}>
             <BtnPrimary label="Kostenlose Analyse anfragen" href="/#request" />
             <BtnGhost label="Zurück zur Startseite" href="/" />
           </div>
@@ -565,7 +567,7 @@ export default function ProzessPage() {
         <Reveal><Tag light>Was ich analysiere</Tag></Reveal>
         <Reveal delay={80}>
           <h2 style={{
-            marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
+            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
             fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.black,
           }}>
             Nicht nur die Website.
@@ -584,7 +586,7 @@ export default function ProzessPage() {
         </Reveal>
 
         <Reveal delay={220}>
-          <div style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
+          <div style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(240px,100%),1fr))', gap: 14 }}>
             {[
               {
                 icon: (
@@ -632,7 +634,7 @@ export default function ProzessPage() {
             marginTop: 32, padding: '18px 24px', borderRadius: 14,
             border: '1px solid rgba(232,168,0,0.25)', background: 'rgba(232,168,0,0.05)',
             fontSize: 14, color: 'rgba(14,12,8,0.65)', lineHeight: 1.65,
-            maxWidth: 560, margin: '32px auto 0', textAlign: 'left',
+            maxWidth: '100%', margin: '32px auto 0', textAlign: 'left',
           }}>
             <strong style={{ color: B.black }}>Das Ergebnis von Iteration 0:</strong> Du bekommst 3–5 konkrete Befunde schriftlich, eine Einschätzung wo ich beginnen würde — und erst dann entscheidest du ob wir weitermachen.
           </div>
@@ -646,7 +648,7 @@ export default function ProzessPage() {
         <Reveal><Tag>Der Ablauf</Tag></Reveal>
         <Reveal delay={80}>
           <h2 style={{
-            marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
+            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
             fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.cream,
           }}>
             Iteration 0 ist kostenlos.
@@ -682,7 +684,7 @@ export default function ProzessPage() {
         <Reveal><Tag light>Aufwand & Preis</Tag></Reveal>
         <Reveal delay={80}>
           <h2 style={{
-            marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
+            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
             fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.black,
           }}>
             Ein Stundensatz.
@@ -714,7 +716,7 @@ export default function ProzessPage() {
         <Reveal><Tag>Häufige Fragen</Tag></Reveal>
         <Reveal delay={80}>
           <h2 style={{
-            marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
+            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
             fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.cream,
           }}>
             Kurze Antworten.
@@ -724,7 +726,7 @@ export default function ProzessPage() {
         </Reveal>
 
         <Reveal delay={180}>
-          <div style={{ marginTop: 48, maxWidth: 640, margin: '48px auto 0', textAlign: 'left' }}>
+          <div style={{ marginTop: 48, maxWidth: '100%', width: '100%', margin: '48px auto 0', textAlign: 'left', boxSizing: 'border-box' }}>
             {[
               {
                 q: 'Was, wenn es mir nach Iteration 1 nicht gefällt?',
@@ -756,14 +758,14 @@ export default function ProzessPage() {
       <Div from={true} />
 
       {/* ── S6: CTA ── light ── */}
-      <Sec id="cta" dark={false} pad="96px 24px 80px">
+      <Sec id="cta" dark={false} pad="80px 20px 64px">
         {/* Tagesstreifen */}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: B.yellow }} />
 
         <Reveal><Tag light>Einstieg</Tag></Reveal>
         <Reveal delay={80}>
           <h2 style={{
-            marginTop: 20, fontSize: 'clamp(1.8rem,4vw,3rem)',
+            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
             fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.025em', color: B.black,
           }}>
             Lass uns starten.
@@ -782,7 +784,7 @@ export default function ProzessPage() {
         </Reveal>
 
         <Reveal delay={220}>
-          <div style={{ marginTop: 40, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div style={{ marginTop: 40, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', padding: '0 4px' }}>
             <a href={WA_HREF} target="_blank" rel="noopener noreferrer"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 10,
