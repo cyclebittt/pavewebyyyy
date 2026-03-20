@@ -479,6 +479,244 @@ function StatBox({ target, suffix, label, delay = 0 }) {
   );
 }
 
+/* ─── LEISTUNG CARD ─── */
+function LeistungCard({ n, icon, kicker, title, desc, accent }) {
+  const [h, setH] = useState(false);
+  return (
+    <div
+      onMouseEnter={() => setH(true)}
+      onMouseLeave={() => setH(false)}
+      style={{
+        padding: '36px 32px',
+        border: `1px solid ${h ? 'rgba(232,168,0,0.25)' : 'rgba(245,242,235,0.07)'}`,
+        background: h ? 'rgba(232,168,0,0.04)' : B.dark,
+        textAlign: 'left', position: 'relative', overflow: 'hidden',
+        transition: 'border-color .22s, background .22s',
+        cursor: 'default',
+      }}>
+      {/* Large faint number */}
+      <div style={{
+        position: 'absolute', top: 20, right: 24,
+        fontSize: 72, fontWeight: 900, lineHeight: 1,
+        color: h ? 'rgba(232,168,0,0.10)' : 'rgba(245,242,235,0.04)',
+        letterSpacing: '-0.04em', userSelect: 'none',
+        transition: 'color .22s',
+        fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
+      }}>
+        {n}
+      </div>
+
+      {/* Yellow top line on hover */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+        background: B.yellow,
+        opacity: h ? 1 : 0,
+        transition: 'opacity .22s',
+      }} />
+
+      {/* Icon */}
+      <div style={{
+        width: 44, height: 44, borderRadius: 12, marginBottom: 24,
+        background: h ? 'rgba(232,168,0,0.14)' : 'rgba(245,242,235,0.06)',
+        border: `1px solid ${h ? 'rgba(232,168,0,0.25)' : 'rgba(245,242,235,0.10)'}`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        color: h ? B.yellow : 'rgba(245,242,235,0.50)',
+        transition: 'all .22s',
+      }}>
+        {icon}
+      </div>
+
+      {/* Kicker */}
+      <div style={{
+        fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
+        letterSpacing: '0.09em', color: B.yellow,
+        marginBottom: 10, opacity: h ? 1 : 0.7,
+        transition: 'opacity .22s',
+      }}>
+        {kicker}
+      </div>
+
+      {/* Title */}
+      <div style={{
+        fontSize: 18, fontWeight: 800, color: B.cream,
+        lineHeight: 1.25, letterSpacing: '-0.01em', marginBottom: 14,
+      }}>
+        {title}
+      </div>
+
+      {/* Desc */}
+      <p style={{
+        fontSize: 13, color: 'rgba(245,242,235,0.50)',
+        lineHeight: 1.7, maxWidth: 340,
+      }}>
+        {desc}
+      </p>
+
+      {/* Bottom link */}
+      <div style={{
+        marginTop: 24, display: 'flex', alignItems: 'center', gap: 6,
+        fontSize: 12, fontWeight: 700, color: B.yellow,
+        opacity: h ? 1 : 0, transition: 'opacity .22s',
+      }}>
+        Anfrage schicken
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path d="M2.5 6h7M6.5 3l3 3-3 3" stroke={B.yellow} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+/* ─── SERVICE CARD LARGE ─── */
+function ServiceCardLarge({ icon, kicker, title, desc, num, delay = 0 }) {
+  const ref = useRef(null);
+  const shown = useReveal(ref);
+  const [h, setH] = useState(false);
+
+  return (
+    <div
+      ref={ref}
+      onMouseEnter={() => setH(true)}
+      onMouseLeave={() => setH(false)}
+      style={{
+        opacity: shown ? 1 : 0,
+        transform: shown ? 'none' : 'translateY(20px)',
+        transition: `opacity .65s ease ${delay}ms, transform .65s ease ${delay}ms`,
+        borderRadius: 20, padding: '32px 28px',
+        border: h ? '1px solid rgba(232,168,0,0.30)' : '1px solid rgba(245,242,235,0.07)',
+        background: h ? 'rgba(232,168,0,0.05)' : B.dark,
+        transition2: 'border-color .2s, background .2s',
+        cursor: 'default', position: 'relative', overflow: 'hidden',
+      }}>
+      {/* Large number watermark */}
+      <div style={{
+        position: 'absolute', top: -8, right: 16,
+        fontSize: 80, fontWeight: 900, lineHeight: 1,
+        color: 'rgba(245,242,235,0.04)',
+        letterSpacing: '-0.04em',
+        userSelect: 'none', pointerEvents: 'none',
+      }}>
+        {num}
+      </div>
+
+      {/* Icon */}
+      <div style={{
+        width: 44, height: 44, borderRadius: 12,
+        background: h ? 'rgba(232,168,0,0.15)' : 'rgba(232,168,0,0.10)',
+        border: `1px solid rgba(232,168,0,${h ? '0.28' : '0.16'})`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        color: B.yellow, marginBottom: 20,
+        transition: 'all .2s',
+      }}>
+        {icon}
+      </div>
+
+      {/* Kicker */}
+      <div style={{
+        fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
+        letterSpacing: '0.08em', color: B.yellow, marginBottom: 10,
+      }}>
+        {kicker}
+      </div>
+
+      {/* Title */}
+      <div style={{
+        fontSize: 20, fontWeight: 800, color: B.cream,
+        letterSpacing: '-0.01em', lineHeight: 1.2, marginBottom: 12,
+      }}>
+        {title}
+      </div>
+
+      {/* Desc */}
+      <p style={{
+        fontSize: 13, color: 'rgba(245,242,235,0.52)',
+        lineHeight: 1.7, maxWidth: 320,
+      }}>
+        {desc}
+      </p>
+
+      {/* CTA link */}
+      <a href="/#request" style={{
+        display: 'inline-flex', alignItems: 'center', gap: 6,
+        marginTop: 22, fontSize: 13, fontWeight: 700,
+        color: h ? B.yellow : 'rgba(232,168,0,0.55)',
+        textDecoration: 'none', transition: 'color .18s',
+      }}>
+        Anfragen <ArrowRight size={14} />
+      </a>
+    </div>
+  );
+}
+
+/* ─── SERVICE CARD COMPACT ─── */
+function ServiceCardCompact({ icon, kicker, title, desc, num, delay = 0 }) {
+  const ref = useRef(null);
+  const shown = useReveal(ref);
+  const [h, setH] = useState(false);
+
+  return (
+    <div
+      ref={ref}
+      onMouseEnter={() => setH(true)}
+      onMouseLeave={() => setH(false)}
+      style={{
+        opacity: shown ? 1 : 0,
+        transform: shown ? 'none' : 'translateY(20px)',
+        transition: `opacity .65s ease ${delay}ms, transform .65s ease ${delay}ms`,
+        borderRadius: 20, padding: '24px 24px',
+        border: h ? '1px solid rgba(232,168,0,0.25)' : '1px solid rgba(245,242,235,0.07)',
+        background: h ? 'rgba(232,168,0,0.04)' : B.dark,
+        cursor: 'default', position: 'relative', overflow: 'hidden',
+      }}>
+      {/* Number watermark */}
+      <div style={{
+        position: 'absolute', top: -6, right: 14,
+        fontSize: 60, fontWeight: 900, lineHeight: 1,
+        color: 'rgba(245,242,235,0.04)',
+        letterSpacing: '-0.04em',
+        userSelect: 'none', pointerEvents: 'none',
+      }}>
+        {num}
+      </div>
+
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+        {/* Icon */}
+        <div style={{
+          width: 38, height: 38, borderRadius: 10, flexShrink: 0,
+          background: h ? 'rgba(232,168,0,0.14)' : 'rgba(232,168,0,0.08)',
+          border: `1px solid rgba(232,168,0,${h ? '0.25' : '0.14'})`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: B.yellow, transition: 'all .2s',
+          marginTop: 2,
+        }}>
+          {icon}
+        </div>
+
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{
+            fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
+            letterSpacing: '0.08em', color: B.yellow, marginBottom: 6,
+          }}>
+            {kicker}
+          </div>
+          <div style={{
+            fontSize: 16, fontWeight: 800, color: B.cream,
+            letterSpacing: '-0.01em', lineHeight: 1.25, marginBottom: 8,
+          }}>
+            {title}
+          </div>
+          <p style={{
+            fontSize: 12, color: 'rgba(245,242,235,0.48)',
+            lineHeight: 1.65,
+          }}>
+            {desc}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── SERVICE CARD ─── */
 function ServiceCard({ icon, kicker, title, desc, dark }) {
   const [h, setH] = useState(false);
@@ -790,7 +1028,7 @@ export default function Home() {
 
         <Reveal delay={300}>
           <div style={{ marginTop: 44, display: 'flex', justifyContent: 'center' }}>
-            <BtnPrimary label="Instagram ansehen" href="https://www.instagram.com/leonnseitz" target="_blank" />
+            <BtnPrimary label="Instagram ansehen" href="https://www.instagram.com/leonseitz" target="_blank" />
           </div>
         </Reveal>
 
@@ -823,21 +1061,50 @@ export default function Home() {
         <Reveal delay={130}>
           <p style={{
             fontSize: 15, color: 'rgba(245,242,235,0.55)',
-            maxWidth: 400, margin: '12px auto 48px', lineHeight: 1.7,
+            maxWidth: 400, margin: '12px auto 56px', lineHeight: 1.7,
           }}>
             Je nachdem wo dein Betrieb steht — ich schaue zuerst, dann machen wir.
           </p>
         </Reveal>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(260px,100%),1fr))', gap: 14 }}>
+        {/* 2x2 large cards with numbered index */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(320px,100%),1fr))', gap: 2 }}>
           {[
-            { icon: <Icon.Web />,       kicker: 'Digitaler Auftritt', title: 'Website, Social, Online-Präsenz.', desc: 'Klarer Aufbau, klare Botschaft. Damit ein Besucher in fünf Sekunden versteht, was du machst — und warum er bleiben soll.' },
-            { icon: <Icon.Brandbook />, kicker: 'Print & Branding',   title: 'Flyer, Speisekarten, Materialien.', desc: 'Visitenkarte, Flyer, Speisekarte, Broschüre — konsistent, professionell, erkennbar. Alles was dein Betrieb anfasst, sollte gut aussehen.' },
-            { icon: <Icon.Motion />,    kicker: 'Content & Motion',   title: 'Social Content, der auffällt.',     desc: 'Kurzvideos, Reels, Motion Graphics. Damit du regelmäßig sichtbar bist — ohne jedes Format von null aufzubauen.' },
-            { icon: <Icon.Video />,     kicker: 'Prozesse',           title: 'Abläufe, die Zeit sparen.',         desc: 'Bestellungen, Kommunikation, interne Abläufe — ich schaue was sich digitalisieren oder vereinfachen lässt. Konkret, umsetzbar.' },
+            {
+              n: '01',
+              icon: <Icon.Web />,
+              kicker: 'Digitaler Auftritt',
+              title: 'Website, Social, Online-Präsenz.',
+              desc: 'Klarer Aufbau, klare Botschaft. Damit ein Besucher in fünf Sekunden versteht, was du machst — und warum er bleiben soll.',
+              accent: B.yellow,
+            },
+            {
+              n: '02',
+              icon: <Icon.Brandbook />,
+              kicker: 'Print & Branding',
+              title: 'Flyer, Speisekarten, Materialien.',
+              desc: 'Visitenkarte, Flyer, Speisekarte, Broschüre — konsistent, professionell, erkennbar. Alles was dein Betrieb anfasst, sollte gut aussehen.',
+              accent: B.yellow,
+            },
+            {
+              n: '03',
+              icon: <Icon.Motion />,
+              kicker: 'Content & Motion',
+              title: 'Social Content, der auffällt.',
+              desc: 'Kurzvideos, Reels, Motion Graphics. Damit du regelmäßig sichtbar bist — ohne jedes Format von null aufzubauen.',
+              accent: B.yellow,
+            },
+            {
+              n: '04',
+              icon: <Icon.Video />,
+              kicker: 'Prozesse',
+              title: 'Abläufe, die Zeit sparen.',
+              desc: 'Bestellungen, Kommunikation, interne Abläufe — ich schaue was sich digitalisieren oder vereinfachen lässt. Konkret, umsetzbar.',
+              accent: B.yellow,
+            },
           ].map((s, i) => (
-            <Reveal key={i} delay={i * 80}>
-              <ServiceCard {...s} dark={true} />
+            <Reveal key={i} delay={i * 70}>
+              <LeistungCard {...s} />
             </Reveal>
           ))}
         </div>
