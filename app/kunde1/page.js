@@ -198,9 +198,8 @@ function Card({ children, highlight = false, style = {} }) {
   return (
     <div style={{
       borderRadius: 20, overflow: 'hidden',
-      border: highlight ? `1px solid rgba(232,168,0,0.28)` : '1px solid rgba(245,242,235,0.08)',
-      background: highlight ? 'rgba(232,168,0,0.05)' : 'rgba(245,242,235,0.03)',
-      backdropFilter: 'blur(8px)',
+      border: highlight ? `1px solid rgba(232,168,0,0.28)` : '1px solid rgba(245,242,235,0.07)',
+      background: highlight ? 'rgba(232,168,0,0.06)' : B.dark,
       ...style,
     }}>
       {children}
@@ -303,7 +302,7 @@ function PhaseCard({ phase, editMode, onTaskToggle, onStatusChange, filterStatus
                     display: 'flex', alignItems: 'center', gap: 12,
                     padding: '10px 14px', borderRadius: 12,
                     border: isDoneTask ? '1px solid rgba(232,168,0,0.15)' : '1px solid rgba(245,242,235,0.07)',
-                    background: isDoneTask ? 'rgba(232,168,0,0.05)' : 'rgba(245,242,235,0.03)',
+                    background: isDoneTask ? 'rgba(232,168,0,0.06)' : 'rgba(245,242,235,0.04)',
                     transition: 'all .2s',
                   }}>
                     {/* Checkbox */}
@@ -377,7 +376,7 @@ function MilestoneTimeline({ milestones, editMode, onToggle }) {
               <div style={{
                 flex: 1, padding: '10px 14px', borderRadius: 14,
                 border: m.done ? '1px solid rgba(232,168,0,0.14)' : '1px solid rgba(245,242,235,0.07)',
-                background: m.done ? 'rgba(232,168,0,0.04)' : 'rgba(245,242,235,0.03)',
+                background: m.done ? 'rgba(232,168,0,0.06)' : 'rgba(245,242,235,0.04)',
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                   <span style={{ fontSize: 13, fontWeight: 700, color: m.done ? 'rgba(245,242,235,0.40)' : B.cream, textDecoration: m.done ? 'line-through' : 'none' }}>
@@ -409,7 +408,7 @@ function DeadlineWidget({ phases, projectDeadline }) {
       <div style={{
         padding: '14px 16px', borderRadius: 14,
         border: projDays <= 7 ? `1px solid rgba(232,168,0,0.28)` : '1px solid rgba(245,242,235,0.08)',
-        background: projDays <= 7 ? 'rgba(232,168,0,0.06)' : 'rgba(245,242,235,0.03)',
+        background: projDays <= 7 ? 'rgba(232,168,0,0.06)' : B.dark,
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       }}>
         <div>
@@ -424,7 +423,7 @@ function DeadlineWidget({ phases, projectDeadline }) {
           <div key={s.id} style={{
             padding: '12px 16px', borderRadius: 14,
             border: '1px solid rgba(245,242,235,0.07)',
-            background: 'rgba(245,242,235,0.03)',
+            background: B.dark,
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           }}>
             <div>
@@ -483,7 +482,7 @@ function GanttChart({ phases, projectStart, projectEnd }) {
                     {phase.label}
                   </div>
                   <div style={{ flex: 1, position: 'relative', height: 32 }}>
-                    <div style={{ position: 'absolute', inset: 0, borderRadius: 100, background: 'rgba(245,242,235,0.04)', border: '1px solid rgba(245,242,235,0.07)' }} />
+                    <div style={{ position: 'absolute', inset: 0, borderRadius: 100, background: B.dark, border: '1px solid rgba(245,242,235,0.07)' }} />
                     <div style={{
                       position: 'absolute', top: 4, bottom: 4, borderRadius: 100,
                       left: `${left}%`, width: `${width}%`, minWidth: 32,
@@ -535,7 +534,7 @@ Leon`
     <div style={{ position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 100, width: 'calc(100% - 40px)', maxWidth: 420 }}>
       <div style={{
         borderRadius: 18, border: '1px solid rgba(232,168,0,0.30)',
-        background: 'rgba(14,12,8,0.85)', backdropFilter: 'blur(20px)',
+        background: B.black, backdropFilter: 'blur(20px)',
         padding: '16px 18px', boxShadow: '0 8px 40px rgba(0,0,0,0.60)',
       }}>
         <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
@@ -595,7 +594,7 @@ function OverallStats({ project }) {
           <div style={{
             padding: '16px 18px', borderRadius: 16,
             border: '1px solid rgba(245,242,235,0.07)',
-            background: 'rgba(245,242,235,0.03)',
+            background: B.dark,
           }}>
             <div style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(245,242,235,0.35)', marginBottom: 8 }}>
               {s.label}
@@ -620,8 +619,8 @@ function FilterBar({ filterStatus, setFilterStatus }) {
           style={{
             fontSize: 11, padding: '4px 12px', borderRadius: 100, cursor: 'pointer',
             border: filterStatus === s ? `1px solid ${B.yellow}` : '1px solid rgba(245,242,235,0.10)',
-            background: filterStatus === s ? 'rgba(232,168,0,0.12)' : 'rgba(245,242,235,0.04)',
-            color: filterStatus === s ? B.yellow : 'rgba(245,242,235,0.45)',
+            background: filterStatus === s ? B.yellow : 'rgba(245,242,235,0.04)',
+            color: filterStatus === s ? B.black : 'rgba(245,242,235,0.45)',
             fontWeight: filterStatus === s ? 700 : 400,
             transition: 'all .15s',
           }}>
@@ -696,11 +695,11 @@ export default function ProjectDashboard() {
   return (
     <div style={{ fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif", color: B.cream, minHeight: '100vh', background: B.black, overflowX: 'hidden' }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=DM+Serif+Display:ital@1&display=swap');
         *{box-sizing:border-box;margin:0;padding:0;min-width:0}
         html,body{overflow-x:hidden;max-width:100%}
         @keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.4}}
-        @keyframes noiseMove{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(90px,60px,0)}}
+        
       `}</style>
 
       <ScrollBar />
@@ -743,8 +742,8 @@ export default function ProjectDashboard() {
                 display: 'inline-flex', alignItems: 'center', gap: 6,
                 padding: '6px 14px', borderRadius: 100, fontSize: 12, fontWeight: 700,
                 border: editMode ? `1px solid rgba(232,168,0,0.35)` : '1px solid rgba(245,242,235,0.12)',
-                background: editMode ? 'rgba(232,168,0,0.12)' : 'rgba(245,242,235,0.05)',
-                color: editMode ? B.yellow : 'rgba(245,242,235,0.55)',
+                background: editMode ? B.yellow : 'rgba(245,242,235,0.05)',
+                color: editMode ? B.black : 'rgba(245,242,235,0.55)',
                 cursor: 'pointer', transition: 'all .18s',
               }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: editMode ? B.yellow : 'rgba(245,242,235,0.30)', animation: editMode ? 'pulseDot 1.5s infinite' : 'none' }} />
@@ -783,15 +782,15 @@ export default function ProjectDashboard() {
 
         {/* Tabs */}
         <Reveal delay={100}>
-          <div style={{ margin: '28px 0 24px', display: 'flex', gap: 4, background: 'rgba(245,242,235,0.04)', border: '1px solid rgba(245,242,235,0.08)', borderRadius: 16, padding: 4, width: 'fit-content', flexWrap: 'wrap' }}>
+          <div style={{ margin: '28px 0 24px', display: 'flex', gap: 4, background: B.dark, border: '1px solid rgba(245,242,235,0.08)', borderRadius: 16, padding: 4, width: 'fit-content', flexWrap: 'wrap' }}>
             {tabs.map(t => (
               <button key={t.id}
                 onClick={() => setActiveTab(t.id)}
                 style={{
                   padding: '8px 16px', borderRadius: 12, fontSize: 13, fontWeight: 700,
                   border: 'none', cursor: 'pointer', transition: 'all .18s',
-                  background: activeTab === t.id ? 'rgba(245,242,235,0.12)' : 'transparent',
-                  color: activeTab === t.id ? B.cream : 'rgba(245,242,235,0.40)',
+                  background: activeTab === t.id ? B.yellow : 'transparent',
+                  color: activeTab === t.id ? B.black : 'rgba(245,242,235,0.40)',
                 }}>
                 {t.label}
               </button>
@@ -863,7 +862,7 @@ export default function ProjectDashboard() {
                       <div key={s.id} style={{
                         padding: '12px 14px', borderRadius: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10,
                         border: s.status === 'done' ? '1px solid rgba(232,168,0,0.20)' : '1px solid rgba(245,242,235,0.07)',
-                        background: s.status === 'done' ? 'rgba(232,168,0,0.05)' : 'rgba(245,242,235,0.03)',
+                        background: s.status === 'done' ? 'rgba(232,168,0,0.06)' : B.dark,
                       }}>
                         <div>
                           <div style={{ fontSize: 10, color: 'rgba(245,242,235,0.30)' }}>{s.label}</div>
