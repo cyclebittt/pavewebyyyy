@@ -267,140 +267,145 @@ function RoadMap() {
 
   const steps = [
     {
-      n: '0', label: 'Phase 0', sub: 'Analyse — kostenlos',
-      note: '✓ Kostenlos, kein Commitment',
-      desc: 'Ich schaue mir deinen gesamten Auftritt an: Website, Print, Social, Prozesse, Ladenauftritt. Du bekommst eine ehrliche Einschätzung — was funktioniert, was nicht, und wo ich ansetzen würde.',
+      n: '0', label: 'Phase 0',
+      sub: 'Analyse',
+      badge: 'Kostenlos',
+      desc: 'Ich schaue mir deinen gesamten Auftritt an — Website, Print, Social, Prozesse, Ladenauftritt. Du bekommst eine ehrliche Einschätzung, wo Potenzial liegt.',
       highlight: true,
     },
     {
-      n: '1', label: 'Phase 1', sub: 'Erste Umsetzung',
-      note: 'Zahlung nur wenn es dir gefällt',
-      desc: 'Ich setze den ersten konkreten Schritt um — ein neues Design, ein überarbeitetes Material, ein digitaler Prozess. Du siehst das Ergebnis und entscheidest dann.',
+      n: '1', label: 'Phase 1',
+      sub: 'Erste Umsetzung',
+      badge: 'Zahlung nur wenn es dir gefällt',
+      desc: 'Ich setze den ersten konkreten Schritt um. Du siehst das fertige Ergebnis — und entscheidest dann ob du zahlst.',
       highlight: false,
     },
     {
-      n: '2', label: 'Phase 2+', sub: 'Weiteres nach Bedarf',
-      note: 'Immer erst nach Fertigstellung',
-      desc: 'Jede weitere Phase baut auf der vorherigen auf. Kein langer Vertrag, kein Paket — wir arbeiten so lange zusammen wie es sinnvoll ist.',
+      n: '2+', label: 'Phase 2+',
+      sub: 'Weiteres nach Bedarf',
+      badge: 'Immer erst nach Fertigstellung',
+      desc: 'Jede weitere Phase baut auf der vorherigen auf. Kein Vertrag, kein Paket — wir arbeiten so lange wie es sinnvoll ist.',
       highlight: false,
     },
   ];
 
   return (
-    <div ref={ref} style={{ maxWidth: '100%', width: '100%', margin: '52px auto 0', textAlign: 'left', padding: '0 4px', boxSizing: 'border-box' }}>
+    <div ref={ref} style={{ width: '100%', maxWidth: 640, margin: '52px auto 0' }}>
 
-      {/* Start marker */}
-      <div style={{
-        opacity: shown ? 1 : 0,
-        transition: 'opacity .5s ease 100ms',
-        display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8,
-      }}>
+      {/* Cards stacked with connecting line */}
+      <div style={{ position: 'relative' }}>
+
+        {/* Vertical connecting line */}
         <div style={{
-          width: 10, height: 10, borderRadius: '50%',
-          background: B.yellow,
-          boxShadow: '0 0 0 4px rgba(232,168,0,0.20)',
-        }} />
-        <span style={{
-          fontSize: 11, fontWeight: 700, letterSpacing: '0.08em',
-          textTransform: 'uppercase', color: 'rgba(245,242,235,0.35)',
-        }}>Start</span>
-      </div>
-
-      {steps.map((s, i) => (
-        <div key={i} style={{
+          position: 'absolute',
+          left: 27, top: 28, bottom: 28,
+          width: 1,
+          background: `linear-gradient(to bottom, ${B.yellow} 0%, rgba(232,168,0,0.20) 40%, rgba(245,242,235,0.06) 100%)`,
           opacity: shown ? 1 : 0,
-          transform: shown ? 'none' : 'translateY(16px)',
-          transition: `opacity .55s ease ${150 + i * 120}ms, transform .55s ease ${150 + i * 120}ms`,
-          display: 'flex', gap: 0,
-        }}>
-          {/* Left: line + node */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 48, flexShrink: 0 }}>
-            {/* Connector line in */}
-            <div style={{
-              width: 1, height: i === 0 ? 0 : 24,
-              background: s.highlight
-                ? `linear-gradient(to bottom,rgba(232,168,0,0.25),${B.yellow})`
-                : 'rgba(245,242,235,0.10)',
-            }} />
-            {/* Node circle */}
-            <div style={{
-              width: s.highlight ? 48 : 40,
-              height: s.highlight ? 48 : 40,
-              borderRadius: '50%',
-              background: s.highlight ? B.yellow : 'rgba(245,242,235,0.06)',
-              border: s.highlight ? 'none' : '1px solid rgba(245,242,235,0.14)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontWeight: 900, fontSize: s.highlight ? 18 : 15,
-              color: s.highlight ? B.black : 'rgba(245,242,235,0.50)',
-              flexShrink: 0,
-              boxShadow: s.highlight ? '0 0 0 8px rgba(232,168,0,0.12)' : 'none',
-            }}>
-              {s.n}
-            </div>
-            {/* Connector line out */}
-            {i < steps.length - 1 && (
+          transition: 'opacity .8s ease .3s',
+        }} />
+
+        {steps.map((s, i) => (
+          <div key={i} style={{
+            display: 'flex', gap: 20, alignItems: 'flex-start',
+            marginBottom: i < steps.length - 1 ? 4 : 0,
+            opacity: shown ? 1 : 0,
+            transform: shown ? 'none' : 'translateY(20px)',
+            transition: `opacity .6s ease ${i * 140}ms, transform .6s ease ${i * 140}ms`,
+          }}>
+
+            {/* Node */}
+            <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 1 }}>
               <div style={{
-                width: 1, flex: 1, minHeight: 32,
-                background: 'rgba(245,242,235,0.08)',
-              }} />
-            )}
-          </div>
-
-          {/* Right: content */}
-          <div style={{ paddingLeft: 20, paddingBottom: i < steps.length - 1 ? 36 : 0, paddingTop: 6 }}>
-            <div style={{
-              fontSize: 11, fontWeight: 700, letterSpacing: '0.07em',
-              textTransform: 'uppercase',
-              color: s.highlight ? B.yellow : 'rgba(245,242,235,0.30)',
-              marginBottom: 4,
-            }}>
-              {s.label}
+                width: 54, height: 54, borderRadius: '50%',
+                background: s.highlight ? B.yellow : B.dark,
+                border: s.highlight ? 'none' : '1px solid rgba(245,242,235,0.12)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontWeight: 900, fontSize: s.highlight ? 20 : 16,
+                color: s.highlight ? B.black : 'rgba(245,242,235,0.40)',
+                boxShadow: s.highlight ? `0 0 0 6px rgba(232,168,0,0.14), 0 0 0 12px rgba(232,168,0,0.06)` : 'none',
+                flexShrink: 0,
+                fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
+              }}>
+                {s.n}
+              </div>
             </div>
-            <div style={{
-              fontSize: 18, fontWeight: 800,
-              color: B.cream, letterSpacing: '-0.01em', marginBottom: 6,
-            }}>
-              {s.sub}
-            </div>
-            <p style={{
-              fontSize: 13, color: 'rgba(245,242,235,0.50)',
-              lineHeight: 1.65, marginBottom: 10, maxWidth: '100%',
-            }}>
-              {s.desc}
-            </p>
-            {/* Note badge */}
-            <span style={{
-              display: 'inline-flex', alignItems: 'center', gap: 5, flexWrap: 'wrap',
-              padding: '4px 12px', borderRadius: 100, fontSize: 12, fontWeight: 700,
-              background: s.highlight ? B.yellow : 'rgba(245,242,235,0.06)',
-              border: s.highlight ? 'none' : '1px solid rgba(245,242,235,0.10)',
-              color: s.highlight ? B.black : 'rgba(245,242,235,0.40)',
-            }}>
-              {s.highlight && <span style={{ fontSize: 10 }}>✓</span>}
-              {s.note}
-            </span>
-          </div>
-        </div>
-      ))}
 
-      {/* End marker */}
-      <div style={{
-        opacity: shown ? 1 : 0,
-        transition: 'opacity .5s ease 700ms',
-        display: 'flex', alignItems: 'center', gap: 12,
-        marginTop: 8, paddingLeft: 14,
-      }}>
+            {/* Content card */}
+            <div style={{
+              flex: 1, minWidth: 0,
+              padding: '16px 20px 20px',
+              borderRadius: 16, marginBottom: 4,
+              border: s.highlight
+                ? '1px solid rgba(232,168,0,0.25)'
+                : '1px solid rgba(245,242,235,0.07)',
+              background: s.highlight ? 'rgba(232,168,0,0.05)' : B.dark,
+            }}>
+              {/* Top row */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap', marginBottom: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{
+                    fontSize: 10, fontWeight: 700, letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: s.highlight ? B.yellow : 'rgba(245,242,235,0.28)',
+                  }}>
+                    {s.label}
+                  </span>
+                  <span style={{
+                    fontSize: 16, fontWeight: 800, color: B.cream,
+                    letterSpacing: '-0.01em',
+                  }}>
+                    {s.sub}
+                  </span>
+                </div>
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  padding: '3px 10px', borderRadius: 100, fontSize: 11, fontWeight: 700,
+                  background: s.highlight ? B.yellow : 'rgba(245,242,235,0.06)',
+                  border: s.highlight ? 'none' : '1px solid rgba(245,242,235,0.10)',
+                  color: s.highlight ? B.black : 'rgba(245,242,235,0.38)',
+                  whiteSpace: 'nowrap',
+                }}>
+                  {s.highlight && '✓ '}{s.badge}
+                </span>
+              </div>
+
+              {/* Divider */}
+              <div style={{ height: 1, background: s.highlight ? 'rgba(232,168,0,0.14)' : 'rgba(245,242,235,0.06)', marginBottom: 10 }} />
+
+              {/* Desc */}
+              <p style={{
+                fontSize: 13, color: 'rgba(245,242,235,0.50)',
+                lineHeight: 1.7, margin: 0,
+              }}>
+                {s.desc}
+              </p>
+            </div>
+          </div>
+        ))}
+
+        {/* End node */}
         <div style={{
-          width: 20, height: 20, borderRadius: '50%',
-          border: `2px solid ${B.yellow}`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          display: 'flex', alignItems: 'center', gap: 20, paddingTop: 4,
+          opacity: shown ? 1 : 0,
+          transition: 'opacity .6s ease 500ms',
         }}>
-          <div style={{ width: 8, height: 8, borderRadius: '50%', background: B.yellow }} />
+          <div style={{ width: 54, display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{
+              width: 20, height: 20, borderRadius: '50%',
+              border: `2px solid ${B.yellow}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: B.yellow }} />
+            </div>
+          </div>
+          <span style={{
+            fontSize: 12, fontWeight: 700, letterSpacing: '0.06em',
+            textTransform: 'uppercase', color: B.yellow,
+          }}>
+            Dein Auftritt ist fertig.
+          </span>
         </div>
-        <span style={{
-          fontSize: 12, fontWeight: 700, letterSpacing: '0.06em',
-          textTransform: 'uppercase', color: B.yellow,
-        }}>Dein Auftritt ist fertig.</span>
       </div>
     </div>
   );
