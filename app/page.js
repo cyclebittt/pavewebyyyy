@@ -1,17 +1,14 @@
 'use client';
-
 import {
   ArrowDown, ArrowRight, CheckCircle2,
   Play, Monitor, Film, BookOpen, Mail,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-
 /* ─── TOKENS ─── */
 const B = {
   yellow: '#E8A800', ocker: '#C68F00',
   black:  '#0E0C08', cream: '#F5F2EB', dark: '#2A2720',
 };
-
 /* ─── HOOKS ─── */
 function useReveal(ref, threshold = 0.08) {
   const [shown, setShown] = useState(false);
@@ -26,7 +23,6 @@ function useReveal(ref, threshold = 0.08) {
   }, [ref, threshold]);
   return shown;
 }
-
 function useScrollProgress() {
   const [p, setP] = useState(0);
   useEffect(() => {
@@ -40,7 +36,6 @@ function useScrollProgress() {
   }, []);
   return p;
 }
-
 function useCountUp({ target, durationMs = 1200 }) {
   const [v, setV] = useState(0);
   const raf = useRef(null);
@@ -57,7 +52,6 @@ function useCountUp({ target, durationMs = 1200 }) {
   useEffect(() => () => { if (raf.current) cancelAnimationFrame(raf.current); }, []);
   return { v, start };
 }
-
 /* ─── PRIMITIVES ─── */
 function Reveal({ children, delay = 0 }) {
   const ref = useRef(null);
@@ -72,7 +66,6 @@ function Reveal({ children, delay = 0 }) {
     </div>
   );
 }
-
 function Tag({ children, light = false }) {
   return (
     <span style={{
@@ -86,7 +79,6 @@ function Tag({ children, light = false }) {
     </span>
   );
 }
-
 function SerifAccent({ children, col }) {
   return (
     <em style={{
@@ -98,7 +90,6 @@ function SerifAccent({ children, col }) {
     </em>
   );
 }
-
 function Underline({ children, active }) {
   return (
     <span style={{ position: 'relative', display: 'inline-block' }}>
@@ -113,7 +104,6 @@ function Underline({ children, active }) {
     </span>
   );
 }
-
 /* ─── CUSTOM SVG ICONS ─── */
 const Icon = {
   Analyse: () => (
@@ -170,7 +160,6 @@ const Icon = {
     </svg>
   ),
 };
-
 /* ─── SCROLL BAR ─── */
 function ScrollBar() {
   const p = useScrollProgress();
@@ -182,7 +171,6 @@ function ScrollBar() {
     </div>
   );
 }
-
 /* ─── BTNS ─── */
 function BtnPrimary({ label, href, lg }) {
   const [h, setH] = useState(false);
@@ -202,7 +190,6 @@ function BtnPrimary({ label, href, lg }) {
     </a>
   );
 }
-
 function BtnGhost({ label, href, dark = true }) {
   const [h, setH] = useState(false);
   return (
@@ -223,7 +210,6 @@ function BtnGhost({ label, href, dark = true }) {
     </a>
   );
 }
-
 /* ─── SECTION ─── */
 function Sec({ id, dark = true, children, pad = '80px 20px' }) {
   return (
@@ -239,7 +225,6 @@ function Sec({ id, dark = true, children, pad = '80px 20px' }) {
     </section>
   );
 }
-
 /* ─── DIVIDER ─── */
 function Div({ from }) {
   return (
@@ -257,31 +242,32 @@ function Div({ from }) {
     </div>
   );
 }
-
 /* ──────────────────────────────────────────
-   VERTICAL ROADMAP
+   VERTICAL ROADMAP — optimiert
 ────────────────────────────────────────── */
 function RoadMap() {
   const ref = useRef(null);
   const shown = useReveal(ref, 0.04);
-
   const steps = [
     {
-      n: '0', label: 'Phase 0',
+      n: '0',
+      label: 'Phase 0',
       sub: 'Analyse',
       badge: 'Kostenlos',
       desc: 'Ich schaue mir deinen gesamten Auftritt an — Website, Print, Social, Prozesse, Ladenauftritt. Du bekommst eine ehrliche Einschätzung, wo Potenzial liegt.',
       highlight: true,
     },
     {
-      n: '1', label: 'Phase 1',
+      n: '1',
+      label: 'Phase 1',
       sub: 'Erste Umsetzung',
       badge: 'Zahlung nur wenn es dir gefällt',
       desc: 'Ich setze den ersten konkreten Schritt um. Du siehst das fertige Ergebnis — und entscheidest dann ob du zahlst.',
       highlight: false,
     },
     {
-      n: '2+', label: 'Phase 2+',
+      n: '2+',
+      label: 'Phase 2+',
       sub: 'Weiteres nach Bedarf',
       badge: 'Immer erst nach Fertigstellung',
       desc: 'Jede weitere Phase baut auf der vorherigen auf. Kein Vertrag, kein Paket — wir arbeiten so lange wie es sinnvoll ist.',
@@ -290,93 +276,125 @@ function RoadMap() {
   ];
 
   return (
-    <div ref={ref} style={{ width: '100%', maxWidth: 640, margin: '52px auto 0' }}>
-
-      {/* Cards stacked with connecting line */}
+    <div ref={ref} style={{ width: '100%', maxWidth: 640, margin: '56px auto 0' }}>
       <div style={{ position: 'relative' }}>
-
         {/* Vertical connecting line */}
         <div style={{
           position: 'absolute',
-          left: 27, top: 28, bottom: 28,
-          width: 1,
-          background: `linear-gradient(to bottom, ${B.yellow} 0%, rgba(232,168,0,0.20) 40%, rgba(245,242,235,0.06) 100%)`,
+          left: 28, top: 30, bottom: 50,
+          width: 2,
+          background: `linear-gradient(to bottom, ${B.yellow} 0%, rgba(232,168,0,0.25) 55%, rgba(245,242,235,0.04) 100%)`,
           opacity: shown ? 1 : 0,
-          transition: 'opacity .8s ease .3s',
+          transition: 'opacity .9s ease .2s',
+          borderRadius: 2,
         }} />
 
         {steps.map((s, i) => (
           <div key={i} style={{
             display: 'flex', gap: 20, alignItems: 'flex-start',
-            marginBottom: i < steps.length - 1 ? 4 : 0,
+            marginBottom: i < steps.length - 1 ? 10 : 0,
             opacity: shown ? 1 : 0,
-            transform: shown ? 'none' : 'translateY(20px)',
-            transition: `opacity .6s ease ${i * 140}ms, transform .6s ease ${i * 140}ms`,
+            transform: shown ? 'none' : 'translateY(22px)',
+            transition: `opacity .65s ease ${i * 150}ms, transform .65s ease ${i * 150}ms`,
           }}>
-
             {/* Node */}
-            <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 1 }}>
+            <div style={{ flexShrink: 0, zIndex: 1 }}>
               <div style={{
-                width: 54, height: 54, borderRadius: '50%',
-                background: s.highlight ? B.yellow : B.dark,
-                border: s.highlight ? 'none' : '1px solid rgba(245,242,235,0.12)',
+                width: 58, height: 58, borderRadius: '50%',
+                background: s.highlight ? B.yellow : '#12121e',
+                border: s.highlight ? 'none' : '1.5px solid rgba(245,242,235,0.10)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontWeight: 900, fontSize: s.highlight ? 20 : 16,
-                color: s.highlight ? B.black : 'rgba(245,242,235,0.40)',
-                boxShadow: s.highlight ? `0 0 0 6px rgba(232,168,0,0.14), 0 0 0 12px rgba(232,168,0,0.06)` : 'none',
-                flexShrink: 0,
+                fontWeight: 900, fontSize: s.n === '2+' ? 13 : 19,
+                color: s.highlight ? B.black : 'rgba(245,242,235,0.28)',
                 fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
-              }}>
+                boxShadow: s.highlight
+                  ? `0 0 0 8px rgba(232,168,0,0.13), 0 0 0 18px rgba(232,168,0,0.05), 0 6px 24px rgba(232,168,0,0.30)`
+                  : 'none',
+              }} >
                 {s.n}
               </div>
             </div>
 
-            {/* Content card */}
+            {/* Card */}
             <div style={{
               flex: 1, minWidth: 0,
-              padding: '16px 20px 20px',
-              borderRadius: 16, marginBottom: 4,
+              padding: '18px 22px 22px',
+              borderRadius: 18, marginBottom: 4,
               border: s.highlight
-                ? '1px solid rgba(232,168,0,0.25)'
+                ? '1.5px solid rgba(232,168,0,0.32)'
                 : '1px solid rgba(245,242,235,0.07)',
-              background: s.highlight ? 'rgba(232,168,0,0.05)' : B.dark,
+              background: s.highlight
+                ? 'linear-gradient(140deg, rgba(232,168,0,0.10) 0%, rgba(232,168,0,0.03) 100%)'
+                : 'rgba(245,242,235,0.02)',
+              boxShadow: s.highlight
+                ? '0 2px 40px rgba(232,168,0,0.08), inset 0 1px 0 rgba(232,168,0,0.18)'
+                : 'none',
+              position: 'relative', overflow: 'hidden',
             }}>
-              {/* Top row */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap', marginBottom: 10 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{
-                    fontSize: 10, fontWeight: 700, letterSpacing: '0.08em',
+              {/* Top accent stripe — nur Phase 0 */}
+              {s.highlight && (
+                <div style={{
+                  position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+                  background: `linear-gradient(to right, ${B.yellow} 0%, rgba(232,168,0,0.25) 100%)`,
+                }} />
+              )}
+
+              {/* Header */}
+              <div style={{
+                display: 'flex', alignItems: 'flex-start',
+                justifyContent: 'space-between', gap: 10,
+                flexWrap: 'wrap', marginBottom: 12,
+              }}>
+                <div>
+                  <div style={{
+                    fontSize: 10, fontWeight: 700, letterSpacing: '0.10em',
                     textTransform: 'uppercase',
-                    color: s.highlight ? B.yellow : 'rgba(245,242,235,0.28)',
+                    color: s.highlight ? B.yellow : 'rgba(245,242,235,0.22)',
+                    marginBottom: 4,
                   }}>
                     {s.label}
-                  </span>
-                  <span style={{
-                    fontSize: 16, fontWeight: 800, color: B.cream,
-                    letterSpacing: '-0.01em',
+                  </div>
+                  <div style={{
+                    fontSize: 17, fontWeight: 800,
+                    color: s.highlight ? B.cream : 'rgba(245,242,235,0.72)',
+                    letterSpacing: '-0.01em', lineHeight: 1.2,
                   }}>
                     {s.sub}
-                  </span>
+                  </div>
                 </div>
                 <span style={{
+                  flexShrink: 0, marginTop: 2,
                   display: 'inline-flex', alignItems: 'center', gap: 5,
-                  padding: '3px 10px', borderRadius: 100, fontSize: 11, fontWeight: 700,
-                  background: s.highlight ? B.yellow : 'rgba(245,242,235,0.06)',
-                  border: s.highlight ? 'none' : '1px solid rgba(245,242,235,0.10)',
-                  color: s.highlight ? B.black : 'rgba(245,242,235,0.38)',
+                  padding: '4px 11px', borderRadius: 100,
+                  fontSize: 10.5, fontWeight: 700, letterSpacing: '0.02em',
+                  background: s.highlight ? B.yellow : 'rgba(245,242,235,0.05)',
+                  border: s.highlight ? 'none' : '1px solid rgba(245,242,235,0.09)',
+                  color: s.highlight ? B.black : 'rgba(245,242,235,0.30)',
                   whiteSpace: 'nowrap',
                 }}>
-                  {s.highlight && '✓ '}{s.badge}
+                  {s.highlight && (
+                    <svg width="8" height="8" viewBox="0 0 10 10" fill={B.black}>
+                      <polygon points="5,0 6.2,3.8 10,3.8 6.9,6.2 8.1,10 5,7.6 1.9,10 3.1,6.2 0,3.8 3.8,3.8" />
+                    </svg>
+                  )}
+                  {s.badge}
                 </span>
               </div>
 
               {/* Divider */}
-              <div style={{ height: 1, background: s.highlight ? 'rgba(232,168,0,0.14)' : 'rgba(245,242,235,0.06)', marginBottom: 10 }} />
+              <div style={{
+                height: 1, marginBottom: 12,
+                background: s.highlight
+                  ? 'rgba(232,168,0,0.16)'
+                  : 'rgba(245,242,235,0.05)',
+              }} />
 
-              {/* Desc */}
+              {/* Description */}
               <p style={{
-                fontSize: 13, color: 'rgba(245,242,235,0.50)',
-                lineHeight: 1.7, margin: 0,
+                fontSize: 13, lineHeight: 1.72, margin: 0,
+                color: s.highlight
+                  ? 'rgba(245,242,235,0.58)'
+                  : 'rgba(245,242,235,0.40)',
               }}>
                 {s.desc}
               </p>
@@ -386,22 +404,16 @@ function RoadMap() {
 
         {/* End node */}
         <div style={{
-          display: 'flex', alignItems: 'center', gap: 20, paddingTop: 4,
+          display: 'flex', alignItems: 'center', gap: 20, paddingTop: 6,
           opacity: shown ? 1 : 0,
-          transition: 'opacity .6s ease 500ms',
+          transition: 'opacity .65s ease 520ms',
         }}>
-          <div style={{ width: 54, display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
-            <div style={{
-              width: 20, height: 20, borderRadius: '50%',
-              border: `2px solid ${B.yellow}`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: B.yellow }} />
-            </div>
+          <div style={{ width: 58, display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
+            <CheckCircle2 size={20} style={{ color: B.yellow, opacity: 0.80 }} />
           </div>
           <span style={{
-            fontSize: 12, fontWeight: 700, letterSpacing: '0.06em',
-            textTransform: 'uppercase', color: B.yellow,
+            fontSize: 12, fontWeight: 700, letterSpacing: '0.07em',
+            textTransform: 'uppercase', color: B.yellow, opacity: 0.80,
           }}>
             Dein Auftritt ist fertig.
           </span>
@@ -410,18 +422,15 @@ function RoadMap() {
     </div>
   );
 }
-
 /* ─── PROOF CARD 21K ─── */
 function ProofCard() {
   const ref = useRef(null);
   const shown = useReveal(ref);
   const { v, start } = useCountUp({ target: 21000, durationMs: 1400 });
   useEffect(() => { if (shown) start(); }, [shown, start]);
-
   const fmt = n => n >= 1000
     ? `${Math.floor(n / 1000)}.${String(n % 1000).padStart(3, '0')}`
     : String(n);
-
   return (
     <div ref={ref} style={{
       borderRadius: 20, overflow: 'hidden',
@@ -453,18 +462,15 @@ function ProofCard() {
     </div>
   );
 }
-
 /* ─── STAT BOX ─── */
 function StatBox({ target, suffix, label, delay = 0 }) {
   const ref = useRef(null);
   const shown = useReveal(ref);
   const { v, start } = useCountUp({ target, durationMs: 1100 });
   useEffect(() => { if (shown) start(); }, [shown, start]);
-
   const fmt = n => n >= 1000
     ? `${Math.floor(n / 1000)}.${String(n % 1000).padStart(3, '0')}`
     : String(n);
-
   return (
     <div ref={ref} style={{
       opacity: shown ? 1 : 0, transform: shown ? 'none' : 'translateY(14px)',
@@ -483,7 +489,6 @@ function StatBox({ target, suffix, label, delay = 0 }) {
     </div>
   );
 }
-
 /* ─── LEISTUNG CARD ─── */
 function LeistungCard({ n, icon, kicker, title, desc, accent }) {
   const [h, setH] = useState(false);
@@ -499,7 +504,6 @@ function LeistungCard({ n, icon, kicker, title, desc, accent }) {
         transition: 'border-color .22s, background .22s',
         cursor: 'default',
       }}>
-      {/* Large faint number */}
       <div style={{
         position: 'absolute', top: 20, right: 24,
         fontSize: 72, fontWeight: 900, lineHeight: 1,
@@ -510,16 +514,12 @@ function LeistungCard({ n, icon, kicker, title, desc, accent }) {
       }}>
         {n}
       </div>
-
-      {/* Yellow top line on hover */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: 2,
         background: B.yellow,
         opacity: h ? 1 : 0,
         transition: 'opacity .22s',
       }} />
-
-      {/* Icon */}
       <div style={{
         width: 44, height: 44, borderRadius: 12, marginBottom: 24,
         background: h ? 'rgba(232,168,0,0.14)' : 'rgba(245,242,235,0.06)',
@@ -530,8 +530,6 @@ function LeistungCard({ n, icon, kicker, title, desc, accent }) {
       }}>
         {icon}
       </div>
-
-      {/* Kicker */}
       <div style={{
         fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
         letterSpacing: '0.09em', color: B.yellow,
@@ -540,24 +538,18 @@ function LeistungCard({ n, icon, kicker, title, desc, accent }) {
       }}>
         {kicker}
       </div>
-
-      {/* Title */}
       <div style={{
         fontSize: 18, fontWeight: 800, color: B.cream,
         lineHeight: 1.25, letterSpacing: '-0.01em', marginBottom: 14,
       }}>
         {title}
       </div>
-
-      {/* Desc */}
       <p style={{
         fontSize: 13, color: 'rgba(245,242,235,0.50)',
         lineHeight: 1.7, maxWidth: 340,
       }}>
         {desc}
       </p>
-
-      {/* Bottom link */}
       <div style={{
         marginTop: 24, display: 'flex', alignItems: 'center', gap: 6,
         fontSize: 12, fontWeight: 700, color: B.yellow,
@@ -571,13 +563,11 @@ function LeistungCard({ n, icon, kicker, title, desc, accent }) {
     </div>
   );
 }
-
 /* ─── SERVICE CARD LARGE ─── */
 function ServiceCardLarge({ icon, kicker, title, desc, num, delay = 0 }) {
   const ref = useRef(null);
   const shown = useReveal(ref);
   const [h, setH] = useState(false);
-
   return (
     <div
       ref={ref}
@@ -590,10 +580,8 @@ function ServiceCardLarge({ icon, kicker, title, desc, num, delay = 0 }) {
         borderRadius: 20, padding: '32px 28px',
         border: h ? '1px solid rgba(232,168,0,0.30)' : '1px solid rgba(245,242,235,0.07)',
         background: h ? 'rgba(232,168,0,0.05)' : B.dark,
-        transition2: 'border-color .2s, background .2s',
         cursor: 'default', position: 'relative', overflow: 'hidden',
       }}>
-      {/* Large number watermark */}
       <div style={{
         position: 'absolute', top: -8, right: 16,
         fontSize: 80, fontWeight: 900, lineHeight: 1,
@@ -603,8 +591,6 @@ function ServiceCardLarge({ icon, kicker, title, desc, num, delay = 0 }) {
       }}>
         {num}
       </div>
-
-      {/* Icon */}
       <div style={{
         width: 44, height: 44, borderRadius: 12,
         background: h ? 'rgba(232,168,0,0.15)' : 'rgba(232,168,0,0.10)',
@@ -615,32 +601,24 @@ function ServiceCardLarge({ icon, kicker, title, desc, num, delay = 0 }) {
       }}>
         {icon}
       </div>
-
-      {/* Kicker */}
       <div style={{
         fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
         letterSpacing: '0.08em', color: B.yellow, marginBottom: 10,
       }}>
         {kicker}
       </div>
-
-      {/* Title */}
       <div style={{
         fontSize: 20, fontWeight: 800, color: B.cream,
         letterSpacing: '-0.01em', lineHeight: 1.2, marginBottom: 12,
       }}>
         {title}
       </div>
-
-      {/* Desc */}
       <p style={{
         fontSize: 13, color: 'rgba(245,242,235,0.52)',
         lineHeight: 1.7, maxWidth: 320,
       }}>
         {desc}
       </p>
-
-      {/* CTA link */}
       <a href="/#request" style={{
         display: 'inline-flex', alignItems: 'center', gap: 6,
         marginTop: 22, fontSize: 13, fontWeight: 700,
@@ -652,13 +630,11 @@ function ServiceCardLarge({ icon, kicker, title, desc, num, delay = 0 }) {
     </div>
   );
 }
-
 /* ─── SERVICE CARD COMPACT ─── */
 function ServiceCardCompact({ icon, kicker, title, desc, num, delay = 0 }) {
   const ref = useRef(null);
   const shown = useReveal(ref);
   const [h, setH] = useState(false);
-
   return (
     <div
       ref={ref}
@@ -673,7 +649,6 @@ function ServiceCardCompact({ icon, kicker, title, desc, num, delay = 0 }) {
         background: h ? 'rgba(232,168,0,0.04)' : B.dark,
         cursor: 'default', position: 'relative', overflow: 'hidden',
       }}>
-      {/* Number watermark */}
       <div style={{
         position: 'absolute', top: -6, right: 14,
         fontSize: 60, fontWeight: 900, lineHeight: 1,
@@ -683,9 +658,7 @@ function ServiceCardCompact({ icon, kicker, title, desc, num, delay = 0 }) {
       }}>
         {num}
       </div>
-
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
-        {/* Icon */}
         <div style={{
           width: 38, height: 38, borderRadius: 10, flexShrink: 0,
           background: h ? 'rgba(232,168,0,0.14)' : 'rgba(232,168,0,0.08)',
@@ -696,7 +669,6 @@ function ServiceCardCompact({ icon, kicker, title, desc, num, delay = 0 }) {
         }}>
           {icon}
         </div>
-
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{
             fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
@@ -721,7 +693,6 @@ function ServiceCardCompact({ icon, kicker, title, desc, num, delay = 0 }) {
     </div>
   );
 }
-
 /* ─── SERVICE CARD ─── */
 function ServiceCard({ icon, kicker, title, desc, dark }) {
   const [h, setH] = useState(false);
@@ -768,7 +739,6 @@ function ServiceCard({ icon, kicker, title, desc, dark }) {
     </div>
   );
 }
-
 /* ─── CALENDLY ─── */
 function CalendlyWidget() {
   useEffect(() => {
@@ -780,7 +750,6 @@ function CalendlyWidget() {
       document.body.appendChild(script);
     }
   }, []);
-
   return (
     <Reveal delay={200}>
       <div style={{
@@ -798,14 +767,12 @@ function CalendlyWidget() {
     </Reveal>
   );
 }
-
 /* ──────────────────────────────────────────
    PAGE
 ────────────────────────────────────────── */
 export default function Home() {
   const heroRef = useRef(null);
   const heroShown = useReveal(heroRef, 0.01);
-
   return (
     <div style={{ fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif", overflowX: 'hidden', position: 'relative', maxWidth: '100vw' }}>
       <style>{`
@@ -815,9 +782,7 @@ export default function Home() {
         *{min-width:0}
         img,svg{max-width:100%}
       `}</style>
-
       <ScrollBar />
-
       {/* ── HEADER ── */}
       <div style={{
         position: 'fixed', top: 3, left: 0, right: 0, zIndex: 50,
@@ -840,7 +805,6 @@ export default function Home() {
           Termin buchen
         </a>
       </div>
-
       {/* ── S1: HERO ── */}
       <Sec id="s1" dark pad="110px 20px 80px">
         <Reveal>
@@ -879,9 +843,7 @@ export default function Home() {
           </div>
         </Reveal>
       </Sec>
-
       <Div from={true} />
-
       {/* ── S2: PROBLEM ── */}
       <Sec id="s2" dark={false} pad="96px 24px">
         <Reveal><Tag light>Das eigentliche Problem</Tag></Reveal>
@@ -905,7 +867,6 @@ export default function Home() {
             Das kostet Vertrauen und Aufträge, die nie ankommen.
           </p>
         </Reveal>
-
         <Reveal delay={220}>
           <div style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(260px,100%),1fr))', gap: 14 }}>
             {[
@@ -949,13 +910,11 @@ export default function Home() {
             ))}
           </div>
         </Reveal>
-
         <Reveal delay={320}>
           <div style={{ marginTop: 44, display: 'flex', justifyContent: 'center' }}>
             <BtnPrimary label="Kostenlose Analyse anfragen" href="/#request" />
           </div>
         </Reveal>
-
         <Reveal delay={400}>
           <div style={{ marginTop: 64, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
             <a href="#s3" style={{
@@ -968,11 +927,17 @@ export default function Home() {
           </div>
         </Reveal>
       </Sec>
-
       <Div from={false} />
-
       {/* ── S3: ROADMAP ── */}
       <Sec id="s3" dark pad="96px 24px">
+        {/* Subtiler Hintergrund-Glow */}
+        <div style={{
+          position: 'absolute', top: '10%', left: '50%',
+          transform: 'translateX(-50%)',
+          width: 700, height: 500, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse at center, rgba(232,168,0,0.06) 0%, transparent 68%)',
+          borderRadius: '50%',
+        }} />
         <Reveal><Tag>Wie wir arbeiten</Tag></Reveal>
         <Reveal delay={80}>
           <h2 style={{
@@ -993,9 +958,7 @@ export default function Home() {
             und du entscheidest nach jeder Runde ob es weitergeht.
           </p>
         </Reveal>
-
         <RoadMap />
-
         <Reveal delay={100}>
           <div style={{ marginTop: 52, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', padding: '0 4px' }}>
             <BtnPrimary label="Kostenlose Analyse anfragen" href="/#request" />
@@ -1003,9 +966,7 @@ export default function Home() {
           </div>
         </Reveal>
       </Sec>
-
       <Div from={true} />
-
       {/* ── S4: PROOF ── */}
       <Sec id="s4" dark={false} pad="96px 24px">
         <Reveal><Tag light>Ergebnisse</Tag></Reveal>
@@ -1018,7 +979,6 @@ export default function Home() {
             Zahlen, die man <SerifAccent col={B.ocker}>einordnen</SerifAccent> kann.
           </h2>
         </Reveal>
-
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(280px,100%),1fr))',
           gap: 20, alignItems: 'start', textAlign: 'left',
@@ -1030,13 +990,11 @@ export default function Home() {
             <StatBox target={100} suffix="+"     label="Abgeschlossene Projekte"            delay={280} />
           </div>
         </div>
-
         <Reveal delay={300}>
           <div style={{ marginTop: 44, display: 'flex', justifyContent: 'center' }}>
             <BtnPrimary label="Instagram ansehen" href="https://www.instagram.com/leonseitz" target="_blank" />
           </div>
         </Reveal>
-
         <Reveal delay={380}>
           <div style={{ marginTop: 64, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
             <a href="#s5" style={{
@@ -1049,9 +1007,7 @@ export default function Home() {
           </div>
         </Reveal>
       </Sec>
-
       <Div from={false} />
-
       {/* ── S5: LEISTUNGEN ── */}
       <Sec id="s5" dark pad="96px 24px">
         <Reveal><Tag>Leistungen</Tag></Reveal>
@@ -1071,8 +1027,6 @@ export default function Home() {
             Je nachdem wo dein Betrieb steht — ich schaue zuerst, dann machen wir.
           </p>
         </Reveal>
-
-        {/* 2x2 large cards with numbered index */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(320px,100%),1fr))', gap: 2 }}>
           {[
             {
@@ -1113,21 +1067,16 @@ export default function Home() {
             </Reveal>
           ))}
         </div>
-
         <Reveal delay={320}>
           <div style={{ marginTop: 48, display: 'flex', justifyContent: 'center' }}>
             <BtnPrimary label="Kostenlose Analyse anfragen" href="/#request" />
           </div>
         </Reveal>
       </Sec>
-
       <Div from={true} />
-
       {/* ── S6: ANFRAGE + CALENDLY ── */}
       <Sec id="request" dark={false} pad="80px 20px 64px">
-        {/* Tagesstreifen */}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: B.yellow }} />
-
         <Reveal><Tag light>Einstieg</Tag></Reveal>
         <Reveal delay={80}>
           <h2 style={{
@@ -1147,11 +1096,7 @@ export default function Home() {
             Phase 0 ist kostenlos.
           </p>
         </Reveal>
-
-        {/* Calendly */}
         <CalendlyWidget />
-
-        {/* Alt contact */}
         <Reveal delay={280}>
           <div style={{ marginTop: 28, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', padding: '0 4px' }}>
             <a
@@ -1189,8 +1134,6 @@ export default function Home() {
             Oder direkt: <strong style={{ color: 'rgba(14,12,8,0.55)' }}>hello@leonseitz.com</strong>
           </p>
         </Reveal>
-
-        {/* Prozess link instead of Pakete */}
         <Reveal delay={340}>
           <div style={{
             marginTop: 56, padding: '24px 28px', borderRadius: 16,
@@ -1217,8 +1160,6 @@ export default function Home() {
             </a>
           </div>
         </Reveal>
-
-        {/* Footer */}
         <Reveal delay={380}>
           <div style={{
             marginTop: 72, paddingTop: 28,
@@ -1239,3 +1180,4 @@ export default function Home() {
     </div>
   );
 }
+
