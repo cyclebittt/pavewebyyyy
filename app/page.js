@@ -4,11 +4,13 @@ import {
   Play, Monitor, Film, BookOpen, Mail,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+
 /* ─── TOKENS ─── */
 const B = {
   yellow: '#E8A800', ocker: '#C68F00',
   black:  '#0E0C08', cream: '#F5F2EB', dark: '#2A2720',
 };
+
 /* ─── HOOKS ─── */
 function useReveal(ref, threshold = 0.08) {
   const [shown, setShown] = useState(false);
@@ -52,6 +54,7 @@ function useCountUp({ target, durationMs = 1200 }) {
   useEffect(() => () => { if (raf.current) cancelAnimationFrame(raf.current); }, []);
   return { v, start };
 }
+
 /* ─── PRIMITIVES ─── */
 function Reveal({ children, delay = 0 }) {
   const ref = useRef(null);
@@ -59,8 +62,8 @@ function Reveal({ children, delay = 0 }) {
   return (
     <div ref={ref} style={{
       opacity: shown ? 1 : 0,
-      transform: shown ? 'none' : 'translateY(20px)',
-      transition: `opacity .65s ease ${delay}ms, transform .65s ease ${delay}ms`,
+      transform: shown ? 'none' : 'translateY(18px)',
+      transition: `opacity .65s cubic-bezier(0.4,0,0.2,1) ${delay}ms, transform .65s cubic-bezier(0.4,0,0.2,1) ${delay}ms`,
     }}>
       {children}
     </div>
@@ -70,7 +73,7 @@ function Tag({ children, light = false }) {
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 5,
-      padding: '3px 12px', borderRadius: 100, fontSize: 11,
+      padding: '4px 13px', borderRadius: 100, fontSize: 11,
       fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase',
       background: light ? B.black : B.yellow,
       color: light ? B.cream : B.black,
@@ -104,6 +107,7 @@ function Underline({ children, active }) {
     </span>
   );
 }
+
 /* ─── CUSTOM SVG ICONS ─── */
 const Icon = {
   Analyse: () => (
@@ -160,17 +164,19 @@ const Icon = {
     </svg>
   ),
 };
+
 /* ─── SCROLL BAR ─── */
 function ScrollBar() {
   const p = useScrollProgress();
   return (
     <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 60, pointerEvents: 'none' }}>
-      <div style={{ height: 3, background: 'rgba(232,168,0,0.15)' }}>
+      <div style={{ height: 3, background: 'rgba(232,168,0,0.12)' }}>
         <div style={{ height: '100%', width: `${Math.round(p * 100)}%`, background: B.yellow, transition: 'width 80ms linear' }} />
       </div>
     </div>
   );
 }
+
 /* ─── BTNS ─── */
 function BtnPrimary({ label, href, lg }) {
   const [h, setH] = useState(false);
@@ -184,7 +190,9 @@ function BtnPrimary({ label, href, lg }) {
         borderRadius: 100, background: h ? B.ocker : B.yellow,
         color: B.black, fontWeight: 800,
         fontSize: lg ? 16 : 14, textDecoration: 'none',
-        transition: 'background .18s', letterSpacing: '-0.01em',
+        transition: 'background .18s cubic-bezier(0.4,0,0.2,1)',
+        letterSpacing: '-0.01em',
+        boxShadow: h ? '0 4px 20px rgba(232,168,0,0.28)' : '0 2px 10px rgba(232,168,0,0.15)',
       }}>
       {label} <ArrowRight size={lg ? 18 : 15} />
     </a>
@@ -201,15 +209,16 @@ function BtnGhost({ label, href, dark = true }) {
         padding: '12px 24px', borderRadius: 100,
         border: `1px solid ${h
           ? (dark ? 'rgba(245,242,235,.45)' : 'rgba(14,12,8,.40)')
-          : (dark ? 'rgba(245,242,235,.20)' : 'rgba(14,12,8,.18)')}`,
+          : (dark ? 'rgba(245,242,235,.18)' : 'rgba(14,12,8,.16)')}`,
         color: dark ? B.cream : B.black,
         fontWeight: 600, fontSize: 14, textDecoration: 'none',
-        transition: 'border-color .18s',
+        transition: 'border-color .18s cubic-bezier(0.4,0,0.2,1)',
       }}>
       {label}
     </a>
   );
 }
+
 /* ─── SECTION ─── */
 function Sec({ id, dark = true, children, pad = '80px 20px' }) {
   return (
@@ -225,6 +234,7 @@ function Sec({ id, dark = true, children, pad = '80px 20px' }) {
     </section>
   );
 }
+
 /* ─── DIVIDER ─── */
 function Div({ from }) {
   return (
@@ -235,129 +245,124 @@ function Div({ from }) {
       <div style={{
         width: 1, height: 48,
         background: from
-          ? 'linear-gradient(to bottom,rgba(232,168,0,0),rgba(232,168,0,.40))'
-          : 'linear-gradient(to bottom,rgba(14,12,8,0),rgba(14,12,8,.22))',
+          ? 'linear-gradient(to bottom,rgba(232,168,0,0),rgba(232,168,0,.35))'
+          : 'linear-gradient(to bottom,rgba(14,12,8,0),rgba(14,12,8,.18))',
       }} />
-      <ArrowDown size={17} style={{ color: from ? 'rgba(232,168,0,.50)' : 'rgba(14,12,8,.28)', marginTop: -2 }} />
+      <ArrowDown size={17} style={{ color: from ? 'rgba(232,168,0,.45)' : 'rgba(14,12,8,.25)', marginTop: -2 }} />
     </div>
   );
 }
+
 /* ──────────────────────────────────────────
-   VERTICAL ROADMAP — optimiert
+   VERTICAL ROADMAP
 ────────────────────────────────────────── */
 function RoadMap() {
   const ref = useRef(null);
   const shown = useReveal(ref, 0.04);
   const steps = [
     {
-      n: '0',
-      label: 'Phase 0',
+      n: '0', label: 'Phase 0',
       sub: 'Analyse',
       badge: 'Kostenlos',
       desc: 'Ich schaue mir deinen gesamten Auftritt an — Website, Print, Social, Prozesse, Ladenauftritt. Du bekommst eine ehrliche Einschätzung, wo Potenzial liegt.',
       highlight: true,
     },
     {
-      n: '1',
-      label: 'Phase 1',
+      n: '1', label: 'Phase 1',
       sub: 'Erste Umsetzung',
       badge: 'Zahlung nur wenn es dir gefällt',
       desc: 'Ich setze den ersten konkreten Schritt um. Du siehst das fertige Ergebnis — und entscheidest dann ob du zahlst.',
       highlight: false,
     },
     {
-      n: '2+',
-      label: 'Phase 2+',
+      n: '2+', label: 'Phase 2+',
       sub: 'Weiteres nach Bedarf',
       badge: 'Immer erst nach Fertigstellung',
       desc: 'Jede weitere Phase baut auf der vorherigen auf. Kein Vertrag, kein Paket — wir arbeiten so lange wie es sinnvoll ist.',
       highlight: false,
     },
   ];
-
   return (
-    <div ref={ref} style={{ width: '100%', maxWidth: 640, margin: '56px auto 0' }}>
+    <div ref={ref} style={{ width: '100%', maxWidth: 640, margin: '52px auto 0' }}>
       <div style={{ position: 'relative' }}>
         {/* Vertical connecting line */}
         <div style={{
           position: 'absolute',
-          left: 28, top: 30, bottom: 50,
+          left: 29, top: 58, bottom: 58,
           width: 2,
-          background: `linear-gradient(to bottom, ${B.yellow} 0%, rgba(232,168,0,0.25) 55%, rgba(245,242,235,0.04) 100%)`,
+          background: `linear-gradient(to bottom, ${B.yellow} 0%, rgba(232,168,0,0.18) 60%, rgba(245,242,235,0.03) 100%)`,
           opacity: shown ? 1 : 0,
-          transition: 'opacity .9s ease .2s',
+          transition: 'opacity 1.1s cubic-bezier(0.4,0,0.2,1) .3s',
           borderRadius: 2,
         }} />
-
         {steps.map((s, i) => (
           <div key={i} style={{
             display: 'flex', gap: 20, alignItems: 'flex-start',
-            marginBottom: i < steps.length - 1 ? 10 : 0,
+            marginBottom: i < steps.length - 1 ? 16 : 0,
             opacity: shown ? 1 : 0,
-            transform: shown ? 'none' : 'translateY(22px)',
-            transition: `opacity .65s ease ${i * 150}ms, transform .65s ease ${i * 150}ms`,
+            transform: shown ? 'none' : 'translateY(18px)',
+            transition: `opacity .7s cubic-bezier(0.4,0,0.2,1) ${i * 130}ms, transform .7s cubic-bezier(0.4,0,0.2,1) ${i * 130}ms`,
           }}>
             {/* Node */}
             <div style={{ flexShrink: 0, zIndex: 1 }}>
               <div style={{
                 width: 58, height: 58, borderRadius: '50%',
-                background: s.highlight ? B.yellow : '#12121e',
-                border: s.highlight ? 'none' : '1.5px solid rgba(245,242,235,0.10)',
+                background: s.highlight ? B.yellow : '#0e0e18',
+                border: s.highlight ? 'none' : '1.5px solid rgba(245,242,235,0.08)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontWeight: 900, fontSize: s.n === '2+' ? 13 : 19,
-                color: s.highlight ? B.black : 'rgba(245,242,235,0.28)',
+                color: s.highlight ? B.black : 'rgba(245,242,235,0.32)',
                 fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
                 boxShadow: s.highlight
-                  ? `0 0 0 8px rgba(232,168,0,0.13), 0 0 0 18px rgba(232,168,0,0.05), 0 6px 24px rgba(232,168,0,0.30)`
+                  ? `0 0 0 7px rgba(232,168,0,0.12), 0 0 0 16px rgba(232,168,0,0.05), 0 8px 28px rgba(232,168,0,0.28)`
                   : 'none',
-              }} >
+                position: 'relative',
+              }}>
                 {s.n}
               </div>
             </div>
-
             {/* Card */}
             <div style={{
               flex: 1, minWidth: 0,
-              padding: '18px 22px 22px',
-              borderRadius: 18, marginBottom: 4,
+              padding: '20px 24px 24px',
+              borderRadius: 20, marginBottom: 4,
               border: s.highlight
-                ? '1.5px solid rgba(232,168,0,0.32)'
-                : '1px solid rgba(245,242,235,0.07)',
+                ? '1.5px solid rgba(232,168,0,0.28)'
+                : '1px solid rgba(245,242,235,0.06)',
               background: s.highlight
-                ? 'linear-gradient(140deg, rgba(232,168,0,0.10) 0%, rgba(232,168,0,0.03) 100%)'
-                : 'rgba(245,242,235,0.02)',
+                ? 'linear-gradient(145deg, rgba(232,168,0,0.09) 0%, rgba(232,168,0,0.025) 100%)'
+                : 'rgba(245,242,235,0.015)',
               boxShadow: s.highlight
-                ? '0 2px 40px rgba(232,168,0,0.08), inset 0 1px 0 rgba(232,168,0,0.18)'
-                : 'none',
+                ? '0 4px 48px rgba(232,168,0,0.07), inset 0 1px 0 rgba(232,168,0,0.16)'
+                : '0 1px 12px rgba(0,0,0,0.18)',
               position: 'relative', overflow: 'hidden',
             }}>
-              {/* Top accent stripe — nur Phase 0 */}
+              {/* Top accent stripe for Phase 0 */}
               {s.highlight && (
                 <div style={{
                   position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-                  background: `linear-gradient(to right, ${B.yellow} 0%, rgba(232,168,0,0.25) 100%)`,
+                  background: `linear-gradient(to right, ${B.yellow} 0%, rgba(232,168,0,0.20) 100%)`,
                 }} />
               )}
-
               {/* Header */}
               <div style={{
                 display: 'flex', alignItems: 'flex-start',
                 justifyContent: 'space-between', gap: 10,
-                flexWrap: 'wrap', marginBottom: 12,
+                flexWrap: 'wrap', marginBottom: 14,
               }}>
                 <div>
                   <div style={{
-                    fontSize: 10, fontWeight: 700, letterSpacing: '0.10em',
+                    fontSize: 10, fontWeight: 700, letterSpacing: '0.11em',
                     textTransform: 'uppercase',
-                    color: s.highlight ? B.yellow : 'rgba(245,242,235,0.22)',
-                    marginBottom: 4,
+                    color: s.highlight ? B.yellow : 'rgba(245,242,235,0.20)',
+                    marginBottom: 5,
                   }}>
                     {s.label}
                   </div>
                   <div style={{
                     fontSize: 17, fontWeight: 800,
-                    color: s.highlight ? B.cream : 'rgba(245,242,235,0.72)',
-                    letterSpacing: '-0.01em', lineHeight: 1.2,
+                    color: s.highlight ? B.cream : 'rgba(245,242,235,0.68)',
+                    letterSpacing: '-0.015em', lineHeight: 1.2,
                   }}>
                     {s.sub}
                   </div>
@@ -365,11 +370,11 @@ function RoadMap() {
                 <span style={{
                   flexShrink: 0, marginTop: 2,
                   display: 'inline-flex', alignItems: 'center', gap: 5,
-                  padding: '4px 11px', borderRadius: 100,
-                  fontSize: 10.5, fontWeight: 700, letterSpacing: '0.02em',
-                  background: s.highlight ? B.yellow : 'rgba(245,242,235,0.05)',
-                  border: s.highlight ? 'none' : '1px solid rgba(245,242,235,0.09)',
-                  color: s.highlight ? B.black : 'rgba(245,242,235,0.30)',
+                  padding: '5px 12px', borderRadius: 999,
+                  fontSize: 10.5, fontWeight: 700, letterSpacing: '0.025em',
+                  background: s.highlight ? B.yellow : 'rgba(245,242,235,0.04)',
+                  border: s.highlight ? 'none' : '1px solid rgba(245,242,235,0.08)',
+                  color: s.highlight ? B.black : 'rgba(245,242,235,0.28)',
                   whiteSpace: 'nowrap',
                 }}>
                   {s.highlight && (
@@ -380,40 +385,44 @@ function RoadMap() {
                   {s.badge}
                 </span>
               </div>
-
               {/* Divider */}
               <div style={{
-                height: 1, marginBottom: 12,
+                height: 1, marginBottom: 14,
                 background: s.highlight
-                  ? 'rgba(232,168,0,0.16)'
-                  : 'rgba(245,242,235,0.05)',
+                  ? 'rgba(232,168,0,0.14)'
+                  : 'rgba(245,242,235,0.045)',
               }} />
-
               {/* Description */}
               <p style={{
-                fontSize: 13, lineHeight: 1.72, margin: 0,
+                fontSize: 13.5, lineHeight: 1.75, margin: 0,
                 color: s.highlight
-                  ? 'rgba(245,242,235,0.58)'
-                  : 'rgba(245,242,235,0.40)',
+                  ? 'rgba(245,242,235,0.55)'
+                  : 'rgba(245,242,235,0.38)',
               }}>
                 {s.desc}
               </p>
             </div>
           </div>
         ))}
-
         {/* End node */}
         <div style={{
-          display: 'flex', alignItems: 'center', gap: 20, paddingTop: 6,
+          display: 'flex', alignItems: 'center', gap: 20, paddingTop: 8,
           opacity: shown ? 1 : 0,
-          transition: 'opacity .65s ease 520ms',
+          transition: 'opacity .7s cubic-bezier(0.4,0,0.2,1) 500ms',
         }}>
           <div style={{ width: 58, display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
-            <CheckCircle2 size={20} style={{ color: B.yellow, opacity: 0.80 }} />
+            <div style={{
+              width: 22, height: 22, borderRadius: '50%',
+              border: `2px solid ${B.yellow}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              opacity: 0.75,
+            }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: B.yellow }} />
+            </div>
           </div>
           <span style={{
             fontSize: 12, fontWeight: 700, letterSpacing: '0.07em',
-            textTransform: 'uppercase', color: B.yellow, opacity: 0.80,
+            textTransform: 'uppercase', color: B.yellow, opacity: 0.75,
           }}>
             Dein Auftritt ist fertig.
           </span>
@@ -422,6 +431,7 @@ function RoadMap() {
     </div>
   );
 }
+
 /* ─── PROOF CARD 21K ─── */
 function ProofCard() {
   const ref = useRef(null);
@@ -433,13 +443,13 @@ function ProofCard() {
     : String(n);
   return (
     <div ref={ref} style={{
-      borderRadius: 20, overflow: 'hidden',
-      border: '1px solid rgba(232,168,0,0.28)',
+      borderRadius: 22, overflow: 'hidden',
+      border: '1px solid rgba(232,168,0,0.25)',
       background: '#E0DDD4', padding: 32,
       textAlign: 'left', position: 'relative',
     }}>
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: B.yellow }} />
-      <div style={{ marginBottom: 12 }}><Tag light>Echtes Ergebnis</Tag></div>
+      <div style={{ marginBottom: 14 }}><Tag light>Echtes Ergebnis</Tag></div>
       <div style={{
         fontSize: 'clamp(1.8rem,6vw,3.5rem)', fontWeight: 900,
         color: B.ocker, lineHeight: 1, letterSpacing: '-0.03em',
@@ -449,7 +459,7 @@ function ProofCard() {
       <div style={{ marginTop: 10, fontSize: 15, fontWeight: 700, color: B.black }}>
         In 2 Monaten — <SerifAccent col={B.ocker}>durch eine Fundraising-Kampagne.</SerifAccent>
       </div>
-      <p style={{ marginTop: 10, fontSize: 13, color: 'rgba(14,12,8,0.60)', lineHeight: 1.65, maxWidth: 360 }}>
+      <p style={{ marginTop: 10, fontSize: 13, color: 'rgba(14,12,8,0.58)', lineHeight: 1.68, maxWidth: 360 }}>
         Kein Werbebudget. Nur Konzept, Branding, Landing Page und eine klare Botschaft.
       </p>
       <a href="/kunde1" style={{
@@ -462,6 +472,7 @@ function ProofCard() {
     </div>
   );
 }
+
 /* ─── STAT BOX ─── */
 function StatBox({ target, suffix, label, delay = 0 }) {
   const ref = useRef(null);
@@ -474,9 +485,9 @@ function StatBox({ target, suffix, label, delay = 0 }) {
   return (
     <div ref={ref} style={{
       opacity: shown ? 1 : 0, transform: shown ? 'none' : 'translateY(14px)',
-      transition: `opacity .55s ease ${delay}ms, transform .55s ease ${delay}ms`,
-      padding: '20px 18px', borderRadius: 16,
-      border: '1px solid rgba(14,12,8,0.09)',
+      transition: `opacity .55s cubic-bezier(0.4,0,0.2,1) ${delay}ms, transform .55s cubic-bezier(0.4,0,0.2,1) ${delay}ms`,
+      padding: '22px 20px', borderRadius: 18,
+      border: '1px solid rgba(14,12,8,0.08)',
       background: '#E8E5DC', textAlign: 'center',
     }}>
       <div style={{
@@ -485,10 +496,11 @@ function StatBox({ target, suffix, label, delay = 0 }) {
       }}>
         {fmt(v)}{suffix}
       </div>
-      <div style={{ marginTop: 6, fontSize: 13, color: 'rgba(14,12,8,0.55)' }}>{label}</div>
+      <div style={{ marginTop: 7, fontSize: 13, color: 'rgba(14,12,8,0.52)' }}>{label}</div>
     </div>
   );
 }
+
 /* ─── LEISTUNG CARD ─── */
 function LeistungCard({ n, icon, kicker, title, desc, accent }) {
   const [h, setH] = useState(false);
@@ -498,62 +510,69 @@ function LeistungCard({ n, icon, kicker, title, desc, accent }) {
       onMouseLeave={() => setH(false)}
       style={{
         padding: '36px 32px',
-        border: `1px solid ${h ? 'rgba(232,168,0,0.25)' : 'rgba(245,242,235,0.07)'}`,
+        border: `1px solid ${h ? 'rgba(232,168,0,0.22)' : 'rgba(245,242,235,0.06)'}`,
         background: h ? 'rgba(232,168,0,0.04)' : B.dark,
         textAlign: 'left', position: 'relative', overflow: 'hidden',
-        transition: 'border-color .22s, background .22s',
+        transition: 'border-color .22s cubic-bezier(0.4,0,0.2,1), background .22s cubic-bezier(0.4,0,0.2,1)',
         cursor: 'default',
       }}>
+      {/* Large faint number */}
       <div style={{
         position: 'absolute', top: 20, right: 24,
         fontSize: 72, fontWeight: 900, lineHeight: 1,
-        color: h ? 'rgba(232,168,0,0.10)' : 'rgba(245,242,235,0.04)',
+        color: h ? 'rgba(232,168,0,0.09)' : 'rgba(245,242,235,0.04)',
         letterSpacing: '-0.04em', userSelect: 'none',
-        transition: 'color .22s',
+        transition: 'color .22s cubic-bezier(0.4,0,0.2,1)',
         fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
       }}>
         {n}
       </div>
+      {/* Yellow top line on hover */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: 2,
         background: B.yellow,
         opacity: h ? 1 : 0,
-        transition: 'opacity .22s',
+        transition: 'opacity .22s cubic-bezier(0.4,0,0.2,1)',
       }} />
+      {/* Icon */}
       <div style={{
         width: 44, height: 44, borderRadius: 12, marginBottom: 24,
-        background: h ? 'rgba(232,168,0,0.14)' : 'rgba(245,242,235,0.06)',
-        border: `1px solid ${h ? 'rgba(232,168,0,0.25)' : 'rgba(245,242,235,0.10)'}`,
+        background: h ? 'rgba(232,168,0,0.13)' : 'rgba(245,242,235,0.05)',
+        border: `1px solid ${h ? 'rgba(232,168,0,0.22)' : 'rgba(245,242,235,0.09)'}`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        color: h ? B.yellow : 'rgba(245,242,235,0.50)',
-        transition: 'all .22s',
+        color: h ? B.yellow : 'rgba(245,242,235,0.45)',
+        transition: 'all .22s cubic-bezier(0.4,0,0.2,1)',
       }}>
         {icon}
       </div>
+      {/* Kicker */}
       <div style={{
         fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
         letterSpacing: '0.09em', color: B.yellow,
-        marginBottom: 10, opacity: h ? 1 : 0.7,
-        transition: 'opacity .22s',
+        marginBottom: 10, opacity: h ? 1 : 0.65,
+        transition: 'opacity .22s cubic-bezier(0.4,0,0.2,1)',
       }}>
         {kicker}
       </div>
+      {/* Title */}
       <div style={{
         fontSize: 18, fontWeight: 800, color: B.cream,
         lineHeight: 1.25, letterSpacing: '-0.01em', marginBottom: 14,
       }}>
         {title}
       </div>
+      {/* Desc */}
       <p style={{
-        fontSize: 13, color: 'rgba(245,242,235,0.50)',
-        lineHeight: 1.7, maxWidth: 340,
+        fontSize: 13, color: 'rgba(245,242,235,0.48)',
+        lineHeight: 1.72, maxWidth: 340,
       }}>
         {desc}
       </p>
+      {/* Bottom link */}
       <div style={{
         marginTop: 24, display: 'flex', alignItems: 'center', gap: 6,
         fontSize: 12, fontWeight: 700, color: B.yellow,
-        opacity: h ? 1 : 0, transition: 'opacity .22s',
+        opacity: h ? 1 : 0, transition: 'opacity .22s cubic-bezier(0.4,0,0.2,1)',
       }}>
         Anfrage schicken
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -563,6 +582,7 @@ function LeistungCard({ n, icon, kicker, title, desc, accent }) {
     </div>
   );
 }
+
 /* ─── SERVICE CARD LARGE ─── */
 function ServiceCardLarge({ icon, kicker, title, desc, num, delay = 0 }) {
   const ref = useRef(null);
@@ -576,12 +596,13 @@ function ServiceCardLarge({ icon, kicker, title, desc, num, delay = 0 }) {
       style={{
         opacity: shown ? 1 : 0,
         transform: shown ? 'none' : 'translateY(20px)',
-        transition: `opacity .65s ease ${delay}ms, transform .65s ease ${delay}ms`,
-        borderRadius: 20, padding: '32px 28px',
-        border: h ? '1px solid rgba(232,168,0,0.30)' : '1px solid rgba(245,242,235,0.07)',
+        transition: `opacity .65s cubic-bezier(0.4,0,0.2,1) ${delay}ms, transform .65s cubic-bezier(0.4,0,0.2,1) ${delay}ms, border-color .2s cubic-bezier(0.4,0,0.2,1), background .2s cubic-bezier(0.4,0,0.2,1)`,
+        borderRadius: 22, padding: '32px 28px',
+        border: h ? '1px solid rgba(232,168,0,0.28)' : '1px solid rgba(245,242,235,0.07)',
         background: h ? 'rgba(232,168,0,0.05)' : B.dark,
         cursor: 'default', position: 'relative', overflow: 'hidden',
       }}>
+      {/* Large number watermark */}
       <div style={{
         position: 'absolute', top: -8, right: 16,
         fontSize: 80, fontWeight: 900, lineHeight: 1,
@@ -591,45 +612,51 @@ function ServiceCardLarge({ icon, kicker, title, desc, num, delay = 0 }) {
       }}>
         {num}
       </div>
+      {/* Icon */}
       <div style={{
         width: 44, height: 44, borderRadius: 12,
-        background: h ? 'rgba(232,168,0,0.15)' : 'rgba(232,168,0,0.10)',
-        border: `1px solid rgba(232,168,0,${h ? '0.28' : '0.16'})`,
+        background: h ? 'rgba(232,168,0,0.15)' : 'rgba(232,168,0,0.09)',
+        border: `1px solid rgba(232,168,0,${h ? '0.28' : '0.14'})`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         color: B.yellow, marginBottom: 20,
-        transition: 'all .2s',
+        transition: 'all .2s cubic-bezier(0.4,0,0.2,1)',
       }}>
         {icon}
       </div>
+      {/* Kicker */}
       <div style={{
         fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
         letterSpacing: '0.08em', color: B.yellow, marginBottom: 10,
       }}>
         {kicker}
       </div>
+      {/* Title */}
       <div style={{
         fontSize: 20, fontWeight: 800, color: B.cream,
         letterSpacing: '-0.01em', lineHeight: 1.2, marginBottom: 12,
       }}>
         {title}
       </div>
+      {/* Desc */}
       <p style={{
-        fontSize: 13, color: 'rgba(245,242,235,0.52)',
-        lineHeight: 1.7, maxWidth: 320,
+        fontSize: 13, color: 'rgba(245,242,235,0.50)',
+        lineHeight: 1.72, maxWidth: 320,
       }}>
         {desc}
       </p>
+      {/* CTA link */}
       <a href="/#request" style={{
         display: 'inline-flex', alignItems: 'center', gap: 6,
         marginTop: 22, fontSize: 13, fontWeight: 700,
-        color: h ? B.yellow : 'rgba(232,168,0,0.55)',
-        textDecoration: 'none', transition: 'color .18s',
+        color: h ? B.yellow : 'rgba(232,168,0,0.50)',
+        textDecoration: 'none', transition: 'color .18s cubic-bezier(0.4,0,0.2,1)',
       }}>
         Anfragen <ArrowRight size={14} />
       </a>
     </div>
   );
 }
+
 /* ─── SERVICE CARD COMPACT ─── */
 function ServiceCardCompact({ icon, kicker, title, desc, num, delay = 0 }) {
   const ref = useRef(null);
@@ -643,12 +670,13 @@ function ServiceCardCompact({ icon, kicker, title, desc, num, delay = 0 }) {
       style={{
         opacity: shown ? 1 : 0,
         transform: shown ? 'none' : 'translateY(20px)',
-        transition: `opacity .65s ease ${delay}ms, transform .65s ease ${delay}ms`,
+        transition: `opacity .65s cubic-bezier(0.4,0,0.2,1) ${delay}ms, transform .65s cubic-bezier(0.4,0,0.2,1) ${delay}ms, border-color .2s cubic-bezier(0.4,0,0.2,1), background .2s cubic-bezier(0.4,0,0.2,1)`,
         borderRadius: 20, padding: '24px 24px',
-        border: h ? '1px solid rgba(232,168,0,0.25)' : '1px solid rgba(245,242,235,0.07)',
+        border: h ? '1px solid rgba(232,168,0,0.22)' : '1px solid rgba(245,242,235,0.06)',
         background: h ? 'rgba(232,168,0,0.04)' : B.dark,
         cursor: 'default', position: 'relative', overflow: 'hidden',
       }}>
+      {/* Number watermark */}
       <div style={{
         position: 'absolute', top: -6, right: 14,
         fontSize: 60, fontWeight: 900, lineHeight: 1,
@@ -659,12 +687,13 @@ function ServiceCardCompact({ icon, kicker, title, desc, num, delay = 0 }) {
         {num}
       </div>
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+        {/* Icon */}
         <div style={{
           width: 38, height: 38, borderRadius: 10, flexShrink: 0,
           background: h ? 'rgba(232,168,0,0.14)' : 'rgba(232,168,0,0.08)',
-          border: `1px solid rgba(232,168,0,${h ? '0.25' : '0.14'})`,
+          border: `1px solid rgba(232,168,0,${h ? '0.25' : '0.12'})`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          color: B.yellow, transition: 'all .2s',
+          color: B.yellow, transition: 'all .2s cubic-bezier(0.4,0,0.2,1)',
           marginTop: 2,
         }}>
           {icon}
@@ -683,8 +712,8 @@ function ServiceCardCompact({ icon, kicker, title, desc, num, delay = 0 }) {
             {title}
           </div>
           <p style={{
-            fontSize: 12, color: 'rgba(245,242,235,0.48)',
-            lineHeight: 1.65,
+            fontSize: 12, color: 'rgba(245,242,235,0.46)',
+            lineHeight: 1.68,
           }}>
             {desc}
           </p>
@@ -693,6 +722,7 @@ function ServiceCardCompact({ icon, kicker, title, desc, num, delay = 0 }) {
     </div>
   );
 }
+
 /* ─── SERVICE CARD ─── */
 function ServiceCard({ icon, kicker, title, desc, dark }) {
   const [h, setH] = useState(false);
@@ -701,20 +731,20 @@ function ServiceCard({ icon, kicker, title, desc, dark }) {
       onMouseEnter={() => setH(true)}
       onMouseLeave={() => setH(false)}
       style={{
-        borderRadius: 18, textAlign: 'left', padding: '22px 24px',
+        borderRadius: 20, textAlign: 'left', padding: '22px 24px',
         border: h
-          ? '1px solid rgba(232,168,0,0.30)'
-          : `1px solid ${dark ? 'rgba(245,242,235,0.07)' : 'rgba(14,12,8,0.09)'}`,
+          ? '1px solid rgba(232,168,0,0.28)'
+          : `1px solid ${dark ? 'rgba(245,242,235,0.06)' : 'rgba(14,12,8,0.08)'}`,
         background: h
-          ? (dark ? 'rgba(232,168,0,0.06)' : 'rgba(232,168,0,0.04)')
+          ? (dark ? 'rgba(232,168,0,0.05)' : 'rgba(232,168,0,0.04)')
           : (dark ? 'rgba(245,242,235,0.03)' : '#E8E5DC'),
-        transition: 'border-color .2s, background .2s',
+        transition: 'border-color .2s cubic-bezier(0.4,0,0.2,1), background .2s cubic-bezier(0.4,0,0.2,1)',
         cursor: 'pointer',
       }}>
       <div style={{
         width: 38, height: 38, borderRadius: 10,
-        background: 'rgba(232,168,0,0.12)',
-        border: '1px solid rgba(232,168,0,0.18)',
+        background: 'rgba(232,168,0,0.11)',
+        border: '1px solid rgba(232,168,0,0.16)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         color: B.yellow, marginBottom: 14,
       }}>
@@ -733,12 +763,13 @@ function ServiceCard({ icon, kicker, title, desc, dark }) {
       }}>
         {title}
       </div>
-      <p style={{ fontSize: 13, color: dark ? 'rgba(245,242,235,0.55)' : 'rgba(14,12,8,0.55)', lineHeight: 1.65 }}>
+      <p style={{ fontSize: 13, color: dark ? 'rgba(245,242,235,0.52)' : 'rgba(14,12,8,0.52)', lineHeight: 1.68 }}>
         {desc}
       </p>
     </div>
   );
 }
+
 /* ─── CALENDLY ─── */
 function CalendlyWidget() {
   useEffect(() => {
@@ -753,8 +784,8 @@ function CalendlyWidget() {
   return (
     <Reveal delay={200}>
       <div style={{
-        marginTop: 48, borderRadius: 20,
-        border: '1px solid rgba(14,12,8,0.10)',
+        marginTop: 48, borderRadius: 22,
+        border: '1px solid rgba(14,12,8,0.09)',
         background: '#E0DDD4', overflow: 'hidden',
         maxWidth: 720, margin: '48px auto 0',
       }}>
@@ -767,6 +798,7 @@ function CalendlyWidget() {
     </Reveal>
   );
 }
+
 /* ──────────────────────────────────────────
    PAGE
 ────────────────────────────────────────── */
@@ -799,7 +831,7 @@ export default function Home() {
           pointerEvents: 'auto', fontSize: 13, fontWeight: 700,
           color: B.yellow, textDecoration: 'none',
           padding: '8px 18px', borderRadius: 100,
-          border: '1px solid rgba(232,168,0,0.28)',
+          border: '1px solid rgba(232,168,0,0.25)',
           background: 'rgba(14,12,8,0.65)', backdropFilter: 'blur(8px)',
         }}>
           Termin buchen
@@ -823,7 +855,7 @@ export default function Home() {
         <Reveal delay={110}>
           <p style={{
             marginTop: 28, fontSize: 'clamp(1rem,2vw,1.15rem)',
-            color: 'rgba(245,242,235,0.58)', lineHeight: 1.72,
+            color: 'rgba(245,242,235,0.55)', lineHeight: 1.75,
             maxWidth: '100%', margin: '28px auto 0',
           }}>
             Ich analysiere wie dein Betrieb aktuell nach außen wirkt — Website, Social Media,
@@ -838,8 +870,8 @@ export default function Home() {
         </Reveal>
         <Reveal delay={500}>
           <div style={{ marginTop: 80, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-            <div style={{ width: 1, height: 36, background: 'linear-gradient(to bottom,rgba(232,168,0,0),rgba(232,168,0,0.35))' }} />
-            <ArrowDown size={16} style={{ color: 'rgba(232,168,0,0.45)' }} />
+            <div style={{ width: 1, height: 36, background: 'linear-gradient(to bottom,rgba(232,168,0,0),rgba(232,168,0,0.32))' }} />
+            <ArrowDown size={16} style={{ color: 'rgba(232,168,0,0.42)' }} />
           </div>
         </Reveal>
       </Sec>
@@ -859,8 +891,8 @@ export default function Home() {
         </Reveal>
         <Reveal delay={160}>
           <p style={{
-            marginTop: 20, fontSize: 15, color: 'rgba(14,12,8,0.58)',
-            lineHeight: 1.72, maxWidth: 500, margin: '20px auto 0',
+            marginTop: 20, fontSize: 15, color: 'rgba(14,12,8,0.55)',
+            lineHeight: 1.75, maxWidth: 500, margin: '20px auto 0',
           }}>
             Ein guter Laden, ein gutes Produkt — aber die Visitenkarte, der Flyer,
             die Website und der Instagram-Auftritt erzählen alle eine andere Geschichte.
@@ -899,13 +931,13 @@ export default function Home() {
               },
             ].map((c, i) => (
               <div key={i} style={{
-                padding: '24px 22px', borderRadius: 16,
-                border: '1px solid rgba(14,12,8,0.09)',
+                padding: '24px 22px', borderRadius: 18,
+                border: '1px solid rgba(14,12,8,0.08)',
                 background: '#E8E5DC', textAlign: 'left',
               }}>
                 <div style={{ marginBottom: 14 }}>{c.icon}</div>
                 <div style={{ fontSize: 14, fontWeight: 800, color: B.black, marginBottom: 8 }}>{c.title}</div>
-                <p style={{ fontSize: 13, color: 'rgba(14,12,8,0.55)', lineHeight: 1.65 }}>{c.desc}</p>
+                <p style={{ fontSize: 13, color: 'rgba(14,12,8,0.52)', lineHeight: 1.68 }}>{c.desc}</p>
               </div>
             ))}
           </div>
@@ -919,7 +951,7 @@ export default function Home() {
           <div style={{ marginTop: 64, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
             <a href="#s3" style={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-              textDecoration: 'none', color: 'rgba(14,12,8,0.28)',
+              textDecoration: 'none', color: 'rgba(14,12,8,0.25)',
               fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase',
             }}>
               Wie wir arbeiten <ArrowDown size={16} style={{ color: B.ocker }} />
@@ -930,14 +962,6 @@ export default function Home() {
       <Div from={false} />
       {/* ── S3: ROADMAP ── */}
       <Sec id="s3" dark pad="96px 24px">
-        {/* Subtiler Hintergrund-Glow */}
-        <div style={{
-          position: 'absolute', top: '10%', left: '50%',
-          transform: 'translateX(-50%)',
-          width: 700, height: 500, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse at center, rgba(232,168,0,0.06) 0%, transparent 68%)',
-          borderRadius: '50%',
-        }} />
         <Reveal><Tag>Wie wir arbeiten</Tag></Reveal>
         <Reveal delay={80}>
           <h2 style={{
@@ -951,8 +975,8 @@ export default function Home() {
         </Reveal>
         <Reveal delay={150}>
           <p style={{
-            marginTop: 20, fontSize: 15, color: 'rgba(245,242,235,0.55)',
-            lineHeight: 1.72, maxWidth: 480, margin: '20px auto 0',
+            marginTop: 20, fontSize: 15, color: 'rgba(245,242,235,0.52)',
+            lineHeight: 1.75, maxWidth: 480, margin: '20px auto 0',
           }}>
             Kein Paket, kein Festpreis im Voraus. Wir arbeiten iterativ — Schritt für Schritt,
             und du entscheidest nach jeder Runde ob es weitergeht.
@@ -999,7 +1023,7 @@ export default function Home() {
           <div style={{ marginTop: 64, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
             <a href="#s5" style={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-              textDecoration: 'none', color: 'rgba(14,12,8,0.28)',
+              textDecoration: 'none', color: 'rgba(14,12,8,0.25)',
               fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase',
             }}>
               Leistungen <ArrowDown size={16} style={{ color: B.ocker }} />
@@ -1021,12 +1045,13 @@ export default function Home() {
         </Reveal>
         <Reveal delay={130}>
           <p style={{
-            fontSize: 15, color: 'rgba(245,242,235,0.55)',
-            maxWidth: 400, margin: '12px auto 56px', lineHeight: 1.7,
+            fontSize: 15, color: 'rgba(245,242,235,0.52)',
+            maxWidth: 400, margin: '12px auto 56px', lineHeight: 1.72,
           }}>
             Je nachdem wo dein Betrieb steht — ich schaue zuerst, dann machen wir.
           </p>
         </Reveal>
+        {/* 2x2 large cards with numbered index */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(320px,100%),1fr))', gap: 2 }}>
           {[
             {
@@ -1076,6 +1101,7 @@ export default function Home() {
       <Div from={true} />
       {/* ── S6: ANFRAGE + CALENDLY ── */}
       <Sec id="request" dark={false} pad="80px 20px 64px">
+        {/* Tagesstreifen */}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: B.yellow }} />
         <Reveal><Tag light>Einstieg</Tag></Reveal>
         <Reveal delay={80}>
@@ -1088,15 +1114,17 @@ export default function Home() {
         </Reveal>
         <Reveal delay={140}>
           <p style={{
-            marginTop: 16, fontSize: 15, color: 'rgba(14,12,8,0.58)',
-            lineHeight: 1.72, maxWidth: 440, margin: '16px auto 0',
+            marginTop: 16, fontSize: 15, color: 'rgba(14,12,8,0.55)',
+            lineHeight: 1.75, maxWidth: 440, margin: '16px auto 0',
           }}>
             Ich schaue mir deinen Betrieb an — digital und vor Ort wenn nötig —
             und sage dir ehrlich, wo ich Potenzial sehe. Kein Paket, kein Commitment.
             Phase 0 ist kostenlos.
           </p>
         </Reveal>
+        {/* Calendly */}
         <CalendlyWidget />
+        {/* Alt contact */}
         <Reveal delay={280}>
           <div style={{ marginTop: 28, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', padding: '0 4px' }}>
             <a
@@ -1107,7 +1135,7 @@ export default function Home() {
                 padding: '13px 24px', borderRadius: 100,
                 background: '#25D366', color: '#fff',
                 fontSize: 14, fontWeight: 700, textDecoration: 'none',
-                transition: 'opacity .18s',
+                transition: 'opacity .18s cubic-bezier(0.4,0,0.2,1)',
               }}
               onMouseEnter={e => e.currentTarget.style.opacity = '0.88'}
               onMouseLeave={e => e.currentTarget.style.opacity = '1'}
@@ -1119,25 +1147,26 @@ export default function Home() {
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 10,
                 padding: '13px 24px', borderRadius: 100,
-                border: '1px solid rgba(14,12,8,0.18)',
-                background: 'transparent', color: 'rgba(14,12,8,0.65)',
+                border: '1px solid rgba(14,12,8,0.16)',
+                background: 'transparent', color: 'rgba(14,12,8,0.62)',
                 fontSize: 14, fontWeight: 700, textDecoration: 'none',
-                transition: 'border-color .18s, color .18s',
+                transition: 'border-color .18s cubic-bezier(0.4,0,0.2,1), color .18s cubic-bezier(0.4,0,0.2,1)',
               }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(14,12,8,0.40)'; e.currentTarget.style.color = B.black; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(14,12,8,0.18)'; e.currentTarget.style.color = 'rgba(14,12,8,0.65)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(14,12,8,0.16)'; e.currentTarget.style.color = 'rgba(14,12,8,0.62)'; }}
             >
               <Mail size={16} /> E-Mail schreiben
             </a>
           </div>
-          <p style={{ marginTop: 12, fontSize: 12, color: 'rgba(14,12,8,0.35)', textAlign: 'center' }}>
-            Oder direkt: <strong style={{ color: 'rgba(14,12,8,0.55)' }}>hello@leonseitz.com</strong>
+          <p style={{ marginTop: 12, fontSize: 12, color: 'rgba(14,12,8,0.32)', textAlign: 'center' }}>
+            Oder direkt: <strong style={{ color: 'rgba(14,12,8,0.52)' }}>hello@leonseitz.com</strong>
           </p>
         </Reveal>
+        {/* Prozess link */}
         <Reveal delay={340}>
           <div style={{
-            marginTop: 56, padding: '24px 28px', borderRadius: 16,
-            border: '1px solid rgba(14,12,8,0.09)', background: '#E8E5DC',
+            marginTop: 56, padding: '24px 28px', borderRadius: 18,
+            border: '1px solid rgba(14,12,8,0.08)', background: '#E8E5DC',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             flexWrap: 'wrap', gap: 16, maxWidth: 560, margin: '56px auto 0', textAlign: 'left',
           }}>
@@ -1145,7 +1174,7 @@ export default function Home() {
               <div style={{ fontSize: 14, fontWeight: 800, color: B.black, marginBottom: 4 }}>
                 Wie läuft ein Projekt ab?
               </div>
-              <p style={{ fontSize: 13, color: 'rgba(14,12,8,0.55)', lineHeight: 1.6 }}>
+              <p style={{ fontSize: 13, color: 'rgba(14,12,8,0.52)', lineHeight: 1.62 }}>
                 Alle Sprints, Zahlungsziele und Meilensteine im Detail.
               </p>
             </div>
@@ -1160,6 +1189,7 @@ export default function Home() {
             </a>
           </div>
         </Reveal>
+        {/* Footer */}
         <Reveal delay={380}>
           <div style={{
             marginTop: 72, paddingTop: 28,
@@ -1168,16 +1198,15 @@ export default function Home() {
             alignItems: 'center', flexWrap: 'wrap', gap: 12,
           }}>
             <span style={{ fontSize: 14, fontWeight: 900, color: B.black }}>Leon Seitz</span>
-            <div style={{ display: 'flex', gap: 20, fontSize: 13, color: 'rgba(14,12,8,0.40)' }}>
+            <div style={{ display: 'flex', gap: 20, fontSize: 13, color: 'rgba(14,12,8,0.38)' }}>
               {[['Instagram', 'https://www.instagram.com/leonseitz'], ['Prozess', '/prozess'], ['Impressum', '/impressum'], ['Datenschutz', '/datenschutz']].map(([l, h]) => (
                 <a key={l} href={h} style={{ color: 'inherit', textDecoration: 'none' }}>{l}</a>
               ))}
             </div>
-            <span style={{ fontSize: 12, color: 'rgba(14,12,8,0.28)' }}>© 2026</span>
+            <span style={{ fontSize: 12, color: 'rgba(14,12,8,0.26)' }}>© 2026</span>
           </div>
         </Reveal>
       </Sec>
     </div>
   );
 }
-
