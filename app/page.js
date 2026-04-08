@@ -253,6 +253,89 @@ function Div({ from }) {
   );
 }
 
+/* ─── LEAD FORM (Phase 0) ─── */
+function LeadForm() {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('idle'); // idle | loading | success | error
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!email) return;
+    setStatus('loading');
+    try {
+      const res = await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      setStatus(res.ok ? 'success' : 'error');
+    } catch {
+      setStatus('error');
+    }
+  };
+
+  if (status === 'success') {
+    return (
+      <div style={{
+        marginTop: 18, display: 'flex', alignItems: 'center', gap: 10,
+        padding: '12px 16px', borderRadius: 12,
+        background: 'rgba(232,168,0,0.08)',
+        border: '1px solid rgba(232,168,0,0.22)',
+      }}>
+        <CheckCircle2 size={16} color={B.yellow} style={{ flexShrink: 0 }} />
+        <span style={{ fontSize: 13, color: 'rgba(245,242,235,0.72)', lineHeight: 1.5 }}>
+          Erhalten. Ich melde mich innerhalb von 24 Stunden.
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} style={{ marginTop: 18 }}>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <input
+          type="email"
+          required
+          placeholder="deine@email.de"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          disabled={status === 'loading'}
+          style={{
+            flex: '1 1 180px', minWidth: 0,
+            padding: '10px 14px', borderRadius: 100,
+            border: '1px solid rgba(232,168,0,0.22)',
+            background: 'rgba(245,242,235,0.05)',
+            color: '#F5F2EB', fontSize: 13,
+            outline: 'none',
+            fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
+          }}
+        />
+        <button
+          type="submit"
+          disabled={status === 'loading'}
+          style={{
+            flexShrink: 0,
+            padding: '10px 20px', borderRadius: 100,
+            background: status === 'loading' ? 'rgba(232,168,0,0.5)' : B.yellow,
+            color: B.black, border: 'none',
+            cursor: status === 'loading' ? 'default' : 'pointer',
+            fontWeight: 800, fontSize: 13,
+            fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
+            transition: 'background .18s cubic-bezier(0.4,0,0.2,1)',
+          }}
+        >
+          {status === 'loading' ? 'Wird gesendet…' : 'Analyse anfragen'}
+        </button>
+      </div>
+      {status === 'error' && (
+        <p style={{ marginTop: 8, fontSize: 12, color: 'rgba(245,242,235,0.40)' }}>
+          Etwas hat nicht geklappt. Bitte direkt an hello@leonseitz.com schreiben.
+        </p>
+      )}
+    </form>
+  );
+}
+
 /* ──────────────────────────────────────────
    VERTICAL ROADMAP
 ────────────────────────────────────────── */
@@ -401,6 +484,8 @@ function RoadMap() {
               }}>
                 {s.desc}
               </p>
+              {/* E-Mail-Formular nur für Phase 0 */}
+              {s.highlight && <LeadForm />}
             </div>
           </div>
         ))}
