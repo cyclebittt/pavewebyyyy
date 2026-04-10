@@ -1,9 +1,6 @@
-import Navbar from '@/components/layout/Navbar';
-
 export default function ImpressumPage() {
   return (
-    <div className="font-jakarta bg-[#0E0C08] text-[#F5F2EB]">
-      <Navbar />
+    <div className="font-jakarta bg-[#0E0C08] text-[#F5F2EB] min-h-screen">
       <main className="max-w-3xl mx-auto px-6 md:px-12 lg:px-20 py-20 md:py-28 space-y-10">
 
         <header className="space-y-4 border-b border-white/10 pb-10">
@@ -36,22 +33,17 @@ export default function ImpressumPage() {
           </h2>
           <p className="text-[#F5F2EB]/70 leading-relaxed">
             Telefon: +49 160 95757167<br />
-            E-Mail: info@paveconsultings.com
+            E-Mail: hello@leonseitz.com
           </p>
         </section>
 
         <section className="space-y-2">
           <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
-            Vertretungsberechtigt
+            Umsatzsteuer
           </h2>
-          <p className="text-[#F5F2EB]/70">Leon Seitz</p>
-        </section>
-
-        <section className="space-y-2">
-          <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
-            Umsatzsteuer-ID
-          </h2>
-          <p className="text-[#F5F2EB]/70">Wird ergänzt, sofern vorhanden.</p>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            Gemäß § 19 UStG wird keine Umsatzsteuer berechnet (Kleinunternehmerregelung).
+          </p>
         </section>
 
         <section className="space-y-2">
@@ -59,9 +51,9 @@ export default function ImpressumPage() {
             Haftung für Inhalte
           </h2>
           <p className="text-[#F5F2EB]/70 leading-relaxed">
-            Wir sind für eigene Inhalte nach den allgemeinen Gesetzen verantwortlich. Für die Richtigkeit, Vollständigkeit und
-            Aktualität übernehmen wir keine Gewähr. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen
-            nach den allgemeinen Gesetzen bleiben hiervon unberührt.
+            Ich bin für eigene Inhalte nach den allgemeinen Gesetzen verantwortlich. Eine Gewähr für Richtigkeit,
+            Vollständigkeit und Aktualität übernehme ich nicht. Verpflichtungen zur Entfernung oder Sperrung von
+            Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt.
           </p>
         </section>
 
@@ -70,9 +62,9 @@ export default function ImpressumPage() {
             Haftung für Links
           </h2>
           <p className="text-[#F5F2EB]/70 leading-relaxed">
-            Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben.
-            Für diese fremden Inhalte übernehmen wir keine Gewähr. Für die Inhalte der verlinkten Seiten ist stets der jeweilige
-            Anbieter oder Betreiber verantwortlich.
+            Diese Website enthält Links zu externen Seiten Dritter, auf deren Inhalte ich keinen Einfluss habe.
+            Für diese fremden Inhalte übernehme ich keine Haftung. Verantwortlich für die Inhalte verlinkter
+            Seiten ist stets der jeweilige Anbieter oder Betreiber.
           </p>
         </section>
 
@@ -81,9 +73,9 @@ export default function ImpressumPage() {
             Urheberrecht
           </h2>
           <p className="text-[#F5F2EB]/70 leading-relaxed">
-            Die durch uns erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht.
-            Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechts
-            bedürfen der schriftlichen Zustimmung.
+            Die von mir erstellten Inhalte und Werke auf dieser Seite unterliegen dem deutschen Urheberrecht.
+            Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des
+            Urheberrechts bedürfen meiner schriftlichen Zustimmung.
           </p>
         </section>
 
@@ -92,7 +84,6 @@ export default function ImpressumPage() {
         </p>
 
       </main>
-      <Footer />
     </div>
   );
 }
