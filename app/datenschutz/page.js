@@ -1,4 +1,4 @@
-export default function DatenschutzPage() {
+export default function AGBPage() {
   return (
     <div className="font-jakarta bg-[#0E0C08] text-[#F5F2EB] min-h-screen">
       <main className="max-w-3xl mx-auto px-6 md:px-12 lg:px-20 py-20 md:py-28 space-y-10">
@@ -8,127 +8,161 @@ export default function DatenschutzPage() {
             Rechtliches
           </span>
           <h1 className="font-serif italic text-4xl md:text-5xl text-[#F5F2EB]">
-            Datenschutzerklärung
+            Allgemeine Geschäftsbedingungen
           </h1>
           <p className="text-[#F5F2EB]/50 text-sm">
-            Informationen zur Verarbeitung personenbezogener Daten gemäß Art. 13 DSGVO.
+            Diese AGB wurden sorgfältig formuliert, ersetzen jedoch keine individuelle Rechtsberatung.
           </p>
         </header>
 
         <section className="space-y-2">
           <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
-            Verantwortlicher
+            1. Geltungsbereich
           </h2>
           <p className="text-[#F5F2EB]/70 leading-relaxed">
-            <span className="text-[#F5F2EB] font-medium">Leon Seitz</span><br />
-            Am Streitberg 28<br />
-            63906 Erlenbach am Main<br />
-            Deutschland<br />
-            E-Mail: hello@leonseitz.com<br />
-            Telefon: +49 160 95757167
+            Diese AGB gelten für alle Verträge zwischen{' '}
+            <span className="text-[#F5F2EB] font-medium">Leon Seitz</span>{' '}
+            (nachfolgend &bdquo;Anbieter&ldquo;) und seinen Auftraggebern über Dienstleistungen
+            in den Bereichen Webentwicklung, Motion Design, Branding und Marketing.
+            Abweichende Bedingungen des Auftraggebers haben keine Gültigkeit, sofern sie nicht
+            schriftlich anerkannt wurden.
           </p>
         </section>
 
         <section className="space-y-2">
           <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
-            Hosting
+            2. Angebote & Vertragsschluss
           </h2>
           <p className="text-[#F5F2EB]/70 leading-relaxed">
-            Diese Website wird gehostet von <span className="text-[#F5F2EB] font-medium">Vercel Inc.</span>,
-            340 Pine Street, Suite 701, San Francisco, CA 94104, USA. Beim Aufruf der Website werden
-            automatisch technische Zugriffsdaten in Server-Logfiles erfasst, darunter IP-Adresse,
-            Browsertyp, Betriebssystem, Referrer-URL und Zeitpunkt des Zugriffs. Diese Daten werden
-            ausschließlich zur Sicherstellung des technischen Betriebs verarbeitet und nicht mit
-            anderen Datenquellen zusammengeführt. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO
-            (berechtigtes Interesse an einem sicheren und stabilen Betrieb). Es besteht ein
-            Auftragsverarbeitungsvertrag mit Vercel. Bei der Verarbeitung durch Vercel kann ein
-            Datentransfer in die USA stattfinden; Vercel nutzt hierfür Standardvertragsklauseln
-            gemäß Art. 46 DSGVO. Weitere Informationen:{" "}
-            <a href="https://vercel.com/legal/privacy-policy" className="text-[#E8A800] underline underline-offset-2" target="_blank" rel="noopener noreferrer">
-              vercel.com/legal/privacy-policy
-            </a>
+            Vor Beginn der Zusammenarbeit erstellt der Anbieter ein schriftliches Gesamtangebot für das
+            jeweilige Projekt. Dieses enthält den geplanten Leistungsumfang aller Phasen sowie den
+            vereinbarten Stundensatz. Der Vertrag kommt ausschließlich durch schriftliche Annahme dieses
+            Angebots durch den Auftraggeber zustande. Erst nach Vertragsschluss beginnt die Leistungserbringung.
+            Mündliche Nebenabreden haben keine Gültigkeit. Änderungen bedürfen der Textform.
           </p>
         </section>
 
         <section className="space-y-2">
           <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
-            Cookies & Tracking
+            3. Leistungsumfang
           </h2>
           <p className="text-[#F5F2EB]/70 leading-relaxed">
-            Diese Website verwendet keine Tracking-Tools, keine Analyse-Dienste und keine
-            Marketing-Cookies. Es werden ausschließlich technisch notwendige Cookies eingesetzt,
-            soweit diese für den Betrieb der Website erforderlich sind.
+            Der konkrete Leistungsumfang ergibt sich ausschließlich aus dem schriftlichen Angebot.
+            Änderungswünsche des Auftraggebers nach Vertragsschluss werden gesondert bewertet und
+            können zu angepassten Fristen und Vergütungen führen.
           </p>
         </section>
 
         <section className="space-y-2">
           <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
-            Kontaktaufnahme
+            4. Projektphasen & Vergütung
           </h2>
           <p className="text-[#F5F2EB]/70 leading-relaxed">
-            Bei einer Kontaktaufnahme per E-Mail werden die übermittelten Daten (Name, E-Mail-Adresse,
-            Nachrichteninhalt) ausschließlich zur Bearbeitung der Anfrage verarbeitet.
-            Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO bei vertragsbezogenen Anfragen,
-            andernfalls Art. 6 Abs. 1 lit. f DSGVO. Die Daten werden gelöscht, sobald der
-            Zweck der Verarbeitung entfallen ist und keine gesetzlichen Aufbewahrungsfristen
-            entgegenstehen.
+            <span className="text-[#F5F2EB] font-medium">Phase 0 &ndash; Analyse:</span>{' '}
+            Die Erstanalyse der digitalen Präsenz des Auftraggebers ist kostenfrei.
+            Es entstehen keine vertraglichen Verpflichtungen.
+          </p>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            <span className="text-[#F5F2EB] font-medium">Phase 1 &ndash; Erste Umsetzungsphase:</span>{' '}
+            Nach schriftlicher Annahme des Gesamtangebots beginnt der Anbieter mit der Leistungserbringung.
+            Nach Abschluss von Phase 1 stellt der Anbieter eine Rechnung gemäß dem vereinbarten Stundensatz
+            und dem tatsächlichen Aufwand. Die Rechnung ist innerhalb von 14 Tagen ab Rechnungsdatum ohne
+            Abzug zu begleichen.
+          </p>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            <span className="text-[#F5F2EB] font-medium">Phase 2 und folgende:</span>{' '}
+            Jede weitere Phase beginnt erst nach vollständigem Zahlungseingang der vorangegangenen Rechnung.
+            Nach Abschluss jeder Phase wird erneut eine Rechnung gestellt. Dieses Verfahren wiederholt sich
+            bis zum Projektabschluss. Bei Zahlungsverzug sind gesetzliche Verzugszinsen nach &sect; 288 BGB
+            fällig. Der Anbieter ist berechtigt, die Leistungserbringung bis zum Ausgleich offener
+            Forderungen auszusetzen.
           </p>
         </section>
 
         <section className="space-y-2">
           <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
-            Terminvereinbarung (Calendly)
+            5. Abnahme
           </h2>
           <p className="text-[#F5F2EB]/70 leading-relaxed">
-            Für die Buchung von Terminen wird der Dienst <span className="text-[#F5F2EB] font-medium">Calendly</span> der
-            Calendly LLC, 271 17th St NW, Atlanta, GA 30363, USA, eingesetzt. Bei der Nutzung
-            werden Kontaktdaten, Terminwünsche und technische Metadaten verarbeitet.
-            Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO. Es besteht ein
-            Auftragsverarbeitungsvertrag mit Calendly. Ein Datentransfer in die USA findet
-            auf Basis von Standardvertragsklauseln gemäß Art. 46 DSGVO statt. Weitere
-            Informationen:{" "}
-            <a href="https://calendly.com/privacy" className="text-[#E8A800] underline underline-offset-2" target="_blank" rel="noopener noreferrer">
-              calendly.com/privacy
-            </a>
+            Nach Abschluss jeder Phase legt der Anbieter die Ergebnisse zur Abnahme vor. Der Auftraggeber
+            ist verpflichtet, die Abnahme innerhalb von 7 Werktagen schriftlich zu erklären oder konkrete
+            Mängel schriftlich zu benennen. Verstreicht diese Frist ohne Rückmeldung, gilt die Leistung
+            als abgenommen. Pauschale oder unbegründete Ablehnungen sind nicht wirksam. Der Anbieter
+            ist berechtigt, festgestellte Mängel innerhalb einer angemessenen Frist nachzubessern.
           </p>
         </section>
 
         <section className="space-y-2">
           <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
-            Deine Rechte
+            6. Mitwirkungspflichten
           </h2>
           <p className="text-[#F5F2EB]/70 leading-relaxed">
-            Du hast gegenüber dem Verantwortlichen folgende Rechte hinsichtlich deiner
-            personenbezogenen Daten: Recht auf Auskunft (Art. 15 DSGVO), Berichtigung
-            (Art. 16 DSGVO), Löschung (Art. 17 DSGVO), Einschränkung der Verarbeitung
-            (Art. 18 DSGVO), Datenübertragbarkeit (Art. 20 DSGVO) sowie Widerspruch
-            gegen die Verarbeitung (Art. 21 DSGVO). Erteilte Einwilligungen können
-            jederzeit mit Wirkung für die Zukunft widerrufen werden. Zudem hast du das
-            Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren, zuständig
-            ist der Landesbeauftragte für den Datenschutz Baden-Württemberg bzw. Bayern.
+            Der Auftraggeber stellt alle erforderlichen Informationen, Zugänge, Materialien und Freigaben
+            rechtzeitig bereit. Verzögerungen durch fehlende Mitwirkung verlängern vereinbarte Fristen
+            entsprechend und begründen keinen Anspruch auf Minderung oder Schadensersatz gegenüber
+            dem Anbieter.
           </p>
         </section>
 
         <section className="space-y-2">
           <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
-            Speicherdauer
+            7. Nutzungsrechte
           </h2>
           <p className="text-[#F5F2EB]/70 leading-relaxed">
-            Personenbezogene Daten werden gelöscht, sobald der Verarbeitungszweck entfällt
-            und keine gesetzlichen Aufbewahrungspflichten entgegenstehen. Für geschäftliche
-            Korrespondenz gelten die handels- und steuerrechtlichen Aufbewahrungsfristen
-            von bis zu 10 Jahren.
+            Mit vollständiger Zahlung der jeweiligen Phase erhält der Auftraggeber ein einfaches,
+            nicht übertragbares Nutzungsrecht an den in dieser Phase erstellten Arbeitsergebnissen.
+            Vorlagen, Konzepte, Methoden und sonstiges Know-how des Anbieters verbleiben in dessen
+            Eigentum. Eine Weitergabe an Dritte oder Unterlizenzierung bedarf der schriftlichen
+            Zustimmung des Anbieters.
           </p>
         </section>
 
         <section className="space-y-2">
           <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
-            Externe Links
+            8. Gewährleistung & Haftung
           </h2>
           <p className="text-[#F5F2EB]/70 leading-relaxed">
-            Diese Website enthält Links zu externen Websites. Für deren Inhalte und
-            Datenschutzpraktiken übernehme ich keine Verantwortung. Es gelten die
-            jeweiligen Datenschutzerklärungen der verlinkten Anbieter.
+            Der Anbieter haftet unbeschränkt bei Vorsatz und grober Fahrlässigkeit sowie bei Schäden
+            aus der Verletzung des Lebens, des Körpers oder der Gesundheit. Bei leichter Fahrlässigkeit
+            haftet der Anbieter nur bei Verletzung wesentlicher Vertragspflichten, begrenzt auf den
+            vertragstypischen, vorhersehbaren Schaden. Eine weitergehende Haftung ist ausgeschlossen.
+          </p>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
+            9. Vertraulichkeit & Referenzen
+          </h2>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            Beide Parteien verpflichten sich, vertrauliche Informationen der jeweils anderen Partei
+            nicht an Dritte weiterzugeben. Diese Pflicht besteht über das Vertragsende hinaus. Der
+            Anbieter ist berechtigt, den Auftraggeber nach dessen ausdrücklicher Freigabe als Referenz
+            zu nennen und Projektergebnisse im eigenen Portfolio zu veröffentlichen, sofern keine
+            gesonderte Geheimhaltungsvereinbarung getroffen wurde.
+          </p>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
+            10. Laufzeit & Kündigung
+          </h2>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            Verträge gelten für die individuell vereinbarte Projektlaufzeit. Das Recht beider Parteien
+            zur außerordentlichen Kündigung aus wichtigem Grund bleibt unberührt und bedarf der
+            Textform. Bereits erbrachte und abgenommene Leistungen sind in jedem Fall zu vergüten.
+          </p>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
+            11. Schlussbestimmungen
+          </h2>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            Es gilt ausschließlich das Recht der Bundesrepublik Deutschland unter Ausschluss des
+            UN-Kaufrechts. Gerichtsstand ist, soweit gesetzlich zulässig, der Sitz des Anbieters.
+            Sollten einzelne Bestimmungen unwirksam sein, bleibt die Wirksamkeit der übrigen
+            unberührt. Die unwirksame Bestimmung ist durch eine wirtschaftlich möglichst
+            nahestehende wirksame Regelung zu ersetzen.
           </p>
         </section>
 
