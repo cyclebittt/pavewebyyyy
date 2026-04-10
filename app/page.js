@@ -1284,9 +1284,9 @@ export default function Home() {
           }}>
             <span style={{ fontSize: 14, fontWeight: 900, color: B.black }}>Leon Seitz</span>
             <div style={{ display: 'flex', gap: 20, fontSize: 13, color: 'rgba(14,12,8,0.38)' }}>
-              [['Instagram', 'https://www.instagram.com/leonnseitz'], ['Prozess', '/prozess'], ['AGB', '/agb'], ['Impressum', '/impressum'], ['Datenschutz', '/datenschutz']].map(([l, h]) => (
-                <a key={l} href={h} style={{ color: 'inherit', textDecoration: 'none' }}>{l}</a>
-              ))}
+             {[['Instagram', 'https://www.instagram.com/leonnseitz'], ['Prozess', '/prozess'], ['AGB', '/agb'], ['Impressum', '/impressum'], ['Datenschutz', '/datenschutz']].map(([l, h]) => (
+  <a key={l} href={h} style={{ color: 'inherit', textDecoration: 'none' }}>{l}</a>
+))}
             </div>
             <span style={{ fontSize: 12, color: 'rgba(14,12,8,0.26)' }}>© 2026</span>
           </div>
