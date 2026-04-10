@@ -1,104 +1,173 @@
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-
 export default function AGBPage() {
   return (
-    <div className="font-proxima bg-gradient-to-br from-[#0B0B0F] via-[#0E0E15] to-black text-white">
-      <Navbar />
+    <div className="font-jakarta bg-[#0E0C08] text-[#F5F2EB] min-h-screen">
+      <main className="max-w-3xl mx-auto px-6 md:px-12 lg:px-20 py-20 md:py-28 space-y-10">
 
-      <main className="max-w-4xl mx-auto px-6 md:px-12 lg:px-20 py-16 md:py-20 space-y-10">
-        <header className="space-y-4">
-          <span className="inline-block text-sm text-indigo-300/80 bg-white/5 border border-white/10 px-3 py-1 rounded-full">Rechtliches</span>
-          <h1 className="text-3xl md:text-5xl font-bold">Allgemeine Geschäftsbedingungen (AGB)</h1>
-          <p className="text-neutral-300">
-            Hinweis: Diese AGB sind ein unverbindlicher Mustertext und stellen <strong>keine Rechtsberatung</strong> dar.
-            Bitte lasse die Inhalte von einer Rechtsberatung prüfen und an dein Unternehmen anpassen.
+        <header className="space-y-4 border-b border-white/10 pb-10">
+          <span className="inline-block text-xs font-medium tracking-widest uppercase text-[#E8A800] mb-2">
+            Rechtliches
+          </span>
+          <h1 className="font-serif italic text-4xl md:text-5xl text-[#F5F2EB]">
+            Allgemeine Geschäftsbedingungen
+          </h1>
+          <p className="text-[#F5F2EB]/50 text-sm">
+            Diese AGB wurden sorgfältig formuliert, ersetzen jedoch keine individuelle Rechtsberatung.
           </p>
         </header>
 
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold">1. Geltungsbereich</h2>
-          <p className="text-neutral-300">
-            Diese AGB gelten für alle Verträge zwischen <strong>Leon Seitz</strong> (nachfolgend „Anbieter“) und seinen Kund:innen
-            über Dienstleistungen in den Bereichen Branding, Webdesign, Content, Social Media und Leadgenerierung.
+        <section className="space-y-2">
+          <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
+            1. Geltungsbereich
+          </h2>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            Diese AGB gelten für alle Verträge zwischen <span className="text-[#F5F2EB] font-medium">Leon Seitz</span> (nachfolgend
+            „Anbieter") und seinen Auftraggebern über Dienstleistungen in den Bereichen Webentwicklung, Motion Design,
+            Branding und Marketing. Abweichende Bedingungen des Auftraggebers haben keine Gültigkeit, sofern sie nicht
+            schriftlich anerkannt wurden.
           </p>
         </section>
 
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold">2. Angebote & Vertragsschluss</h2>
-          <p className="text-neutral-300">
-            Angebote des Anbieters sind freibleibend. Ein Vertrag kommt erst durch schriftliche Bestätigung oder
-            durch Leistungsbeginn zustande. Änderungen und Ergänzungen bedürfen der Textform.
+        <section className="space-y-2">
+          <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
+            2. Angebote & Vertragsschluss
+          </h2>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            Vor Beginn der Zusammenarbeit erstellt der Anbieter ein schriftliches Gesamtangebot für das
+            jeweilige Projekt. Dieses enthält den geplanten Leistungsumfang aller Phasen sowie den
+            vereinbarten Stundensatz. Der Vertrag kommt ausschließlich durch schriftliche Annahme dieses
+            Angebots durch den Auftraggeber zustande. Erst nach Vertragsschluss beginnt die Leistungserbringung.
+            Mündliche Nebenabreden haben keine Gültigkeit. Änderungen bedürfen der Textform.
           </p>
         </section>
 
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold">3. Leistungsumfang</h2>
-          <p className="text-neutral-300">
-            Der Leistungsumfang ergibt sich aus dem individuellen Angebot bzw. Leistungs-/Paketbeschreibungen.
-            Änderungswünsche nach Beauftragung können zu Zeit- und Preis­anpassungen führen.
+        <section className="space-y-2">
+          <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
+            3. Leistungsumfang
+          </h2>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            Der konkrete Leistungsumfang ergibt sich ausschließlich aus dem schriftlichen Angebot.
+            Änderungswünsche des Auftraggebers nach Vertragsschluss werden gesondert bewertet und
+            können zu angepassten Fristen und Vergütungen führen.
           </p>
         </section>
 
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold">4. Mitwirkungspflichten</h2>
-          <p className="text-neutral-300">
-            Auftraggebende stellen alle für die Leistungserbringung erforderlichen Informationen, Materialien und
-            Freigaben fristgerecht bereit. Verzögerungen aufgrund fehlender Mitwirkung verlängern Fristen entsprechend.
+        <section className="space-y-2">
+          <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
+            4. Projektphasen & Vergütung
+          </h2>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            <span className="text-[#F5F2EB] font-medium">Phase 0 – Analyse:</span> Die Erstanalyse der digitalen
+            Präsenz des Auftraggebers ist kostenfrei. Es entstehen keine vertraglichen Verpflichtungen.
+          </p>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            <span className="text-[#F5F2EB] font-medium">Phase 1 – Erste Umsetzungsphase:</span> Nach schriftlicher
+            Annahme des Gesamtangebots beginnt der Anbieter mit der Leistungserbringung. Nach Abschluss
+            von Phase 1 stellt der Anbieter eine Rechnung gemäß dem vereinbarten Stundensatz und dem
+            tatsächlichen Aufwand. Die Rechnung ist innerhalb von 14 Tagen ab Rechnungsdatum ohne
+            Abzug zu begleichen.
+          </p>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            <span className="text-[#F5F2EB] font-medium">Phase 2 und folgende:</span> Jede weitere Phase beginnt
+            erst nach vollständigem Zahlungseingang der vorangegangenen Rechnung. Nach Abschluss jeder
+            Phase wird erneut eine Rechnung gestellt. Dieses Verfahren wiederholt sich bis zum
+            Projektabschluss. Bei Zahlungsverzug sind gesetzliche Verzugszinsen nach § 288 BGB fällig.
+            Der Anbieter ist berechtigt, die Leistungserbringung bis zum Ausgleich offener Forderungen
+            auszusetzen.
           </p>
         </section>
 
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold">5. Vergütung & Zahlung</h2>
-          <p className="text-neutral-300">
-            Sofern nicht anders vereinbart, gelten die im Angebot genannten Preise. Zahlungen sind innerhalb von
-            14 Tagen ab Rechnungsdatum ohne Abzug fällig. Bei Verzug können gesetzliche Verzugszinsen berechnet werden.
+        <section className="space-y-2">
+          <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
+            5. Abnahme
+          </h2>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            Nach Abschluss jeder Phase legt der Anbieter die Ergebnisse zur Abnahme vor. Der Auftraggeber
+            ist verpflichtet, die Abnahme innerhalb von 7 Werktagen schriftlich zu erklären oder konkrete
+            Mängel schriftlich zu benennen. Verstreicht diese Frist ohne Rückmeldung, gilt die Leistung
+            als abgenommen. Pauschale oder unbegründete Ablehnungen sind nicht wirksam. Der Anbieter
+            ist berechtigt, festgestellte Mängel innerhalb einer angemessenen Frist nachzubessern.
           </p>
         </section>
 
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold">6. Nutzungsrechte</h2>
-          <p className="text-neutral-300">
-            Nutzungsrechte an Arbeitsergebnissen gehen – soweit vereinbart – erst nach vollständiger Zahlung über.
-            Vorlagen, Methoden und Know-how verbleiben beim Anbieter. Eine Weitergabe an Dritte bedarf der Zustimmung.
+        <section className="space-y-2">
+          <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
+            6. Mitwirkungspflichten
+          </h2>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            Der Auftraggeber stellt alle erforderlichen Informationen, Zugänge, Materialien und Freigaben
+            rechtzeitig bereit. Verzögerungen durch fehlende Mitwirkung verlängern vereinbarte Fristen
+            entsprechend und begründen keinen Anspruch auf Minderung oder Schadensersatz gegenüber
+            dem Anbieter.
           </p>
         </section>
 
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold">7. Gewährleistung & Haftung</h2>
-          <p className="text-neutral-300">
-            Der Anbieter haftet nur für Vorsatz und grobe Fahrlässigkeit; bei leichter Fahrlässigkeit nur bei Verletzung
-            wesentlicher Vertragspflichten (Kardinalpflichten) und begrenzt auf den vertragstypischen, vorhersehbaren Schaden.
+        <section className="space-y-2">
+          <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
+            7. Nutzungsrechte
+          </h2>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            Mit vollständiger Zahlung der jeweiligen Phase erhält der Auftraggeber ein einfaches,
+            nicht übertragbares Nutzungsrecht an den in dieser Phase erstellten Arbeitsergebnissen.
+            Vorlagen, Konzepte, Methoden und sonstiges Know-how des Anbieters verbleiben in dessen
+            Eigentum. Eine Weitergabe an Dritte oder Unterlizenzierung bedarf der schriftlichen
+            Zustimmung des Anbieters.
           </p>
         </section>
 
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold">8. Vertraulichkeit & Referenzen</h2>
-          <p className="text-neutral-300">
-            Beide Parteien behandeln vertrauliche Informationen streng vertraulich. Der Anbieter darf den/die Auftraggeber:in
-            nach Freigabe als Referenz nennen und Ergebnisse in Portfolios zeigen, sofern keine Geheimhaltung vereinbart ist.
+        <section className="space-y-2">
+          <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
+            8. Gewährleistung & Haftung
+          </h2>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            Der Anbieter haftet unbeschränkt bei Vorsatz und grober Fahrlässigkeit sowie bei Schäden
+            aus der Verletzung des Lebens, des Körpers oder der Gesundheit. Bei leichter Fahrlässigkeit
+            haftet der Anbieter nur bei Verletzung wesentlicher Vertragspflichten, begrenzt auf den
+            vertragstypischen, vorhersehbaren Schaden. Eine weitergehende Haftung ist ausgeschlossen.
           </p>
         </section>
 
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold">9. Laufzeit & Kündigung</h2>
-          <p className="text-neutral-300">
-            Verträge gelten für die vereinbarte Laufzeit. Ein außerordentliches Kündigungsrecht bleibt unberührt.
+        <section className="space-y-2">
+          <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
+            9. Vertraulichkeit & Referenzen
+          </h2>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            Beide Parteien verpflichten sich, vertrauliche Informationen der jeweils anderen Partei
+            nicht an Dritte weiterzugeben. Diese Pflicht besteht über das Vertragsende hinaus. Der
+            Anbieter ist berechtigt, den Auftraggeber nach dessen ausdrücklicher Freigabe als Referenz
+            zu nennen und Projektergebnisse im eigenen Portfolio zu veröffentlichen, sofern keine
+            gesonderte Geheimhaltungsvereinbarung getroffen wurde.
           </p>
         </section>
 
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold">10. Schlussbestimmungen</h2>
-          <p className="text-neutral-300">
-            Es gilt das Recht der Bundesrepublik Deutschland. Gerichtsstand – soweit zulässig – ist der Sitz des Anbieters.
-            Sollten einzelne Bestimmungen unwirksam sein, bleibt die Wirksamkeit der übrigen unberührt.
+        <section className="space-y-2">
+          <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
+            10. Laufzeit & Kündigung
+          </h2>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            Verträge gelten für die individuell vereinbarte Projektlaufzeit. Das Recht beider Parteien
+            zur außerordentlichen Kündigung aus wichtigem Grund bleibt unberührt und bedarf der
+            Textform. Bereits erbrachte und abgenommene Leistungen sind in jedem Fall zu vergüten.
           </p>
         </section>
 
-        <p className="text-xs text-neutral-500">Stand: {new Date().toLocaleDateString('de-DE')}</p>
+        <section className="space-y-2">
+          <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
+            11. Schlussbestimmungen
+          </h2>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            Es gilt ausschließlich das Recht der Bundesrepublik Deutschland unter Ausschluss des
+            UN-Kaufrechts. Gerichtsstand ist, soweit gesetzlich zulässig, der Sitz des Anbieters.
+            Sollten einzelne Bestimmungen unwirksam sein, bleibt die Wirksamkeit der übrigen
+            unberührt. Die unwirksame Bestimmung ist durch eine wirtschaftlich möglichst
+            nahestehende wirksame Regelung zu ersetzen.
+          </p>
+        </section>
+
+        <p className="text-xs text-[#F5F2EB]/30 border-t border-white/10 pt-8">
+          Stand: {new Date().toLocaleDateString('de-DE')}
+        </p>
+
       </main>
-
-      <Footer />
     </div>
   );
 }
