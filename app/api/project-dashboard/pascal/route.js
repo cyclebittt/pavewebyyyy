@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { put, get } from "@vercel/blob";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 const BLOB_PATH = "dashboards/pascal-dashboard.json";
 
@@ -72,15 +73,27 @@ export async function GET() {
       return NextResponse.json(INITIAL_PROJECT);
     }
 
-    const text = await result.text();
+    const text = await new Response(result.stream).text();
     const data = JSON.parse(text);
 
     return NextResponse.json(data, {
-      headers: { "Cache-Control": "no-store" },
+      headers: {
+        "Cache-Control": "no-store",
+      },
     });
   } catch (error) {
-    await saveDashboard(INITIAL_PROJECT);
-    return NextResponse.json(INITIAL_PROJECT);
+    try {
+      await saveDashboard(INITIAL_PROJECT);
+      return NextResponse.json(INITIAL_PROJECT);
+    } catch (saveError) {
+      return NextResponse.json(
+        {
+          error: "Dashboard konnte nicht geladen oder initialisiert werden.",
+          details: String(saveError),
+        },
+        { status: 500 }
+      );
+    }
   }
 }
 
