@@ -577,7 +577,7 @@ function GanttChart({ phases, projectStart, projectEnd }) {
   );
 }
 
-function TimeTracking({ project, editMode, onAddTime }) {
+function TimeTracking({ project, editMode, onAddTime, onSetManualHours }) {
   const entries = project.timeEntries ?? [];
   const totalHours = entries.reduce((sum, entry) => sum + Number(entry.duration || 0), 0);
   const planned = Number(project.plannedHours || 1);
@@ -596,21 +596,43 @@ function TimeTracking({ project, editMode, onAddTime }) {
           </div>
 
           {editMode && (
-            <button
-              onClick={onAddTime}
-              style={{
-                padding: "7px 14px",
-                borderRadius: 100,
-                border: "1px solid rgba(232,168,0,0.28)",
-                background: "rgba(232,168,0,0.10)",
-                color: B.yellow,
-                fontSize: 12,
-                fontWeight: 700,
-                cursor: "pointer",
-              }}
-            >
-              Zeit hinzufügen
-            </button>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <button
+                onClick={onAddTime}
+                style={{
+                  padding: "7px 14px",
+                  borderRadius: 100,
+                  border: "1px solid rgba(232,168,0,0.28)",
+                  background: "rgba(232,168,0,0.10)",
+                  color: B.yellow,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                Zeit hinzufügen
+              </button>
+
+              <button
+                onClick={() => {
+                  const value = Number(prompt("Wie viele Stunden wurden bisher gearbeitet? Beispiel: 2.5"));
+                  if (!Number.isFinite(value) || value < 0) return;
+                  onSetManualHours(value);
+                }}
+                style={{
+                  padding: "7px 14px",
+                  borderRadius: 100,
+                  border: "1px solid rgba(245,242,235,0.12)",
+                  background: "rgba(245,242,235,0.05)",
+                  color: "rgba(245,242,235,0.65)",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                Stunden setzen
+              </button>
+            </div>
           )}
         </div>
 
@@ -885,6 +907,29 @@ export default function ProjectDashboard() {
     });
   }, [saveProject]);
 
+  const handleSetManualHours = useCallback(
+    (hours) => {
+      setProject((prev) => {
+        const next = {
+          ...prev,
+          timeEntries: [
+            {
+              id: "manual-hours",
+              date: new Date().toISOString().slice(0, 10),
+              title: "Manuell gesetzter Gesamtaufwand",
+              duration: hours,
+              note: "Direkt im Dashboard manuell angepasst.",
+            },
+          ],
+        };
+
+        saveProject(next);
+        return next;
+      });
+    },
+    [saveProject]
+  );
+
   const tabs = [
     { id: "phases", label: "Phasen" },
     { id: "gantt", label: "Zeitplan" },
@@ -915,17 +960,6 @@ export default function ProjectDashboard() {
 
       <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(800px 600px at 20% 20%, rgba(232,168,0,0.07), transparent 60%)" }} />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            opacity: 0.08,
-            mixBlendMode: "overlay",
-            backgroundImage:
-              "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E\")",
-            backgroundSize: "220px 220px",
-          }}
-        />
       </div>
 
       <header
@@ -970,15 +1004,6 @@ export default function ProjectDashboard() {
                 cursor: "pointer",
               }}
             >
-              <span
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background: editMode ? B.black : "rgba(245,242,235,0.30)",
-                  animation: editMode ? "pulseDot 1.5s infinite" : "none",
-                }}
-              />
               {editMode ? "Bearbeiten aktiv" : "Bearbeiten"}
             </button>
           </div>
@@ -1078,7 +1103,12 @@ export default function ProjectDashboard() {
 
         {activeTab === "time" && (
           <Reveal>
-            <TimeTracking project={project} editMode={editMode} onAddTime={handleAddTimeEntry} />
+            <TimeTracking
+              project={project}
+              editMode={editMode}
+              onAddTime={handleAddTimeEntry}
+              onSetManualHours={handleSetManualHours}
+            />
           </Reveal>
         )}
 
