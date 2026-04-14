@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
+import { put, get } from "@vercel/blob";
 
-const filePath = path.join(process.cwd(), "data", "pascal-dashboard.json");
+export const runtime = "nodejs";
+
+const BLOB_PATH = "dashboards/pascal-dashboard.json";
 
 const INITIAL_PROJECT = {
   client: "Pascal Hagelgans",
@@ -13,7 +14,6 @@ const INITIAL_PROJECT = {
   startDate: "2026-04-14",
   deadline: "2026-04-20",
   overallProgress: 0,
-
   phases: [
     {
       id: "p1",
@@ -44,7 +44,6 @@ const INITIAL_PROJECT = {
       ],
     },
   ],
-
   timeEntries: [
     {
       id: "time1",
@@ -56,28 +55,48 @@ const INITIAL_PROJECT = {
   ],
 };
 
-async function ensureFile() {
-  await fs.mkdir(path.dirname(filePath), { recursive: true });
-
-  try {
-    await fs.access(filePath);
-  } catch {
-    await fs.writeFile(filePath, JSON.stringify(INITIAL_PROJECT, null, 2));
-  }
+async function saveDashboard(data) {
+  await put(BLOB_PATH, JSON.stringify(data, null, 2), {
+    access: "private",
+    contentType: "application/json",
+    allowOverwrite: true,
+  });
 }
 
 export async function GET() {
-  await ensureFile();
+  try {
+    const result = await get(BLOB_PATH, { access: "private" });
 
-  const data = await fs.readFile(filePath, "utf8");
-  return NextResponse.json(JSON.parse(data));
+    if (!result || result.statusCode === 404) {
+      await saveDashboard(INITIAL_PROJECT);
+      return NextResponse.json(INITIAL_PROJECT);
+    }
+
+    const text = await result.text();
+    const data = JSON.parse(text);
+
+    return NextResponse.json(data, {
+      headers: { "Cache-Control": "no-store" },
+    });
+  } catch (error) {
+    await saveDashboard(INITIAL_PROJECT);
+    return NextResponse.json(INITIAL_PROJECT);
+  }
 }
 
 export async function POST(req) {
-  const body = await req.json();
+  try {
+    const body = await req.json();
+    await saveDashboard(body);
 
-  await ensureFile();
-  await fs.writeFile(filePath, JSON.stringify(body, null, 2));
-
-  return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error: "Dashboard konnte nicht gespeichert werden.",
+        details: String(error),
+      },
+      { status: 500 }
+    );
+  }
 }
