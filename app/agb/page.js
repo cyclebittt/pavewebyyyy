@@ -11,7 +11,6 @@ export default function AGBPage() {
             Allgemeine {String.fromCharCode(71, 101, 115, 99, 104, 228, 102, 116, 115, 98, 101, 100, 105, 110, 103, 117, 110, 103, 101, 110)}
           </h1>
           <p className="text-[#F5F2EB]/50 text-sm">
-            Diese AGB wurden sorgfältig formuliert, ersetzen jedoch keine individuelle Rechtsberatung.
           </p>
         </header>
 
