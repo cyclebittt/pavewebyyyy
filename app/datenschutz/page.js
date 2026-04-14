@@ -11,7 +11,7 @@ export default function AGBPage() {
             Allgemeine Geschäftsbedingungen
           </h1>
           <p className="text-[#F5F2EB]/50 text-sm">
-            Diese AGB wurden sorgfältig formuliert, ersetzen jedoch keine individuelle Rechtsberatung.
+            Stand: 14.04.2026
           </p>
         </header>
 
