@@ -376,6 +376,260 @@ function LeadForm() {
   );
 }
 
+/* ─── INTAKE FORM — step selector (for #request section) ─── */
+const INTAKE_STEPS = [
+  {
+    key: 'goal',
+    type: 'select',
+    question: 'Was ist dein Ziel?',
+    options: [
+      { value: 'Neue Website', label: 'Neue Website' },
+      { value: 'Mehr Anfragen', label: 'Mehr Anfragen' },
+      { value: 'Besseres Branding', label: 'Besseres Branding' },
+      { value: 'Social Media', label: 'Social Media' },
+      { value: 'Kompletter Neustart', label: 'Kompletter Neustart' },
+    ],
+  },
+  {
+    key: 'website_status',
+    type: 'select',
+    question: 'Hast du bereits eine Website?',
+    options: [
+      { value: 'Ja, funktioniert nicht gut', label: 'Ja — aber sie funktioniert nicht' },
+      { value: 'Ja, bin zufrieden', label: 'Ja — bin zufrieden' },
+      { value: 'Nein', label: 'Noch keine' },
+    ],
+  },
+  {
+    key: 'timeline',
+    type: 'select',
+    question: 'Wann kann es losgehen?',
+    options: [
+      { value: 'So bald wie möglich', label: 'So bald wie möglich' },
+      { value: 'In 1–2 Wochen', label: 'In 1–2 Wochen' },
+      { value: 'In etwa 1 Monat', label: 'In etwa 1 Monat' },
+      { value: 'Noch offen', label: 'Noch offen' },
+    ],
+  },
+  {
+    key: 'url',
+    type: 'input',
+    inputType: 'url',
+    question: 'Deine Website-URL',
+    placeholder: 'https://deinbetrieb.de',
+    hint: 'Optional — falls du schon eine Seite hast.',
+    optional: true,
+  },
+  {
+    key: 'notes',
+    type: 'textarea',
+    question: 'Noch etwas, das ich wissen sollte?',
+    placeholder: 'Z.B. Branche, Budget-Vorstellung, besondere Anforderungen…',
+    hint: 'Optional — alles was mir hilft, deine Situation besser zu verstehen.',
+    optional: true,
+  },
+];
+
+const INP_STYLE = {
+  width: '100%', padding: '12px 14px', borderRadius: 12,
+  border: '1.5px solid rgba(14,12,8,0.12)', background: '#FAFAF8',
+  color: '#0E0C08', fontSize: 14, outline: 'none', boxSizing: 'border-box',
+  fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
+  transition: 'border-color .18s',
+};
+
+function LeadFormLight() {
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('idle');
+
+  const totalSteps = INTAKE_STEPS.length;
+  const isEmailStep = step === totalSteps;
+  const currentStep = INTAKE_STEPS[step];
+
+  const pick = (key, value) => {
+    setAnswers(a => ({ ...a, [key]: value }));
+    setStep(s => s + 1);
+  };
+
+  const advance = () => setStep(s => s + 1);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!email) return;
+    setStatus('loading');
+    try {
+      const res = await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          url: answers.url || '',
+          goal: [answers.goal, answers.website_status].filter(Boolean).join(' · '),
+          timeline: answers.timeline || '',
+          ...(answers.notes ? { goal: [answers.goal, answers.website_status, answers.notes].filter(Boolean).join(' · ') } : {}),
+        }),
+      });
+      setStatus(res.ok ? 'success' : 'error');
+    } catch {
+      setStatus('error');
+    }
+  };
+
+  if (status === 'success') {
+    return (
+      <div style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        gap: 12, padding: '40px 0', textAlign: 'center',
+      }}>
+        <CheckCircle2 size={36} color={B.ocker} />
+        <div style={{ fontSize: 17, fontWeight: 900, color: B.black }}>Erhalten.</div>
+        <p style={{ fontSize: 14, color: 'rgba(14,12,8,0.52)', lineHeight: 1.65 }}>
+          Ich melde mich innerhalb von 24 Stunden bei dir.
+        </p>
+      </div>
+    );
+  }
+
+  const totalProgress = totalSteps + 1;
+  const progressPct = ((isEmailStep ? totalSteps : step) / totalProgress) * 100;
+
+  const BackBtn = () => (
+    <button type="button" onClick={() => setStep(s => s - 1)} style={{
+      marginTop: 12, background: 'none', border: 'none', display: 'block',
+      fontSize: 12, color: 'rgba(14,12,8,0.35)', cursor: 'pointer',
+      fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif", padding: 0,
+    }}>← Zurück</button>
+  );
+
+  return (
+    <div>
+      {/* Progress bar */}
+      <div style={{ height: 3, borderRadius: 99, background: 'rgba(14,12,8,0.07)', marginBottom: 24, overflow: 'hidden' }}>
+        <div style={{
+          height: '100%', borderRadius: 99, background: B.ocker,
+          width: `${progressPct}%`,
+          transition: 'width .35s cubic-bezier(0.4,0,0.2,1)',
+        }} />
+      </div>
+
+      {!isEmailStep && currentStep.type === 'select' && (
+        <div>
+          <div style={{ fontSize: 15, fontWeight: 800, color: B.black, marginBottom: 14 }}>
+            {currentStep.question}
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {currentStep.options.map(opt => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => pick(currentStep.key, opt.value)}
+                style={{
+                  width: '100%', padding: '12px 16px', borderRadius: 12, textAlign: 'left',
+                  border: '1.5px solid rgba(14,12,8,0.10)', background: '#FAFAF8',
+                  color: B.black, fontSize: 14, fontWeight: 600, cursor: 'pointer',
+                  fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
+                  transition: 'border-color .15s, background .15s',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = B.ocker; e.currentTarget.style.background = 'rgba(232,168,0,0.04)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(14,12,8,0.10)'; e.currentTarget.style.background = '#FAFAF8'; }}
+              >
+                {opt.label}
+                <ArrowRight size={14} style={{ opacity: 0.28, flexShrink: 0 }} />
+              </button>
+            ))}
+          </div>
+          {step > 0 && <BackBtn />}
+        </div>
+      )}
+
+      {!isEmailStep && (currentStep.type === 'input' || currentStep.type === 'textarea') && (
+        <div>
+          <div style={{ fontSize: 15, fontWeight: 800, color: B.black, marginBottom: 4 }}>
+            {currentStep.question}
+            {currentStep.optional && <span style={{ fontSize: 12, fontWeight: 400, color: 'rgba(14,12,8,0.35)', marginLeft: 8 }}>optional</span>}
+          </div>
+          {currentStep.hint && (
+            <p style={{ fontSize: 13, color: 'rgba(14,12,8,0.42)', marginBottom: 12, lineHeight: 1.55 }}>{currentStep.hint}</p>
+          )}
+          {currentStep.type === 'input' ? (
+            <input
+              type={currentStep.inputType || 'text'}
+              placeholder={currentStep.placeholder}
+              value={answers[currentStep.key] || ''}
+              onChange={e => setAnswers(a => ({ ...a, [currentStep.key]: e.target.value }))}
+              autoFocus
+              style={{ ...INP_STYLE, marginBottom: 10 }}
+            />
+          ) : (
+            <textarea
+              placeholder={currentStep.placeholder}
+              value={answers[currentStep.key] || ''}
+              onChange={e => setAnswers(a => ({ ...a, [currentStep.key]: e.target.value }))}
+              rows={4}
+              autoFocus
+              style={{ ...INP_STYLE, resize: 'none', lineHeight: 1.6, marginBottom: 10 }}
+            />
+          )}
+          <button type="button" onClick={advance} style={{
+            width: '100%', padding: '12px 24px', borderRadius: 100,
+            background: B.black, color: B.cream, border: 'none', cursor: 'pointer',
+            fontWeight: 700, fontSize: 14,
+            fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
+          }}>
+            Weiter →
+          </button>
+          <BackBtn />
+        </div>
+      )}
+
+      {isEmailStep && (
+        <form onSubmit={handleSubmit}>
+          <div style={{ fontSize: 15, fontWeight: 800, color: B.black, marginBottom: 6 }}>
+            Wohin soll die Analyse?
+          </div>
+          <p style={{ fontSize: 13, color: 'rgba(14,12,8,0.45)', marginBottom: 14, lineHeight: 1.6 }}>
+            Ich schicke dir meine Einschätzung direkt per E-Mail.
+          </p>
+          <input
+            type="email" required autoFocus
+            placeholder="deine@email.de"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            style={{ ...INP_STYLE, marginBottom: 10 }}
+          />
+          <button type="submit" disabled={status === 'loading'} style={{
+            width: '100%', padding: '13px 24px', borderRadius: 100,
+            background: status === 'loading' ? 'rgba(232,168,0,0.6)' : B.yellow,
+            color: B.black, border: 'none', cursor: status === 'loading' ? 'default' : 'pointer',
+            fontWeight: 800, fontSize: 14,
+            fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
+            transition: 'background .18s',
+          }}>
+            {status === 'loading' ? 'Wird gesendet…' : 'Analyse anfragen →'}
+          </button>
+          <button type="button" onClick={() => setStep(s => s - 1)} style={{
+            marginTop: 10, background: 'none', border: 'none', display: 'block',
+            fontSize: 12, color: 'rgba(14,12,8,0.35)', cursor: 'pointer',
+            fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif", padding: 0,
+          }}>← Zurück</button>
+          {status === 'error' && (
+            <p style={{ marginTop: 8, fontSize: 12, color: 'rgba(14,12,8,0.40)', textAlign: 'center' }}>
+              Fehler — schreib direkt an <strong>hello@leonseitz.com</strong>
+            </p>
+          )}
+        </form>
+      )}
+
+      <p style={{ marginTop: 16, fontSize: 11, color: 'rgba(14,12,8,0.25)', textAlign: 'center' }}>
+        Kein Spam. Kein Paket. Nur eine ehrliche Einschätzung.
+      </p>
+    </div>
+  );
+}
+
 /* ──────────────────────────────────────────
    VERTICAL ROADMAP
 ────────────────────────────────────────── */
@@ -524,8 +778,24 @@ function RoadMap() {
               }}>
                 {s.desc}
               </p>
-              {/* E-Mail-Formular nur für Phase 0 */}
-              {s.highlight && <LeadForm />}
+              {/* CTA für Phase 0 */}
+              {s.highlight && (
+                <a
+                  href="/#request"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 8,
+                    marginTop: 20, padding: '11px 22px', borderRadius: 100,
+                    background: B.yellow, color: B.black, textDecoration: 'none',
+                    fontWeight: 800, fontSize: 13,
+                    fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
+                    transition: 'opacity .18s',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.opacity = '0.88'}
+                  onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+                >
+                  Jetzt kostenlos anfragen <ArrowRight size={14} />
+                </a>
+              )}
             </div>
           </div>
         ))}
@@ -628,23 +898,54 @@ function StatBox({ target, suffix, label, delay = 0 }) {
 }
 
 /* ─── LEISTUNG CARD ─── */
-function LeistungCard({ n, icon, kicker, title, desc, accent }) {
+function LeistungCard({ n, icon, kicker, title, desc, accent, img }) {
   const [h, setH] = useState(false);
   return (
     <div
       onMouseEnter={() => setH(true)}
       onMouseLeave={() => setH(false)}
       style={{
-        padding: '36px 32px',
         border: `1px solid ${h ? 'rgba(232,168,0,0.22)' : 'rgba(245,242,235,0.06)'}`,
         background: h ? 'rgba(232,168,0,0.04)' : B.dark,
         textAlign: 'left', position: 'relative', overflow: 'hidden',
         transition: 'border-color .22s cubic-bezier(0.4,0,0.2,1), background .22s cubic-bezier(0.4,0,0.2,1)',
         cursor: 'default',
+        display: 'flex', flexDirection: 'column',
       }}>
+      {/* Yellow top line on hover */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+        background: B.yellow,
+        opacity: h ? 1 : 0,
+        transition: 'opacity .22s cubic-bezier(0.4,0,0.2,1)',
+      }} />
+      {/* Image area */}
+      {img && (
+        <div style={{
+          width: '100%', height: 200, overflow: 'hidden',
+          background: 'transparent',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          flexShrink: 0,
+        }}>
+          <img
+            src={img}
+            alt={kicker}
+            style={{
+              width: '100%', height: '100%',
+              objectFit: 'contain',
+              transform: h ? 'scale(1.04)' : 'scale(1)',
+              transition: 'transform .45s cubic-bezier(0.4,0,0.2,1)',
+              filter: 'drop-shadow(0 8px 24px rgba(232,168,0,0.08))',
+            }}
+            onError={e => { e.currentTarget.parentElement.style.display = 'none'; }}
+          />
+        </div>
+      )}
+      {/* Content */}
+      <div style={{ padding: '28px 32px', flex: 1, position: 'relative' }}>
       {/* Large faint number */}
       <div style={{
-        position: 'absolute', top: 20, right: 24,
+        position: 'absolute', top: 16, right: 24,
         fontSize: 72, fontWeight: 900, lineHeight: 1,
         color: h ? 'rgba(232,168,0,0.09)' : 'rgba(245,242,235,0.04)',
         letterSpacing: '-0.04em', userSelect: 'none',
@@ -653,16 +954,9 @@ function LeistungCard({ n, icon, kicker, title, desc, accent }) {
       }}>
         {n}
       </div>
-      {/* Yellow top line on hover */}
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-        background: B.yellow,
-        opacity: h ? 1 : 0,
-        transition: 'opacity .22s cubic-bezier(0.4,0,0.2,1)',
-      }} />
       {/* Icon */}
       <div style={{
-        width: 44, height: 44, borderRadius: 12, marginBottom: 24,
+        width: 44, height: 44, borderRadius: 12, marginBottom: 20,
         background: h ? 'rgba(232,168,0,0.13)' : 'rgba(245,242,235,0.05)',
         border: `1px solid ${h ? 'rgba(232,168,0,0.22)' : 'rgba(245,242,235,0.09)'}`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -705,6 +999,7 @@ function LeistungCard({ n, icon, kicker, title, desc, accent }) {
           <path d="M2.5 6h7M6.5 3l3 3-3 3" stroke={B.yellow} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       </div>
+      </div>{/* end content */}
     </div>
   );
 }
@@ -1011,57 +1306,74 @@ function ReferenzCard({ img, kategorie, name, desc, url }) {
       style={{ textDecoration: 'none', display: 'block' }}
     >
       <div style={{
-        borderRadius: 16, overflow: 'hidden',
-        background: 'transparent',
-        transition: 'transform .25s cubic-bezier(0.4,0,0.2,1)',
-        transform: h ? 'translateY(-3px)' : 'none',
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: 0,
+        borderRadius: 20,
+        overflow: 'hidden',
+        background: '#F5F2EB',
+        transition: 'transform .25s cubic-bezier(0.4,0,0.2,1), box-shadow .25s',
+        transform: h ? 'translateY(-4px)' : 'none',
+        boxShadow: h ? '0 16px 48px rgba(14,12,8,0.12)' : '0 4px 20px rgba(14,12,8,0.06)',
       }}>
-        {/* Image container — optimised for 1000×1000 transparent device mockups */}
+        {/* Image — fills left half, no background rectangle */}
         <div style={{
-          position: 'relative', width: '100%', paddingTop: '72%',
-          background: 'linear-gradient(135deg, #F0EDE4 0%, #E8E5DC 100%)',
+          position: 'relative',
+          minHeight: 300,
           overflow: 'hidden',
+          background: 'transparent',
         }}>
           <img
             src={img}
             alt={name}
             style={{
-              position: 'absolute', inset: '4% 2%',
-              width: '96%', height: '92%',
-              objectFit: 'contain',
-              transform: h ? 'scale(1.04) translateY(-1%)' : 'scale(1)',
-              transition: 'transform .45s cubic-bezier(0.4,0,0.2,1)',
-              filter: 'drop-shadow(0 8px 24px rgba(14,12,8,0.10))',
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center top',
+              transform: h ? 'scale(1.04)' : 'scale(1)',
+              transition: 'transform .5s cubic-bezier(0.4,0,0.2,1)',
             }}
             onError={e => { e.currentTarget.style.display = 'none'; }}
           />
-          {/* Kategorie pill */}
+        </div>
+        {/* Text — right half, vertically centered */}
+        <div style={{
+          padding: '40px 36px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          gap: 0,
+        }}>
           <div style={{
-            position: 'absolute', top: 14, left: 14,
-            padding: '5px 12px', borderRadius: 999,
-            background: 'rgba(14,12,8,0.72)', backdropFilter: 'blur(8px)',
-            fontSize: 11, fontWeight: 700, letterSpacing: '0.07em',
-            textTransform: 'uppercase', color: B.cream,
+            fontSize: 11, fontWeight: 700, letterSpacing: '0.1em',
+            textTransform: 'uppercase', color: B.ocker, marginBottom: 10,
           }}>
             {kategorie}
           </div>
-        </div>
-        {/* Card body */}
-        <div style={{ padding: '18px 4px 8px', textAlign: 'left' }}>
-          <div style={{ fontSize: 16, fontWeight: 800, color: B.black, letterSpacing: '-0.01em', marginBottom: 5 }}>
+          <div style={{
+            fontSize: 'clamp(1.2rem,2vw,1.6rem)', fontWeight: 900,
+            color: B.black, letterSpacing: '-0.02em', lineHeight: 1.15,
+            marginBottom: 14,
+          }}>
             {name}
           </div>
-          <p style={{ fontSize: 13, color: 'rgba(14,12,8,0.52)', lineHeight: 1.65, margin: 0 }}>
+          <p style={{
+            fontSize: 15, color: 'rgba(14,12,8,0.62)',
+            lineHeight: 1.75, margin: 0, marginBottom: 24,
+          }}>
             {desc}
           </p>
           <div style={{
-            marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 5,
-            fontSize: 12, fontWeight: 700,
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            fontSize: 13, fontWeight: 700,
             color: h ? B.ocker : 'rgba(14,12,8,0.38)',
-            transition: 'color .2s cubic-bezier(0.4,0,0.2,1)',
+            transition: 'color .2s',
           }}>
             Projekt ansehen
-            <ArrowRight size={12} />
+            <ArrowRight size={14} />
           </div>
         </div>
       </div>
@@ -1431,9 +1743,9 @@ export default function Home() {
           </p>
         </Reveal>
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit,minmax(min(300px,100%),1fr))',
-          gap: 20, marginTop: 48, textAlign: 'left',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 20, marginTop: 48,
         }}>
           {PROJEKTE.map((p, i) => (
             <Reveal key={p.id} delay={i * 80}>
@@ -1505,6 +1817,7 @@ export default function Home() {
               title: 'Website, Social, Online-Präsenz.',
               desc: 'Klarer Aufbau, klare Botschaft. Damit ein Besucher in fünf Sekunden versteht, was du machst — und warum er bleiben soll.',
               accent: B.yellow,
+              img: '/leistungen/website.png',
             },
             {
               n: '02',
@@ -1513,6 +1826,7 @@ export default function Home() {
               title: 'Flyer, Speisekarten, Materialien.',
               desc: 'Visitenkarte, Flyer, Speisekarte, Broschüre — konsistent, professionell, erkennbar. Alles was dein Betrieb anfasst, sollte gut aussehen.',
               accent: B.yellow,
+              img: '/leistungen/print.png',
             },
             {
               n: '03',
@@ -1521,6 +1835,7 @@ export default function Home() {
               title: 'Social Content, der auffällt.',
               desc: 'Kurzvideos, Reels, Motion Graphics. Damit du regelmäßig sichtbar bist — ohne jedes Format von null aufzubauen.',
               accent: B.yellow,
+              img: '/leistungen/motion.png',
             },
             {
               n: '04',
@@ -1529,6 +1844,7 @@ export default function Home() {
               title: 'Abläufe, die Zeit sparen.',
               desc: 'Bestellungen, Kommunikation, interne Abläufe — ich schaue was sich digitalisieren oder vereinfachen lässt. Konkret, umsetzbar.',
               accent: B.yellow,
+              img: '/leistungen/prozesse.png',
             },
           ].map((s, i) => (
             <Reveal key={i} delay={i * 70}>
@@ -1579,68 +1895,116 @@ export default function Home() {
       </Sec>
       <Div from={true} />
       {/* ── S6: ANFRAGE + CALENDLY ── */}
-      <Sec id="request" dark={false} pad="80px 20px 64px">
-        {/* Tagesstreifen */}
+      <Sec id="request" dark={false} pad="80px 20px 80px">
+        {/* Top accent stripe */}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: B.yellow }} />
-        <Reveal><Tag light>Einstieg</Tag></Reveal>
-        <Reveal delay={80}>
-          <h2 style={{
-            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
-            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: B.black,
+
+        {/* 2-column layout */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(340px,100%), 1fr))',
+          gap: 56, alignItems: 'start', textAlign: 'left', maxWidth: 960, margin: '0 auto',
+        }}>
+          {/* LEFT: headline + trust */}
+          <Reveal>
+            <div>
+              <Tag light>Phase 0 — Kostenlos</Tag>
+              <h2 style={{
+                marginTop: 20, fontSize: 'clamp(1.6rem,4vw,2.6rem)',
+                fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: B.black,
+              }}>
+                Lass uns reden.<br /><SerifAccent col={B.ocker}>Kein Commitment.</SerifAccent>
+              </h2>
+              <p style={{
+                marginTop: 18, fontSize: 15, color: 'rgba(14,12,8,0.55)',
+                lineHeight: 1.8, maxWidth: 380,
+              }}>
+                Ich schaue mir deinen Betrieb an — Website, Social, Flyer, alles — und sage dir ehrlich,
+                wo Potenzial liegt. Phase 0 kostet dich nichts.
+              </p>
+              {/* Trust signals */}
+              <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {[
+                  'Kostenlose Analyse — kein verstecktes Angebot',
+                  'Antwort innerhalb von 24 Stunden',
+                  'Zahlung erst wenn du zufrieden bist',
+                ].map((t, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{
+                      width: 20, height: 20, borderRadius: '50%', flexShrink: 0,
+                      background: 'rgba(232,168,0,0.12)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}>
+                      <CheckCircle2 size={12} color={B.ocker} />
+                    </div>
+                    <span style={{ fontSize: 13, color: 'rgba(14,12,8,0.62)', fontWeight: 600 }}>{t}</span>
+                  </div>
+                ))}
+              </div>
+              {/* Alt contact below trust */}
+              <div style={{ marginTop: 36, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                <a
+                  href="https://wa.me/4916095757167?text=Hi%20Leon%2C%0A%0AZiel%3A%0ADeadline%3A%0AStand%3A%0A%0AKurzer%20Kontext%3A"
+                  target="_blank" rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 8,
+                    padding: '10px 20px', borderRadius: 100,
+                    background: '#25D366', color: '#fff',
+                    fontSize: 13, fontWeight: 700, textDecoration: 'none',
+                    transition: 'opacity .18s',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.opacity = '0.88'}
+                  onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+                >
+                  <Icon.WA /> WhatsApp
+                </a>
+                <a
+                  href="mailto:hello@leonseitz.com?subject=Kostenlose Website-Analyse&body=Meine Website: %0D%0AZiel: %0D%0ADeadline (optional): %0D%0A"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 8,
+                    padding: '10px 20px', borderRadius: 100,
+                    border: '1px solid rgba(14,12,8,0.16)',
+                    background: 'transparent', color: 'rgba(14,12,8,0.62)',
+                    fontSize: 13, fontWeight: 700, textDecoration: 'none',
+                    transition: 'border-color .18s, color .18s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(14,12,8,0.40)'; e.currentTarget.style.color = B.black; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(14,12,8,0.16)'; e.currentTarget.style.color = 'rgba(14,12,8,0.62)'; }}
+                >
+                  <Mail size={14} /> E-Mail
+                </a>
+              </div>
+            </div>
+          </Reveal>
+
+          {/* RIGHT: form card */}
+          <Reveal delay={120}>
+            <div style={{
+              background: '#fff',
+              borderRadius: 20,
+              padding: '36px 32px',
+              boxShadow: '0 4px 32px rgba(14,12,8,0.07)',
+              border: '1px solid rgba(14,12,8,0.06)',
+            }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: B.black, marginBottom: 20 }}>
+                Analyse anfragen — kostenlos &amp; unverbindlich
+              </div>
+              <LeadFormLight />
+            </div>
+          </Reveal>
+        </div>
+
+        {/* Calendly below as optional */}
+        <div style={{ marginTop: 72, maxWidth: 960, margin: '72px auto 0' }}>
+          <div style={{
+            textAlign: 'center', marginBottom: 20,
+            fontSize: 12, fontWeight: 700, letterSpacing: '0.08em',
+            textTransform: 'uppercase', color: 'rgba(14,12,8,0.30)',
           }}>
-            Lass uns reden. <SerifAccent col={B.ocker}>Kostenlos.</SerifAccent>
-          </h2>
-        </Reveal>
-        <Reveal delay={140}>
-          <p style={{
-            marginTop: 16, fontSize: 15, color: 'rgba(14,12,8,0.55)',
-            lineHeight: 1.75, maxWidth: 440, margin: '16px auto 0',
-          }}>
-            Ich schaue mir deinen Betrieb an — digital und vor Ort wenn nötig —
-            und sage dir ehrlich, wo ich Potenzial sehe. Kein Paket, kein Commitment.
-            Phase 0 ist kostenlos.
-          </p>
-        </Reveal>
-        {/* Calendly */}
-        <CalendlyWidget />
-        {/* Alt contact */}
-        <Reveal delay={280}>
-          <div style={{ marginTop: 28, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', padding: '0 4px' }}>
-            <a
-              href="https://wa.me/4916095757167?text=Hi%20Leon%2C%0A%0AZiel%3A%0ADeadline%3A%0AStand%3A%0A%0AKurzer%20Kontext%3A"
-              target="_blank" rel="noopener noreferrer"
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 10,
-                padding: '13px 24px', borderRadius: 100,
-                background: '#25D366', color: '#fff',
-                fontSize: 14, fontWeight: 700, textDecoration: 'none',
-                transition: 'opacity .18s cubic-bezier(0.4,0,0.2,1)',
-              }}
-              onMouseEnter={e => e.currentTarget.style.opacity = '0.88'}
-              onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-            >
-              <Icon.WA /> WhatsApp schreiben
-            </a>
-            <a
-              href="mailto:hello@leonseitz.com?subject=Kostenlose Website-Analyse&body=Meine Website: %0D%0AZiel: %0D%0ADeadline (optional): %0D%0A"
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 10,
-                padding: '13px 24px', borderRadius: 100,
-                border: '1px solid rgba(14,12,8,0.16)',
-                background: 'transparent', color: 'rgba(14,12,8,0.62)',
-                fontSize: 14, fontWeight: 700, textDecoration: 'none',
-                transition: 'border-color .18s cubic-bezier(0.4,0,0.2,1), color .18s cubic-bezier(0.4,0,0.2,1)',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(14,12,8,0.40)'; e.currentTarget.style.color = B.black; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(14,12,8,0.16)'; e.currentTarget.style.color = 'rgba(14,12,8,0.62)'; }}
-            >
-              <Mail size={16} /> E-Mail schreiben
-            </a>
+            Oder direkt einen Termin buchen
           </div>
-          <p style={{ marginTop: 12, fontSize: 12, color: 'rgba(14,12,8,0.32)', textAlign: 'center' }}>
-            Oder direkt: <strong style={{ color: 'rgba(14,12,8,0.52)' }}>hello@leonseitz.com</strong>
-          </p>
-        </Reveal>
+          <CalendlyWidget />
+        </div>
         {/* Prozess link */}
         <Reveal delay={340}>
           <div style={{
