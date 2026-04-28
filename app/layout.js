@@ -2,37 +2,35 @@ import "./globals.css";
 import Script from "next/script";
 
 export const metadata = {
-  title: "Leon Seitz — Digitaler Auftritt für lokale Betriebe",
+  title: "Leon Seitz — Digitale Strukturen für wachsende Unternehmen",
   description:
-    "Ich analysiere wie dein Betrieb nach außen wirkt — Website, Flyer, Social, Prozesse. Kostenlose Analyse, kein Commitment.",
+    "Ich analysiere, wo digitale Struktur fehlt — Website, interne Abläufe, Kommunikation und Außenauftritt. Kostenlose Analyse, kein Commitment.",
   keywords:
-    "Webdesign, Branding, Flyer, Speisekarte, Social Media, Digitalisierung, Aschaffenburg, Obernburg, lokale Betriebe",
+    "digitale Strukturen, Digitalisierung, Webdesign, interne Abläufe, Prozessdigitalisierung, Kommunikation, Branding, Website, Social Media, Aschaffenburg, Obernburg, Unternehmen",
   authors: [{ name: "Leon Seitz", url: "https://www.leonseitz.com" }],
   metadataBase: new URL("https://www.leonseitz.com"),
   openGraph: {
     type: "website",
     locale: "de_DE",
     url: "https://www.leonseitz.com/",
-    title: "Leon Seitz — Digitaler Auftritt für lokale Betriebe",
+    title: "Leon Seitz — Digitale Strukturen für wachsende Unternehmen",
     description:
-      "Kostenlose Analyse deines Auftritts — Website, Print, Social, Prozesse. Zahlung erst wenn es dir gefällt.",
+      "Kostenlose Analyse: Ich prüfe Website, interne Abläufe, Kommunikation und Außenauftritt — und zeige konkret, wo digitale Struktur fehlt.",
     siteName: "Leon Seitz",
     images: [
       {
-        // TODO: Ersetze durch ein echtes 1200×630 JPG, z.B. /og-image.jpg
-        // Ein .ico wird von Social-Plattformen und Google nicht korrekt gerendert
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Leon Seitz — Digitaler Auftritt für lokale Betriebe",
+        alt: "Leon Seitz — Digitale Strukturen für wachsende Unternehmen",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Leon Seitz — Digitaler Auftritt für lokale Betriebe",
+    title: "Leon Seitz — Digitale Strukturen für wachsende Unternehmen",
     description:
-      "Kostenlose Analyse deines Auftritts — Website, Print, Social, Prozesse.",
+      "Kostenlose Analyse: Website, interne Abläufe, Kommunikation und Außenauftritt — konkret, ehrlich, ohne Commitment.",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -62,9 +60,9 @@ const schemaOrg = {
   "@type": "Person",
   name: "Leon Seitz",
   url: "https://www.leonseitz.com",
-  jobTitle: "Webdesigner & Digitaler Stratege",
+  jobTitle: "Digitaler Stratege & Webdesigner",
   description:
-    "Ich helfe lokalen Betrieben in der Region Aschaffenburg mit Webdesign, Branding, Print und Social Media.",
+    "Ich helfe wachsenden Unternehmen dabei, digitale Strukturen aufzubauen — von Website und Außenauftritt bis zu internen Abläufen, Kommunikation und Prozessdigitalisierung.",
   email: "hello@leonseitz.com",
   address: {
     "@type": "PostalAddress",
@@ -76,19 +74,33 @@ const schemaOrg = {
     { "@type": "City", name: "Aschaffenburg" },
     { "@type": "City", name: "Obernburg am Main" },
     { "@type": "City", name: "Erlenbach am Main" },
+    { "@type": "AdministrativeArea", name: "Bayern" },
   ],
   sameAs: [
     "https://www.instagram.com/leonnseitz",
-    "https://www.linkedin.com/in/leon-seitz", // URL anpassen falls abweichend
+    "https://www.linkedin.com/in/leon-seitz"
   ],
   knowsAbout: [
+    "Digitale Strukturen",
+    "Prozessdigitalisierung",
     "Webdesign",
     "Branding",
-    "Motion Design",
+    "Kommunikation",
     "Social Media",
+    "Motion Design",
     "Next.js",
     "Shopify",
+    "Automatisierte Workflows"
   ],
+  offers: {
+    "@type": "Offer",
+    name: "Kostenlose Phase-0-Analyse",
+    description:
+      "Analyse von Website, internen Abläufen, Kommunikation und Außenauftritt zur Identifikation digitaler Potenziale.",
+    price: "0",
+    priceCurrency: "EUR",
+    availability: "https://schema.org/InStock",
+  },
 };
 
 export default function RootLayout({ children }) {
