@@ -6,7 +6,7 @@ export async function POST(request) {
     return Response.json({ error: 'Invalid request' }, { status: 400 });
   }
 
-  const { email, name } = body;
+  const { email, name, url, goal, timeline } = body;
 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return Response.json({ error: 'Gültige E-Mail erforderlich.' }, { status: 400 });
@@ -14,6 +14,13 @@ export async function POST(request) {
 
   const today = new Date().toISOString().split('T')[0];
   const displayName = name?.trim() || email;
+
+  const notizen = [
+    'Phase-0-Anfrage über Website-Formular.',
+    url      ? `URL: ${url}`          : null,
+    goal     ? `Ziel: ${goal}`        : null,
+    timeline ? `Timeline: ${timeline}` : null,
+  ].filter(Boolean).join('\n');
 
   // ── 1. Notion: Lead-Eintrag anlegen ──────────────────────────────
   try {
@@ -35,7 +42,7 @@ export async function POST(request) {
           'Kanal': { select: { name: 'Website' } },
           'Kontaktdatum': { date: { start: today } },
           'Notizen': {
-            rich_text: [{ text: { content: 'Phase-0-Anfrage über Website-Formular.' } }],
+            rich_text: [{ text: { content: notizen } }],
           },
         },
       }),
@@ -70,6 +77,9 @@ export async function POST(request) {
             from_email: email,
             lead_name: displayName,
             lead_date: today,
+            lead_url: url || '—',
+            lead_goal: goal || '—',
+            lead_timeline: timeline || '—',
           },
         }),
       });

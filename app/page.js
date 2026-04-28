@@ -253,20 +253,22 @@ function Div({ from }) {
   );
 }
 
-/* ─── LEAD FORM (Phase 0) ─── */
+/* ─── INTAKE FORM (Phase 0) ─── */
 function LeadForm() {
-  const [email, setEmail] = useState('');
-  const [status, setStatus] = useState('idle'); // idle | loading | success | error
+  const [fields, setFields] = useState({ url: '', goal: '', timeline: '', email: '' });
+  const [status, setStatus] = useState('idle');
+
+  const set = key => e => setFields(f => ({ ...f, [key]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email) return;
+    if (!fields.email) return;
     setStatus('loading');
     try {
       const res = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify(fields),
       });
       setStatus(res.ok ? 'success' : 'error');
     } catch {
@@ -290,42 +292,80 @@ function LeadForm() {
     );
   }
 
+  const inp = {
+    width: '100%', padding: '10px 14px', borderRadius: 10,
+    border: '1px solid rgba(232,168,0,0.20)',
+    background: 'rgba(245,242,235,0.05)',
+    color: '#F5F2EB', fontSize: 13, outline: 'none',
+    fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
+    boxSizing: 'border-box',
+  };
+
   return (
-    <form onSubmit={handleSubmit} style={{ marginTop: 18 }}>
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+    <form onSubmit={handleSubmit} style={{ marginTop: 20 }}>
+      <style>{`
+        .intake-select option { background: #1a1812; color: #F5F2EB; }
+        .intake-input::placeholder { color: rgba(245,242,235,0.32); }
+        .intake-select:invalid { color: rgba(245,242,235,0.32); }
+      `}</style>
+      <div style={{ display: 'grid', gap: 8 }}>
         <input
-          type="email"
-          required
-          placeholder="deine@email.de"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          disabled={status === 'loading'}
-          style={{
-            flex: '1 1 180px', minWidth: 0,
-            padding: '10px 14px', borderRadius: 100,
-            border: '1px solid rgba(232,168,0,0.22)',
-            background: 'rgba(245,242,235,0.05)',
-            color: '#F5F2EB', fontSize: 13,
-            outline: 'none',
-            fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
-          }}
+          className="intake-input"
+          type="url"
+          placeholder="Website-URL — welche Seite soll analysiert werden?"
+          value={fields.url}
+          onChange={set('url')}
+          style={inp}
         />
-        <button
-          type="submit"
-          disabled={status === 'loading'}
-          style={{
-            flexShrink: 0,
-            padding: '10px 20px', borderRadius: 100,
-            background: status === 'loading' ? 'rgba(232,168,0,0.5)' : B.yellow,
-            color: B.black, border: 'none',
-            cursor: status === 'loading' ? 'default' : 'pointer',
-            fontWeight: 800, fontSize: 13,
-            fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
-            transition: 'background .18s cubic-bezier(0.4,0,0.2,1)',
-          }}
+        <textarea
+          className="intake-input"
+          placeholder="Was ist dein Ziel? (z.B. mehr Anfragen, besseres Branding, neuer Auftritt…)"
+          value={fields.goal}
+          onChange={set('goal')}
+          rows={2}
+          style={{ ...inp, resize: 'none', lineHeight: 1.6 }}
+        />
+        <select
+          className="intake-select"
+          value={fields.timeline}
+          onChange={set('timeline')}
+          required
+          style={{ ...inp, color: fields.timeline ? '#F5F2EB' : 'rgba(245,242,235,0.32)' }}
         >
-          {status === 'loading' ? 'Wird gesendet…' : 'Analyse anfragen'}
-        </button>
+          <option value="" disabled>Wann kann es losgehen?</option>
+          <option value="So bald wie möglich">So bald wie möglich</option>
+          <option value="In 1–2 Wochen">In 1–2 Wochen</option>
+          <option value="In etwa 1 Monat">In etwa 1 Monat</option>
+          <option value="Noch offen">Noch offen / nach Absprache</option>
+        </select>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <input
+            className="intake-input"
+            type="email"
+            required
+            placeholder="E-Mail — wohin soll die Phase-0-Analyse?"
+            value={fields.email}
+            onChange={set('email')}
+            style={{ ...inp, flex: '1 1 180px', minWidth: 0 }}
+          />
+          <button
+            type="submit"
+            disabled={status === 'loading'}
+            style={{
+              flexShrink: 0,
+              padding: '10px 22px', borderRadius: 100,
+              background: status === 'loading' ? 'rgba(232,168,0,0.5)' : B.yellow,
+              color: B.black, border: 'none',
+              cursor: status === 'loading' ? 'default' : 'pointer',
+              fontWeight: 800, fontSize: 13,
+              fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
+              transition: 'background .18s cubic-bezier(0.4,0,0.2,1)',
+              alignSelf: 'flex-start',
+            }}
+          >
+            {status === 'loading' ? 'Wird gesendet…' : 'Phase 0 anfragen →'}
+          </button>
+        </div>
       </div>
       {status === 'error' && (
         <p style={{ marginTop: 8, fontSize: 12, color: 'rgba(245,242,235,0.40)' }}>
@@ -857,6 +897,38 @@ function ServiceCard({ icon, kicker, title, desc, dark }) {
   );
 }
 
+/* ─── TESTIMONIAL CARD ─── */
+function TestimonialCard({ quote, name, company, delay = 0 }) {
+  const ref = useRef(null);
+  const shown = useReveal(ref);
+  return (
+    <div ref={ref} style={{
+      opacity: shown ? 1 : 0,
+      transform: shown ? 'none' : 'translateY(16px)',
+      transition: `opacity .6s cubic-bezier(0.4,0,0.2,1) ${delay}ms, transform .6s cubic-bezier(0.4,0,0.2,1) ${delay}ms`,
+      padding: '28px 28px 24px',
+      borderRadius: 20,
+      border: '1px solid rgba(14,12,8,0.09)',
+      background: '#E0DDD4',
+      textAlign: 'left', position: 'relative',
+    }}>
+      <div style={{
+        fontSize: 40, lineHeight: 1, color: B.ocker,
+        fontFamily: 'Georgia,serif', marginBottom: 14, opacity: 0.7,
+      }}>
+        &ldquo;
+      </div>
+      <p style={{ fontSize: 14, lineHeight: 1.75, color: 'rgba(14,12,8,0.70)', margin: 0 }}>
+        {quote}
+      </p>
+      <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid rgba(14,12,8,0.07)' }}>
+        <div style={{ fontSize: 13, fontWeight: 800, color: B.black }}>{name}</div>
+        {company && <div style={{ fontSize: 12, color: 'rgba(14,12,8,0.45)', marginTop: 2 }}>{company}</div>}
+      </div>
+    </div>
+  );
+}
+
 /* ─── REFERENZ CARD ─── */
 const PROJEKTE = [
   {
@@ -1322,6 +1394,34 @@ export default function Home() {
           </div>
         </Reveal>
       </Sec>
+      {/* ── S4.6: TESTIMONIALS ── */}
+      <Sec id="testimonials" dark={false} pad="0 24px 96px">
+        <Reveal><Tag light>Stimmen</Tag></Reveal>
+        <Reveal delay={80}>
+          <h2 style={{
+            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
+            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: B.black,
+          }}>
+            Was Kunden <SerifAccent col={B.ocker}>sagen.</SerifAccent>
+          </h2>
+        </Reveal>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit,minmax(min(300px,100%),1fr))',
+          gap: 20, marginTop: 48,
+        }}>
+          <TestimonialCard
+            delay={80}
+            quote="Von der ersten Idee bis zur finalen Umsetzung alles auf sehr hohem professionellen Niveau. Meine Wünsche wurden vollständig berücksichtigt und sinnvolle Vorschläge eingebracht, die das Ergebnis noch verbessert haben. Das Ergebnis hat meine Erwartungen vollkommen erfüllt — die Website ist modern, funktional und optisch sehr ansprechend."
+            name="Oksana Hettinger"
+          />
+          <TestimonialCard
+            delay={160}
+            quote="Ich kann Leon uneingeschränkt weiterempfehlen. Die Zusammenarbeit mit ihm ist immer kooperativ, effektiv und zielführend."
+            name="Dominic Hildebrandt"
+          />
+        </div>
+      </Sec>
       <Div from={false} />
       {/* ── S5: LEISTUNGEN ── */}
       <Sec id="s5" dark pad="96px 24px">
@@ -1383,6 +1483,41 @@ export default function Home() {
             </Reveal>
           ))}
         </div>
+        <Reveal delay={260}>
+          <div style={{
+            marginTop: 16, padding: '22px 26px',
+            border: '1px dashed rgba(232,168,0,0.22)',
+            borderRadius: 16, background: 'rgba(232,168,0,0.03)',
+            textAlign: 'left', position: 'relative',
+          }}>
+            <span style={{
+              position: 'absolute', top: -11, left: 26,
+              padding: '3px 12px', borderRadius: 99,
+              background: B.black,
+              border: '1px solid rgba(232,168,0,0.25)',
+              fontSize: 10, fontWeight: 700, letterSpacing: '0.08em',
+              textTransform: 'uppercase', color: B.yellow,
+            }}>
+              In Arbeit
+            </span>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase', color: B.yellow, marginBottom: 8, opacity: 0.7 }}>
+              05 — Automatisierte Workflows
+            </div>
+            <div style={{ fontSize: 16, fontWeight: 800, color: B.cream, marginBottom: 10 }}>
+              Prozesse, die von selbst laufen.
+            </div>
+            <p style={{ fontSize: 13, color: 'rgba(245,242,235,0.45)', lineHeight: 1.72, maxWidth: 580, margin: 0 }}>
+              CRM-Synchronisierung, automatisierte E-Mail-Sequenzen, Buchungssysteme, Benachrichtigungen — das kommt bald als eigenes Paket. Ich baue das gerade auf. Wenn dich das interessiert, einfach vormerken lassen.
+            </p>
+            <a href="/#request" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              marginTop: 16, fontSize: 12, fontWeight: 700,
+              color: B.yellow, textDecoration: 'none', opacity: 0.75,
+            }}>
+              Vormerken lassen <ArrowRight size={12} />
+            </a>
+          </div>
+        </Reveal>
         <Reveal delay={320}>
           <div style={{ marginTop: 48, display: 'flex', justifyContent: 'center' }}>
             <BtnPrimary label="Kostenlose Analyse anfragen" href="/#request" />
