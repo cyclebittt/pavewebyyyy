@@ -1,7 +1,7 @@
 'use client';
 import {
   ArrowDown, ArrowRight, CheckCircle2,
-  Play, Monitor, Film, BookOpen, Mail,
+  Monitor, Film, BookOpen, Mail,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -178,10 +178,12 @@ function ScrollBar() {
 }
 
 /* ─── BTNS ─── */
-function BtnPrimary({ label, href, lg }) {
+function BtnPrimary({ label, href, lg, target }) {
   const [h, setH] = useState(false);
   return (
     <a href={href}
+      target={target}
+      rel={target === '_blank' ? 'noopener noreferrer' : undefined}
       onMouseEnter={() => setH(true)}
       onMouseLeave={() => setH(false)}
       style={{
@@ -319,7 +321,7 @@ function LeadForm() {
         />
         <textarea
           className="intake-input"
-          placeholder="Was ist dein Ziel? (z.B. mehr Anfragen, besseres Branding, neuer Auftritt…)"
+          placeholder="Was ist dein Ziel? (z.B. digitale Struktur, bessere Abläufe, mehr Anfragen, klarerer Auftritt …)"
           value={fields.goal}
           onChange={set('goal')}
           rows={2}
@@ -383,21 +385,23 @@ const INTAKE_STEPS = [
     type: 'select',
     question: 'Was ist dein Ziel?',
     options: [
+      { value: 'Digitale Struktur aufbauen', label: 'Digitale Struktur aufbauen' },
+      { value: 'Interne Abläufe verbessern', label: 'Interne Abläufe verbessern' },
       { value: 'Neue Website', label: 'Neue Website' },
       { value: 'Mehr Anfragen', label: 'Mehr Anfragen' },
-      { value: 'Besseres Branding', label: 'Besseres Branding' },
-      { value: 'Social Media', label: 'Social Media' },
+      { value: 'Klarerer Außenauftritt', label: 'Klarerer Außenauftritt' },
       { value: 'Kompletter Neustart', label: 'Kompletter Neustart' },
     ],
   },
   {
     key: 'website_status',
     type: 'select',
-    question: 'Hast du bereits eine Website?',
+    question: 'Wie digital ist dein Unternehmen aktuell aufgestellt?',
     options: [
-      { value: 'Ja, funktioniert nicht gut', label: 'Ja — aber sie funktioniert nicht' },
-      { value: 'Ja, bin zufrieden', label: 'Ja — bin zufrieden' },
-      { value: 'Nein', label: 'Noch keine' },
+      { value: 'Es gibt schon Systeme, aber nicht sauber verbunden', label: 'Es gibt schon Systeme, aber nicht sauber verbunden' },
+      { value: 'Vieles läuft noch analog oder manuell', label: 'Vieles läuft noch analog oder manuell' },
+      { value: 'Website vorhanden, aber Abläufe fehlen', label: 'Website vorhanden, aber Abläufe fehlen' },
+      { value: 'Noch kein klarer digitaler Aufbau', label: 'Noch kein klarer digitaler Aufbau' },
     ],
   },
   {
@@ -416,7 +420,7 @@ const INTAKE_STEPS = [
     type: 'input',
     inputType: 'url',
     question: 'Deine Website-URL',
-    placeholder: 'https://deinbetrieb.de',
+    placeholder: 'https://deinunternehmen.de',
     hint: 'Optional — falls du schon eine Seite hast.',
     optional: true,
   },
@@ -424,7 +428,7 @@ const INTAKE_STEPS = [
     key: 'notes',
     type: 'textarea',
     question: 'Noch etwas, das ich wissen sollte?',
-    placeholder: 'Z.B. Branche, Budget-Vorstellung, besondere Anforderungen…',
+    placeholder: 'Z.B. Branche, aktuelle Abläufe, Software, Budget-Vorstellung, besondere Anforderungen …',
     hint: 'Optional — alles was mir hilft, deine Situation besser zu verstehen.',
     optional: true,
   },
@@ -466,9 +470,8 @@ function LeadFormLight() {
         body: JSON.stringify({
           email,
           url: answers.url || '',
-          goal: [answers.goal, answers.website_status].filter(Boolean).join(' · '),
+          goal: [answers.goal, answers.website_status, answers.notes].filter(Boolean).join(' · '),
           timeline: answers.timeline || '',
-          ...(answers.notes ? { goal: [answers.goal, answers.website_status, answers.notes].filter(Boolean).join(' · ') } : {}),
         }),
       });
       setStatus(res.ok ? 'success' : 'error');
@@ -505,7 +508,6 @@ function LeadFormLight() {
 
   return (
     <div>
-      {/* Progress bar */}
       <div style={{ height: 3, borderRadius: 99, background: 'rgba(14,12,8,0.07)', marginBottom: 24, overflow: 'hidden' }}>
         <div style={{
           height: '100%', borderRadius: 99, background: B.ocker,
@@ -641,7 +643,7 @@ function RoadMap() {
       n: '0', label: 'Phase 0',
       sub: 'Analyse',
       badge: 'Kostenlos',
-      desc: 'Ich schaue mir deinen gesamten Auftritt an — Website, Print, Social, Prozesse, Ladenauftritt. Du bekommst eine ehrliche Einschätzung, wo Potenzial liegt.',
+      desc: 'Ich schaue mir an, wo digitale Struktur fehlt — Website, interne Abläufe, Kommunikation und Außenauftritt. Du bekommst eine ehrliche Einschätzung, wo Potenzial liegt.',
       highlight: true,
     },
     {
@@ -662,7 +664,6 @@ function RoadMap() {
   return (
     <div ref={ref} style={{ width: '100%', maxWidth: 640, margin: '52px auto 0' }}>
       <div style={{ position: 'relative' }}>
-        {/* Vertical connecting line */}
         <div style={{
           position: 'absolute',
           left: 29, top: 58, bottom: 58,
@@ -680,7 +681,6 @@ function RoadMap() {
             transform: shown ? 'none' : 'translateY(18px)',
             transition: `opacity .7s cubic-bezier(0.4,0,0.2,1) ${i * 130}ms, transform .7s cubic-bezier(0.4,0,0.2,1) ${i * 130}ms`,
           }}>
-            {/* Node */}
             <div style={{ flexShrink: 0, zIndex: 1 }}>
               <div style={{
                 width: 58, height: 58, borderRadius: '50%',
@@ -698,7 +698,6 @@ function RoadMap() {
                 {s.n}
               </div>
             </div>
-            {/* Card */}
             <div style={{
               flex: 1, minWidth: 0,
               padding: '20px 24px 24px',
@@ -714,14 +713,12 @@ function RoadMap() {
                 : '0 1px 12px rgba(0,0,0,0.18)',
               position: 'relative', overflow: 'hidden',
             }}>
-              {/* Top accent stripe for Phase 0 */}
               {s.highlight && (
                 <div style={{
                   position: 'absolute', top: 0, left: 0, right: 0, height: 2,
                   background: `linear-gradient(to right, ${B.yellow} 0%, rgba(232,168,0,0.20) 100%)`,
                 }} />
               )}
-              {/* Header */}
               <div style={{
                 display: 'flex', alignItems: 'flex-start',
                 justifyContent: 'space-between', gap: 10,
@@ -762,14 +759,12 @@ function RoadMap() {
                   {s.badge}
                 </span>
               </div>
-              {/* Divider */}
               <div style={{
                 height: 1, marginBottom: 14,
                 background: s.highlight
                   ? 'rgba(232,168,0,0.14)'
                   : 'rgba(245,242,235,0.045)',
               }} />
-              {/* Description */}
               <p style={{
                 fontSize: 13.5, lineHeight: 1.75, margin: 0,
                 color: s.highlight
@@ -778,7 +773,6 @@ function RoadMap() {
               }}>
                 {s.desc}
               </p>
-              {/* CTA für Phase 0 */}
               {s.highlight && (
                 <a
                   href="/#request"
@@ -799,7 +793,6 @@ function RoadMap() {
             </div>
           </div>
         ))}
-        {/* End node */}
         <div style={{
           display: 'flex', alignItems: 'center', gap: 20, paddingTop: 8,
           opacity: shown ? 1 : 0,
@@ -819,7 +812,7 @@ function RoadMap() {
             fontSize: 12, fontWeight: 700, letterSpacing: '0.07em',
             textTransform: 'uppercase', color: B.yellow, opacity: 0.75,
           }}>
-            Dein Auftritt ist fertig.
+            Deine digitale Struktur steht.
           </span>
         </div>
       </div>
@@ -912,14 +905,12 @@ function LeistungCard({ n, icon, kicker, title, desc, accent, img }) {
         cursor: 'default',
         display: 'flex', flexDirection: 'column',
       }}>
-      {/* Yellow top line on hover */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: 2,
         background: B.yellow,
         opacity: h ? 1 : 0,
         transition: 'opacity .22s cubic-bezier(0.4,0,0.2,1)',
       }} />
-      {/* Image area */}
       {img && (
         <div style={{
           width: '100%', height: 200, overflow: 'hidden',
@@ -941,9 +932,7 @@ function LeistungCard({ n, icon, kicker, title, desc, accent, img }) {
           />
         </div>
       )}
-      {/* Content */}
       <div style={{ padding: '28px 32px', flex: 1, position: 'relative' }}>
-      {/* Large faint number */}
       <div style={{
         position: 'absolute', top: 16, right: 24,
         fontSize: 72, fontWeight: 900, lineHeight: 1,
@@ -954,7 +943,6 @@ function LeistungCard({ n, icon, kicker, title, desc, accent, img }) {
       }}>
         {n}
       </div>
-      {/* Icon */}
       <div style={{
         width: 44, height: 44, borderRadius: 12, marginBottom: 20,
         background: h ? 'rgba(232,168,0,0.13)' : 'rgba(245,242,235,0.05)',
@@ -965,7 +953,6 @@ function LeistungCard({ n, icon, kicker, title, desc, accent, img }) {
       }}>
         {icon}
       </div>
-      {/* Kicker */}
       <div style={{
         fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
         letterSpacing: '0.09em', color: B.yellow,
@@ -974,21 +961,18 @@ function LeistungCard({ n, icon, kicker, title, desc, accent, img }) {
       }}>
         {kicker}
       </div>
-      {/* Title */}
       <div style={{
         fontSize: 18, fontWeight: 800, color: B.cream,
         lineHeight: 1.25, letterSpacing: '-0.01em', marginBottom: 14,
       }}>
         {title}
       </div>
-      {/* Desc */}
       <p style={{
         fontSize: 13, color: 'rgba(245,242,235,0.48)',
         lineHeight: 1.72, maxWidth: 340,
       }}>
         {desc}
       </p>
-      {/* Bottom link */}
       <div style={{
         marginTop: 24, display: 'flex', alignItems: 'center', gap: 6,
         fontSize: 12, fontWeight: 700, color: B.yellow,
@@ -999,194 +983,7 @@ function LeistungCard({ n, icon, kicker, title, desc, accent, img }) {
           <path d="M2.5 6h7M6.5 3l3 3-3 3" stroke={B.yellow} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       </div>
-      </div>{/* end content */}
-    </div>
-  );
-}
-
-/* ─── SERVICE CARD LARGE ─── */
-function ServiceCardLarge({ icon, kicker, title, desc, num, delay = 0 }) {
-  const ref = useRef(null);
-  const shown = useReveal(ref);
-  const [h, setH] = useState(false);
-  return (
-    <div
-      ref={ref}
-      onMouseEnter={() => setH(true)}
-      onMouseLeave={() => setH(false)}
-      style={{
-        opacity: shown ? 1 : 0,
-        transform: shown ? 'none' : 'translateY(20px)',
-        transition: `opacity .65s cubic-bezier(0.4,0,0.2,1) ${delay}ms, transform .65s cubic-bezier(0.4,0,0.2,1) ${delay}ms, border-color .2s cubic-bezier(0.4,0,0.2,1), background .2s cubic-bezier(0.4,0,0.2,1)`,
-        borderRadius: 22, padding: '32px 28px',
-        border: h ? '1px solid rgba(232,168,0,0.28)' : '1px solid rgba(245,242,235,0.07)',
-        background: h ? 'rgba(232,168,0,0.05)' : B.dark,
-        cursor: 'default', position: 'relative', overflow: 'hidden',
-      }}>
-      {/* Large number watermark */}
-      <div style={{
-        position: 'absolute', top: -8, right: 16,
-        fontSize: 80, fontWeight: 900, lineHeight: 1,
-        color: 'rgba(245,242,235,0.04)',
-        letterSpacing: '-0.04em',
-        userSelect: 'none', pointerEvents: 'none',
-      }}>
-        {num}
       </div>
-      {/* Icon */}
-      <div style={{
-        width: 44, height: 44, borderRadius: 12,
-        background: h ? 'rgba(232,168,0,0.15)' : 'rgba(232,168,0,0.09)',
-        border: `1px solid rgba(232,168,0,${h ? '0.28' : '0.14'})`,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        color: B.yellow, marginBottom: 20,
-        transition: 'all .2s cubic-bezier(0.4,0,0.2,1)',
-      }}>
-        {icon}
-      </div>
-      {/* Kicker */}
-      <div style={{
-        fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
-        letterSpacing: '0.08em', color: B.yellow, marginBottom: 10,
-      }}>
-        {kicker}
-      </div>
-      {/* Title */}
-      <div style={{
-        fontSize: 20, fontWeight: 800, color: B.cream,
-        letterSpacing: '-0.01em', lineHeight: 1.2, marginBottom: 12,
-      }}>
-        {title}
-      </div>
-      {/* Desc */}
-      <p style={{
-        fontSize: 13, color: 'rgba(245,242,235,0.50)',
-        lineHeight: 1.72, maxWidth: 320,
-      }}>
-        {desc}
-      </p>
-      {/* CTA link */}
-      <a href="/#request" style={{
-        display: 'inline-flex', alignItems: 'center', gap: 6,
-        marginTop: 22, fontSize: 13, fontWeight: 700,
-        color: h ? B.yellow : 'rgba(232,168,0,0.50)',
-        textDecoration: 'none', transition: 'color .18s cubic-bezier(0.4,0,0.2,1)',
-      }}>
-        Anfragen <ArrowRight size={14} />
-      </a>
-    </div>
-  );
-}
-
-/* ─── SERVICE CARD COMPACT ─── */
-function ServiceCardCompact({ icon, kicker, title, desc, num, delay = 0 }) {
-  const ref = useRef(null);
-  const shown = useReveal(ref);
-  const [h, setH] = useState(false);
-  return (
-    <div
-      ref={ref}
-      onMouseEnter={() => setH(true)}
-      onMouseLeave={() => setH(false)}
-      style={{
-        opacity: shown ? 1 : 0,
-        transform: shown ? 'none' : 'translateY(20px)',
-        transition: `opacity .65s cubic-bezier(0.4,0,0.2,1) ${delay}ms, transform .65s cubic-bezier(0.4,0,0.2,1) ${delay}ms, border-color .2s cubic-bezier(0.4,0,0.2,1), background .2s cubic-bezier(0.4,0,0.2,1)`,
-        borderRadius: 20, padding: '24px 24px',
-        border: h ? '1px solid rgba(232,168,0,0.22)' : '1px solid rgba(245,242,235,0.06)',
-        background: h ? 'rgba(232,168,0,0.04)' : B.dark,
-        cursor: 'default', position: 'relative', overflow: 'hidden',
-      }}>
-      {/* Number watermark */}
-      <div style={{
-        position: 'absolute', top: -6, right: 14,
-        fontSize: 60, fontWeight: 900, lineHeight: 1,
-        color: 'rgba(245,242,235,0.04)',
-        letterSpacing: '-0.04em',
-        userSelect: 'none', pointerEvents: 'none',
-      }}>
-        {num}
-      </div>
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
-        {/* Icon */}
-        <div style={{
-          width: 38, height: 38, borderRadius: 10, flexShrink: 0,
-          background: h ? 'rgba(232,168,0,0.14)' : 'rgba(232,168,0,0.08)',
-          border: `1px solid rgba(232,168,0,${h ? '0.25' : '0.12'})`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          color: B.yellow, transition: 'all .2s cubic-bezier(0.4,0,0.2,1)',
-          marginTop: 2,
-        }}>
-          {icon}
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{
-            fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
-            letterSpacing: '0.08em', color: B.yellow, marginBottom: 6,
-          }}>
-            {kicker}
-          </div>
-          <div style={{
-            fontSize: 16, fontWeight: 800, color: B.cream,
-            letterSpacing: '-0.01em', lineHeight: 1.25, marginBottom: 8,
-          }}>
-            {title}
-          </div>
-          <p style={{
-            fontSize: 12, color: 'rgba(245,242,235,0.46)',
-            lineHeight: 1.68,
-          }}>
-            {desc}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─── SERVICE CARD ─── */
-function ServiceCard({ icon, kicker, title, desc, dark }) {
-  const [h, setH] = useState(false);
-  return (
-    <div
-      onMouseEnter={() => setH(true)}
-      onMouseLeave={() => setH(false)}
-      style={{
-        borderRadius: 20, textAlign: 'left', padding: '22px 24px',
-        border: h
-          ? '1px solid rgba(232,168,0,0.28)'
-          : `1px solid ${dark ? 'rgba(245,242,235,0.06)' : 'rgba(14,12,8,0.08)'}`,
-        background: h
-          ? (dark ? 'rgba(232,168,0,0.05)' : 'rgba(232,168,0,0.04)')
-          : (dark ? 'rgba(245,242,235,0.03)' : '#E8E5DC'),
-        transition: 'border-color .2s cubic-bezier(0.4,0,0.2,1), background .2s cubic-bezier(0.4,0,0.2,1)',
-        cursor: 'pointer',
-      }}>
-      <div style={{
-        width: 38, height: 38, borderRadius: 10,
-        background: 'rgba(232,168,0,0.11)',
-        border: '1px solid rgba(232,168,0,0.16)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        color: B.yellow, marginBottom: 14,
-      }}>
-        {icon}
-      </div>
-      <div style={{
-        fontSize: 11, fontWeight: 700, textTransform: 'uppercase',
-        letterSpacing: '0.07em', color: B.yellow, marginBottom: 6,
-      }}>
-        {kicker}
-      </div>
-      <div style={{
-        fontSize: 16, fontWeight: 800,
-        color: dark ? B.cream : B.black,
-        marginBottom: 8, letterSpacing: '-0.01em',
-      }}>
-        {title}
-      </div>
-      <p style={{ fontSize: 13, color: dark ? 'rgba(245,242,235,0.52)' : 'rgba(14,12,8,0.52)', lineHeight: 1.68 }}>
-        {desc}
-      </p>
     </div>
   );
 }
@@ -1225,7 +1022,6 @@ function TestimonialCard({ quote, name, company, delay = 0 }) {
       boxShadow: '0 2px 16px rgba(14,12,8,0.08), 0 0 0 1px rgba(14,12,8,0.05)',
       textAlign: 'left', position: 'relative',
     }}>
-      {/* Google badge top-right */}
       <div style={{
         position: 'absolute', top: 22, right: 24,
         display: 'flex', alignItems: 'center', gap: 6,
@@ -1235,13 +1031,10 @@ function TestimonialCard({ quote, name, company, delay = 0 }) {
           Google Rezension
         </span>
       </div>
-      {/* Stars */}
       <Stars />
-      {/* Quote */}
       <p style={{ fontSize: 14, lineHeight: 1.75, color: 'rgba(14,12,8,0.72)', margin: '14px 0 0' }}>
         {quote}
       </p>
-      {/* Author */}
       <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
         <div style={{
           width: 32, height: 32, borderRadius: '50%',
@@ -1316,7 +1109,6 @@ function ReferenzCard({ img, kategorie, name, desc, url }) {
         transform: h ? 'translateY(-4px)' : 'none',
         boxShadow: h ? '0 16px 48px rgba(14,12,8,0.12)' : '0 4px 20px rgba(14,12,8,0.06)',
       }}>
-        {/* Image — fills left half, no background rectangle */}
         <div style={{
           position: 'relative',
           minHeight: 300,
@@ -1339,7 +1131,6 @@ function ReferenzCard({ img, kategorie, name, desc, url }) {
             onError={e => { e.currentTarget.style.display = 'none'; }}
           />
         </div>
-        {/* Text — right half, vertically centered */}
         <div style={{
           padding: '40px 36px',
           display: 'flex',
@@ -1426,7 +1217,6 @@ export default function Home() {
         img,svg{max-width:100%}
       `}</style>
       <ScrollBar />
-      {/* ── HEADER ── */}
       <div style={{
         position: 'fixed', top: 3, left: 0, right: 0, zIndex: 50,
         padding: '14px 20px', display: 'flex', justifyContent: 'space-between',
@@ -1448,29 +1238,28 @@ export default function Home() {
           Termin buchen
         </a>
       </div>
-      {/* ── S1: HERO ── */}
+
       <Sec id="s1" dark pad="110px 20px 80px">
         <Reveal>
           <div ref={heroRef} style={{
             fontSize: 'clamp(2rem,7vw,4.8rem)', fontWeight: 900,
             lineHeight: 1.06, letterSpacing: '-0.025em',
-            color: B.cream, maxWidth: 780, margin: '0 auto', wordBreak: 'break-word',
+            color: B.cream, maxWidth: 860, margin: '0 auto', wordBreak: 'break-word',
           }}>
-            Dein Betrieb verdient einen Auftritt,
-            der{' '}
-            <Underline active={heroShown}>wirkt</Underline>
-            {' '}– digital{' '}
-            <SerifAccent col={B.cream}>und vor Ort.</SerifAccent>
+            Ich baue digitale Strukturen für Unternehmen,
+            die intern wachsen, aber noch{' '}
+            <Underline active={heroShown}>analog</Underline>
+            {' '}arbeiten.
           </div>
         </Reveal>
         <Reveal delay={110}>
           <p style={{
             marginTop: 28, fontSize: 'clamp(1rem,2vw,1.15rem)',
             color: 'rgba(245,242,235,0.55)', lineHeight: 1.75,
-            maxWidth: '100%', margin: '28px auto 0',
+            maxWidth: 680, margin: '28px auto 0',
           }}>
-            Ich analysiere wie dein Betrieb aktuell nach außen wirkt — Website, Social Media,
-            Flyer, Speisekarte, Ladenauftritt. Und zeige konkret, wo Potenzial liegt.
+            Ich analysiere, wo digitale Struktur fehlt — Website, interne Abläufe,
+            Kommunikation, Außenauftritt. Und zeige konkret, wo Potenzial liegt.
             Kostenlos. Ohne Commitment.
           </p>
         </Reveal>
@@ -1486,8 +1275,9 @@ export default function Home() {
           </div>
         </Reveal>
       </Sec>
+
       <Div from={true} />
-      {/* ── S2: PROBLEM ── */}
+
       <Sec id="s2" dark={false} pad="96px 24px">
         <Reveal><Tag light>Das eigentliche Problem</Tag></Reveal>
         <Reveal delay={80}>
@@ -1495,19 +1285,19 @@ export default function Home() {
             marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
             fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: B.black,
           }}>
-            Viele Betriebe sind gut.
+            Viele Unternehmen wachsen schneller
             <br />
-            <span style={{ color: B.ocker }}>Aber nach außen wirkt es nicht so.</span>
+            <span style={{ color: B.ocker }}>als ihre digitalen Strukturen.</span>
           </h2>
         </Reveal>
         <Reveal delay={160}>
           <p style={{
             marginTop: 20, fontSize: 15, color: 'rgba(14,12,8,0.55)',
-            lineHeight: 1.75, maxWidth: 500, margin: '20px auto 0',
+            lineHeight: 1.75, maxWidth: 560, margin: '20px auto 0',
           }}>
-            Ein guter Laden, ein gutes Produkt — aber die Visitenkarte, der Flyer,
-            die Website und der Instagram-Auftritt erzählen alle eine andere Geschichte.
-            Das kostet Vertrauen und Aufträge, die nie ankommen.
+            Ein gutes Unternehmen, ein gutes Produkt — aber Website, Kommunikation,
+            interne Abläufe und Außenauftritt wachsen nicht sauber mit.
+            Das kostet Klarheit, Vertrauen und Zeit.
           </p>
         </Reveal>
         <Reveal delay={220}>
@@ -1570,8 +1360,9 @@ export default function Home() {
           </div>
         </Reveal>
       </Sec>
+
       <Div from={false} />
-      {/* ── S3: ROADMAP ── */}
+
       <Sec id="s3" dark pad="96px 24px">
         <Reveal><Tag>Wie wir arbeiten</Tag></Reveal>
         <Reveal delay={80}>
@@ -1601,7 +1392,7 @@ export default function Home() {
           </div>
         </Reveal>
       </Sec>
-      {/* ── S3.5: VERGLEICH ── */}
+
       <Sec id="vergleich" dark pad="0 24px 96px">
         <Reveal><Tag>Der Unterschied</Tag></Reveal>
         <Reveal delay={80}>
@@ -1614,7 +1405,6 @@ export default function Home() {
         </Reveal>
         <Reveal delay={160}>
           <div style={{ marginTop: 48, maxWidth: 720, margin: '48px auto 0', overflowX: 'auto' }}>
-            {/* Header row */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 2, marginBottom: 2 }}>
               <div />
               <div style={{
@@ -1623,7 +1413,7 @@ export default function Home() {
                 borderBottom: 'none', fontSize: 12.5, fontWeight: 800,
                 color: 'rgba(245,242,235,0.40)', textAlign: 'center',
               }}>
-                Klassische Agentur 😩
+                Klassische Agentur
               </div>
               <div style={{
                 padding: '13px 16px', borderRadius: '12px 12px 0 0',
@@ -1631,10 +1421,9 @@ export default function Home() {
                 borderBottom: 'none', fontSize: 12.5, fontWeight: 800,
                 color: B.yellow, textAlign: 'center',
               }}>
-                Leon Seitz 🤝
+                Leon Seitz
               </div>
             </div>
-            {/* Data rows */}
             {[
               { label: 'Bezahlung',        them: 'Vorauskasse, Ergebnis offen',    us: 'Du zahlst erst wenn es dir gefällt' },
               { label: 'Erste Ergebnisse', them: 'Wochen Wartezeit',               us: 'In 24–72 Stunden' },
@@ -1682,8 +1471,9 @@ export default function Home() {
           </div>
         </Reveal>
       </Sec>
+
       <Div from={true} />
-      {/* ── S4: PROOF ── */}
+
       <Sec id="s4" dark={false} pad="96px 24px">
         <Reveal><Tag light>Ergebnisse</Tag></Reveal>
         <Reveal delay={80}>
@@ -1723,7 +1513,7 @@ export default function Home() {
           </div>
         </Reveal>
       </Sec>
-      {/* ── S4.5: REFERENZEN ── */}
+
       <Sec id="referenzen" dark={false} pad="0 24px 96px">
         <Reveal><Tag light>Referenzen</Tag></Reveal>
         <Reveal delay={80}>
@@ -1759,7 +1549,7 @@ export default function Home() {
           </div>
         </Reveal>
       </Sec>
-      {/* ── S4.6: TESTIMONIALS ── */}
+
       <Sec id="testimonials" dark={false} pad="0 24px 96px">
         <Reveal><Tag light>Stimmen</Tag></Reveal>
         <Reveal delay={80}>
@@ -1787,8 +1577,9 @@ export default function Home() {
           />
         </div>
       </Sec>
+
       <Div from={false} />
-      {/* ── S5: LEISTUNGEN ── */}
+
       <Sec id="s5" dark pad="96px 24px">
         <Reveal><Tag>Leistungen</Tag></Reveal>
         <Reveal delay={80}>
@@ -1802,12 +1593,11 @@ export default function Home() {
         <Reveal delay={130}>
           <p style={{
             fontSize: 15, color: 'rgba(245,242,235,0.52)',
-            maxWidth: 400, margin: '12px auto 56px', lineHeight: 1.72,
+            maxWidth: 460, margin: '12px auto 56px', lineHeight: 1.72,
           }}>
-            Je nachdem wo dein Betrieb steht — ich schaue zuerst, dann machen wir.
+            Je nachdem wo dein Unternehmen steht — ich schaue zuerst, dann machen wir.
           </p>
         </Reveal>
-        {/* 2x2 large cards with numbered index */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(320px,100%),1fr))', gap: 2 }}>
           {[
             {
@@ -1822,9 +1612,9 @@ export default function Home() {
             {
               n: '02',
               icon: <Icon.Brandbook />,
-              kicker: 'Print & Branding',
-              title: 'Flyer, Speisekarten, Materialien.',
-              desc: 'Visitenkarte, Flyer, Speisekarte, Broschüre — konsistent, professionell, erkennbar. Alles was dein Betrieb anfasst, sollte gut aussehen.',
+              kicker: 'Kommunikation & Branding',
+              title: 'Außenauftritt, Materialien, Wiedererkennung.',
+              desc: 'Website, Social, Print und Kommunikation sollen erkennbar zusammengehören. Konsistent, professionell und klar.',
               accent: B.yellow,
               img: '/leistungen/print.png',
             },
@@ -1893,19 +1683,17 @@ export default function Home() {
           </div>
         </Reveal>
       </Sec>
+
       <Div from={true} />
-      {/* ── S6: ANFRAGE + CALENDLY ── */}
+
       <Sec id="request" dark={false} pad="80px 20px 80px">
-        {/* Top accent stripe */}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: B.yellow }} />
 
-        {/* 2-column layout */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(min(340px,100%), 1fr))',
           gap: 56, alignItems: 'start', textAlign: 'left', maxWidth: 960, margin: '0 auto',
         }}>
-          {/* LEFT: headline + trust */}
           <Reveal>
             <div>
               <Tag light>Phase 0 — Kostenlos</Tag>
@@ -1917,12 +1705,10 @@ export default function Home() {
               </h2>
               <p style={{
                 marginTop: 18, fontSize: 15, color: 'rgba(14,12,8,0.55)',
-                lineHeight: 1.8, maxWidth: 380,
+                lineHeight: 1.8, maxWidth: 420,
               }}>
-                Ich schaue mir deinen Betrieb an — Website, Social, Flyer, alles — und sage dir ehrlich,
-                wo Potenzial liegt. Phase 0 kostet dich nichts.
+                Ich schaue mir dein Unternehmen an — Website, interne Abläufe, Kommunikation und Außenauftritt — und sage dir ehrlich, wo digitale Struktur fehlt. Phase 0 kostet dich nichts.
               </p>
-              {/* Trust signals */}
               <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {[
                   'Kostenlose Analyse — kein verstecktes Angebot',
@@ -1941,7 +1727,6 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-              {/* Alt contact below trust */}
               <div style={{ marginTop: 36, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 <a
                   href="https://wa.me/4916095757167?text=Hi%20Leon%2C%0A%0AZiel%3A%0ADeadline%3A%0AStand%3A%0A%0AKurzer%20Kontext%3A"
@@ -1959,7 +1744,7 @@ export default function Home() {
                   <Icon.WA /> WhatsApp
                 </a>
                 <a
-                  href="mailto:hello@leonseitz.com?subject=Kostenlose Website-Analyse&body=Meine Website: %0D%0AZiel: %0D%0ADeadline (optional): %0D%0A"
+                  href="mailto:hello@leonseitz.com?subject=Kostenlose Analyse&body=Meine Website: %0D%0AZiel: %0D%0ADeadline (optional): %0D%0A"
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: 8,
                     padding: '10px 20px', borderRadius: 100,
@@ -1977,7 +1762,6 @@ export default function Home() {
             </div>
           </Reveal>
 
-          {/* RIGHT: form card */}
           <Reveal delay={120}>
             <div style={{
               background: '#fff',
@@ -1994,7 +1778,6 @@ export default function Home() {
           </Reveal>
         </div>
 
-        {/* Calendly below as optional */}
         <div style={{ marginTop: 72, maxWidth: 960, margin: '72px auto 0' }}>
           <div style={{
             textAlign: 'center', marginBottom: 20,
@@ -2005,7 +1788,7 @@ export default function Home() {
           </div>
           <CalendlyWidget />
         </div>
-        {/* Prozess link */}
+
         <Reveal delay={340}>
           <div style={{
             marginTop: 56, padding: '24px 28px', borderRadius: 18,
@@ -2032,7 +1815,7 @@ export default function Home() {
             </a>
           </div>
         </Reveal>
-        {/* Footer */}
+
         <Reveal delay={380}>
           <div style={{
             marginTop: 72, paddingTop: 28,
@@ -2042,9 +1825,15 @@ export default function Home() {
           }}>
             <span style={{ fontSize: 14, fontWeight: 900, color: B.black }}>Leon Seitz</span>
             <div style={{ display: 'flex', gap: 20, fontSize: 13, color: 'rgba(14,12,8,0.38)' }}>
-             {[['Instagram', 'https://www.instagram.com/leonnseitz'], ['Prozess', '/prozess'], ['AGB', '/agb'], ['Impressum', '/impressum'], ['Datenschutz', '/datenschutz']].map(([l, h]) => (
-  <a key={l} href={h} style={{ color: 'inherit', textDecoration: 'none' }}>{l}</a>
-))}
+              {[
+                ['Instagram', 'https://www.instagram.com/leonnseitz'],
+                ['Prozess', '/prozess'],
+                ['AGB', '/agb'],
+                ['Impressum', '/impressum'],
+                ['Datenschutz', '/datenschutz'],
+              ].map(([l, h]) => (
+                <a key={l} href={h} style={{ color: 'inherit', textDecoration: 'none' }}>{l}</a>
+              ))}
             </div>
             <span style={{ fontSize: 12, color: 'rgba(14,12,8,0.26)' }}>© 2026</span>
           </div>
