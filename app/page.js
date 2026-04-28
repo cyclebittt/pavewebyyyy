@@ -933,7 +933,7 @@ function TestimonialCard({ quote, name, company, delay = 0 }) {
 const PROJEKTE = [
   {
     id: 'kfa',
-    img: '/projekte/kfa.jpg',
+    img: '/projekte/kfa.png',
     kategorie: 'Fundraising-Kampagne',
     name: 'KFA Aschaffenburg',
     desc: '21.000 € in 2 Monaten. Konzept, Branding und Landing Page — komplett ohne Werbebudget.',
@@ -941,11 +941,27 @@ const PROJEKTE = [
   },
   {
     id: 'angelo',
-    img: '/projekte/angelo.jpg',
+    img: '/projekte/angelo.png',
     kategorie: 'Booking & Branding',
     name: 'Angelo DJ',
     desc: 'Moderne Booking-Seite für einen DJ. Keine Formulare, direkte Anfrage, klares Auftreten.',
     url: 'https://angelo-site.vercel.app/',
+  },
+  {
+    id: 'star-doener',
+    img: '/projekte/star-doener.png',
+    kategorie: 'Restaurant & Gastronomie',
+    name: 'Star Döner',
+    desc: 'Moderner Webauftritt für ein Döner-Restaurant. Speisekarte, Standort und klare Conversion.',
+    url: 'https://star-doner-website.vercel.app/',
+  },
+  {
+    id: 'paveo',
+    img: '/projekte/paveo.png',
+    kategorie: 'Agentur-Website',
+    name: 'Paveo',
+    desc: 'Agentur-Landingpage mit klarer Positionierung, Leistungsübersicht und Kontaktführung.',
+    url: 'https://leonseitz.com',
   },
 ];
 
@@ -965,20 +981,22 @@ function ReferenzCard({ img, kategorie, name, desc, url }) {
         transition: 'border-color .2s cubic-bezier(0.4,0,0.2,1), box-shadow .2s cubic-bezier(0.4,0,0.2,1)',
         boxShadow: h ? '0 8px 40px rgba(14,12,8,0.12)' : '0 2px 12px rgba(14,12,8,0.05)',
       }}>
-        {/* Image container */}
+        {/* Image container — optimised for 1000×1000 transparent device mockups */}
         <div style={{
-          position: 'relative', width: '100%', paddingTop: '58%',
-          background: '#D4D0C7', overflow: 'hidden',
+          position: 'relative', width: '100%', paddingTop: '72%',
+          background: 'linear-gradient(135deg, #F0EDE4 0%, #E8E5DC 100%)',
+          overflow: 'hidden',
         }}>
           <img
             src={img}
             alt={name}
             style={{
-              position: 'absolute', inset: 0,
-              width: '100%', height: '100%',
-              objectFit: 'cover',
-              transform: h ? 'scale(1.03)' : 'scale(1)',
-              transition: 'transform .4s cubic-bezier(0.4,0,0.2,1)',
+              position: 'absolute', inset: '4% 2%',
+              width: '96%', height: '92%',
+              objectFit: 'contain',
+              transform: h ? 'scale(1.04) translateY(-1%)' : 'scale(1)',
+              transition: 'transform .45s cubic-bezier(0.4,0,0.2,1)',
+              filter: 'drop-shadow(0 8px 24px rgba(14,12,8,0.10))',
             }}
             onError={e => { e.currentTarget.style.display = 'none'; }}
           />
