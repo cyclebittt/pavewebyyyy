@@ -857,6 +857,93 @@ function ServiceCard({ icon, kicker, title, desc, dark }) {
   );
 }
 
+/* ─── REFERENZ CARD ─── */
+const PROJEKTE = [
+  {
+    id: 'kfa',
+    img: '/projekte/kfa.jpg',
+    kategorie: 'Fundraising-Kampagne',
+    name: 'KFA Aschaffenburg',
+    desc: '21.000 € in 2 Monaten. Konzept, Branding und Landing Page — komplett ohne Werbebudget.',
+    url: 'https://kfa-fundraising.vercel.app/',
+  },
+  {
+    id: 'angelo',
+    img: '/projekte/angelo.jpg',
+    kategorie: 'Booking & Branding',
+    name: 'Angelo DJ',
+    desc: 'Moderne Booking-Seite für einen DJ. Keine Formulare, direkte Anfrage, klares Auftreten.',
+    url: 'https://angelo-site.vercel.app/',
+  },
+];
+
+function ReferenzCard({ img, kategorie, name, desc, url }) {
+  const [h, setH] = useState(false);
+  return (
+    <a
+      href={url} target="_blank" rel="noopener noreferrer"
+      onMouseEnter={() => setH(true)}
+      onMouseLeave={() => setH(false)}
+      style={{ textDecoration: 'none', display: 'block' }}
+    >
+      <div style={{
+        borderRadius: 20, overflow: 'hidden',
+        border: `1px solid ${h ? 'rgba(14,12,8,0.22)' : 'rgba(14,12,8,0.09)'}`,
+        background: '#E8E5DC',
+        transition: 'border-color .2s cubic-bezier(0.4,0,0.2,1), box-shadow .2s cubic-bezier(0.4,0,0.2,1)',
+        boxShadow: h ? '0 8px 40px rgba(14,12,8,0.12)' : '0 2px 12px rgba(14,12,8,0.05)',
+      }}>
+        {/* Image container */}
+        <div style={{
+          position: 'relative', width: '100%', paddingTop: '58%',
+          background: '#D4D0C7', overflow: 'hidden',
+        }}>
+          <img
+            src={img}
+            alt={name}
+            style={{
+              position: 'absolute', inset: 0,
+              width: '100%', height: '100%',
+              objectFit: 'cover',
+              transform: h ? 'scale(1.03)' : 'scale(1)',
+              transition: 'transform .4s cubic-bezier(0.4,0,0.2,1)',
+            }}
+            onError={e => { e.currentTarget.style.display = 'none'; }}
+          />
+          {/* Kategorie pill */}
+          <div style={{
+            position: 'absolute', top: 14, left: 14,
+            padding: '5px 12px', borderRadius: 999,
+            background: 'rgba(14,12,8,0.72)', backdropFilter: 'blur(8px)',
+            fontSize: 11, fontWeight: 700, letterSpacing: '0.07em',
+            textTransform: 'uppercase', color: B.cream,
+          }}>
+            {kategorie}
+          </div>
+        </div>
+        {/* Card body */}
+        <div style={{ padding: '22px 24px 24px', textAlign: 'left' }}>
+          <div style={{ fontSize: 17, fontWeight: 800, color: B.black, letterSpacing: '-0.01em', marginBottom: 8 }}>
+            {name}
+          </div>
+          <p style={{ fontSize: 13, color: 'rgba(14,12,8,0.55)', lineHeight: 1.68, margin: 0 }}>
+            {desc}
+          </p>
+          <div style={{
+            marginTop: 18, display: 'inline-flex', alignItems: 'center', gap: 6,
+            fontSize: 12, fontWeight: 700,
+            color: h ? B.ocker : 'rgba(14,12,8,0.45)',
+            transition: 'color .2s cubic-bezier(0.4,0,0.2,1)',
+          }}>
+            Projekt ansehen
+            <ArrowRight size={13} />
+          </div>
+        </div>
+      </div>
+    </a>
+  );
+}
+
 /* ─── CALENDLY ─── */
 function CalendlyWidget() {
   useEffect(() => {
@@ -1077,6 +1164,87 @@ export default function Home() {
           </div>
         </Reveal>
       </Sec>
+      {/* ── S3.5: VERGLEICH ── */}
+      <Sec id="vergleich" dark pad="0 24px 96px">
+        <Reveal><Tag>Der Unterschied</Tag></Reveal>
+        <Reveal delay={80}>
+          <h2 style={{
+            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
+            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: B.cream,
+          }}>
+            Klassische Agentur — oder einfach <SerifAccent col={B.yellow}>Leon.</SerifAccent>
+          </h2>
+        </Reveal>
+        <Reveal delay={160}>
+          <div style={{ marginTop: 48, maxWidth: 720, margin: '48px auto 0', overflowX: 'auto' }}>
+            {/* Header row */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 2, marginBottom: 2 }}>
+              <div />
+              <div style={{
+                padding: '13px 16px', borderRadius: '12px 12px 0 0',
+                background: 'rgba(245,242,235,0.04)', border: '1px solid rgba(245,242,235,0.07)',
+                borderBottom: 'none', fontSize: 12.5, fontWeight: 800,
+                color: 'rgba(245,242,235,0.40)', textAlign: 'center',
+              }}>
+                Klassische Agentur 😩
+              </div>
+              <div style={{
+                padding: '13px 16px', borderRadius: '12px 12px 0 0',
+                background: 'rgba(232,168,0,0.10)', border: `1px solid rgba(232,168,0,0.26)`,
+                borderBottom: 'none', fontSize: 12.5, fontWeight: 800,
+                color: B.yellow, textAlign: 'center',
+              }}>
+                Leon Seitz 🤝
+              </div>
+            </div>
+            {/* Data rows */}
+            {[
+              { label: 'Bezahlung',        them: 'Vorauskasse, Ergebnis offen',    us: 'Du zahlst erst wenn es dir gefällt' },
+              { label: 'Erste Ergebnisse', them: 'Wochen Wartezeit',               us: 'In 24–72 Stunden' },
+              { label: 'Kommunikation',    them: 'Ticket-System, Umwege',          us: 'Direkt mit mir — kein Umweg' },
+              { label: 'Risiko',           them: 'Geld weg, Ergebnis unsicher',    us: 'Gefällt es nicht? Kostet nichts.' },
+            ].map((row, i, arr) => {
+              const isLast = i === arr.length - 1;
+              return (
+                <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 2, marginBottom: isLast ? 0 : 2 }}>
+                  <div style={{
+                    padding: '15px 4px 15px 0',
+                    fontSize: 11, fontWeight: 700, letterSpacing: '0.08em',
+                    textTransform: 'uppercase', color: 'rgba(245,242,235,0.30)',
+                    textAlign: 'left', display: 'flex', alignItems: 'center',
+                  }}>
+                    {row.label}
+                  </div>
+                  <div style={{
+                    padding: '15px 16px',
+                    background: 'rgba(245,242,235,0.025)',
+                    border: '1px solid rgba(245,242,235,0.055)', borderTop: 'none',
+                    borderRadius: isLast ? '0 0 0 12px' : 0,
+                    fontSize: 13, color: 'rgba(245,242,235,0.35)',
+                    textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    {row.them}
+                  </div>
+                  <div style={{
+                    padding: '15px 16px',
+                    background: 'rgba(232,168,0,0.07)',
+                    border: '1px solid rgba(232,168,0,0.17)', borderTop: 'none',
+                    borderRadius: isLast ? '0 0 12px 0' : 0,
+                    fontSize: 13, fontWeight: 700, color: 'rgba(245,242,235,0.85)',
+                    textAlign: 'center', display: 'flex', alignItems: 'center',
+                    justifyContent: 'center', gap: 7,
+                  }}>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path d="M2 6.5L4.5 9L10 3" stroke={B.yellow} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    {row.us}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Reveal>
+      </Sec>
       <Div from={true} />
       {/* ── S4: PROOF ── */}
       <Sec id="s4" dark={false} pad="96px 24px">
@@ -1115,6 +1283,42 @@ export default function Home() {
             }}>
               Leistungen <ArrowDown size={16} style={{ color: B.ocker }} />
             </a>
+          </div>
+        </Reveal>
+      </Sec>
+      {/* ── S4.5: REFERENZEN ── */}
+      <Sec id="referenzen" dark={false} pad="0 24px 96px">
+        <Reveal><Tag light>Referenzen</Tag></Reveal>
+        <Reveal delay={80}>
+          <h2 style={{
+            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
+            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: B.black,
+          }}>
+            Projekte, die für sich <SerifAccent col={B.ocker}>sprechen.</SerifAccent>
+          </h2>
+        </Reveal>
+        <Reveal delay={140}>
+          <p style={{
+            marginTop: 16, fontSize: 15, color: 'rgba(14,12,8,0.52)',
+            lineHeight: 1.75, maxWidth: 440, margin: '16px auto 0',
+          }}>
+            Echte Projekte, echte Ergebnisse — von Fundraising bis Booking.
+          </p>
+        </Reveal>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit,minmax(min(300px,100%),1fr))',
+          gap: 20, marginTop: 48, textAlign: 'left',
+        }}>
+          {PROJEKTE.map((p, i) => (
+            <Reveal key={p.id} delay={i * 80}>
+              <ReferenzCard {...p} />
+            </Reveal>
+          ))}
+        </div>
+        <Reveal delay={240}>
+          <div style={{ marginTop: 44, display: 'flex', justifyContent: 'center' }}>
+            <BtnPrimary label="Kostenlose Analyse anfragen" href="/#request" />
           </div>
         </Reveal>
       </Sec>
