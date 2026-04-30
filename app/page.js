@@ -619,7 +619,7 @@ function LeadFormLight() {
 /* ─── SECTIONS ─── */
 function HeroV2() {
   return (
-    <Frame id="hero" bg={B.ink} padding="80px 64px 96px" style={{ color: B.cream }}>
+   <Frame id="hero" bg="#000" padding="80px 64px 96px" style={{ color: B.cream, minHeight: '100vh' }}>
       <div
         style={{
           position: 'absolute',
@@ -1205,7 +1205,7 @@ function PhaseZeroV2() {
 
       <div style={{ maxWidth: 760, margin: '0 auto', position: 'relative' }}>
         <svg
-          style={{ position: 'absolute', left: 36, top: 32, height: 'calc(100% - 80px)', width: 24, pointerEvents: 'none' }}
+          style={{ position: 'absolute', left: 24, top: 32, height: 'calc(100% - 80px)', width: 24, pointerEvents: 'none' }}
           viewBox="0 0 24 600"
           preserveAspectRatio="none"
         >
@@ -2254,6 +2254,7 @@ export default function Home() {
           overflow-x: hidden;
           max-width: 100%;
           width: 100%;
+          background: #000;
         }
 
         * {
