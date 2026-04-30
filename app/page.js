@@ -1,57 +1,88 @@
 'use client';
-import {
-  ArrowDown, ArrowRight, CheckCircle2,
-  Monitor, Film, BookOpen, Mail,
-} from 'lucide-react';
+
+import { ArrowRight, CheckCircle2, Mail } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-/* ─── TOKENS ─── */
 const B = {
-  yellow: '#E8A800', ocker: '#C68F00',
-  black:  '#0E0C08', cream: '#F5F2EB', dark: '#2A2720',
+  yellow: '#E8A800',
+  ocker: '#C68F00',
+  rust: '#9F5A2A',
+  black: '#0E0C08',
+  ink: '#0E0C08',
+  cream: '#F5F2EB',
+  dark: '#2A2720',
+  muted: 'rgba(26,23,18,0.55)',
+};
+
+const FONTS = {
+  sans: "'Plus Jakarta Sans',system-ui,sans-serif",
+  serif: "'DM Serif Display',Georgia,serif",
+  hand: "'Caveat',cursive",
+  mono: "'Plus Jakarta Sans',system-ui,sans-serif",
 };
 
 /* ─── HOOKS ─── */
 function useReveal(ref, threshold = 0.08) {
   const [shown, setShown] = useState(false);
+
   useEffect(() => {
-    const el = ref.current; if (!el) return;
+    const el = ref.current;
+    if (!el) return;
+
     const obs = new IntersectionObserver(
-      e => { if (e.some(x => x.isIntersecting)) setShown(true); },
+      e => {
+        if (e.some(x => x.isIntersecting)) setShown(true);
+      },
       { threshold }
     );
+
     obs.observe(el);
     return () => obs.disconnect();
   }, [ref, threshold]);
+
   return shown;
 }
+
 function useScrollProgress() {
   const [p, setP] = useState(0);
+
   useEffect(() => {
     const fn = () => {
       const d = document.documentElement;
       setP(d.scrollTop / Math.max(1, d.scrollHeight - d.clientHeight));
     };
+
     fn();
     window.addEventListener('scroll', fn, { passive: true });
     return () => window.removeEventListener('scroll', fn);
   }, []);
+
   return p;
 }
+
 function useCountUp({ target, durationMs = 1200 }) {
   const [v, setV] = useState(0);
   const raf = useRef(null);
+
   const start = useCallback(() => {
     if (raf.current) cancelAnimationFrame(raf.current);
+
     const t0 = performance.now();
+
     const tick = t => {
       const e = 1 - Math.pow(1 - Math.min(1, (t - t0) / durationMs), 3);
       setV(Math.round(target * e));
+
       if (e < 1) raf.current = requestAnimationFrame(tick);
     };
+
     raf.current = requestAnimationFrame(tick);
   }, [target, durationMs]);
-  useEffect(() => () => { if (raf.current) cancelAnimationFrame(raf.current); }, []);
+
+  useEffect(() => () => {
+    if (raf.current) cancelAnimationFrame(raf.current);
+  }, []);
+
   return { v, start };
 }
 
@@ -59,349 +90,218 @@ function useCountUp({ target, durationMs = 1200 }) {
 function Reveal({ children, delay = 0 }) {
   const ref = useRef(null);
   const shown = useReveal(ref);
+
   return (
-    <div ref={ref} style={{
-      opacity: shown ? 1 : 0,
-      transform: shown ? 'none' : 'translateY(18px)',
-      transition: `opacity .65s cubic-bezier(0.4,0,0.2,1) ${delay}ms, transform .65s cubic-bezier(0.4,0,0.2,1) ${delay}ms`,
-    }}>
+    <div
+      ref={ref}
+      style={{
+        opacity: shown ? 1 : 0,
+        transform: shown ? 'none' : 'translateY(18px)',
+        transition: `opacity .65s cubic-bezier(0.4,0,0.2,1) ${delay}ms, transform .65s cubic-bezier(0.4,0,0.2,1) ${delay}ms`,
+      }}
+    >
       {children}
     </div>
   );
 }
-function Tag({ children, light = false }) {
+
+function Frame({ bg, padding = '96px 24px', children, style = {}, id }) {
   return (
-    <span style={{
-      display: 'inline-flex', alignItems: 'center', gap: 5,
-      padding: '4px 13px', borderRadius: 100, fontSize: 11,
-      fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase',
-      background: light ? B.black : B.yellow,
-      color: light ? B.cream : B.black,
-    }}>
+    <section
+      id={id}
+      style={{
+        background: bg,
+        padding,
+        position: 'relative',
+        overflow: 'hidden',
+        width: '100%',
+        ...style,
+      }}
+    >
+      {children}
+    </section>
+  );
+}
+
+function Eyebrow({ children, color }) {
+  return (
+    <span
+      style={{
+        display: 'inline-block',
+        fontSize: 11,
+        fontWeight: 700,
+        letterSpacing: '0.12em',
+        textTransform: 'uppercase',
+        color: color || B.ocker,
+        padding: '5px 14px',
+        borderRadius: 100,
+        border: `1px solid ${color ? 'rgba(232,168,0,0.25)' : 'rgba(14,12,8,0.12)'}`,
+        background: color ? 'rgba(232,168,0,0.06)' : 'rgba(14,12,8,0.035)',
+      }}
+    >
       {children}
     </span>
   );
 }
-function SerifAccent({ children, col }) {
+
+function Serif({ children, color }) {
   return (
-    <em style={{
-      fontFamily: "'DM Serif Display',Georgia,serif",
-      fontStyle: 'italic', fontWeight: 400,
-      color: col || 'inherit',
-    }}>
+    <em
+      style={{
+        fontFamily: FONTS.serif,
+        fontStyle: 'italic',
+        fontWeight: 400,
+        color: color || 'inherit',
+      }}
+    >
       {children}
     </em>
   );
 }
-function Underline({ children, active }) {
+
+function HandLine({ d, stroke, strokeWidth = 2, opacity = 1, dash }) {
   return (
-    <span style={{ position: 'relative', display: 'inline-block' }}>
-      {children}
-      <svg aria-hidden style={{ position: 'absolute', left: 0, bottom: -3, width: '100%', height: 6, overflow: 'visible' }}>
-        <line x1="0" y1="4" x2="100%" y2="4"
-          stroke={B.yellow} strokeWidth="2.5" strokeLinecap="round"
-          strokeDasharray="100%" strokeDashoffset={active ? '0' : '100%'}
-          style={{ transition: active ? 'stroke-dashoffset .65s cubic-bezier(.4,0,.2,1) .25s' : 'none' }}
-        />
-      </svg>
-    </span>
+    <path
+      d={d}
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      opacity={opacity}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeDasharray={dash}
+    />
   );
 }
 
-/* ─── CUSTOM SVG ICONS ─── */
-const Icon = {
-  Analyse: () => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/>
-      <line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
-    </svg>
-  ),
-  Entwurf: () => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="3" width="18" height="18" rx="2"/>
-      <line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="13" y2="12"/><line x1="7" y1="16" x2="10" y2="16"/>
-    </svg>
-  ),
-  Review: () => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20 6L9 17l-5-5"/>
-    </svg>
-  ),
-  Launch: () => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 2L12 22M2 12L22 12" opacity="0.3"/>
-      <path d="M5 19L12 2L19 19L12 15L5 19Z"/>
-    </svg>
-  ),
-  Anfrage: () => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-    </svg>
-  ),
-  Brandbook: () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-    </svg>
-  ),
-  Motion: () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="5 3 19 12 5 21 5 3"/>
-    </svg>
-  ),
-  Web: () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
-    </svg>
-  ),
-  Video: () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="6" width="14" height="12" rx="2"/><path d="M22 8l-6 4 6 4V8z"/>
-    </svg>
-  ),
-  WA: () => (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="#25D366">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-    </svg>
-  ),
-};
+function StickyNote({ children, color = B.yellow, rotate = -2, style = {} }) {
+  return (
+    <div
+      style={{
+        display: 'inline-block',
+        background: color,
+        color: B.black,
+        padding: '10px 14px',
+        borderRadius: 4,
+        fontFamily: FONTS.hand,
+        fontSize: 18,
+        lineHeight: 1.1,
+        transform: `rotate(${rotate}deg)`,
+        boxShadow: '0 8px 18px rgba(0,0,0,0.16)',
+        ...style,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
-/* ─── SCROLL BAR ─── */
 function ScrollBar() {
   const p = useScrollProgress();
+
   return (
-    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 60, pointerEvents: 'none' }}>
+    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 80, pointerEvents: 'none' }}>
       <div style={{ height: 3, background: 'rgba(232,168,0,0.12)' }}>
-        <div style={{ height: '100%', width: `${Math.round(p * 100)}%`, background: B.yellow, transition: 'width 80ms linear' }} />
+        <div
+          style={{
+            height: '100%',
+            width: `${Math.round(p * 100)}%`,
+            background: B.yellow,
+            transition: 'width 80ms linear',
+          }}
+        />
       </div>
     </div>
   );
 }
 
-/* ─── BTNS ─── */
-function BtnPrimary({ label, href, lg, target }) {
+function BtnPrimary({ label, href, target }) {
   const [h, setH] = useState(false);
+
   return (
-    <a href={href}
+    <a
+      href={href}
       target={target}
       rel={target === '_blank' ? 'noopener noreferrer' : undefined}
       onMouseEnter={() => setH(true)}
       onMouseLeave={() => setH(false)}
       style={{
-        display: 'inline-flex', alignItems: 'center', gap: 8,
-        padding: lg ? '16px 36px' : '12px 26px',
-        borderRadius: 100, background: h ? B.ocker : B.yellow,
-        color: B.black, fontWeight: 800,
-        fontSize: lg ? 16 : 14, textDecoration: 'none',
-        transition: 'background .18s cubic-bezier(0.4,0,0.2,1)',
-        letterSpacing: '-0.01em',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 8,
+        padding: '14px 28px',
+        borderRadius: 100,
+        background: h ? B.ocker : B.yellow,
+        color: B.black,
+        fontWeight: 800,
+        fontSize: 14,
+        textDecoration: 'none',
         boxShadow: h ? '0 4px 20px rgba(232,168,0,0.28)' : '0 2px 10px rgba(232,168,0,0.15)',
-      }}>
-      {label} <ArrowRight size={lg ? 18 : 15} />
-    </a>
-  );
-}
-function BtnGhost({ label, href, dark = true }) {
-  const [h, setH] = useState(false);
-  return (
-    <a href={href}
-      onMouseEnter={() => setH(true)}
-      onMouseLeave={() => setH(false)}
-      style={{
-        display: 'inline-flex', alignItems: 'center', gap: 8,
-        padding: '12px 24px', borderRadius: 100,
-        border: `1px solid ${h
-          ? (dark ? 'rgba(245,242,235,.45)' : 'rgba(14,12,8,.40)')
-          : (dark ? 'rgba(245,242,235,.18)' : 'rgba(14,12,8,.16)')}`,
-        color: dark ? B.cream : B.black,
-        fontWeight: 600, fontSize: 14, textDecoration: 'none',
-        transition: 'border-color .18s cubic-bezier(0.4,0,0.2,1)',
-      }}>
+        transition: 'background .18s cubic-bezier(0.4,0,0.2,1)',
+      }}
+    >
       {label}
+      <ArrowRight size={15} />
     </a>
   );
 }
 
-/* ─── SECTION ─── */
-function Sec({ id, dark = true, children, pad = '80px 20px' }) {
-  return (
-    <section id={id} style={{
-      background: dark ? B.black : B.cream,
-      color: dark ? B.cream : B.black,
-      padding: pad, position: 'relative',
-      overflowX: 'hidden', width: '100%',
-    }}>
-      <div style={{ maxWidth: 920, margin: '0 auto', width: '100%', textAlign: 'center' }}>
-        {children}
-      </div>
-    </section>
-  );
-}
+/* ─── ICONS ─── */
+const Icon = {
+  Brandbook: () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+    </svg>
+  ),
+  Motion: () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="5 3 19 12 5 21 5 3" />
+    </svg>
+  ),
+  Web: () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="3" width="20" height="14" rx="2" />
+      <line x1="8" y1="21" x2="16" y2="21" />
+      <line x1="12" y1="17" x2="12" y2="21" />
+    </svg>
+  ),
+  Video: () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="6" width="14" height="12" rx="2" />
+      <path d="M22 8l-6 4 6 4V8z" />
+    </svg>
+  ),
+  WA: () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="#25D366">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+    </svg>
+  ),
+};
 
-/* ─── DIVIDER ─── */
-function Div({ from }) {
-  return (
-    <div style={{
-      background: from ? B.black : B.cream,
-      display: 'flex', flexDirection: 'column', alignItems: 'center',
-    }}>
-      <div style={{
-        width: 1, height: 48,
-        background: from
-          ? 'linear-gradient(to bottom,rgba(232,168,0,0),rgba(232,168,0,.35))'
-          : 'linear-gradient(to bottom,rgba(14,12,8,0),rgba(14,12,8,.18))',
-      }} />
-      <ArrowDown size={17} style={{ color: from ? 'rgba(232,168,0,.45)' : 'rgba(14,12,8,.25)', marginTop: -2 }} />
-    </div>
-  );
-}
-
-/* ─── INTAKE FORM (Phase 0) ─── */
-function LeadForm() {
-  const [fields, setFields] = useState({ url: '', goal: '', timeline: '', email: '' });
-  const [status, setStatus] = useState('idle');
-
-  const set = key => e => setFields(f => ({ ...f, [key]: e.target.value }));
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!fields.email) return;
-    setStatus('loading');
-    try {
-      const res = await fetch('/api/lead', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(fields),
-      });
-      setStatus(res.ok ? 'success' : 'error');
-    } catch {
-      setStatus('error');
-    }
-  };
-
-  if (status === 'success') {
-    return (
-      <div style={{
-        marginTop: 18, display: 'flex', alignItems: 'center', gap: 10,
-        padding: '12px 16px', borderRadius: 12,
-        background: 'rgba(232,168,0,0.08)',
-        border: '1px solid rgba(232,168,0,0.22)',
-      }}>
-        <CheckCircle2 size={16} color={B.yellow} style={{ flexShrink: 0 }} />
-        <span style={{ fontSize: 13, color: 'rgba(245,242,235,0.72)', lineHeight: 1.5 }}>
-          Erhalten. Ich melde mich innerhalb von 24 Stunden.
-        </span>
-      </div>
-    );
-  }
-
-  const inp = {
-    width: '100%', padding: '10px 14px', borderRadius: 10,
-    border: '1px solid rgba(232,168,0,0.20)',
-    background: 'rgba(245,242,235,0.05)',
-    color: '#F5F2EB', fontSize: 13, outline: 'none',
-    fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
-    boxSizing: 'border-box',
-  };
-
-  return (
-    <form onSubmit={handleSubmit} style={{ marginTop: 20 }}>
-      <style>{`
-        .intake-select option { background: #1a1812; color: #F5F2EB; }
-        .intake-input::placeholder { color: rgba(245,242,235,0.32); }
-        .intake-select:invalid { color: rgba(245,242,235,0.32); }
-      `}</style>
-      <div style={{ display: 'grid', gap: 8 }}>
-        <input
-          className="intake-input"
-          type="url"
-          placeholder="Website-URL — welche Seite soll analysiert werden?"
-          value={fields.url}
-          onChange={set('url')}
-          style={inp}
-        />
-        <textarea
-          className="intake-input"
-          placeholder="Was ist dein Ziel? (z.B. digitale Struktur, bessere Abläufe, mehr Anfragen, klarerer Auftritt …)"
-          value={fields.goal}
-          onChange={set('goal')}
-          rows={2}
-          style={{ ...inp, resize: 'none', lineHeight: 1.6 }}
-        />
-        <select
-          className="intake-select"
-          value={fields.timeline}
-          onChange={set('timeline')}
-          required
-          style={{ ...inp, color: fields.timeline ? '#F5F2EB' : 'rgba(245,242,235,0.32)' }}
-        >
-          <option value="" disabled>Wann kann es losgehen?</option>
-          <option value="So bald wie möglich">So bald wie möglich</option>
-          <option value="In 1–2 Wochen">In 1–2 Wochen</option>
-          <option value="In etwa 1 Monat">In etwa 1 Monat</option>
-          <option value="Noch offen">Noch offen / nach Absprache</option>
-        </select>
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          <input
-            className="intake-input"
-            type="email"
-            required
-            placeholder="E-Mail — wohin soll die Phase-0-Analyse?"
-            value={fields.email}
-            onChange={set('email')}
-            style={{ ...inp, flex: '1 1 180px', minWidth: 0 }}
-          />
-          <button
-            type="submit"
-            disabled={status === 'loading'}
-            style={{
-              flexShrink: 0,
-              padding: '10px 22px', borderRadius: 100,
-              background: status === 'loading' ? 'rgba(232,168,0,0.5)' : B.yellow,
-              color: B.black, border: 'none',
-              cursor: status === 'loading' ? 'default' : 'pointer',
-              fontWeight: 800, fontSize: 13,
-              fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
-              transition: 'background .18s cubic-bezier(0.4,0,0.2,1)',
-              alignSelf: 'flex-start',
-            }}
-          >
-            {status === 'loading' ? 'Wird gesendet…' : 'Phase 0 anfragen →'}
-          </button>
-        </div>
-      </div>
-      {status === 'error' && (
-        <p style={{ marginTop: 8, fontSize: 12, color: 'rgba(245,242,235,0.40)' }}>
-          Etwas hat nicht geklappt. Bitte direkt an hello@leonseitz.com schreiben.
-        </p>
-      )}
-    </form>
-  );
-}
-
-/* ─── INTAKE FORM — step selector (for #request section) ─── */
+/* ─── FORM ─── */
 const INTAKE_STEPS = [
   {
     key: 'goal',
     type: 'select',
     question: 'Was ist dein Ziel?',
     options: [
-      { value: 'Digitale Struktur aufbauen', label: 'Digitale Struktur aufbauen' },
-      { value: 'Interne Abläufe verbessern', label: 'Interne Abläufe verbessern' },
       { value: 'Neue Website', label: 'Neue Website' },
       { value: 'Mehr Anfragen', label: 'Mehr Anfragen' },
-      { value: 'Klarerer Außenauftritt', label: 'Klarerer Außenauftritt' },
+      { value: 'Besseres Branding', label: 'Besseres Branding' },
+      { value: 'Social Media', label: 'Social Media' },
       { value: 'Kompletter Neustart', label: 'Kompletter Neustart' },
     ],
   },
   {
     key: 'website_status',
     type: 'select',
-    question: 'Wie digital ist dein Unternehmen aktuell aufgestellt?',
+    question: 'Wie ist dein aktueller Stand?',
     options: [
-      { value: 'Es gibt schon Systeme, aber nicht sauber verbunden', label: 'Es gibt schon Systeme, aber nicht sauber verbunden' },
-      { value: 'Vieles läuft noch analog oder manuell', label: 'Vieles läuft noch analog oder manuell' },
-      { value: 'Website vorhanden, aber Abläufe fehlen', label: 'Website vorhanden, aber Abläufe fehlen' },
-      { value: 'Noch kein klarer digitaler Aufbau', label: 'Noch kein klarer digitaler Aufbau' },
+      { value: 'Es gibt schon etwas, aber es wirkt nicht professionell', label: 'Es gibt schon etwas, aber es wirkt nicht professionell' },
+      { value: 'Website vorhanden, aber nicht überzeugend', label: 'Website vorhanden, aber nicht überzeugend' },
+      { value: 'Social / Print / Website passen nicht zusammen', label: 'Social / Print / Website passen nicht zusammen' },
+      { value: 'Noch kein klarer Auftritt', label: 'Noch kein klarer Auftritt' },
     ],
   },
   {
@@ -428,18 +328,23 @@ const INTAKE_STEPS = [
     key: 'notes',
     type: 'textarea',
     question: 'Noch etwas, das ich wissen sollte?',
-    placeholder: 'Z.B. Branche, aktuelle Abläufe, Software, Budget-Vorstellung, besondere Anforderungen …',
+    placeholder: 'Z.B. Branche, aktueller Auftritt, Zielgruppe, Budget-Vorstellung, besondere Anforderungen …',
     hint: 'Optional — alles was mir hilft, deine Situation besser zu verstehen.',
     optional: true,
   },
 ];
 
 const INP_STYLE = {
-  width: '100%', padding: '12px 14px', borderRadius: 12,
-  border: '1.5px solid rgba(14,12,8,0.12)', background: '#FAFAF8',
-  color: '#0E0C08', fontSize: 14, outline: 'none', boxSizing: 'border-box',
-  fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
-  transition: 'border-color .18s',
+  width: '100%',
+  padding: '12px 14px',
+  borderRadius: 12,
+  border: '1.5px solid rgba(14,12,8,0.12)',
+  background: '#FAFAF8',
+  color: '#0E0C08',
+  fontSize: 14,
+  outline: 'none',
+  boxSizing: 'border-box',
+  fontFamily: FONTS.sans,
 };
 
 function LeadFormLight() {
@@ -459,10 +364,12 @@ function LeadFormLight() {
 
   const advance = () => setStep(s => s + 1);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     if (!email) return;
+
     setStatus('loading');
+
     try {
       const res = await fetch('/api/lead', {
         method: 'POST',
@@ -474,6 +381,7 @@ function LeadFormLight() {
           timeline: answers.timeline || '',
         }),
       });
+
       setStatus(res.ok ? 'success' : 'error');
     } catch {
       setStatus('error');
@@ -482,10 +390,7 @@ function LeadFormLight() {
 
   if (status === 'success') {
     return (
-      <div style={{
-        display: 'flex', flexDirection: 'column', alignItems: 'center',
-        gap: 12, padding: '40px 0', textAlign: 'center',
-      }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, padding: '40px 0', textAlign: 'center' }}>
         <CheckCircle2 size={36} color={B.ocker} />
         <div style={{ fontSize: 17, fontWeight: 900, color: B.black }}>Erhalten.</div>
         <p style={{ fontSize: 14, color: 'rgba(14,12,8,0.52)', lineHeight: 1.65 }}>
@@ -499,21 +404,37 @@ function LeadFormLight() {
   const progressPct = ((isEmailStep ? totalSteps : step) / totalProgress) * 100;
 
   const BackBtn = () => (
-    <button type="button" onClick={() => setStep(s => s - 1)} style={{
-      marginTop: 12, background: 'none', border: 'none', display: 'block',
-      fontSize: 12, color: 'rgba(14,12,8,0.35)', cursor: 'pointer',
-      fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif", padding: 0,
-    }}>← Zurück</button>
+    <button
+      type="button"
+      onClick={() => setStep(s => s - 1)}
+      style={{
+        marginTop: 12,
+        background: 'none',
+        border: 'none',
+        display: 'block',
+        fontSize: 12,
+        color: 'rgba(14,12,8,0.35)',
+        cursor: 'pointer',
+        fontFamily: FONTS.sans,
+        padding: 0,
+      }}
+    >
+      ← Zurück
+    </button>
   );
 
   return (
     <div>
       <div style={{ height: 3, borderRadius: 99, background: 'rgba(14,12,8,0.07)', marginBottom: 24, overflow: 'hidden' }}>
-        <div style={{
-          height: '100%', borderRadius: 99, background: B.ocker,
-          width: `${progressPct}%`,
-          transition: 'width .35s cubic-bezier(0.4,0,0.2,1)',
-        }} />
+        <div
+          style={{
+            height: '100%',
+            borderRadius: 99,
+            background: B.ocker,
+            width: `${progressPct}%`,
+            transition: 'width .35s cubic-bezier(0.4,0,0.2,1)',
+          }}
+        />
       </div>
 
       {!isEmailStep && currentStep.type === 'select' && (
@@ -521,6 +442,7 @@ function LeadFormLight() {
           <div style={{ fontSize: 15, fontWeight: 800, color: B.black, marginBottom: 14 }}>
             {currentStep.question}
           </div>
+
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {currentStep.options.map(opt => (
               <button
@@ -528,21 +450,36 @@ function LeadFormLight() {
                 type="button"
                 onClick={() => pick(currentStep.key, opt.value)}
                 style={{
-                  width: '100%', padding: '12px 16px', borderRadius: 12, textAlign: 'left',
-                  border: '1.5px solid rgba(14,12,8,0.10)', background: '#FAFAF8',
-                  color: B.black, fontSize: 14, fontWeight: 600, cursor: 'pointer',
-                  fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
-                  transition: 'border-color .15s, background .15s',
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  width: '100%',
+                  padding: '12px 16px',
+                  borderRadius: 12,
+                  textAlign: 'left',
+                  border: '1.5px solid rgba(14,12,8,0.10)',
+                  background: '#FAFAF8',
+                  color: B.black,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  fontFamily: FONTS.sans,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = B.ocker; e.currentTarget.style.background = 'rgba(232,168,0,0.04)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(14,12,8,0.10)'; e.currentTarget.style.background = '#FAFAF8'; }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = B.ocker;
+                  e.currentTarget.style.background = 'rgba(232,168,0,0.04)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = 'rgba(14,12,8,0.10)';
+                  e.currentTarget.style.background = '#FAFAF8';
+                }}
               >
                 {opt.label}
                 <ArrowRight size={14} style={{ opacity: 0.28, flexShrink: 0 }} />
               </button>
             ))}
           </div>
+
           {step > 0 && <BackBtn />}
         </div>
       )}
@@ -551,11 +488,19 @@ function LeadFormLight() {
         <div>
           <div style={{ fontSize: 15, fontWeight: 800, color: B.black, marginBottom: 4 }}>
             {currentStep.question}
-            {currentStep.optional && <span style={{ fontSize: 12, fontWeight: 400, color: 'rgba(14,12,8,0.35)', marginLeft: 8 }}>optional</span>}
+            {currentStep.optional && (
+              <span style={{ fontSize: 12, fontWeight: 400, color: 'rgba(14,12,8,0.35)', marginLeft: 8 }}>
+                optional
+              </span>
+            )}
           </div>
+
           {currentStep.hint && (
-            <p style={{ fontSize: 13, color: 'rgba(14,12,8,0.42)', marginBottom: 12, lineHeight: 1.55 }}>{currentStep.hint}</p>
+            <p style={{ fontSize: 13, color: 'rgba(14,12,8,0.42)', marginBottom: 12, lineHeight: 1.55 }}>
+              {currentStep.hint}
+            </p>
           )}
+
           {currentStep.type === 'input' ? (
             <input
               type={currentStep.inputType || 'text'}
@@ -575,14 +520,26 @@ function LeadFormLight() {
               style={{ ...INP_STYLE, resize: 'none', lineHeight: 1.6, marginBottom: 10 }}
             />
           )}
-          <button type="button" onClick={advance} style={{
-            width: '100%', padding: '12px 24px', borderRadius: 100,
-            background: B.black, color: B.cream, border: 'none', cursor: 'pointer',
-            fontWeight: 700, fontSize: 14,
-            fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
-          }}>
+
+          <button
+            type="button"
+            onClick={advance}
+            style={{
+              width: '100%',
+              padding: '12px 24px',
+              borderRadius: 100,
+              background: B.black,
+              color: B.cream,
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: 700,
+              fontSize: 14,
+              fontFamily: FONTS.sans,
+            }}
+          >
             Weiter →
           </button>
+
           <BackBtn />
         </div>
       )}
@@ -592,31 +549,58 @@ function LeadFormLight() {
           <div style={{ fontSize: 15, fontWeight: 800, color: B.black, marginBottom: 6 }}>
             Wohin soll die Analyse?
           </div>
+
           <p style={{ fontSize: 13, color: 'rgba(14,12,8,0.45)', marginBottom: 14, lineHeight: 1.6 }}>
             Ich schicke dir meine Einschätzung direkt per E-Mail.
           </p>
+
           <input
-            type="email" required autoFocus
+            type="email"
+            required
+            autoFocus
             placeholder="deine@email.de"
             value={email}
             onChange={e => setEmail(e.target.value)}
             style={{ ...INP_STYLE, marginBottom: 10 }}
           />
-          <button type="submit" disabled={status === 'loading'} style={{
-            width: '100%', padding: '13px 24px', borderRadius: 100,
-            background: status === 'loading' ? 'rgba(232,168,0,0.6)' : B.yellow,
-            color: B.black, border: 'none', cursor: status === 'loading' ? 'default' : 'pointer',
-            fontWeight: 800, fontSize: 14,
-            fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
-            transition: 'background .18s',
-          }}>
+
+          <button
+            type="submit"
+            disabled={status === 'loading'}
+            style={{
+              width: '100%',
+              padding: '13px 24px',
+              borderRadius: 100,
+              background: status === 'loading' ? 'rgba(232,168,0,0.6)' : B.yellow,
+              color: B.black,
+              border: 'none',
+              cursor: status === 'loading' ? 'default' : 'pointer',
+              fontWeight: 800,
+              fontSize: 14,
+              fontFamily: FONTS.sans,
+            }}
+          >
             {status === 'loading' ? 'Wird gesendet…' : 'Analyse anfragen →'}
           </button>
-          <button type="button" onClick={() => setStep(s => s - 1)} style={{
-            marginTop: 10, background: 'none', border: 'none', display: 'block',
-            fontSize: 12, color: 'rgba(14,12,8,0.35)', cursor: 'pointer',
-            fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif", padding: 0,
-          }}>← Zurück</button>
+
+          <button
+            type="button"
+            onClick={() => setStep(s => s - 1)}
+            style={{
+              marginTop: 10,
+              background: 'none',
+              border: 'none',
+              display: 'block',
+              fontSize: 12,
+              color: 'rgba(14,12,8,0.35)',
+              cursor: 'pointer',
+              fontFamily: FONTS.sans,
+              padding: 0,
+            }}
+          >
+            ← Zurück
+          </button>
+
           {status === 'error' && (
             <p style={{ marginTop: 8, fontSize: 12, color: 'rgba(14,12,8,0.40)', textAlign: 'center' }}>
               Fehler — schreib direkt an <strong>hello@leonseitz.com</strong>
@@ -632,267 +616,297 @@ function LeadFormLight() {
   );
 }
 
-/* ──────────────────────────────────────────
-   VERTICAL ROADMAP
-────────────────────────────────────────── */
-function RoadMap() {
-  const ref = useRef(null);
-  const shown = useReveal(ref, 0.04);
-  const steps = [
+/* ─── SECTIONS ─── */
+function HeroV2() {
+  return (
+    <Frame id="hero" bg={B.ink} padding="80px 64px 96px" style={{ color: B.cream }}>
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          padding: '20px 64px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          zIndex: 5,
+        }}
+      >
+        <a href="/" style={{ fontSize: 15, fontWeight: 900, color: B.cream, letterSpacing: '-0.01em', textDecoration: 'none' }}>
+          Leon Seitz
+        </a>
+
+        <a
+          href="#next"
+          style={{
+            fontSize: 12,
+            fontWeight: 700,
+            color: B.yellow,
+            padding: '8px 18px',
+            borderRadius: 100,
+            border: '1px solid rgba(232,168,0,0.25)',
+            background: 'rgba(14,12,8,0.65)',
+            textDecoration: 'none',
+          }}
+        >
+          Termin buchen
+        </a>
+      </div>
+
+      <Reveal>
+        <div style={{ maxWidth: 880, margin: '60px auto 0', textAlign: 'center', position: 'relative' }}>
+          <span
+            style={{
+              display: 'inline-block',
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              color: B.yellow,
+              padding: '5px 14px',
+              borderRadius: 100,
+              border: '1px solid rgba(232,168,0,0.25)',
+              background: 'rgba(232,168,0,0.06)',
+              marginBottom: 28,
+            }}
+          >
+            Phase 0 — Kostenlos
+          </span>
+
+          <h1
+            style={{
+              fontSize: 'clamp(2.3rem,7vw,4.7rem)',
+              fontWeight: 900,
+              lineHeight: 1.04,
+              letterSpacing: '-0.03em',
+              color: B.cream,
+              marginBottom: 28,
+            }}
+          >
+            Schnelles Marketing ist möglich.
+            <br />
+            <span style={{ position: 'relative', display: 'inline-block' }}>
+              Ohne <Serif color={B.yellow}>Agentur-Bullshit.</Serif>
+              <svg
+                style={{ position: 'absolute', left: 0, bottom: -8, width: '100%', height: 14, overflow: 'visible' }}
+                viewBox="0 0 600 14"
+                preserveAspectRatio="none"
+              >
+                <HandLine d="M 8 9 Q 150 3, 300 7 T 592 6" stroke={B.yellow} strokeWidth={3} opacity={0.85} />
+                <HandLine d="M 16 12 Q 200 7, 400 11 T 588 10" stroke={B.yellow} strokeWidth={1.6} opacity={0.5} />
+              </svg>
+            </span>
+          </h1>
+
+          <p
+            style={{
+              fontSize: 'clamp(1rem,2vw,1.125rem)',
+              lineHeight: 1.7,
+              color: 'rgba(245,242,235,0.62)',
+              maxWidth: 620,
+              margin: '0 auto 40px',
+            }}
+          >
+            Die meisten lokalen Betriebe verlieren Kunden — nicht weil ihr Angebot schlecht ist,
+            sondern weil ihr Auftritt es nicht zeigt. Ich zeige dir, wo dein Potenzial liegt.
+            Kostenlos. Ohne Commitment.
+          </p>
+
+          <BtnPrimary label="Kostenlose Analyse anfragen" href="#next" />
+
+          <div
+            style={{
+              marginTop: 36,
+              display: 'flex',
+              justifyContent: 'center',
+              gap: 28,
+              fontSize: 12,
+              color: 'rgba(245,242,235,0.40)',
+              flexWrap: 'wrap',
+            }}
+          >
+            <span>✓ Antwort in 24h</span>
+            <span>✓ Keine Vorauskasse</span>
+            <span>✓ Kein Vertrag</span>
+          </div>
+        </div>
+      </Reveal>
+    </Frame>
+  );
+}
+
+function ProblemV2() {
+  const points = [
     {
-      n: '0', label: 'Phase 0',
-      sub: 'Analyse',
-      badge: 'Kostenlos',
-      desc: 'Ich schaue mir an, wo digitale Struktur fehlt — Website, interne Abläufe, Kommunikation und Außenauftritt. Du bekommst eine ehrliche Einschätzung, wo Potenzial liegt.',
-      highlight: true,
+      n: '01',
+      title: 'Kein Auftritt, der wirkt',
+      desc: 'Flyer, Website, Instagram — alles irgendwie vorhanden, aber nichts zieht in eine Richtung. Potenzielle Kunden kommen vorbei und gehen wieder.',
     },
     {
-      n: '1', label: 'Phase 1',
-      sub: 'Erste Umsetzung',
-      badge: 'Zahlung nur wenn es dir gefällt',
-      desc: 'Ich setze den ersten konkreten Schritt um. Du siehst das fertige Ergebnis — und entscheidest dann ob du zahlst.',
-      highlight: false,
+      n: '02',
+      title: 'Marketing kostet Zeit, die du nicht hast',
+      desc: 'Du weißt, dass etwas fehlt. Aber zwischen Tagesgeschäft und Feierabend bleibt nichts übrig, um es anzugehen.',
     },
     {
-      n: '2+', label: 'Phase 2+',
-      sub: 'Weiteres nach Bedarf',
-      badge: 'Immer erst nach Fertigstellung',
-      desc: 'Jede weitere Phase baut auf der vorherigen auf. Kein Vertrag, kein Paket — wir arbeiten so lange wie es sinnvoll ist.',
-      highlight: false,
+      n: '03',
+      title: 'Agenturen lösen das Problem nicht',
+      desc: 'Lange Laufzeiten, Vorauskasse, keine Garantie auf Ergebnis. Das Risiko liegt immer bei dir.',
     },
   ];
+
   return (
-    <div ref={ref} style={{ width: '100%', maxWidth: 640, margin: '52px auto 0' }}>
-      <div style={{ position: 'relative' }}>
-        <div style={{
-          position: 'absolute',
-          left: 29, top: 58, bottom: 58,
-          width: 2,
-          background: `linear-gradient(to bottom, ${B.yellow} 0%, rgba(232,168,0,0.18) 60%, rgba(245,242,235,0.03) 100%)`,
-          opacity: shown ? 1 : 0,
-          transition: 'opacity 1.1s cubic-bezier(0.4,0,0.2,1) .3s',
-          borderRadius: 2,
-        }} />
-        {steps.map((s, i) => (
-          <div key={i} style={{
-            display: 'flex', gap: 20, alignItems: 'flex-start',
-            marginBottom: i < steps.length - 1 ? 16 : 0,
-            opacity: shown ? 1 : 0,
-            transform: shown ? 'none' : 'translateY(18px)',
-            transition: `opacity .7s cubic-bezier(0.4,0,0.2,1) ${i * 130}ms, transform .7s cubic-bezier(0.4,0,0.2,1) ${i * 130}ms`,
-          }}>
-            <div style={{ flexShrink: 0, zIndex: 1 }}>
-              <div style={{
-                width: 58, height: 58, borderRadius: '50%',
-                background: s.highlight ? B.yellow : '#0e0e18',
-                border: s.highlight ? 'none' : '1.5px solid rgba(245,242,235,0.08)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontWeight: 900, fontSize: s.n === '2+' ? 13 : 19,
-                color: s.highlight ? B.black : 'rgba(245,242,235,0.32)',
-                fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
-                boxShadow: s.highlight
-                  ? `0 0 0 7px rgba(232,168,0,0.12), 0 0 0 16px rgba(232,168,0,0.05), 0 8px 28px rgba(232,168,0,0.28)`
-                  : 'none',
-                position: 'relative',
-              }}>
-                {s.n}
-              </div>
-            </div>
-            <div style={{
-              flex: 1, minWidth: 0,
-              padding: '20px 24px 24px',
-              borderRadius: 20, marginBottom: 4,
-              border: s.highlight
-                ? '1.5px solid rgba(232,168,0,0.28)'
-                : '1px solid rgba(245,242,235,0.06)',
-              background: s.highlight
-                ? 'linear-gradient(145deg, rgba(232,168,0,0.09) 0%, rgba(232,168,0,0.025) 100%)'
-                : 'rgba(245,242,235,0.015)',
-              boxShadow: s.highlight
-                ? '0 4px 48px rgba(232,168,0,0.07), inset 0 1px 0 rgba(232,168,0,0.16)'
-                : '0 1px 12px rgba(0,0,0,0.18)',
-              position: 'relative', overflow: 'hidden',
-            }}>
-              {s.highlight && (
-                <div style={{
-                  position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-                  background: `linear-gradient(to right, ${B.yellow} 0%, rgba(232,168,0,0.20) 100%)`,
-                }} />
-              )}
-              <div style={{
-                display: 'flex', alignItems: 'flex-start',
-                justifyContent: 'space-between', gap: 10,
-                flexWrap: 'wrap', marginBottom: 14,
-              }}>
-                <div>
-                  <div style={{
-                    fontSize: 10, fontWeight: 700, letterSpacing: '0.11em',
-                    textTransform: 'uppercase',
-                    color: s.highlight ? B.yellow : 'rgba(245,242,235,0.20)',
-                    marginBottom: 5,
-                  }}>
-                    {s.label}
-                  </div>
-                  <div style={{
-                    fontSize: 17, fontWeight: 800,
-                    color: s.highlight ? B.cream : 'rgba(245,242,235,0.68)',
-                    letterSpacing: '-0.015em', lineHeight: 1.2,
-                  }}>
-                    {s.sub}
-                  </div>
-                </div>
-                <span style={{
-                  flexShrink: 0, marginTop: 2,
-                  display: 'inline-flex', alignItems: 'center', gap: 5,
-                  padding: '5px 12px', borderRadius: 999,
-                  fontSize: 10.5, fontWeight: 700, letterSpacing: '0.025em',
-                  background: s.highlight ? B.yellow : 'rgba(245,242,235,0.04)',
-                  border: s.highlight ? 'none' : '1px solid rgba(245,242,235,0.08)',
-                  color: s.highlight ? B.black : 'rgba(245,242,235,0.28)',
-                  whiteSpace: 'nowrap',
-                }}>
-                  {s.highlight && (
-                    <svg width="8" height="8" viewBox="0 0 10 10" fill={B.black}>
-                      <polygon points="5,0 6.2,3.8 10,3.8 6.9,6.2 8.1,10 5,7.6 1.9,10 3.1,6.2 0,3.8 3.8,3.8" />
-                    </svg>
-                  )}
-                  {s.badge}
-                </span>
-              </div>
-              <div style={{
-                height: 1, marginBottom: 14,
-                background: s.highlight
-                  ? 'rgba(232,168,0,0.14)'
-                  : 'rgba(245,242,235,0.045)',
-              }} />
-              <p style={{
-                fontSize: 13.5, lineHeight: 1.75, margin: 0,
-                color: s.highlight
-                  ? 'rgba(245,242,235,0.55)'
-                  : 'rgba(245,242,235,0.38)',
-              }}>
-                {s.desc}
-              </p>
-              {s.highlight && (
-                <a
-                  href="/#request"
-                  style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 8,
-                    marginTop: 20, padding: '11px 22px', borderRadius: 100,
-                    background: B.yellow, color: B.black, textDecoration: 'none',
-                    fontWeight: 800, fontSize: 13,
-                    fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
-                    transition: 'opacity .18s',
-                  }}
-                  onMouseEnter={e => e.currentTarget.style.opacity = '0.88'}
-                  onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-                >
-                  Jetzt kostenlos anfragen <ArrowRight size={14} />
-                </a>
-              )}
-            </div>
-          </div>
-        ))}
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 20, paddingTop: 8,
-          opacity: shown ? 1 : 0,
-          transition: 'opacity .7s cubic-bezier(0.4,0,0.2,1) 500ms',
-        }}>
-          <div style={{ width: 58, display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
-            <div style={{
-              width: 22, height: 22, borderRadius: '50%',
-              border: `2px solid ${B.yellow}`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              opacity: 0.75,
-            }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: B.yellow }} />
-            </div>
-          </div>
-          <span style={{
-            fontSize: 12, fontWeight: 700, letterSpacing: '0.07em',
-            textTransform: 'uppercase', color: B.yellow, opacity: 0.75,
-          }}>
-            Deine digitale Struktur steht.
-          </span>
+    <Frame id="problem" bg={B.cream} padding="96px 24px">
+      <Reveal>
+        <div style={{ maxWidth: 760, margin: '0 auto', textAlign: 'center', marginBottom: 56 }}>
+          <Eyebrow>Das eigentliche Problem</Eyebrow>
+
+          <h2
+            style={{
+              marginTop: 18,
+              fontSize: 'clamp(1.8rem,5vw,3.25rem)',
+              fontWeight: 900,
+              lineHeight: 1.08,
+              letterSpacing: '-0.025em',
+              color: B.ink,
+            }}
+          >
+            Viele Betriebe sind gut.
+            <br />
+            <Serif color={B.ocker}>Aber nach außen wirkt es nicht so.</Serif>
+          </h2>
+
+          <p
+            style={{
+              marginTop: 18,
+              fontSize: 16,
+              color: 'rgba(26,23,18,0.55)',
+              lineHeight: 1.7,
+              maxWidth: 540,
+              marginInline: 'auto',
+            }}
+          >
+            Ein guter Laden, ein gutes Produkt — aber Visitenkarte, Flyer, Website und Instagram erzählen
+            drei verschiedene Geschichten. Das kostet Vertrauen und Aufträge, die nie ankommen.
+          </p>
         </div>
+      </Reveal>
+
+      <div
+        style={{
+          maxWidth: 920,
+          margin: '0 auto',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit,minmax(min(260px,100%),1fr))',
+          gap: 24,
+        }}
+      >
+        {points.map((p, i) => (
+          <Reveal key={p.n} delay={i * 90}>
+            <div
+              style={{
+                background: '#fff',
+                borderRadius: 18,
+                padding: '32px 28px',
+                border: '1px solid rgba(26,23,18,0.06)',
+                boxShadow: '0 4px 24px rgba(26,23,18,0.04)',
+                position: 'relative',
+                textAlign: 'left',
+                minHeight: '100%',
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: FONTS.serif,
+                  fontStyle: 'italic',
+                  fontSize: 56,
+                  lineHeight: 0.9,
+                  color: B.yellow,
+                  marginBottom: 16,
+                  letterSpacing: '-0.03em',
+                }}
+              >
+                {p.n}
+              </div>
+
+              <div
+                style={{
+                  fontSize: 19,
+                  fontWeight: 800,
+                  color: B.ink,
+                  marginBottom: 10,
+                  letterSpacing: '-0.01em',
+                  lineHeight: 1.25,
+                }}
+              >
+                {p.title}
+              </div>
+
+              <p style={{ fontSize: 14, color: 'rgba(26,23,18,0.55)', lineHeight: 1.7, margin: 0 }}>
+                {p.desc}
+              </p>
+            </div>
+          </Reveal>
+        ))}
       </div>
-    </div>
+
+      <Reveal delay={220}>
+        <div
+          style={{
+            maxWidth: 580,
+            margin: '56px auto 0',
+            textAlign: 'center',
+            position: 'relative',
+            padding: '32px 28px',
+            background: '#FBF8F1',
+            border: '1px solid rgba(26,23,18,0.07)',
+            borderRadius: 18,
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              top: -16,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              padding: '4px 14px',
+              borderRadius: 100,
+              background: B.ink,
+              color: B.cream,
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+            }}
+          >
+            Echte Kundenstimme
+          </div>
+
+          <p
+            style={{
+              fontFamily: FONTS.serif,
+              fontStyle: 'italic',
+              fontSize: 22,
+              lineHeight: 1.4,
+              color: B.ink,
+              margin: 0,
+            }}
+          >
+            „Ich kann Leon uneingeschränkt weiterempfehlen. Die Zusammenarbeit ist immer kooperativ, effektiv und zielführend.“
+          </p>
+
+          <div style={{ marginTop: 16, fontSize: 13, fontWeight: 700, color: B.ocker }}>
+            — Dominic Hildebrandt
+          </div>
+        </div>
+      </Reveal>
+    </Frame>
   );
 }
 
-/* ─── PROOF CARD 21K ─── */
-function ProofCard() {
-  const ref = useRef(null);
-  const shown = useReveal(ref);
-  const { v, start } = useCountUp({ target: 21000, durationMs: 1400 });
-  useEffect(() => { if (shown) start(); }, [shown, start]);
-  const fmt = n => n >= 1000
-    ? `${Math.floor(n / 1000)}.${String(n % 1000).padStart(3, '0')}`
-    : String(n);
-  return (
-    <div ref={ref} style={{
-      borderRadius: 22, overflow: 'hidden',
-      border: '1px solid rgba(232,168,0,0.25)',
-      background: '#E0DDD4', padding: 32,
-      textAlign: 'left', position: 'relative',
-    }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: B.yellow }} />
-      <div style={{ marginBottom: 14 }}><Tag light>Echtes Ergebnis</Tag></div>
-      <div style={{
-        fontSize: 'clamp(1.8rem,6vw,3.5rem)', fontWeight: 900,
-        color: B.ocker, lineHeight: 1, letterSpacing: '-0.03em',
-      }}>
-        {fmt(v)} €
-      </div>
-      <div style={{ marginTop: 10, fontSize: 15, fontWeight: 700, color: B.black }}>
-        In 2 Monaten — <SerifAccent col={B.ocker}>durch eine Fundraising-Kampagne.</SerifAccent>
-      </div>
-      <p style={{ marginTop: 10, fontSize: 13, color: 'rgba(14,12,8,0.58)', lineHeight: 1.68, maxWidth: 360 }}>
-        Kein Werbebudget. Nur Konzept, Branding, Landing Page und eine klare Botschaft.
-      </p>
-      <a href="https://kfa-fundraising.vercel.app/"
-      target="_blank"
-      rel="noopener noreferrer" style={{
-        display: 'inline-flex', alignItems: 'center', gap: 6,
-        marginTop: 20, fontSize: 13, fontWeight: 700,
-        color: B.ocker, textDecoration: 'none',
-      }}>
-        Vollständiges Projekt ansehen <ArrowRight size={14} />
-      </a>
-    </div>
-  );
-}
-
-/* ─── STAT ROW ─── */
-function StatBox({ target, suffix, label, delay = 0 }) {
-  const ref = useRef(null);
-  const shown = useReveal(ref);
-  const { v, start } = useCountUp({ target, durationMs: 1100 });
-  useEffect(() => { if (shown) start(); }, [shown, start]);
-  const fmt = n => n >= 1000
-    ? `${Math.floor(n / 1000)}.${String(n % 1000).padStart(3, '0')}`
-    : String(n);
-  return (
-    <div ref={ref} style={{
-      opacity: shown ? 1 : 0, transform: shown ? 'none' : 'translateX(-10px)',
-      transition: `opacity .55s cubic-bezier(0.4,0,0.2,1) ${delay}ms, transform .55s cubic-bezier(0.4,0,0.2,1) ${delay}ms`,
-      display: 'flex', alignItems: 'baseline', gap: 14, textAlign: 'left',
-      paddingLeft: 16, borderLeft: `2px solid ${B.ocker}`,
-    }}>
-      <div style={{
-        fontSize: 'clamp(2rem,5vw,3rem)', fontWeight: 900,
-        color: B.ocker, lineHeight: 1, letterSpacing: '-0.04em',
-      }}>
-        {fmt(v)}{suffix}
-      </div>
-      <div style={{ fontSize: 13, color: 'rgba(14,12,8,0.52)', lineHeight: 1.4, maxWidth: 140 }}>{label}</div>
-    </div>
-  );
-}
-
-/* ─── LEISTUNG CARD ─── */
-function LeistungCard({ n, icon, kicker, title, desc, accent, img }) {
+function LeistungCard({ n, icon, kicker, title, desc, img }) {
   const [h, setH] = useState(false);
+
   return (
     <div
       onMouseEnter={() => setH(true)}
@@ -900,945 +914,1374 @@ function LeistungCard({ n, icon, kicker, title, desc, accent, img }) {
       style={{
         border: `1px solid ${h ? 'rgba(232,168,0,0.22)' : 'rgba(245,242,235,0.06)'}`,
         background: h ? 'rgba(232,168,0,0.04)' : B.dark,
-        textAlign: 'left', position: 'relative', overflow: 'hidden',
+        textAlign: 'left',
+        position: 'relative',
+        overflow: 'hidden',
         transition: 'border-color .22s cubic-bezier(0.4,0,0.2,1), background .22s cubic-bezier(0.4,0,0.2,1)',
-        cursor: 'default',
-        display: 'flex', flexDirection: 'column',
-      }}>
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-        background: B.yellow,
-        opacity: h ? 1 : 0,
-        transition: 'opacity .22s cubic-bezier(0.4,0,0.2,1)',
-      }} />
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 2,
+          background: B.yellow,
+          opacity: h ? 1 : 0,
+          transition: 'opacity .22s cubic-bezier(0.4,0,0.2,1)',
+        }}
+      />
+
       {img && (
-        <div style={{
-          width: '100%', height: 200, overflow: 'hidden',
-          background: 'transparent',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          flexShrink: 0,
-        }}>
+        <div style={{ width: '100%', height: 200, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <img
             src={img}
             alt={kicker}
             style={{
-              width: '100%', height: '100%',
+              width: '100%',
+              height: '100%',
               objectFit: 'contain',
               transform: h ? 'scale(1.04)' : 'scale(1)',
               transition: 'transform .45s cubic-bezier(0.4,0,0.2,1)',
               filter: 'drop-shadow(0 8px 24px rgba(232,168,0,0.08))',
             }}
-            onError={e => { e.currentTarget.parentElement.style.display = 'none'; }}
+            onError={e => {
+              e.currentTarget.parentElement.style.display = 'none';
+            }}
           />
         </div>
       )}
+
       <div style={{ padding: '28px 32px', flex: 1, position: 'relative' }}>
-      <div style={{
-        position: 'absolute', top: 16, right: 24,
-        fontSize: 72, fontWeight: 900, lineHeight: 1,
-        color: h ? 'rgba(232,168,0,0.09)' : 'rgba(245,242,235,0.04)',
-        letterSpacing: '-0.04em', userSelect: 'none',
-        transition: 'color .22s cubic-bezier(0.4,0,0.2,1)',
-        fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
-      }}>
-        {n}
-      </div>
-      <div style={{
-        width: 44, height: 44, borderRadius: 12, marginBottom: 20,
-        background: h ? 'rgba(232,168,0,0.13)' : 'rgba(245,242,235,0.05)',
-        border: `1px solid ${h ? 'rgba(232,168,0,0.22)' : 'rgba(245,242,235,0.09)'}`,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        color: h ? B.yellow : 'rgba(245,242,235,0.45)',
-        transition: 'all .22s cubic-bezier(0.4,0,0.2,1)',
-      }}>
-        {icon}
-      </div>
-      <div style={{
-        fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
-        letterSpacing: '0.09em', color: B.yellow,
-        marginBottom: 10, opacity: h ? 1 : 0.65,
-        transition: 'opacity .22s cubic-bezier(0.4,0,0.2,1)',
-      }}>
-        {kicker}
-      </div>
-      <div style={{
-        fontSize: 18, fontWeight: 800, color: B.cream,
-        lineHeight: 1.25, letterSpacing: '-0.01em', marginBottom: 14,
-      }}>
-        {title}
-      </div>
-      <p style={{
-        fontSize: 13, color: 'rgba(245,242,235,0.48)',
-        lineHeight: 1.72, maxWidth: 340,
-      }}>
-        {desc}
-      </p>
-      <div style={{
-        marginTop: 24, display: 'flex', alignItems: 'center', gap: 6,
-        fontSize: 12, fontWeight: 700, color: B.yellow,
-        opacity: h ? 1 : 0, transition: 'opacity .22s cubic-bezier(0.4,0,0.2,1)',
-      }}>
-        Anfrage schicken
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <path d="M2.5 6h7M6.5 3l3 3-3 3" stroke={B.yellow} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─── TESTIMONIAL CARD ─── */
-const GoogleIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-  </svg>
-);
-
-const Stars = () => (
-  <div style={{ display: 'flex', gap: 2 }}>
-    {[1,2,3,4,5].map(i => (
-      <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill="#FBBC05">
-        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-      </svg>
-    ))}
-  </div>
-);
-
-function TestimonialCard({ quote, name, company, delay = 0 }) {
-  const ref = useRef(null);
-  const shown = useReveal(ref);
-  return (
-    <div ref={ref} style={{
-      opacity: shown ? 1 : 0,
-      transform: shown ? 'none' : 'translateY(16px)',
-      transition: `opacity .6s cubic-bezier(0.4,0,0.2,1) ${delay}ms, transform .6s cubic-bezier(0.4,0,0.2,1) ${delay}ms`,
-      padding: '26px 28px 24px',
-      borderRadius: 20,
-      background: '#fff',
-      boxShadow: '0 2px 16px rgba(14,12,8,0.08), 0 0 0 1px rgba(14,12,8,0.05)',
-      textAlign: 'left', position: 'relative',
-    }}>
-      <div style={{
-        position: 'absolute', top: 22, right: 24,
-        display: 'flex', alignItems: 'center', gap: 6,
-      }}>
-        <GoogleIcon />
-        <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(14,12,8,0.35)', letterSpacing: '0.04em' }}>
-          Google Rezension
-        </span>
-      </div>
-      <Stars />
-      <p style={{ fontSize: 14, lineHeight: 1.75, color: 'rgba(14,12,8,0.72)', margin: '14px 0 0' }}>
-        {quote}
-      </p>
-      <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
-        <div style={{
-          width: 32, height: 32, borderRadius: '50%',
-          background: `linear-gradient(135deg, ${B.yellow} 0%, ${B.ocker} 100%)`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 13, fontWeight: 900, color: B.black, flexShrink: 0,
-        }}>
-          {name[0]}
-        </div>
-        <div>
-          <div style={{ fontSize: 13, fontWeight: 800, color: B.black }}>{name}</div>
-          {company && <div style={{ fontSize: 12, color: 'rgba(14,12,8,0.42)' }}>{company}</div>}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─── REFERENZ CARD ─── */
-const PROJEKTE = [
-  {
-    id: 'kfa',
-    img: '/projekte/kfa.png',
-    kategorie: 'Fundraising-Kampagne',
-    name: 'KFA Aschaffenburg',
-    desc: '21.000 € in 2 Monaten. Konzept, Branding und Landing Page — komplett ohne Werbebudget.',
-    url: 'https://kfa-fundraising.vercel.app/',
-  },
-  {
-    id: 'angelo',
-    img: '/projekte/angelo.png',
-    kategorie: 'Booking & Branding',
-    name: 'Angelo DJ',
-    desc: 'Moderne Booking-Seite für einen DJ. Keine Formulare, direkte Anfrage, klares Auftreten.',
-    url: 'https://angelo-site.vercel.app/',
-  },
-  {
-    id: 'star-doener',
-    img: '/projekte/star-doener.png',
-    kategorie: 'Restaurant & Gastronomie',
-    name: 'Star Döner',
-    desc: 'Moderner Webauftritt für ein Döner-Restaurant. Speisekarte, Standort und klare Conversion.',
-    url: 'https://star-doner-website.vercel.app/',
-  },
-  {
-    id: 'paveo',
-    img: '/projekte/paveo.png',
-    kategorie: 'Agentur-Website',
-    name: 'Paveo',
-    desc: 'Agentur-Landingpage mit klarer Positionierung, Leistungsübersicht und Kontaktführung.',
-    url: 'https://leonseitz.com',
-  },
-];
-
-function ReferenzCard({ img, kategorie, name, desc, url }) {
-  const [h, setH] = useState(false);
-  return (
-    <a
-      href={url} target="_blank" rel="noopener noreferrer"
-      onMouseEnter={() => setH(true)}
-      onMouseLeave={() => setH(false)}
-      style={{ textDecoration: 'none', display: 'block' }}
-    >
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: 0,
-        borderRadius: 20,
-        overflow: 'hidden',
-        background: '#F5F2EB',
-        transition: 'transform .25s cubic-bezier(0.4,0,0.2,1), box-shadow .25s',
-        transform: h ? 'translateY(-4px)' : 'none',
-        boxShadow: h ? '0 16px 48px rgba(14,12,8,0.12)' : '0 4px 20px rgba(14,12,8,0.06)',
-      }}>
-        <div style={{
-          position: 'relative',
-          minHeight: 300,
-          overflow: 'hidden',
-          background: 'transparent',
-        }}>
-          <img
-            src={img}
-            alt={name}
-            style={{
-              position: 'absolute',
-              inset: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center top',
-              transform: h ? 'scale(1.04)' : 'scale(1)',
-              transition: 'transform .5s cubic-bezier(0.4,0,0.2,1)',
-            }}
-            onError={e => { e.currentTarget.style.display = 'none'; }}
-          />
-        </div>
-        <div style={{
-          padding: '40px 36px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          gap: 0,
-        }}>
-          <div style={{
-            fontSize: 11, fontWeight: 700, letterSpacing: '0.1em',
-            textTransform: 'uppercase', color: B.ocker, marginBottom: 10,
-          }}>
-            {kategorie}
-          </div>
-          <div style={{
-            fontSize: 'clamp(1.2rem,2vw,1.6rem)', fontWeight: 900,
-            color: B.black, letterSpacing: '-0.02em', lineHeight: 1.15,
-            marginBottom: 14,
-          }}>
-            {name}
-          </div>
-          <p style={{
-            fontSize: 15, color: 'rgba(14,12,8,0.62)',
-            lineHeight: 1.75, margin: 0, marginBottom: 24,
-          }}>
-            {desc}
-          </p>
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 6,
-            fontSize: 13, fontWeight: 700,
-            color: h ? B.ocker : 'rgba(14,12,8,0.38)',
-            transition: 'color .2s',
-          }}>
-            Projekt ansehen
-            <ArrowRight size={14} />
-          </div>
-        </div>
-      </div>
-    </a>
-  );
-}
-
-/* ─── CALENDLY ─── */
-function CalendlyWidget() {
-  useEffect(() => {
-    const existing = document.querySelector('script[src*="calendly"]');
-    if (!existing) {
-      const script = document.createElement('script');
-      script.src = 'https://assets.calendly.com/assets/external/widget.js';
-      script.async = true;
-      document.body.appendChild(script);
-    }
-  }, []);
-  return (
-    <Reveal delay={200}>
-      <div style={{
-        marginTop: 48, borderRadius: 22,
-        border: '1px solid rgba(14,12,8,0.09)',
-        background: '#E0DDD4', overflow: 'hidden',
-        maxWidth: 720, margin: '48px auto 0',
-      }}>
         <div
-          className="calendly-inline-widget"
-          data-url="https://calendly.com/hello-leonseitz/30min?hide_event_type_details=1&hide_gdpr_banner=1&primary_color=e8a800"
-          style={{ height: 700, width: '100%', minWidth: '1px' }}
-        />
+          style={{
+            position: 'absolute',
+            top: 16,
+            right: 24,
+            fontSize: 72,
+            fontWeight: 900,
+            lineHeight: 1,
+            color: h ? 'rgba(232,168,0,0.09)' : 'rgba(245,242,235,0.04)',
+            letterSpacing: '-0.04em',
+            userSelect: 'none',
+          }}
+        >
+          {n}
+        </div>
+
+        <div
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: 12,
+            marginBottom: 20,
+            background: h ? 'rgba(232,168,0,0.13)' : 'rgba(245,242,235,0.05)',
+            border: `1px solid ${h ? 'rgba(232,168,0,0.22)' : 'rgba(245,242,235,0.09)'}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: h ? B.yellow : 'rgba(245,242,235,0.45)',
+          }}
+        >
+          {icon}
+        </div>
+
+        <div
+          style={{
+            fontSize: 10,
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            letterSpacing: '0.09em',
+            color: B.yellow,
+            marginBottom: 10,
+            opacity: h ? 1 : 0.65,
+          }}
+        >
+          {kicker}
+        </div>
+
+        <div
+          style={{
+            fontSize: 18,
+            fontWeight: 800,
+            color: B.cream,
+            lineHeight: 1.25,
+            letterSpacing: '-0.01em',
+            marginBottom: 14,
+          }}
+        >
+          {title}
+        </div>
+
+        <p style={{ fontSize: 13, color: 'rgba(245,242,235,0.48)', lineHeight: 1.72, maxWidth: 340 }}>
+          {desc}
+        </p>
       </div>
-    </Reveal>
+    </div>
   );
 }
 
-/* ──────────────────────────────────────────
-   PAGE
-────────────────────────────────────────── */
-export default function Home() {
-  const heroRef = useRef(null);
-  const heroShown = useReveal(heroRef, 0.01);
+function LeistungenV2() {
+  const services = [
+    {
+      n: '01',
+      icon: <Icon.Web />,
+      kicker: 'Digitaler Auftritt',
+      title: 'Website, Social, Online-Präsenz.',
+      desc: 'Wir bringen Struktur in deinen Auftritt: klare Botschaft, klare Führung, klare nächste Handlung. Damit Besucher sofort verstehen, warum sie bleiben sollen.',
+      img: '/leistungen/website.png',
+    },
+    {
+      n: '02',
+      icon: <Icon.Brandbook />,
+      kicker: 'Branding & Kommunikation',
+      title: 'Ein Auftritt, der zusammengehört.',
+      desc: 'Flyer, Website, Social und Kommunikation sollen nicht nach Zufall aussehen. Wir machen deinen Betrieb wiedererkennbar und professionell.',
+      img: '/leistungen/print.png',
+    },
+    {
+      n: '03',
+      icon: <Icon.Motion />,
+      kicker: 'Content & Motion',
+      title: 'Sichtbarkeit, ohne jedes Mal neu anzufangen.',
+      desc: 'Kurzvideos, Reels, Motion Graphics und Vorlagen. Damit du regelmäßig sichtbar bist, ohne jedes Format jedes Mal von null zu bauen.',
+      img: '/leistungen/motion.png',
+    },
+    {
+      n: '04',
+      icon: <Icon.Video />,
+      kicker: 'Prozesse',
+      title: 'Abläufe, die Zeit sparen.',
+      desc: 'Anfragen, Bestellungen, Kommunikation und interne Abläufe: Wir schauen, was sich digitalisieren, vereinfachen oder automatisieren lässt.',
+      img: '/leistungen/prozesse.png',
+    },
+  ];
+
   return (
-    <div style={{ fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif", overflowX: 'hidden', position: 'relative', maxWidth: '100vw' }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=DM+Serif+Display:ital@1&display=swap');
-        *{box-sizing:border-box;margin:0;padding:0}
-        html,body{scroll-behavior:smooth;overflow-x:hidden;max-width:100%;width:100%}
-        *{min-width:0}
-        img,svg{max-width:100%}
-      `}</style>
-      <ScrollBar />
-      <div style={{
-        position: 'fixed', top: 3, left: 0, right: 0, zIndex: 50,
-        padding: '14px 20px', display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', pointerEvents: 'none',
-      }}>
-        <span style={{
-          fontSize: 15, fontWeight: 900, color: B.cream,
-          letterSpacing: '-0.01em', mixBlendMode: 'difference', pointerEvents: 'auto',
-        }}>
-          Leon Seitz
-        </span>
-        <a href="/#request" style={{
-          pointerEvents: 'auto', fontSize: 13, fontWeight: 700,
-          color: B.yellow, textDecoration: 'none',
-          padding: '8px 18px', borderRadius: 100,
-          border: '1px solid rgba(232,168,0,0.25)',
-          background: 'rgba(14,12,8,0.65)', backdropFilter: 'blur(8px)',
-        }}>
-          Termin buchen
-        </a>
-      </div>
-
-      <Sec id="s1" dark pad="110px 20px 80px">
+    <Frame id="leistungen" bg={B.ink} padding="96px 24px" style={{ color: B.cream }}>
+      <div style={{ maxWidth: 920, margin: '0 auto', textAlign: 'center' }}>
         <Reveal>
-          <div ref={heroRef} style={{
-            fontSize: 'clamp(2rem,7vw,4.8rem)', fontWeight: 900,
-            lineHeight: 1.06, letterSpacing: '-0.025em',
-            color: B.cream, maxWidth: 860, margin: '0 auto', wordBreak: 'break-word',
-          }}>
-            Ich baue digitale Strukturen für Unternehmen,
-            die intern wachsen, aber noch{' '}
-            <Underline active={heroShown}>analog</Underline>
-            {' '}arbeiten.
-          </div>
-        </Reveal>
-        <Reveal delay={110}>
-          <p style={{
-            marginTop: 28, fontSize: 'clamp(1rem,2vw,1.15rem)',
-            color: 'rgba(245,242,235,0.55)', lineHeight: 1.75,
-            maxWidth: 680, margin: '28px auto 0',
-          }}>
-            Ich analysiere, wo digitale Struktur fehlt — Website, interne Abläufe,
-            Kommunikation, Außenauftritt. Und zeige konkret, wo Potenzial liegt.
-            Kostenlos. Ohne Commitment.
-          </p>
-        </Reveal>
-        <Reveal delay={230}>
-          <div style={{ marginTop: 44, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <BtnPrimary label="Kostenlose Analyse anfragen" href="/#request" lg />
-          </div>
-        </Reveal>
-        <Reveal delay={500}>
-          <div style={{ marginTop: 80, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-            <div style={{ width: 1, height: 36, background: 'linear-gradient(to bottom,rgba(232,168,0,0),rgba(232,168,0,0.32))' }} />
-            <ArrowDown size={16} style={{ color: 'rgba(232,168,0,0.42)' }} />
-          </div>
-        </Reveal>
-      </Sec>
+          <Eyebrow color={B.yellow}>Lösungen im Überblick</Eyebrow>
 
-      <Div from={true} />
-
-      <Sec id="s2" dark={false} pad="96px 24px">
-        <Reveal><Tag light>Das eigentliche Problem</Tag></Reveal>
-        <Reveal delay={80}>
-          <h2 style={{
-            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
-            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: B.black,
-          }}>
-            Viele Unternehmen wachsen schneller
-            <br />
-            <span style={{ color: B.ocker }}>als ihre digitalen Strukturen.</span>
+          <h2
+            style={{
+              marginTop: 18,
+              fontSize: 'clamp(1.8rem,5vw,3.25rem)',
+              fontWeight: 900,
+              lineHeight: 1.08,
+              letterSpacing: '-0.025em',
+              color: B.cream,
+            }}
+          >
+            So lösen wir das <Serif color={B.yellow}>gemeinsam.</Serif>
           </h2>
-        </Reveal>
-        <Reveal delay={160}>
-          <p style={{
-            marginTop: 20, fontSize: 15, color: 'rgba(14,12,8,0.55)',
-            lineHeight: 1.75, maxWidth: 560, margin: '20px auto 0',
-          }}>
-            Ein gutes Unternehmen, ein gutes Produkt — aber Website, Kommunikation,
-            interne Abläufe und Außenauftritt wachsen nicht sauber mit.
-            Das kostet Klarheit, Vertrauen und Zeit.
+
+          <p style={{ fontSize: 15, color: 'rgba(245,242,235,0.52)', maxWidth: 520, margin: '16px auto 56px', lineHeight: 1.72 }}>
+            Erst verstehen, wo der Hebel liegt. Dann gezielt umsetzen — nicht blind Pakete verkaufen.
           </p>
         </Reveal>
-        <Reveal delay={220}>
-          <div style={{ marginTop: 52, maxWidth: 620, margin: '52px auto 0', textAlign: 'left' }}>
-            {[
-              {
-                n: '01',
-                title: 'Kein klarer Auftrag',
-                desc: 'Der CTA fehlt oder ist versteckt. Der Besucher weiß nicht, was als nächstes passieren soll.',
-              },
-              {
-                n: '02',
-                title: 'Kein konsistentes Branding',
-                desc: 'Website, Social und Print wirken wie von drei verschiedenen Personen. Das kostet Vertrauen.',
-              },
-              {
-                n: '03',
-                title: 'Botschaft zu allgemein',
-                desc: 'In fünf Sekunden wird nicht klar, warum der Besucher bleiben sollte.',
-              },
-            ].map((item, i, arr) => (
-              <div key={i} style={{
-                display: 'grid', gridTemplateColumns: '36px 1fr', gap: '0 18px',
-                paddingTop: i > 0 ? 28 : 0,
-                paddingBottom: i < arr.length - 1 ? 28 : 0,
-                borderBottom: i < arr.length - 1 ? '1px solid rgba(14,12,8,0.07)' : 'none',
-              }}>
-                <div style={{
-                  fontSize: 11, fontWeight: 700, color: B.ocker,
-                  letterSpacing: '0.1em', paddingTop: 3,
-                }}>
-                  {item.n}
-                </div>
-                <div>
-                  <div style={{ fontSize: 17, fontWeight: 800, color: B.black, marginBottom: 7, letterSpacing: '-0.01em' }}>
-                    {item.title}
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(320px,100%),1fr))', gap: 2 }}>
+          {services.map((s, i) => (
+            <Reveal key={s.n} delay={i * 70}>
+              <LeistungCard {...s} />
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={260}>
+          <div
+            style={{
+              marginTop: 16,
+              padding: '22px 26px',
+              border: '1px dashed rgba(232,168,0,0.22)',
+              borderRadius: 16,
+              background: 'rgba(232,168,0,0.03)',
+              textAlign: 'left',
+              position: 'relative',
+            }}
+          >
+            <span
+              style={{
+                position: 'absolute',
+                top: -11,
+                left: 26,
+                padding: '3px 12px',
+                borderRadius: 99,
+                background: B.ink,
+                border: '1px solid rgba(232,168,0,0.25)',
+                fontSize: 10,
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: B.yellow,
+              }}
+            >
+              In Arbeit
+            </span>
+
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase', color: B.yellow, marginBottom: 8, opacity: 0.7 }}>
+              05 — Automatisierte Workflows
+            </div>
+
+            <div style={{ fontSize: 16, fontWeight: 800, color: B.cream, marginBottom: 10 }}>
+              Prozesse, die von selbst laufen.
+            </div>
+
+            <p style={{ fontSize: 13, color: 'rgba(245,242,235,0.45)', lineHeight: 1.72, maxWidth: 580, margin: 0 }}>
+              CRM-Synchronisierung, automatisierte E-Mail-Sequenzen, Buchungssysteme und Benachrichtigungen. Wenn das für dich relevant ist, nehmen wir es direkt in Phase 0 mit auf.
+            </p>
+          </div>
+        </Reveal>
+      </div>
+    </Frame>
+  );
+}
+
+function PhaseZeroV2() {
+  const phases = [
+    {
+      n: '0',
+      label: 'Phase 0',
+      title: 'Analyse',
+      badge: 'Kostenlos',
+      desc: 'Ich schaue mir alles an. Website, Print, Social, Prozesse. Du bekommst eine ehrliche Einschätzung — schriftlich.',
+      highlight: true,
+    },
+    {
+      n: '1',
+      label: 'Phase 1',
+      title: 'Erste Umsetzung',
+      badge: 'Zahlung nur bei Zufriedenheit',
+      desc: 'Das erste konkrete Ergebnis. Du siehst es fertig — und entscheidest dann, ob du zahlst.',
+    },
+    {
+      n: '2+',
+      label: 'Phase 2+',
+      title: 'Weitere Schritte',
+      badge: 'Immer nach Fertigstellung',
+      desc: 'Kein Vertrag. Kein Paket. Wir arbeiten so lange, wie es sinnvoll ist.',
+    },
+  ];
+
+  return (
+    <Frame id="phase-zero" bg={B.ink} padding="96px 24px" style={{ color: B.cream }}>
+      <Reveal>
+        <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center', marginBottom: 64 }}>
+          <Eyebrow color={B.yellow}>Wie wir arbeiten</Eyebrow>
+
+          <h2
+            style={{
+              marginTop: 18,
+              fontSize: 'clamp(1.8rem,5vw,3.25rem)',
+              fontWeight: 900,
+              lineHeight: 1.08,
+              letterSpacing: '-0.025em',
+              color: B.cream,
+            }}
+          >
+            Du zahlst erst,
+            <br />
+            wenn es dir <Serif color={B.yellow}>gefällt.</Serif>
+          </h2>
+
+          <p
+            style={{
+              marginTop: 18,
+              fontSize: 16,
+              color: 'rgba(245,242,235,0.55)',
+              lineHeight: 1.7,
+              maxWidth: 460,
+              marginInline: 'auto',
+            }}
+          >
+            Das ist keine Floskel. Phase 0 ist kostenlos. Du siehst, was möglich ist — und entscheidest dann.
+          </p>
+        </div>
+      </Reveal>
+
+      <div style={{ maxWidth: 760, margin: '0 auto', position: 'relative' }}>
+        <svg
+          style={{ position: 'absolute', left: 36, top: 32, height: 'calc(100% - 80px)', width: 24, pointerEvents: 'none' }}
+          viewBox="0 0 24 600"
+          preserveAspectRatio="none"
+        >
+          <HandLine d="M 12 0 Q 4 150, 14 300 T 12 600" stroke={B.yellow} strokeWidth={2} dash="3 6" opacity={0.5} />
+        </svg>
+
+        {phases.map((p, i) => (
+          <Reveal key={p.n} delay={i * 100}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '76px 1fr',
+                gap: 24,
+                alignItems: 'flex-start',
+                marginBottom: i < phases.length - 1 ? 32 : 0,
+              }}
+            >
+              <div
+                style={{
+                  width: 72,
+                  height: 72,
+                  borderRadius: '50%',
+                  background: p.highlight ? B.yellow : 'transparent',
+                  border: p.highlight ? 'none' : '1.5px solid rgba(245,242,235,0.18)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: p.n === '2+' ? 18 : 24,
+                  fontWeight: 900,
+                  color: p.highlight ? B.ink : 'rgba(245,242,235,0.5)',
+                  boxShadow: p.highlight ? '0 0 0 8px rgba(232,168,0,0.10), 0 0 0 18px rgba(232,168,0,0.05)' : 'none',
+                  position: 'relative',
+                  zIndex: 1,
+                }}
+              >
+                {p.n}
+              </div>
+
+              <div
+                style={{
+                  padding: '24px 28px',
+                  borderRadius: 18,
+                  background: p.highlight ? 'linear-gradient(145deg, rgba(232,168,0,0.10), rgba(232,168,0,0.03))' : 'rgba(245,242,235,0.02)',
+                  border: p.highlight ? '1.5px solid rgba(232,168,0,0.28)' : '1px solid rgba(245,242,235,0.06)',
+                  position: 'relative',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap', marginBottom: 14 }}>
+                  <div>
+                    <div
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 700,
+                        letterSpacing: '0.11em',
+                        textTransform: 'uppercase',
+                        color: p.highlight ? B.yellow : 'rgba(245,242,235,0.30)',
+                        marginBottom: 6,
+                      }}
+                    >
+                      {p.label}
+                    </div>
+
+                    <div
+                      style={{
+                        fontSize: 22,
+                        fontWeight: 800,
+                        letterSpacing: '-0.01em',
+                        color: p.highlight ? B.cream : 'rgba(245,242,235,0.7)',
+                      }}
+                    >
+                      {p.title}
+                    </div>
                   </div>
-                  <p style={{ fontSize: 14, color: 'rgba(14,12,8,0.52)', lineHeight: 1.7, margin: 0 }}>
-                    {item.desc}
-                  </p>
+
+                  <span
+                    style={{
+                      padding: '5px 13px',
+                      borderRadius: 100,
+                      fontSize: 11,
+                      fontWeight: 700,
+                      background: p.highlight ? B.yellow : 'rgba(245,242,235,0.04)',
+                      color: p.highlight ? B.ink : 'rgba(245,242,235,0.45)',
+                      border: p.highlight ? 'none' : '1px solid rgba(245,242,235,0.08)',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {p.badge}
+                  </span>
                 </div>
-              </div>
-            ))}
-          </div>
-        </Reveal>
-        <Reveal delay={320}>
-          <div style={{ marginTop: 44, display: 'flex', justifyContent: 'center' }}>
-            <BtnPrimary label="Kostenlose Analyse anfragen" href="/#request" />
-          </div>
-        </Reveal>
-        <Reveal delay={400}>
-          <div style={{ marginTop: 64, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-            <a href="#s3" style={{
-              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-              textDecoration: 'none', color: 'rgba(14,12,8,0.25)',
-              fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase',
-            }}>
-              Wie wir arbeiten <ArrowDown size={16} style={{ color: B.ocker }} />
-            </a>
-          </div>
-        </Reveal>
-      </Sec>
 
-      <Div from={false} />
+                <p
+                  style={{
+                    fontSize: 14,
+                    lineHeight: 1.7,
+                    margin: 0,
+                    color: p.highlight ? 'rgba(245,242,235,0.62)' : 'rgba(245,242,235,0.42)',
+                  }}
+                >
+                  {p.desc}
+                </p>
 
-      <Sec id="s3" dark pad="96px 24px">
-        <Reveal><Tag>Wie wir arbeiten</Tag></Reveal>
-        <Reveal delay={80}>
-          <h2 style={{
-            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
-            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: B.cream,
-          }}>
-            Phase 0 ist kostenlos.
-            <br />
-            Du zahlst nur, wenn es dir <SerifAccent col={B.cream}>gefällt.</SerifAccent>
-          </h2>
-        </Reveal>
-        <Reveal delay={150}>
-          <p style={{
-            marginTop: 20, fontSize: 15, color: 'rgba(245,242,235,0.52)',
-            lineHeight: 1.75, maxWidth: 480, margin: '20px auto 0',
-          }}>
-            Kein Paket, kein Festpreis im Voraus. Wir arbeiten iterativ — Schritt für Schritt,
-            und du entscheidest nach jeder Runde ob es weitergeht.
-          </p>
-        </Reveal>
-        <RoadMap />
-        <Reveal delay={100}>
-          <div style={{ marginTop: 52, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', padding: '0 4px' }}>
-            <BtnPrimary label="Kostenlose Analyse anfragen" href="/#request" />
-            <BtnGhost label="Ablauf im Detail" href="/prozess" />
-          </div>
-        </Reveal>
-      </Sec>
-
-      <Sec id="vergleich" dark pad="0 24px 96px">
-        <Reveal><Tag>Der Unterschied</Tag></Reveal>
-        <Reveal delay={80}>
-          <h2 style={{
-            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
-            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: B.cream,
-          }}>
-            Klassische Agentur — oder einfach <SerifAccent col={B.yellow}>Leon.</SerifAccent>
-          </h2>
-        </Reveal>
-        <Reveal delay={160}>
-          <div style={{ marginTop: 48, maxWidth: 720, margin: '48px auto 0', overflowX: 'auto' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 2, marginBottom: 2 }}>
-              <div />
-              <div style={{
-                padding: '13px 16px', borderRadius: '12px 12px 0 0',
-                background: 'rgba(245,242,235,0.04)', border: '1px solid rgba(245,242,235,0.07)',
-                borderBottom: 'none', fontSize: 12.5, fontWeight: 800,
-                color: 'rgba(245,242,235,0.40)', textAlign: 'center',
-              }}>
-                Klassische Agentur
-              </div>
-              <div style={{
-                padding: '13px 16px', borderRadius: '12px 12px 0 0',
-                background: 'rgba(232,168,0,0.10)', border: `1px solid rgba(232,168,0,0.26)`,
-                borderBottom: 'none', fontSize: 12.5, fontWeight: 800,
-                color: B.yellow, textAlign: 'center',
-              }}>
-                Leon Seitz
+                {p.highlight && (
+                  <div style={{ position: 'absolute', top: -28, right: -8, zIndex: 2 }}>
+                    <StickyNote color={B.yellow} rotate={4} style={{ fontSize: 14, padding: '6px 10px' }}>
+                      Hier steigen wir
+                      <br />
+                      ein. Kein Risiko.
+                    </StickyNote>
+                  </div>
+                )}
               </div>
             </div>
-            {[
-              { label: 'Bezahlung',        them: 'Vorauskasse, Ergebnis offen',    us: 'Du zahlst erst wenn es dir gefällt' },
-              { label: 'Erste Ergebnisse', them: 'Wochen Wartezeit',               us: 'In 24–72 Stunden' },
-              { label: 'Kommunikation',    them: 'Ticket-System, Umwege',          us: 'Direkt mit mir — kein Umweg' },
-              { label: 'Risiko',           them: 'Geld weg, Ergebnis unsicher',    us: 'Gefällt es nicht? Kostet nichts.' },
-            ].map((row, i, arr) => {
-              const isLast = i === arr.length - 1;
+          </Reveal>
+        ))}
+      </div>
+    </Frame>
+  );
+}
+
+function WarumLeonV2() {
+  const rows = [
+    { label: 'Bezahlung', them: 'Vorauskasse — Ergebnis offen', us: 'Erst zahlen, wenn es dir gefällt' },
+    { label: 'Erste Ergebnisse', them: 'Wochen Wartezeit', us: 'In 24–72 Stunden' },
+    { label: 'Kommunikation', them: 'Account- & Projektmanager', us: 'Direkt mit mir' },
+    { label: 'Risiko', them: 'Geld weg, Ergebnis unsicher', us: 'Gefällt es nicht? Kostet nichts.' },
+    { label: 'Vertrag', them: '12 Monate Mindestlaufzeit', us: 'Kein Vertrag, kein Paket' },
+  ];
+
+  return (
+    <Frame id="warum-leon" bg={B.cream} padding="96px 24px">
+      <Reveal>
+        <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center', marginBottom: 56 }}>
+          <Eyebrow>Warum Leon</Eyebrow>
+
+          <h2
+            style={{
+              marginTop: 18,
+              fontSize: 'clamp(1.8rem,5vw,3.25rem)',
+              fontWeight: 900,
+              lineHeight: 1.08,
+              letterSpacing: '-0.025em',
+              color: B.ink,
+            }}
+          >
+            Klassische Agentur —
+            <br />
+            oder einfach <Serif color={B.ocker}>Leon.</Serif>
+          </h2>
+
+          <p
+            style={{
+              marginTop: 18,
+              fontSize: 16,
+              color: 'rgba(26,23,18,0.55)',
+              lineHeight: 1.7,
+              maxWidth: 540,
+              marginInline: 'auto',
+            }}
+          >
+            Keine Agentur-Struktur bedeutet: kein Overhead, keine Verzögerungen, kein Umweg.
+            Du kommunizierst direkt mit der Person, die umsetzt.
+          </p>
+        </div>
+      </Reveal>
+
+      <Reveal delay={100}>
+        <div style={{ maxWidth: 880, margin: '0 auto', overflowX: 'auto' }}>
+          <div style={{ minWidth: 680 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr 1.2fr', gap: 4, marginBottom: 4 }}>
+              <div />
+              <div
+                style={{
+                  padding: '16px 20px',
+                  borderRadius: '14px 14px 0 0',
+                  background: 'rgba(26,23,18,0.05)',
+                  border: '1px solid rgba(26,23,18,0.08)',
+                  borderBottom: 'none',
+                  fontSize: 14,
+                  fontWeight: 800,
+                  color: 'rgba(26,23,18,0.45)',
+                  textAlign: 'center',
+                }}
+              >
+                Klassische Agentur
+              </div>
+
+              <div
+                style={{
+                  padding: '16px 20px',
+                  borderRadius: '14px 14px 0 0',
+                  background: B.ink,
+                  color: B.cream,
+                  border: `1px solid ${B.ink}`,
+                  borderBottom: 'none',
+                  fontSize: 14,
+                  fontWeight: 800,
+                  textAlign: 'center',
+                  position: 'relative',
+                }}
+              >
+                Leon Seitz
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: 14,
+                    right: 18,
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    background: B.yellow,
+                  }}
+                />
+              </div>
+            </div>
+
+            {rows.map((r, i) => {
+              const isLast = i === rows.length - 1;
+
               return (
-                <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 2, marginBottom: isLast ? 0 : 2 }}>
-                  <div style={{
-                    padding: '15px 4px 15px 0',
-                    fontSize: 11, fontWeight: 700, letterSpacing: '0.08em',
-                    textTransform: 'uppercase', color: 'rgba(245,242,235,0.30)',
-                    textAlign: 'left', display: 'flex', alignItems: 'center',
-                  }}>
-                    {row.label}
+                <div key={r.label} style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr 1.2fr', gap: 4, marginBottom: isLast ? 0 : 4 }}>
+                  <div
+                    style={{
+                      padding: '18px 12px',
+                      fontSize: 12,
+                      fontWeight: 700,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      color: 'rgba(26,23,18,0.45)',
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  >
+                    {r.label}
                   </div>
-                  <div style={{
-                    padding: '15px 16px',
-                    background: 'rgba(245,242,235,0.025)',
-                    border: '1px solid rgba(245,242,235,0.055)', borderTop: 'none',
-                    borderRadius: isLast ? '0 0 0 12px' : 0,
-                    fontSize: 13, color: 'rgba(245,242,235,0.35)',
-                    textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    {row.them}
+
+                  <div
+                    style={{
+                      padding: '18px 20px',
+                      background: '#fff',
+                      border: '1px solid rgba(26,23,18,0.07)',
+                      borderTop: 'none',
+                      borderRadius: isLast ? '0 0 0 14px' : 0,
+                      fontSize: 14,
+                      color: 'rgba(26,23,18,0.50)',
+                      textAlign: 'center',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {r.them}
                   </div>
-                  <div style={{
-                    padding: '15px 16px',
-                    background: 'rgba(232,168,0,0.07)',
-                    border: '1px solid rgba(232,168,0,0.17)', borderTop: 'none',
-                    borderRadius: isLast ? '0 0 12px 0' : 0,
-                    fontSize: 13, fontWeight: 700, color: 'rgba(245,242,235,0.85)',
-                    textAlign: 'center', display: 'flex', alignItems: 'center',
-                    justifyContent: 'center', gap: 7,
-                  }}>
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M2 6.5L4.5 9L10 3" stroke={B.yellow} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+
+                  <div
+                    style={{
+                      padding: '18px 20px',
+                      background: '#1f1d18',
+                      color: B.cream,
+                      border: '1px solid #1f1d18',
+                      borderTop: 'none',
+                      borderRadius: isLast ? '0 0 14px 0' : 0,
+                      fontSize: 14,
+                      fontWeight: 700,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 10,
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <path d="M2 7.5L5.5 11L12 4" stroke={B.yellow} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    {row.us}
+                    <span style={{ textAlign: 'left' }}>{r.us}</span>
                   </div>
                 </div>
               );
             })}
           </div>
-        </Reveal>
-      </Sec>
-
-      <Div from={true} />
-
-      <Sec id="s4" dark={false} pad="96px 24px">
-        <Reveal><Tag light>Ergebnisse</Tag></Reveal>
-        <Reveal delay={80}>
-          <h2 style={{
-            marginTop: 20, marginBottom: 48,
-            fontSize: 'clamp(1.6rem,5vw,3rem)', fontWeight: 900,
-            lineHeight: 1.1, letterSpacing: '-0.02em', color: B.black,
-          }}>
-            Zahlen, die man <SerifAccent col={B.ocker}>einordnen</SerifAccent> kann.
-          </h2>
-        </Reveal>
-        <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(280px,100%),1fr))',
-          gap: 20, alignItems: 'start', textAlign: 'left',
-        }}>
-          <Reveal delay={80}><ProofCard /></Reveal>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <StatBox target={15}  suffix="+ Mio" label="Likes auf erstellten Inhalten"     delay={120} />
-            <StatBox target={10}  suffix="+ Mio" label="Klicks über Social Media generiert" delay={200} />
-            <StatBox target={100} suffix="+"     label="Abgeschlossene Projekte"            delay={280} />
-          </div>
         </div>
-        <Reveal delay={300}>
-          <div style={{ marginTop: 44, display: 'flex', justifyContent: 'center' }}>
-            <BtnPrimary label="Instagram ansehen" href="https://www.instagram.com/leonnseitz" target="_blank" />
-          </div>
-        </Reveal>
-        <Reveal delay={380}>
-          <div style={{ marginTop: 64, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-            <a href="#s5" style={{
-              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-              textDecoration: 'none', color: 'rgba(14,12,8,0.25)',
-              fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase',
-            }}>
-              Leistungen <ArrowDown size={16} style={{ color: B.ocker }} />
+      </Reveal>
+    </Frame>
+  );
+}
+
+function ErgebnisseV2() {
+  return (
+    <Frame id="ergebnisse" bg={B.cream} padding="96px 24px">
+      <Reveal>
+        <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center', marginBottom: 64 }}>
+          <Eyebrow>Ergebnisse</Eyebrow>
+
+          <h2
+            style={{
+              marginTop: 18,
+              fontSize: 'clamp(1.8rem,5vw,3.25rem)',
+              fontWeight: 900,
+              lineHeight: 1.08,
+              letterSpacing: '-0.025em',
+              color: B.ink,
+            }}
+          >
+            Zahlen, die man <Serif color={B.ocker}>einordnen</Serif> kann.
+          </h2>
+
+          <p
+            style={{
+              marginTop: 18,
+              fontSize: 16,
+              color: 'rgba(26,23,18,0.55)',
+              lineHeight: 1.7,
+              maxWidth: 540,
+              marginInline: 'auto',
+            }}
+          >
+            Mehr Kunden durch digitalen Auftritt? Mehr Umsatz durch automatisierte Abläufe?
+            Hier ein konkretes Beispiel — und ein Track Record, der für sich spricht.
+          </p>
+        </div>
+      </Reveal>
+
+      <div
+        style={{
+          maxWidth: 980,
+          margin: '0 auto',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit,minmax(min(360px,100%),1fr))',
+          gap: 56,
+          alignItems: 'flex-start',
+        }}
+      >
+        <Reveal>
+          <div style={{ position: 'relative' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 22 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                Case · 01
+              </span>
+              <div style={{ flex: 1, height: 1, background: B.ink }} />
+              <span style={{ fontFamily: FONTS.hand, fontSize: 18, color: B.muted }}>
+                KFA Aschaffenburg
+              </span>
+            </div>
+
+            <div style={{ position: 'relative' }}>
+              <svg
+                viewBox="0 0 480 200"
+                style={{
+                  position: 'absolute',
+                  top: -50,
+                  left: -22,
+                  width: 520,
+                  height: 230,
+                  pointerEvents: 'none',
+                  zIndex: 0,
+                }}
+              >
+                <HandLine d="M 32 112 C 28 34, 232 12, 382 48 C 470 70, 472 176, 348 198 C 198 222, 14 200, 32 112" stroke={B.rust} strokeWidth={2.2} opacity={0.55} />
+                <HandLine d="M 38 116 C 36 40, 240 20, 388 56 C 466 78, 462 178, 344 196 C 200 216, 22 200, 38 116" stroke={B.rust} strokeWidth={1.6} opacity={0.4} />
+              </svg>
+
+              <div
+                style={{
+                  position: 'relative',
+                  zIndex: 1,
+                  fontFamily: FONTS.serif,
+                  fontStyle: 'italic',
+                  fontSize: 'clamp(5rem,15vw,10.5rem)',
+                  fontWeight: 400,
+                  lineHeight: 0.85,
+                  color: B.ink,
+                  letterSpacing: '-0.04em',
+                }}
+              >
+                21.000<span style={{ color: B.rust }}>€</span>
+              </div>
+
+              <div
+                style={{
+                  position: 'absolute',
+                  right: -10,
+                  top: -28,
+                  zIndex: 2,
+                  fontFamily: FONTS.hand,
+                  fontSize: 22,
+                  color: B.rust,
+                  transform: 'rotate(6deg)',
+                  textAlign: 'right',
+                }}
+              >
+                in 2 Monaten
+              </div>
+            </div>
+
+            <p
+              style={{
+                marginTop: 32,
+                fontSize: 16,
+                lineHeight: 1.7,
+                color: B.ink,
+                maxWidth: 460,
+                borderLeft: `3px solid ${B.yellow}`,
+                paddingLeft: 18,
+              }}
+            >
+              <Serif>Eine Fundraising-Kampagne</Serif> — kein Werbebudget, keine bezahlten Reichweiten.
+              Nur Konzept, Branding, Landing Page und eine klare Botschaft.
+            </p>
+
+            <a
+              href="https://kfa-fundraising.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                marginTop: 20,
+                display: 'inline-flex',
+                gap: 6,
+                alignItems: 'center',
+                fontSize: 13,
+                fontWeight: 700,
+                color: B.rust,
+                textDecoration: 'none',
+              }}
+            >
+              Vollständiges Projekt ansehen →
             </a>
           </div>
         </Reveal>
-      </Sec>
 
-      <Sec id="referenzen" dark={false} pad="0 24px 96px">
-        <Reveal><Tag light>Referenzen</Tag></Reveal>
-        <Reveal delay={80}>
-          <h2 style={{
-            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
-            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: B.black,
-          }}>
-            Projekte, die für sich <SerifAccent col={B.ocker}>sprechen.</SerifAccent>
-          </h2>
-        </Reveal>
-        <Reveal delay={140}>
-          <p style={{
-            marginTop: 16, fontSize: 15, color: 'rgba(14,12,8,0.52)',
-            lineHeight: 1.75, maxWidth: 440, margin: '16px auto 0',
-          }}>
-            Echte Projekte, echte Ergebnisse — von Fundraising bis Booking.
-          </p>
-        </Reveal>
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 20, marginTop: 48,
-        }}>
-          {PROJEKTE.map((p, i) => (
-            <Reveal key={p.id} delay={i * 80}>
-              <ReferenzCard {...p} />
-            </Reveal>
-          ))}
-        </div>
-        <Reveal delay={240}>
-          <div style={{ marginTop: 44, display: 'flex', justifyContent: 'center' }}>
-            <BtnPrimary label="Kostenlose Analyse anfragen" href="/#request" />
+        <Reveal delay={120}>
+          <div style={{ paddingTop: 22 }}>
+            <div
+              style={{
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                color: B.muted,
+                marginBottom: 18,
+                paddingBottom: 8,
+                borderBottom: `1.5px solid ${B.ink}`,
+              }}
+            >
+              Track Record
+            </div>
+
+            {[
+              { v: '15', unit: 'Mio +', l: 'Likes auf Inhalten, die ich gestaltet habe' },
+              { v: '10', unit: 'Mio +', l: 'Klicks über Social Media generiert' },
+              { v: '100', unit: '+', l: 'Abgeschlossene Projekte' },
+            ].map((s, i, arr) => (
+              <div
+                key={s.l}
+                style={{
+                  padding: '20px 0',
+                  borderBottom: i < arr.length - 1 ? '1px dashed rgba(26,23,18,0.18)' : 'none',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 6 }}>
+                  <span
+                    style={{
+                      fontFamily: FONTS.serif,
+                      fontStyle: 'italic',
+                      fontSize: 56,
+                      lineHeight: 0.9,
+                      color: B.ink,
+                    }}
+                  >
+                    {s.v}
+                  </span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: B.rust, letterSpacing: '0.04em' }}>
+                    {s.unit}
+                  </span>
+                </div>
+
+                <div style={{ fontSize: 13, color: B.muted, lineHeight: 1.5 }}>
+                  {s.l}
+                </div>
+              </div>
+            ))}
+
+            <div style={{ marginTop: 24 }}>
+              <StickyNote color={B.yellow} rotate={-2}>
+                Konkret schlägt
+                <br />
+                vage. Immer.
+              </StickyNote>
+            </div>
           </div>
         </Reveal>
-      </Sec>
+      </div>
+    </Frame>
+  );
+}
 
-      <Sec id="testimonials" dark={false} pad="0 24px 96px">
-        <Reveal><Tag light>Stimmen</Tag></Reveal>
-        <Reveal delay={80}>
-          <h2 style={{
-            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
-            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: B.black,
-          }}>
-            Was Kunden <SerifAccent col={B.ocker}>sagen.</SerifAccent>
+function NextStepsV2() {
+  const steps = [
+    {
+      n: '01',
+      title: 'Anfrage schicken',
+      desc: 'Trag ein, wo du stehst: Ziel, aktueller Stand, gewünschter Beginn. Das dauert 2 Minuten.',
+    },
+    {
+      n: '02',
+      title: 'Kostenlose Analyse',
+      desc: 'Ich schaue mir deinen Auftritt an und gebe dir eine ehrliche Einschätzung. Keine versteckte Agenda.',
+    },
+    {
+      n: '03',
+      title: 'Erste Umsetzung',
+      desc: 'Du siehst das Ergebnis — und entscheidest dann, ob du zahlst.',
+    },
+  ];
+
+  return (
+    <Frame id="next" bg={B.cream} padding="96px 24px">
+      <Reveal>
+        <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center', marginBottom: 56 }}>
+          <span
+            style={{
+              display: 'inline-block',
+              padding: '5px 14px',
+              borderRadius: 100,
+              background: B.ink,
+              color: B.cream,
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              marginBottom: 18,
+            }}
+          >
+            Phase 0 — Kostenlos
+          </span>
+
+          <h2
+            style={{
+              fontSize: 'clamp(1.8rem,5vw,3.25rem)',
+              fontWeight: 900,
+              lineHeight: 1.08,
+              letterSpacing: '-0.025em',
+              color: B.ink,
+            }}
+          >
+            Lass uns reden.
+            <br />
+            <Serif color={B.ocker}>Kein Commitment.</Serif>
           </h2>
-        </Reveal>
-        <div style={{
+        </div>
+      </Reveal>
+
+      <Reveal delay={80}>
+        <div
+          style={{
+            maxWidth: 920,
+            margin: '0 auto 48px',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit,minmax(min(240px,100%),1fr))',
+            gap: 28,
+            position: 'relative',
+          }}
+        >
+          {steps.map(s => (
+            <div key={s.n} style={{ textAlign: 'center', padding: '0 16px', position: 'relative' }}>
+              <div
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: '50%',
+                  background: B.yellow,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 18,
+                  fontWeight: 900,
+                  color: B.ink,
+                  margin: '0 auto 18px',
+                  boxShadow: '0 0 0 6px rgba(232,168,0,0.10)',
+                }}
+              >
+                {s.n}
+              </div>
+
+              <div style={{ fontSize: 18, fontWeight: 800, color: B.ink, marginBottom: 8, letterSpacing: '-0.01em' }}>
+                {s.title}
+              </div>
+
+              <p style={{ fontSize: 13, color: 'rgba(26,23,18,0.55)', lineHeight: 1.65, margin: 0, maxWidth: 220, marginInline: 'auto' }}>
+                {s.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </Reveal>
+
+      <Reveal delay={140}>
+        <div
+          style={{
+            maxWidth: 580,
+            margin: '0 auto',
+            background: '#fff',
+            borderRadius: 22,
+            padding: '36px 36px',
+            boxShadow: '0 4px 32px rgba(26,23,18,0.07)',
+            border: '1px solid rgba(26,23,18,0.06)',
+          }}
+        >
+          <div style={{ fontSize: 13, fontWeight: 800, color: B.ink, marginBottom: 20, letterSpacing: '-0.01em' }}>
+            Analyse anfragen — kostenlos &amp; unverbindlich
+          </div>
+
+          <LeadFormLight />
+        </div>
+      </Reveal>
+
+      <Reveal delay={200}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginTop: 28, flexWrap: 'wrap' }}>
+          <a
+            href="https://wa.me/4916095757167?text=Hi%20Leon%2C%0A%0AZiel%3A%0ADeadline%3A%0AStand%3A%0A%0AKurzer%20Kontext%3A"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '10px 22px',
+              borderRadius: 100,
+              background: '#25D366',
+              color: '#fff',
+              fontSize: 13,
+              fontWeight: 700,
+              textDecoration: 'none',
+            }}
+          >
+            <Icon.WA /> WhatsApp
+          </a>
+
+          <a
+            href="mailto:hello@leonseitz.com?subject=Kostenlose Analyse&body=Meine Website: %0D%0AZiel: %0D%0ADeadline (optional): %0D%0A"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '10px 22px',
+              borderRadius: 100,
+              border: '1px solid rgba(26,23,18,0.16)',
+              color: 'rgba(26,23,18,0.62)',
+              fontSize: 13,
+              fontWeight: 700,
+              textDecoration: 'none',
+            }}
+          >
+            <Mail size={14} /> E-Mail
+          </a>
+        </div>
+      </Reveal>
+    </Frame>
+  );
+}
+
+function FAQV2() {
+  const [open, setOpen] = useState(0);
+
+  const faqs = [
+    {
+      q: 'Was kostet die kostenlose Analyse wirklich?',
+      a: 'Nichts. Du bekommst eine ehrliche schriftliche Einschätzung deines Auftritts. Wenn du danach mit mir arbeiten willst, klären wir den Preis im zweiten Schritt. Wenn nicht — kein Problem.',
+    },
+    {
+      q: 'Wie schnell bekomme ich erste Ergebnisse?',
+      a: 'Die Analyse landet innerhalb von 24–72 Stunden in deinem Postfach. Erste Umsetzungen sehen wir uns je nach Umfang in 1–3 Wochen an.',
+    },
+    {
+      q: 'Muss ich vorher zahlen?',
+      a: 'Nein. Phase 0 ist kostenlos. Phase 1 zahlst du erst, wenn dir das Ergebnis gefällt. Kein Vertrag, keine Vorauskasse.',
+    },
+    {
+      q: 'Wie unterscheidet sich das von einer Agentur?',
+      a: 'Du sprichst direkt mit mir. Kein Account-Manager, kein Projektmanager dazwischen. Kein Paket, keine Mindestlaufzeit. Du zahlst für das, was wir machen — nicht für Overhead.',
+    },
+    {
+      q: 'Was, wenn ich gar nicht weiß, was ich brauche?',
+      a: 'Genau dafür ist Phase 0 da. Ich schaue mir alles an — Website, Social, Print — und sage dir, wo der Hebel liegt. Du musst vorher nichts wissen.',
+    },
+    {
+      q: 'Kannst du auch nur einzelne Sachen machen, z.B. nur Flyer?',
+      a: 'Ja. Wenn du nur einen konkreten Bedarf hast, machen wir das. Wenn ich glaube, dass mehr Sinn ergibt, sage ich es — aber die Entscheidung liegt bei dir.',
+    },
+  ];
+
+  return (
+    <Frame id="faq" bg={B.ink} padding="96px 24px" style={{ color: B.cream }}>
+      <Reveal>
+        <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center', marginBottom: 56 }}>
+          <Eyebrow color={B.yellow}>Noch Fragen?</Eyebrow>
+
+          <h2
+            style={{
+              marginTop: 18,
+              fontSize: 'clamp(1.8rem,5vw,3.25rem)',
+              fontWeight: 900,
+              lineHeight: 1.08,
+              letterSpacing: '-0.025em',
+              color: B.cream,
+            }}
+          >
+            Was Kunden vorher <Serif color={B.yellow}>wissen wollen.</Serif>
+          </h2>
+        </div>
+      </Reveal>
+
+      <div style={{ maxWidth: 760, margin: '0 auto' }}>
+        {faqs.map((f, i) => {
+          const isOpen = open === i;
+
+          return (
+            <div
+              key={f.q}
+              style={{
+                borderTop: i === 0 ? '1px solid rgba(245,242,235,0.10)' : 'none',
+                borderBottom: '1px solid rgba(245,242,235,0.10)',
+                padding: '24px 4px',
+                background: isOpen ? 'rgba(232,168,0,0.04)' : 'transparent',
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setOpen(isOpen ? -1 : i)}
+                style={{
+                  width: '100%',
+                  background: 'transparent',
+                  border: 'none',
+                  padding: 0,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                  gap: 24,
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  fontFamily: FONTS.sans,
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 800,
+                    color: B.cream,
+                    letterSpacing: '-0.01em',
+                    lineHeight: 1.35,
+                    flex: 1,
+                  }}
+                >
+                  {f.q}
+                </div>
+
+                <div
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: '50%',
+                    background: isOpen ? B.yellow : 'rgba(245,242,235,0.06)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: isOpen ? B.ink : 'rgba(245,242,235,0.5)',
+                    fontSize: 16,
+                    fontWeight: 900,
+                    flexShrink: 0,
+                    transform: isOpen ? 'rotate(45deg)' : 'none',
+                    transition: 'transform .2s',
+                  }}
+                >
+                  +
+                </div>
+              </button>
+
+              {isOpen && (
+                <p
+                  style={{
+                    marginTop: 14,
+                    fontSize: 15,
+                    lineHeight: 1.7,
+                    color: 'rgba(245,242,235,0.62)',
+                    maxWidth: 620,
+                  }}
+                >
+                  {f.a}
+                </p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <Reveal delay={140}>
+        <div
+          style={{
+            maxWidth: 580,
+            margin: '48px auto 0',
+            textAlign: 'center',
+            padding: '24px 28px',
+            border: '1px solid rgba(232,168,0,0.20)',
+            background: 'rgba(232,168,0,0.04)',
+            borderRadius: 16,
+          }}
+        >
+          <div style={{ fontSize: 14, color: 'rgba(245,242,235,0.65)', marginBottom: 12 }}>
+            Noch was Konkretes?
+          </div>
+
+          <a
+            href="mailto:hello@leonseitz.com?subject=Kurze Frage"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '11px 24px',
+              borderRadius: 100,
+              background: B.yellow,
+              color: B.ink,
+              fontSize: 14,
+              fontWeight: 800,
+              textDecoration: 'none',
+            }}
+          >
+            Kurz nachfragen →
+          </a>
+        </div>
+      </Reveal>
+    </Frame>
+  );
+}
+
+function TestimonialsV2() {
+  const testimonials = [
+    {
+      quote:
+        'Von der ersten Idee bis zur finalen Umsetzung alles auf sehr hohem professionellen Niveau. Meine Wünsche wurden vollständig berücksichtigt und sinnvolle Vorschläge eingebracht. Die Website ist modern, funktional und optisch sehr ansprechend.',
+      name: 'Oksana Hettinger',
+    },
+    {
+      quote:
+        'Ich kann Leon uneingeschränkt weiterempfehlen. Die Zusammenarbeit ist immer kooperativ, effektiv und zielführend.',
+      name: 'Dominic Hildebrandt',
+    },
+  ];
+
+  return (
+    <Frame id="stimmen" bg={B.cream} padding="96px 24px">
+      <Reveal>
+        <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center', marginBottom: 56 }}>
+          <Eyebrow>Stimmen</Eyebrow>
+
+          <h2
+            style={{
+              marginTop: 18,
+              fontSize: 'clamp(1.8rem,5vw,3.25rem)',
+              fontWeight: 900,
+              lineHeight: 1.08,
+              letterSpacing: '-0.025em',
+              color: B.ink,
+            }}
+          >
+            Was Kunden <Serif color={B.ocker}>sagen.</Serif>
+          </h2>
+        </div>
+      </Reveal>
+
+      <div
+        style={{
+          maxWidth: 920,
+          margin: '0 auto',
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit,minmax(min(300px,100%),1fr))',
-          gap: 20, marginTop: 48,
-        }}>
-          <TestimonialCard
-            delay={80}
-            quote="Von der ersten Idee bis zur finalen Umsetzung alles auf sehr hohem professionellen Niveau. Meine Wünsche wurden vollständig berücksichtigt und sinnvolle Vorschläge eingebracht, die das Ergebnis noch verbessert haben. Das Ergebnis hat meine Erwartungen vollkommen erfüllt — die Website ist modern, funktional und optisch sehr ansprechend."
-            name="Oksana Hettinger"
-          />
-          <TestimonialCard
-            delay={160}
-            quote="Ich kann Leon uneingeschränkt weiterempfehlen. Die Zusammenarbeit mit ihm ist immer kooperativ, effektiv und zielführend."
-            name="Dominic Hildebrandt"
-          />
-        </div>
-      </Sec>
-
-      <Div from={false} />
-
-      <Sec id="s5" dark pad="96px 24px">
-        <Reveal><Tag>Leistungen</Tag></Reveal>
-        <Reveal delay={80}>
-          <h2 style={{
-            marginTop: 20, fontSize: 'clamp(1.6rem,5vw,3rem)',
-            fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: B.cream,
-          }}>
-            Was ich analysiere <SerifAccent col={B.cream}>und umsetze.</SerifAccent>
-          </h2>
-        </Reveal>
-        <Reveal delay={130}>
-          <p style={{
-            fontSize: 15, color: 'rgba(245,242,235,0.52)',
-            maxWidth: 460, margin: '12px auto 56px', lineHeight: 1.72,
-          }}>
-            Je nachdem wo dein Unternehmen steht — ich schaue zuerst, dann machen wir.
-          </p>
-        </Reveal>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(320px,100%),1fr))', gap: 2 }}>
-          {[
-            {
-              n: '01',
-              icon: <Icon.Web />,
-              kicker: 'Digitaler Auftritt',
-              title: 'Website, Social, Online-Präsenz.',
-              desc: 'Klarer Aufbau, klare Botschaft. Damit ein Besucher in fünf Sekunden versteht, was du machst — und warum er bleiben soll.',
-              accent: B.yellow,
-              img: '/leistungen/website.png',
-            },
-            {
-              n: '02',
-              icon: <Icon.Brandbook />,
-              kicker: 'Kommunikation & Branding',
-              title: 'Außenauftritt, Materialien, Wiedererkennung.',
-              desc: 'Website, Social, Print und Kommunikation sollen erkennbar zusammengehören. Konsistent, professionell und klar.',
-              accent: B.yellow,
-              img: '/leistungen/print.png',
-            },
-            {
-              n: '03',
-              icon: <Icon.Motion />,
-              kicker: 'Content & Motion',
-              title: 'Social Content, der auffällt.',
-              desc: 'Kurzvideos, Reels, Motion Graphics. Damit du regelmäßig sichtbar bist — ohne jedes Format von null aufzubauen.',
-              accent: B.yellow,
-              img: '/leistungen/motion.png',
-            },
-            {
-              n: '04',
-              icon: <Icon.Video />,
-              kicker: 'Prozesse',
-              title: 'Abläufe, die Zeit sparen.',
-              desc: 'Bestellungen, Kommunikation, interne Abläufe — ich schaue was sich digitalisieren oder vereinfachen lässt. Konkret, umsetzbar.',
-              accent: B.yellow,
-              img: '/leistungen/prozesse.png',
-            },
-          ].map((s, i) => (
-            <Reveal key={i} delay={i * 70}>
-              <LeistungCard {...s} />
-            </Reveal>
-          ))}
-        </div>
-        <Reveal delay={260}>
-          <div style={{
-            marginTop: 16, padding: '22px 26px',
-            border: '1px dashed rgba(232,168,0,0.22)',
-            borderRadius: 16, background: 'rgba(232,168,0,0.03)',
-            textAlign: 'left', position: 'relative',
-          }}>
-            <span style={{
-              position: 'absolute', top: -11, left: 26,
-              padding: '3px 12px', borderRadius: 99,
-              background: B.black,
-              border: '1px solid rgba(232,168,0,0.25)',
-              fontSize: 10, fontWeight: 700, letterSpacing: '0.08em',
-              textTransform: 'uppercase', color: B.yellow,
-            }}>
-              In Arbeit
-            </span>
-            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase', color: B.yellow, marginBottom: 8, opacity: 0.7 }}>
-              05 — Automatisierte Workflows
-            </div>
-            <div style={{ fontSize: 16, fontWeight: 800, color: B.cream, marginBottom: 10 }}>
-              Prozesse, die von selbst laufen.
-            </div>
-            <p style={{ fontSize: 13, color: 'rgba(245,242,235,0.45)', lineHeight: 1.72, maxWidth: 580, margin: 0 }}>
-              CRM-Synchronisierung, automatisierte E-Mail-Sequenzen, Buchungssysteme, Benachrichtigungen — das kommt bald als eigenes Paket. Ich baue das gerade auf. Wenn dich das interessiert, einfach vormerken lassen.
-            </p>
-            <a href="/#request" style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              marginTop: 16, fontSize: 12, fontWeight: 700,
-              color: B.yellow, textDecoration: 'none', opacity: 0.75,
-            }}>
-              Vormerken lassen <ArrowRight size={12} />
-            </a>
-          </div>
-        </Reveal>
-        <Reveal delay={320}>
-          <div style={{ marginTop: 48, display: 'flex', justifyContent: 'center' }}>
-            <BtnPrimary label="Kostenlose Analyse anfragen" href="/#request" />
-          </div>
-        </Reveal>
-      </Sec>
-
-      <Div from={true} />
-
-      <Sec id="request" dark={false} pad="80px 20px 80px">
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: B.yellow }} />
-
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(340px,100%), 1fr))',
-          gap: 56, alignItems: 'start', textAlign: 'left', maxWidth: 960, margin: '0 auto',
-        }}>
-          <Reveal>
-            <div>
-              <Tag light>Phase 0 — Kostenlos</Tag>
-              <h2 style={{
-                marginTop: 20, fontSize: 'clamp(1.6rem,4vw,2.6rem)',
-                fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: B.black,
-              }}>
-                Lass uns reden.<br /><SerifAccent col={B.ocker}>Kein Commitment.</SerifAccent>
-              </h2>
-              <p style={{
-                marginTop: 18, fontSize: 15, color: 'rgba(14,12,8,0.55)',
-                lineHeight: 1.8, maxWidth: 420,
-              }}>
-                Ich schaue mir dein Unternehmen an — Website, interne Abläufe, Kommunikation und Außenauftritt — und sage dir ehrlich, wo digitale Struktur fehlt. Phase 0 kostet dich nichts.
-              </p>
-              <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 12 }}>
-                {[
-                  'Kostenlose Analyse — kein verstecktes Angebot',
-                  'Antwort innerhalb von 24 Stunden',
-                  'Zahlung erst wenn du zufrieden bist',
-                ].map((t, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{
-                      width: 20, height: 20, borderRadius: '50%', flexShrink: 0,
-                      background: 'rgba(232,168,0,0.12)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}>
-                      <CheckCircle2 size={12} color={B.ocker} />
-                    </div>
-                    <span style={{ fontSize: 13, color: 'rgba(14,12,8,0.62)', fontWeight: 600 }}>{t}</span>
-                  </div>
+          gap: 24,
+        }}
+      >
+        {testimonials.map((t, i) => (
+          <Reveal key={t.name} delay={i * 100}>
+            <div
+              style={{
+                padding: '32px 32px',
+                background: '#fff',
+                borderRadius: 20,
+                boxShadow: '0 2px 16px rgba(26,23,18,0.06)',
+                border: '1px solid rgba(26,23,18,0.05)',
+                position: 'relative',
+                textAlign: 'left',
+                minHeight: '100%',
+              }}
+            >
+              <div style={{ display: 'flex', gap: 2, marginBottom: 18 }}>
+                {[1, 2, 3, 4, 5].map(s => (
+                  <svg key={s} width="14" height="14" viewBox="0 0 24 24" fill="#FBBC05">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                  </svg>
                 ))}
               </div>
-              <div style={{ marginTop: 36, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                <a
-                  href="https://wa.me/4916095757167?text=Hi%20Leon%2C%0A%0AZiel%3A%0ADeadline%3A%0AStand%3A%0A%0AKurzer%20Kontext%3A"
-                  target="_blank" rel="noopener noreferrer"
-                  style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 8,
-                    padding: '10px 20px', borderRadius: 100,
-                    background: '#25D366', color: '#fff',
-                    fontSize: 13, fontWeight: 700, textDecoration: 'none',
-                    transition: 'opacity .18s',
-                  }}
-                  onMouseEnter={e => e.currentTarget.style.opacity = '0.88'}
-                  onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-                >
-                  <Icon.WA /> WhatsApp
-                </a>
-                <a
-                  href="mailto:hello@leonseitz.com?subject=Kostenlose Analyse&body=Meine Website: %0D%0AZiel: %0D%0ADeadline (optional): %0D%0A"
-                  style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 8,
-                    padding: '10px 20px', borderRadius: 100,
-                    border: '1px solid rgba(14,12,8,0.16)',
-                    background: 'transparent', color: 'rgba(14,12,8,0.62)',
-                    fontSize: 13, fontWeight: 700, textDecoration: 'none',
-                    transition: 'border-color .18s, color .18s',
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(14,12,8,0.40)'; e.currentTarget.style.color = B.black; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(14,12,8,0.16)'; e.currentTarget.style.color = 'rgba(14,12,8,0.62)'; }}
-                >
-                  <Mail size={14} /> E-Mail
-                </a>
-              </div>
-            </div>
-          </Reveal>
 
-          <Reveal delay={120}>
-            <div style={{
-              background: '#fff',
-              borderRadius: 20,
-              padding: '36px 32px',
-              boxShadow: '0 4px 32px rgba(14,12,8,0.07)',
-              border: '1px solid rgba(14,12,8,0.06)',
-            }}>
-              <div style={{ fontSize: 13, fontWeight: 800, color: B.black, marginBottom: 20 }}>
-                Analyse anfragen — kostenlos &amp; unverbindlich
-              </div>
-              <LeadFormLight />
-            </div>
-          </Reveal>
-        </div>
-
-        <div style={{ marginTop: 72, maxWidth: 960, margin: '72px auto 0' }}>
-          <div style={{
-            textAlign: 'center', marginBottom: 20,
-            fontSize: 12, fontWeight: 700, letterSpacing: '0.08em',
-            textTransform: 'uppercase', color: 'rgba(14,12,8,0.30)',
-          }}>
-            Oder direkt einen Termin buchen
-          </div>
-          <CalendlyWidget />
-        </div>
-
-        <Reveal delay={340}>
-          <div style={{
-            marginTop: 56, padding: '24px 28px', borderRadius: 18,
-            border: '1px solid rgba(14,12,8,0.08)', background: '#E8E5DC',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            flexWrap: 'wrap', gap: 16, maxWidth: 560, margin: '56px auto 0', textAlign: 'left',
-          }}>
-            <div style={{ textAlign: 'left' }}>
-              <div style={{ fontSize: 14, fontWeight: 800, color: B.black, marginBottom: 4 }}>
-                Wie läuft ein Projekt ab?
-              </div>
-              <p style={{ fontSize: 13, color: 'rgba(14,12,8,0.52)', lineHeight: 1.62 }}>
-                Alle Sprints, Zahlungsziele und Meilensteine im Detail.
+              <p style={{ fontSize: 15, lineHeight: 1.7, color: 'rgba(26,23,18,0.72)', margin: 0, marginBottom: 24 }}>
+                „{t.quote}“
               </p>
-            </div>
-            <a href="/prozess" style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              padding: '11px 22px', borderRadius: 100,
-              background: B.black, color: B.cream,
-              fontSize: 13, fontWeight: 700, textDecoration: 'none',
-              flexShrink: 0,
-            }}>
-              Prozess ansehen <ArrowRight size={14} />
-            </a>
-          </div>
-        </Reveal>
 
-        <Reveal delay={380}>
-          <div style={{
-            marginTop: 72, paddingTop: 28,
-            borderTop: '1px solid rgba(14,12,8,0.07)',
-            display: 'flex', justifyContent: 'space-between',
-            alignItems: 'center', flexWrap: 'wrap', gap: 12,
-          }}>
-            <span style={{ fontSize: 14, fontWeight: 900, color: B.black }}>Leon Seitz</span>
-            <div style={{ display: 'flex', gap: 20, fontSize: 13, color: 'rgba(14,12,8,0.38)' }}>
-              {[
-                ['Instagram', 'https://www.instagram.com/leonnseitz'],
-                ['Prozess', '/prozess'],
-                ['AGB', '/agb'],
-                ['Impressum', '/impressum'],
-                ['Datenschutz', '/datenschutz'],
-              ].map(([l, h]) => (
-                <a key={l} href={h} style={{ color: 'inherit', textDecoration: 'none' }}>{l}</a>
-              ))}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: '50%',
+                    background: `linear-gradient(135deg, ${B.yellow}, ${B.ocker})`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 14,
+                    fontWeight: 900,
+                    color: B.ink,
+                  }}
+                >
+                  {t.name[0]}
+                </div>
+
+                <div style={{ fontSize: 14, fontWeight: 800, color: B.ink }}>
+                  {t.name}
+                </div>
+              </div>
             </div>
-            <span style={{ fontSize: 12, color: 'rgba(14,12,8,0.26)' }}>© 2026</span>
+          </Reveal>
+        ))}
+      </div>
+
+      <Reveal delay={180}>
+        <div
+          style={{
+            maxWidth: 720,
+            margin: '64px auto 0',
+            padding: '32px 40px',
+            borderRadius: 22,
+            background: B.ink,
+            color: B.cream,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 20,
+          }}
+        >
+          <div>
+            <div style={{ fontSize: 18, fontWeight: 800, color: B.cream, marginBottom: 6 }}>
+              Bereit für Phase 0?
+            </div>
+
+            <div style={{ fontSize: 13, color: 'rgba(245,242,235,0.55)' }}>
+              Kostenlose Analyse — Antwort innerhalb von 24h.
+            </div>
           </div>
-        </Reveal>
-      </Sec>
+
+          <a
+            href="#next"
+            style={{
+              padding: '14px 28px',
+              borderRadius: 100,
+              background: B.yellow,
+              color: B.ink,
+              fontSize: 14,
+              fontWeight: 800,
+              boxShadow: '0 4px 20px rgba(232,168,0,0.28)',
+              textDecoration: 'none',
+            }}
+          >
+            Jetzt anfragen →
+          </a>
+        </div>
+      </Reveal>
+
+      <Footer />
+    </Frame>
+  );
+}
+
+function Footer() {
+  return (
+    <div
+      style={{
+        maxWidth: 960,
+        margin: '72px auto 0',
+        paddingTop: 28,
+        borderTop: '1px solid rgba(14,12,8,0.07)',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: 12,
+      }}
+    >
+      <span style={{ fontSize: 14, fontWeight: 900, color: B.black }}>Leon Seitz</span>
+
+      <div style={{ display: 'flex', gap: 20, fontSize: 13, color: 'rgba(14,12,8,0.38)', flexWrap: 'wrap' }}>
+        {[
+          ['Instagram', 'https://www.instagram.com/leonnseitz'],
+          ['Prozess', '/prozess'],
+          ['AGB', '/agb'],
+          ['Impressum', '/impressum'],
+          ['Datenschutz', '/datenschutz'],
+        ].map(([l, h]) => (
+          <a key={l} href={h} style={{ color: 'inherit', textDecoration: 'none' }}>
+            {l}
+          </a>
+        ))}
+      </div>
+
+      <span style={{ fontSize: 12, color: 'rgba(14,12,8,0.26)' }}>© 2026</span>
+    </div>
+  );
+}
+
+/* ─── PAGE ─── */
+export default function Home() {
+  return (
+    <div
+      style={{
+        fontFamily: FONTS.sans,
+        overflowX: 'hidden',
+        position: 'relative',
+        maxWidth: '100vw',
+      }}
+    >
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=DM+Serif+Display:ital@1&family=Caveat:wght@600;700&display=swap');
+
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+        }
+
+        html,
+        body {
+          scroll-behavior: smooth;
+          overflow-x: hidden;
+          max-width: 100%;
+          width: 100%;
+        }
+
+        * {
+          min-width: 0;
+        }
+
+        img,
+        svg {
+          max-width: 100%;
+        }
+
+        @media (max-width: 760px) {
+          section {
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+          }
+
+          h1,
+          h2 {
+            word-break: normal;
+          }
+        }
+      `}</style>
+
+      <ScrollBar />
+
+      <HeroV2 />
+      <ProblemV2 />
+      <LeistungenV2 />
+      <PhaseZeroV2 />
+      <WarumLeonV2 />
+      <ErgebnisseV2 />
+      <NextStepsV2 />
+      <FAQV2 />
+      <TestimonialsV2 />
     </div>
   );
 }
