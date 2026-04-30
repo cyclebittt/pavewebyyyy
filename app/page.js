@@ -2285,7 +2285,7 @@ export default function Home() {
       <LeistungenV2 />
       <PhaseZeroV2 />
       <WarumLeonV2 />
-      <ReferenzSection />
+      <ReferenzenSection />
       <NextStepsV2 />
       <FAQV2 />
       <TestimonialsV2 />
