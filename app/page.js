@@ -1492,211 +1492,218 @@ function WarumLeonV2() {
   );
 }
 
-function ErgebnisseV2() {
+const PROJEKTE = [
+  {
+    id: 'kfa',
+    img: '/projekte/kfa.png',
+    kategorie: 'Fundraising-Kampagne',
+    name: 'KFA Aschaffenburg',
+    desc: '21.000 € in 2 Monaten. Konzept, Branding und Landing Page — komplett ohne Werbebudget.',
+    url: 'https://kfa-fundraising.vercel.app/',
+  },
+  {
+    id: 'angelo',
+    img: '/projekte/angelo.png',
+    kategorie: 'Booking & Branding',
+    name: 'Angelo DJ',
+    desc: 'Moderne Booking-Seite für einen DJ. Keine Formulare, direkte Anfrage, klares Auftreten.',
+    url: 'https://angelo-site.vercel.app/',
+  },
+  {
+    id: 'star-doener',
+    img: '/projekte/star-doener.png',
+    kategorie: 'Restaurant & Gastronomie',
+    name: 'Star Döner',
+    desc: 'Moderner Webauftritt für ein Döner-Restaurant. Speisekarte, Standort und klare Conversion.',
+    url: 'https://star-doner-website.vercel.app/',
+  },
+  {
+    id: 'paveo',
+    img: '/projekte/paveo.png',
+    kategorie: 'Agentur-Website',
+    name: 'Paveo',
+    desc: 'Agentur-Landingpage mit klarer Positionierung, Leistungsübersicht und Kontaktführung.',
+    url: 'https://leonseitz.com',
+  },
+];
+
+function ReferenzCard({ img, kategorie, name, desc, url }) {
+  const [h, setH] = useState(false);
+
   return (
-    <Frame id="ergebnisse" bg={B.cream} padding="96px 24px">
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      onMouseEnter={() => setH(true)}
+      onMouseLeave={() => setH(false)}
+      style={{ textDecoration: 'none', display: 'block' }}
+    >
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: 0,
+          borderRadius: 20,
+          overflow: 'hidden',
+          background: '#F5F2EB',
+          transition: 'transform .25s cubic-bezier(0.4,0,0.2,1), box-shadow .25s',
+          transform: h ? 'translateY(-4px)' : 'none',
+          boxShadow: h
+            ? '0 16px 48px rgba(14,12,8,0.12)'
+            : '0 4px 20px rgba(14,12,8,0.06)',
+        }}
+      >
+        <div
+          style={{
+            position: 'relative',
+            minHeight: 300,
+            overflow: 'hidden',
+            background: 'transparent',
+          }}
+        >
+          <img
+            src={img}
+            alt={name}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center top',
+              transform: h ? 'scale(1.04)' : 'scale(1)',
+              transition: 'transform .5s cubic-bezier(0.4,0,0.2,1)',
+            }}
+            onError={e => {
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+        </div>
+
+        <div
+          style={{
+            padding: '40px 36px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            gap: 0,
+          }}
+        >
+          <div
+            style={{
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              color: B.ocker,
+              marginBottom: 10,
+            }}
+          >
+            {kategorie}
+          </div>
+
+          <div
+            style={{
+              fontSize: 'clamp(1.2rem,2vw,1.6rem)',
+              fontWeight: 900,
+              color: B.black,
+              letterSpacing: '-0.02em',
+              lineHeight: 1.15,
+              marginBottom: 14,
+            }}
+          >
+            {name}
+          </div>
+
+          <p
+            style={{
+              fontSize: 15,
+              color: 'rgba(14,12,8,0.62)',
+              lineHeight: 1.75,
+              margin: 0,
+              marginBottom: 24,
+            }}
+          >
+            {desc}
+          </p>
+
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              fontSize: 13,
+              fontWeight: 700,
+              color: h ? B.ocker : 'rgba(14,12,8,0.38)',
+              transition: 'color .2s',
+            }}
+          >
+            Projekt ansehen
+            <ArrowRight size={14} />
+          </div>
+        </div>
+      </div>
+    </a>
+  );
+}
+
+function ReferenzenSection() {
+  return (
+    <Frame id="referenzen" bg={B.cream} padding="96px 24px">
       <Reveal>
-        <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center', marginBottom: 64 }}>
-          <Eyebrow>Ergebnisse</Eyebrow>
+        <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center' }}>
+          <Eyebrow>Referenzen</Eyebrow>
 
           <h2
             style={{
-              marginTop: 18,
-              fontSize: 'clamp(1.8rem,5vw,3.25rem)',
+              marginTop: 20,
+              fontSize: 'clamp(1.6rem,5vw,3rem)',
               fontWeight: 900,
-              lineHeight: 1.08,
-              letterSpacing: '-0.025em',
-              color: B.ink,
+              lineHeight: 1.1,
+              letterSpacing: '-0.02em',
+              color: B.black,
             }}
           >
-            Zahlen, die man <Serif color={B.ocker}>einordnen</Serif> kann.
+            Projekte, die für sich <Serif color={B.ocker}>sprechen.</Serif>
           </h2>
 
           <p
             style={{
-              marginTop: 18,
-              fontSize: 16,
-              color: 'rgba(26,23,18,0.55)',
-              lineHeight: 1.7,
-              maxWidth: 540,
+              marginTop: 16,
+              fontSize: 15,
+              color: 'rgba(14,12,8,0.52)',
+              lineHeight: 1.75,
+              maxWidth: 440,
               marginInline: 'auto',
             }}
           >
-            Mehr Kunden durch digitalen Auftritt? Mehr Umsatz durch automatisierte Abläufe?
-            Hier ein konkretes Beispiel — und ein Track Record, der für sich spricht.
+            Echte Projekte, echte Ergebnisse — von Fundraising bis Booking.
           </p>
         </div>
       </Reveal>
 
       <div
         style={{
-          maxWidth: 980,
-          margin: '0 auto',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit,minmax(min(360px,100%),1fr))',
-          gap: 56,
-          alignItems: 'flex-start',
+          maxWidth: 920,
+          margin: '48px auto 0',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 20,
         }}
       >
-        <Reveal>
-          <div style={{ position: 'relative' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 22 }}>
-              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-                Case · 01
-              </span>
-              <div style={{ flex: 1, height: 1, background: B.ink }} />
-              <span style={{ fontFamily: FONTS.hand, fontSize: 18, color: B.muted }}>
-                KFA Aschaffenburg
-              </span>
-            </div>
-
-            <div style={{ position: 'relative' }}>
-              <svg
-                viewBox="0 0 480 200"
-                style={{
-                  position: 'absolute',
-                  top: -50,
-                  left: -22,
-                  width: 520,
-                  height: 230,
-                  pointerEvents: 'none',
-                  zIndex: 0,
-                }}
-              >
-                <HandLine d="M 32 112 C 28 34, 232 12, 382 48 C 470 70, 472 176, 348 198 C 198 222, 14 200, 32 112" stroke={B.rust} strokeWidth={2.2} opacity={0.55} />
-                <HandLine d="M 38 116 C 36 40, 240 20, 388 56 C 466 78, 462 178, 344 196 C 200 216, 22 200, 38 116" stroke={B.rust} strokeWidth={1.6} opacity={0.4} />
-              </svg>
-
-              <div
-                style={{
-                  position: 'relative',
-                  zIndex: 1,
-                  fontFamily: FONTS.serif,
-                  fontStyle: 'italic',
-                  fontSize: 'clamp(5rem,15vw,10.5rem)',
-                  fontWeight: 400,
-                  lineHeight: 0.85,
-                  color: B.ink,
-                  letterSpacing: '-0.04em',
-                }}
-              >
-                21.000<span style={{ color: B.rust }}>€</span>
-              </div>
-
-              <div
-                style={{
-                  position: 'absolute',
-                  right: -10,
-                  top: -28,
-                  zIndex: 2,
-                  fontFamily: FONTS.hand,
-                  fontSize: 22,
-                  color: B.rust,
-                  transform: 'rotate(6deg)',
-                  textAlign: 'right',
-                }}
-              >
-                in 2 Monaten
-              </div>
-            </div>
-
-            <p
-              style={{
-                marginTop: 32,
-                fontSize: 16,
-                lineHeight: 1.7,
-                color: B.ink,
-                maxWidth: 460,
-                borderLeft: `3px solid ${B.yellow}`,
-                paddingLeft: 18,
-              }}
-            >
-              <Serif>Eine Fundraising-Kampagne</Serif> — kein Werbebudget, keine bezahlten Reichweiten.
-              Nur Konzept, Branding, Landing Page und eine klare Botschaft.
-            </p>
-
-            <a
-              href="https://kfa-fundraising.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                marginTop: 20,
-                display: 'inline-flex',
-                gap: 6,
-                alignItems: 'center',
-                fontSize: 13,
-                fontWeight: 700,
-                color: B.rust,
-                textDecoration: 'none',
-              }}
-            >
-              Vollständiges Projekt ansehen →
-            </a>
-          </div>
-        </Reveal>
-
-        <Reveal delay={120}>
-          <div style={{ paddingTop: 22 }}>
-            <div
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                color: B.muted,
-                marginBottom: 18,
-                paddingBottom: 8,
-                borderBottom: `1.5px solid ${B.ink}`,
-              }}
-            >
-              Track Record
-            </div>
-
-            {[
-              { v: '15', unit: 'Mio +', l: 'Likes auf Inhalten, die ich gestaltet habe' },
-              { v: '10', unit: 'Mio +', l: 'Klicks über Social Media generiert' },
-              { v: '100', unit: '+', l: 'Abgeschlossene Projekte' },
-            ].map((s, i, arr) => (
-              <div
-                key={s.l}
-                style={{
-                  padding: '20px 0',
-                  borderBottom: i < arr.length - 1 ? '1px dashed rgba(26,23,18,0.18)' : 'none',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 6 }}>
-                  <span
-                    style={{
-                      fontFamily: FONTS.serif,
-                      fontStyle: 'italic',
-                      fontSize: 56,
-                      lineHeight: 0.9,
-                      color: B.ink,
-                    }}
-                  >
-                    {s.v}
-                  </span>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: B.rust, letterSpacing: '0.04em' }}>
-                    {s.unit}
-                  </span>
-                </div>
-
-                <div style={{ fontSize: 13, color: B.muted, lineHeight: 1.5 }}>
-                  {s.l}
-                </div>
-              </div>
-            ))}
-
-            <div style={{ marginTop: 24 }}>
-              <StickyNote color={B.yellow} rotate={-2}>
-                Konkret schlägt
-                <br />
-                vage. Immer.
-              </StickyNote>
-            </div>
-          </div>
-        </Reveal>
+        {PROJEKTE.map((p, i) => (
+          <Reveal key={p.id} delay={i * 80}>
+            <ReferenzCard {...p} />
+          </Reveal>
+        ))}
       </div>
+
+      <Reveal delay={240}>
+        <div style={{ marginTop: 44, display: 'flex', justifyContent: 'center' }}>
+          <BtnPrimary label="Kostenlose Analyse anfragen" href="#next" />
+        </div>
+      </Reveal>
     </Frame>
   );
 }
@@ -2278,7 +2285,7 @@ export default function Home() {
       <LeistungenV2 />
       <PhaseZeroV2 />
       <WarumLeonV2 />
-      <ErgebnisseV2 />
+      <ReferenzSection />
       <NextStepsV2 />
       <FAQV2 />
       <TestimonialsV2 />
