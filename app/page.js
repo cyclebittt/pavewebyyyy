@@ -1372,11 +1372,12 @@ function WarumLeonV2() {
       </Reveal>
 
       <Reveal delay={100}>
-        <div style={{ maxWidth: 880, margin: '0 auto', overflowX: 'auto' }}>
-          <div style={{ minWidth: 680 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr 1.2fr', gap: 4, marginBottom: 4 }}>
+        <div className="comp-scroll" style={{ maxWidth: 880, margin: '0 auto', overflowX: 'auto' }}>
+          <div className="comp-inner" style={{ minWidth: 680 }}>
+            <div className="comp-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr 1.2fr', gap: 4, marginBottom: 4 }}>
               <div />
               <div
+                className="comp-them"
                 style={{
                   padding: '16px 20px',
                   borderRadius: '14px 14px 0 0',
@@ -1425,7 +1426,7 @@ function WarumLeonV2() {
               const isLast = i === rows.length - 1;
 
               return (
-                <div key={r.label} style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr 1.2fr', gap: 4, marginBottom: isLast ? 0 : 4 }}>
+                <div key={r.label} className="comp-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr 1.2fr', gap: 4, marginBottom: isLast ? 0 : 4 }}>
                   <div
                     style={{
                       padding: '18px 12px',
@@ -1442,6 +1443,7 @@ function WarumLeonV2() {
                   </div>
 
                   <div
+                    className="comp-them"
                     style={{
                       padding: '18px 20px',
                       background: '#fff',
@@ -2287,6 +2289,10 @@ export default function Home() {
           .ref-card-img  { min-height: 220px !important; }
           .ref-card-text { padding: 24px 20px !important; }
           .leistung-img  { height: 150px !important; }
+          .comp-scroll   { overflow-x: visible !important; -webkit-overflow-scrolling: touch; }
+          .comp-inner    { min-width: 0 !important; }
+          .comp-row      { grid-template-columns: 1fr 1.4fr !important; }
+          .comp-them     { display: none !important; }
         }
       `}</style>
 
