@@ -936,7 +936,7 @@ function LeistungCard({ n, icon, kicker, title, desc, img }) {
       />
 
       {img && (
-        <div style={{ width: '100%', height: 200, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <div className="leistung-img" style={{ width: '100%', height: 200, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <img
             src={img}
             alt={kicker}
@@ -1540,9 +1540,10 @@ function ReferenzCard({ img, kategorie, name, desc, url }) {
       style={{ textDecoration: 'none', display: 'block' }}
     >
       <div
+        className="ref-card-grid"
         style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px,100%), 1fr))',
           gap: 0,
           borderRadius: 20,
           overflow: 'hidden',
@@ -1555,9 +1556,10 @@ function ReferenzCard({ img, kategorie, name, desc, url }) {
         }}
       >
         <div
+          className="ref-card-img"
           style={{
             position: 'relative',
-            minHeight: 300,
+            minHeight: 280,
             overflow: 'hidden',
             background: 'transparent',
           }}
@@ -1582,6 +1584,7 @@ function ReferenzCard({ img, kategorie, name, desc, url }) {
         </div>
 
         <div
+          className="ref-card-text"
           style={{
             padding: '40px 36px',
             display: 'flex',
@@ -2252,13 +2255,14 @@ export default function Home() {
         body {
           scroll-behavior: smooth;
           overflow-x: hidden;
-          max-width: 100%;
+          max-width: 100vw;
           width: 100%;
           background: #000;
         }
 
         * {
           min-width: 0;
+          box-sizing: border-box;
         }
 
         img,
@@ -2276,6 +2280,13 @@ export default function Home() {
           h2 {
             word-break: normal;
           }
+        }
+
+        @media (max-width: 600px) {
+          .ref-card-grid { grid-template-columns: 1fr !important; }
+          .ref-card-img  { min-height: 220px !important; }
+          .ref-card-text { padding: 24px 20px !important; }
+          .leistung-img  { height: 150px !important; }
         }
       `}</style>
 
