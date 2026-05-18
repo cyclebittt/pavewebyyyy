@@ -2252,6 +2252,22 @@ const REVIEWS = [
     date: 'vor 5 Monaten',
     text: 'Ich kann Leon uneingeschränkt weiterempfehlen. Die Zusammenarbeit ist immer kooperativ, effektiv und zielführend.',
   },
+  {
+    name: 'Ian',
+    initials: 'I',
+    color: '#EA4335',
+    rating: 5,
+    date: 'vor 2 Monaten',
+    text: 'Schnelle Antworten, erstellt individuelle Top-Websites, Posts etc.',
+  },
+  {
+    name: 'Laura Janke',
+    initials: 'LJ',
+    color: '#9C27B0',
+    rating: 5,
+    date: 'vor 1 Monat',
+    text: 'Zuverlässig — hält Fristen wie abgesprochen ein, gute zielführende Ideen, Top-Kommunikation.',
+  },
 ];
 
 function GoogleIcon() {
@@ -2277,72 +2293,88 @@ function StarsFilled({ n = 5 }) {
   );
 }
 
+function ReviewCard({ r }) {
+  return (
+    <div style={{
+      width: 300,
+      flexShrink: 0,
+      background: '#fff',
+      border: '1px solid rgba(26,23,18,0.08)',
+      borderRadius: 14,
+      padding: '20px 22px',
+      boxShadow: '0 1px 8px rgba(26,23,18,0.05)',
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+        <div style={{
+          width: 36, height: 36, borderRadius: '50%',
+          background: r.color,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 13, fontWeight: 700, color: '#fff', flexShrink: 0,
+        }}>
+          {r.initials}
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: B.ink, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {r.name}
+          </div>
+          <div style={{ fontSize: 11, color: 'rgba(26,23,18,0.38)', marginTop: 2 }}>
+            {r.date}
+          </div>
+        </div>
+        <div style={{ flexShrink: 0 }}>
+          <GoogleIcon />
+        </div>
+      </div>
+      <StarsFilled n={r.rating} />
+      <p style={{ marginTop: 10, fontSize: 13, lineHeight: 1.65, color: 'rgba(26,23,18,0.68)', margin: '10px 0 0' }}>
+        {r.text}
+      </p>
+    </div>
+  );
+}
+
 function GoogleReviewsSection() {
   return (
-    <Frame bg={B.cream} padding="52px 24px">
-      <div style={{ maxWidth: 920, margin: '0 auto' }}>
-        <Reveal>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 28, flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <GoogleIcon />
-              <span style={{ fontSize: 13, fontWeight: 700, color: 'rgba(26,23,18,0.4)', letterSpacing: '0.01em' }}>
-                Rezensionen
-              </span>
-            </div>
-            <div style={{ width: 1, height: 20, background: 'rgba(26,23,18,0.1)' }} />
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: 28, fontWeight: 900, color: B.ink, lineHeight: 1 }}>5,0</span>
-              <div>
-                <StarsFilled />
-                <div style={{ fontSize: 11, color: 'rgba(26,23,18,0.38)', marginTop: 2 }}>
-                  2 Google-Rezensionen
-                </div>
-              </div>
-            </div>
+    <Frame bg={B.cream} padding="44px 0 48px">
+      <Reveal>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 24, paddingInline: 24, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <GoogleIcon />
+            <span style={{ fontSize: 13, fontWeight: 700, color: 'rgba(26,23,18,0.4)', letterSpacing: '0.01em' }}>
+              Rezensionen
+            </span>
           </div>
-        </Reveal>
+          <div style={{ width: 1, height: 20, background: 'rgba(26,23,18,0.1)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 28, fontWeight: 900, color: B.ink, lineHeight: 1 }}>5,0</span>
+            <StarsFilled />
+          </div>
+        </div>
+      </Reveal>
 
+      {/* Marquee */}
+      <div style={{ overflow: 'hidden', position: 'relative' }}>
+        {/* fade edges */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(340px,100%), 1fr))',
+          position: 'absolute', left: 0, top: 0, bottom: 0, width: 80, zIndex: 2,
+          background: `linear-gradient(to right, ${B.cream}, transparent)`,
+          pointerEvents: 'none',
+        }} />
+        <div style={{
+          position: 'absolute', right: 0, top: 0, bottom: 0, width: 80, zIndex: 2,
+          background: `linear-gradient(to left, ${B.cream}, transparent)`,
+          pointerEvents: 'none',
+        }} />
+
+        <div className="reviews-track" style={{
+          display: 'flex',
           gap: 14,
+          padding: '4px 24px 6px',
+          width: 'max-content',
+          animation: 'reviews-scroll 28s linear infinite',
         }}>
-          {REVIEWS.map((r, i) => (
-            <Reveal key={r.name} delay={i * 80}>
-              <div style={{
-                background: '#fff',
-                border: '1px solid rgba(26,23,18,0.08)',
-                borderRadius: 12,
-                padding: '20px 22px',
-                boxShadow: '0 1px 6px rgba(26,23,18,0.05)',
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                  <div style={{
-                    width: 38, height: 38, borderRadius: '50%',
-                    background: r.color,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 14, fontWeight: 700, color: '#fff', flexShrink: 0,
-                  }}>
-                    {r.initials}
-                  </div>
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: B.ink, lineHeight: 1.2 }}>
-                      {r.name}
-                    </div>
-                    <div style={{ fontSize: 11, color: 'rgba(26,23,18,0.38)', marginTop: 2 }}>
-                      {r.date}
-                    </div>
-                  </div>
-                  <div style={{ marginLeft: 'auto', flexShrink: 0 }}>
-                    <GoogleIcon />
-                  </div>
-                </div>
-                <StarsFilled n={r.rating} />
-                <p style={{ marginTop: 10, fontSize: 14, lineHeight: 1.65, color: 'rgba(26,23,18,0.70)' }}>
-                  {r.text}
-                </p>
-              </div>
-            </Reveal>
+          {[...REVIEWS, ...REVIEWS].map((r, i) => (
+            <ReviewCard key={i} r={r} />
           ))}
         </div>
       </div>
@@ -2410,6 +2442,15 @@ export default function Home() {
           .comp-inner    { min-width: 0 !important; }
           .comp-row      { grid-template-columns: 1fr 1.4fr !important; }
           .comp-them     { display: none !important; }
+        }
+
+        @keyframes reviews-scroll {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+
+        .reviews-track:hover {
+          animation-play-state: paused;
         }
       `}</style>
 
