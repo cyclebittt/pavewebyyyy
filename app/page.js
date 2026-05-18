@@ -2458,7 +2458,6 @@ export default function Home() {
 
       <HeroV2 />
       <GoogleReviewsSection />
-      <ProblemV2 />
       <LeistungenV2 />
       <PhaseZeroV2 />
       <ReferenzenSection />
