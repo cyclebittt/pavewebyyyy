@@ -776,7 +776,7 @@ function ReferenzCard({ id, img, kategorie, name, desc, url, isEven }) {
       onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
       style={{ textDecoration: 'none', display: 'block' }}>
       <div className="ref-card-grid" style={{ display:'grid', gridTemplateColumns: isEven?'.95fr 1.05fr':'1.05fr .95fr',
-        gap:0, borderRadius:20, overflow:'hidden', background:'#F5F2EB',
+        gap:0, borderRadius:20, overflow:'hidden', background:'#0c0c08',
         transition:'transform .25s, box-shadow .25s',
         transform: h?'translateY(-4px)':'none',
         boxShadow: h?'0 16px 48px rgba(14,12,8,0.12)':'0 4px 20px rgba(14,12,8,0.06)' }}>
@@ -790,10 +790,10 @@ function ReferenzCard({ id, img, kategorie, name, desc, url, isEven }) {
         </div>
         <div className="ref-card-text" style={{ padding:'40px 36px', display:'flex', flexDirection:'column', justifyContent:'center', gap:0 }}>
           <div style={{ fontSize:11, fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:B.ocker, marginBottom:10 }}>{kategorie}</div>
-          <div style={{ fontSize:'clamp(1.2rem,2vw,1.6rem)', fontWeight:900, color:B.black, letterSpacing:'-0.02em', lineHeight:1.15, marginBottom:14 }}>{name}</div>
-          <p style={{ fontSize:15, color:'rgba(14,12,8,0.62)', lineHeight:1.75, margin:0, marginBottom:24 }}>{desc}</p>
+          <div style={{ fontSize:'clamp(1.2rem,2vw,1.6rem)', fontWeight:900, color:B.cream, letterSpacing:'-0.02em', lineHeight:1.15, marginBottom:14 }}>{name}</div>
+          <p style={{ fontSize:15, color:'rgba(245,242,235,0.52)', lineHeight:1.75, margin:0, marginBottom:24 }}>{desc}</p>
           <div style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:13, fontWeight:700,
-            color: h?B.ocker:'rgba(14,12,8,0.38)', transition:'color .2s' }}>
+            color: h?B.ocker:'rgba(245,242,235,0.35)', transition:'color .2s' }}>
             Projekt ansehen <ArrowRight size={14} />
           </div>
         </div>
