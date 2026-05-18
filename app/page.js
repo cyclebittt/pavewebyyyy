@@ -248,28 +248,23 @@ function BtnPrimary({ label, href, target }) {
 
 /* ─── ICONS ─── */
 const Icon = {
-  Brandbook: () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-    </svg>
-  ),
-  Motion: () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="5 3 19 12 5 21 5 3" />
-    </svg>
-  ),
-  Web: () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="3" width="20" height="14" rx="2" />
-      <line x1="8" y1="21" x2="16" y2="21" />
-      <line x1="12" y1="17" x2="12" y2="21" />
-    </svg>
-  ),
-  Video: () => (
+  Prozesse: () => (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <rect x="2" y="6" width="14" height="12" rx="2" />
       <path d="M22 8l-6 4 6 4V8z" />
+    </svg>
+  ),
+  Automation: () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+    </svg>
+  ),
+  Dashboard: () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="3" width="7" height="7" rx="1" />
+      <rect x="3" y="14" width="7" height="7" rx="1" />
+      <rect x="14" y="14" width="7" height="7" rx="1" />
     </svg>
   ),
   WA: () => (
@@ -684,10 +679,12 @@ function HeroV2() {
               marginBottom: 28,
             }}
           >
-            Schnelles Marketing ist möglich.
+            Dein Betrieb läuft
+            <br />
+            noch auf Papier.
             <br />
             <span style={{ position: 'relative', display: 'inline-block' }}>
-              Ohne <Serif color={B.yellow}>Agentur-Bullshit.</Serif>
+              <Serif color={B.yellow}>Ich ändere das.</Serif>{' '}In 24 Stunden.
               <svg
                 style={{ position: 'absolute', left: 0, bottom: -8, width: '100%', height: 14, overflow: 'visible' }}
                 viewBox="0 0 600 14"
@@ -708,9 +705,8 @@ function HeroV2() {
               margin: '0 auto 40px',
             }}
           >
-            Die meisten lokalen Betriebe verlieren Kunden — nicht weil ihr Angebot schlecht ist,
-            sondern weil ihr Auftritt es nicht zeigt. Ich zeige dir, wo dein Potenzial liegt.
-            Kostenlos. Ohne Commitment.
+            Prozesse, Abläufe, interne Systeme — die meisten Betriebe lassen täglich Zeit und Geld
+            liegen, weil nichts digital läuft. Ich zeige dir, wo der Hebel liegt. Kostenlos. Ohne Commitment.
           </p>
 
           <BtnPrimary label="Kostenlose Analyse anfragen" href="#next" />
@@ -904,7 +900,7 @@ function ProblemV2() {
   );
 }
 
-function LeistungCard({ n, icon, kicker, title, desc, img }) {
+function LeistungCard({ n, icon, kicker, title, desc, img, url }) {
   const [h, setH] = useState(false);
 
   return (
@@ -1019,6 +1015,28 @@ function LeistungCard({ n, icon, kicker, title, desc, img }) {
         <p style={{ fontSize: 13, color: 'rgba(245,242,235,0.48)', lineHeight: 1.72, maxWidth: 340 }}>
           {desc}
         </p>
+
+        {url && (
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={e => e.stopPropagation()}
+            style={{
+              marginTop: 20,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              fontSize: 12,
+              fontWeight: 700,
+              color: h ? B.yellow : 'rgba(245,242,235,0.35)',
+              textDecoration: 'none',
+              transition: 'color .2s',
+            }}
+          >
+            Live ansehen <ArrowRight size={12} />
+          </a>
+        )}
       </div>
     </div>
   );
@@ -1028,35 +1046,26 @@ function LeistungenV2() {
   const services = [
     {
       n: '01',
-      icon: <Icon.Web />,
-      kicker: 'Digitaler Auftritt',
-      title: 'Website, Social, Online-Präsenz.',
-      desc: 'Wir bringen Struktur in deinen Auftritt: klare Botschaft, klare Führung, klare nächste Handlung. Damit Besucher sofort verstehen, warum sie bleiben sollen.',
-      img: '/leistungen/website.png',
-    },
-    {
-      n: '02',
-      icon: <Icon.Brandbook />,
-      kicker: 'Branding & Kommunikation',
-      title: 'Ein Auftritt, der zusammengehört.',
-      desc: 'Flyer, Website, Social und Kommunikation sollen nicht nach Zufall aussehen. Wir machen deinen Betrieb wiedererkennbar und professionell.',
-      img: '/leistungen/print.png',
-    },
-    {
-      n: '03',
-      icon: <Icon.Motion />,
-      kicker: 'Content & Motion',
-      title: 'Sichtbarkeit, ohne jedes Mal neu anzufangen.',
-      desc: 'Kurzvideos, Reels, Motion Graphics und Vorlagen. Damit du regelmäßig sichtbar bist, ohne jedes Format jedes Mal von null zu bauen.',
-      img: '/leistungen/motion.png',
-    },
-    {
-      n: '04',
-      icon: <Icon.Video />,
+      icon: <Icon.Prozesse />,
       kicker: 'Prozesse',
       title: 'Abläufe, die Zeit sparen.',
       desc: 'Anfragen, Bestellungen, Kommunikation und interne Abläufe: Wir schauen, was sich digitalisieren, vereinfachen oder automatisieren lässt.',
       img: '/leistungen/prozesse.png',
+    },
+    {
+      n: '02',
+      icon: <Icon.Automation />,
+      kicker: 'Automatisierte Workflows',
+      title: 'Prozesse, die von selbst laufen.',
+      desc: 'CRM-Synchronisierung, automatisierte E-Mail-Sequenzen, Buchungssysteme und Benachrichtigungen — alles ohne manuellen Aufwand.',
+    },
+    {
+      n: '03',
+      icon: <Icon.Dashboard />,
+      kicker: 'Dashboard',
+      title: 'Dein Betrieb auf einen Blick.',
+      desc: 'Umsatz, Ausgaben, Zeit und Projekte — alles in einem System. Kein Spreadsheet-Chaos, kein Raten, nur Klarheit.',
+      url: 'https://ls-plum-alpha.vercel.app',
     },
   ];
 
@@ -1064,7 +1073,7 @@ function LeistungenV2() {
     <Frame id="leistungen" bg={B.ink} padding="96px 24px" style={{ color: B.cream }}>
       <div style={{ maxWidth: 920, margin: '0 auto', textAlign: 'center' }}>
         <Reveal>
-          <Eyebrow color={B.yellow}>Lösungen im Überblick</Eyebrow>
+          <Eyebrow color={B.yellow}>Was ich anbiete</Eyebrow>
 
           <h2
             style={{
@@ -1076,15 +1085,15 @@ function LeistungenV2() {
               color: B.cream,
             }}
           >
-            So lösen wir das <Serif color={B.yellow}>gemeinsam.</Serif>
+            Systeme, die deinen Betrieb <Serif color={B.yellow}>entlasten.</Serif>
           </h2>
 
           <p style={{ fontSize: 15, color: 'rgba(245,242,235,0.52)', maxWidth: 520, margin: '16px auto 56px', lineHeight: 1.72 }}>
-            Erst verstehen, wo der Hebel liegt. Dann gezielt umsetzen — nicht blind Pakete verkaufen.
+            Kein Paket. Erst verstehen, wo der Hebel liegt — dann gezielt umsetzen.
           </p>
         </Reveal>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(320px,100%),1fr))', gap: 2 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(280px,100%),1fr))', gap: 2 }}>
           {services.map((s, i) => (
             <Reveal key={s.n} delay={i * 70}>
               <LeistungCard {...s} />
@@ -1095,45 +1104,37 @@ function LeistungenV2() {
         <Reveal delay={260}>
           <div
             style={{
-              marginTop: 16,
-              padding: '22px 26px',
-              border: '1px dashed rgba(232,168,0,0.22)',
-              borderRadius: 16,
-              background: 'rgba(232,168,0,0.03)',
-              textAlign: 'left',
-              position: 'relative',
+              marginTop: 28,
+              padding: '18px 26px',
+              border: '1px solid rgba(245,242,235,0.07)',
+              borderRadius: 14,
+              background: 'rgba(245,242,235,0.02)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              flexWrap: 'wrap',
             }}
           >
-            <span
+            <span style={{ fontSize: 15, color: 'rgba(245,242,235,0.50)' }}>
+              Webdesign? Dafür gibt es Paveo.
+            </span>
+            <a
+              href="https://paveo360.de"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
-                position: 'absolute',
-                top: -11,
-                left: 26,
-                padding: '3px 12px',
-                borderRadius: 99,
-                background: B.ink,
-                border: '1px solid rgba(232,168,0,0.25)',
-                fontSize: 10,
+                fontSize: 15,
                 fontWeight: 700,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
                 color: B.yellow,
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 4,
               }}
             >
-              In Arbeit
-            </span>
-
-            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase', color: B.yellow, marginBottom: 8, opacity: 0.7 }}>
-              05 — Automatisierte Workflows
-            </div>
-
-            <div style={{ fontSize: 16, fontWeight: 800, color: B.cream, marginBottom: 10 }}>
-              Prozesse, die von selbst laufen.
-            </div>
-
-            <p style={{ fontSize: 13, color: 'rgba(245,242,235,0.45)', lineHeight: 1.72, maxWidth: 580, margin: 0 }}>
-              CRM-Synchronisierung, automatisierte E-Mail-Sequenzen, Buchungssysteme und Benachrichtigungen. Wenn das für dich relevant ist, nehmen wir es direkt in Phase 0 mit auf.
-            </p>
+              paveo360.de <ArrowRight size={14} />
+            </a>
           </div>
         </Reveal>
       </div>
@@ -1498,34 +1499,34 @@ const PROJEKTE = [
   {
     id: 'kfa',
     img: '/projekte/kfa.png',
-    kategorie: 'Fundraising-Kampagne',
+    kategorie: 'Gesamtprojekt — Fundraising',
     name: 'KFA Aschaffenburg',
-    desc: '21.000 € in 2 Monaten. Konzept, Branding und Landing Page — komplett ohne Werbebudget.',
+    desc: '21.000 € in 2 Monaten. Konzept, Branding und Landing Page — komplett ohne Werbebudget. Als Teil des Umsetzungsteams.',
     url: 'https://kfa-fundraising.vercel.app/',
-  },
-  {
-    id: 'angelo',
-    img: '/projekte/angelo.png',
-    kategorie: 'Booking & Branding',
-    name: 'Angelo DJ',
-    desc: 'Moderne Booking-Seite für einen DJ. Keine Formulare, direkte Anfrage, klares Auftreten.',
-    url: 'https://angelo-site.vercel.app/',
   },
   {
     id: 'star-doener',
     img: '/projekte/star-doener.png',
-    kategorie: 'Restaurant & Gastronomie',
+    kategorie: 'Gesamtprojekt — Gastronomie',
     name: 'Star Döner',
-    desc: 'Moderner Webauftritt für ein Döner-Restaurant. Speisekarte, Standort und klare Conversion.',
+    desc: 'Digitaler Auftritt, Speisekarte und klare Conversion für ein lokales Restaurant. Als Teil des Umsetzungsteams.',
     url: 'https://star-doner-website.vercel.app/',
   },
   {
-    id: 'paveo',
-    img: '/projekte/paveo.png',
-    kategorie: 'Agentur-Website',
-    name: 'Paveo',
-    desc: 'Agentur-Landingpage mit klarer Positionierung, Leistungsübersicht und Kontaktführung.',
-    url: 'https://leonseitz.com',
+    id: 'angelo',
+    img: '/projekte/angelo.png',
+    kategorie: 'Gesamtprojekt — Booking & Branding',
+    name: 'Angelo DJ',
+    desc: 'Booking-Seite, Branding und direkte Anfragestrecke für einen DJ. Als Teil des Umsetzungsteams.',
+    url: 'https://angelo-site.vercel.app/',
+  },
+  {
+    id: 'dashboard',
+    img: '/projekte/dashboard.png',
+    kategorie: 'Eigenes Tool',
+    name: 'Founder OS Dashboard',
+    desc: 'Ein digitales Betriebssystem für Solo-Unternehmer. Finanzen, Zeit, Projekte — alles an einem Ort, ohne Spreadsheet-Chaos.',
+    url: 'https://ls-plum-alpha.vercel.app',
   },
 ];
 
@@ -1670,7 +1671,7 @@ function ReferenzenSection() {
               color: B.black,
             }}
           >
-            Projekte, die für sich <Serif color={B.ocker}>sprechen.</Serif>
+            Gesamtprojekte, bei denen ich <Serif color={B.ocker}>dabei war.</Serif>
           </h2>
 
           <p
@@ -1679,11 +1680,11 @@ function ReferenzenSection() {
               fontSize: 15,
               color: 'rgba(14,12,8,0.52)',
               lineHeight: 1.75,
-              maxWidth: 440,
+              maxWidth: 480,
               marginInline: 'auto',
             }}
           >
-            Echte Projekte, echte Ergebnisse — von Fundraising bis Booking.
+            Nicht Webdesign-Aufträge — sondern Projekte, bei denen ich als Teil des Teams von Konzept bis Umsetzung mitgemacht habe.
           </p>
         </div>
       </Reveal>
@@ -2415,10 +2416,10 @@ export default function Home() {
       <ScrollBar />
 
       <HeroV2 />
+      <GoogleReviewsSection />
       <ProblemV2 />
       <LeistungenV2 />
       <PhaseZeroV2 />
-      <WarumLeonV2 />
       <ReferenzenSection />
       <NextStepsV2 />
       <FAQV2 />
