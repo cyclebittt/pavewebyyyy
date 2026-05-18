@@ -238,8 +238,8 @@ const INTAKE_STEPS = [
 
 const INP_STYLE = {
   width: '100%', padding: '12px 14px', borderRadius: 12,
-  border: '1.5px solid rgba(14,12,8,0.12)', background: '#FAFAF8',
-  color: '#0E0C08', fontSize: 14, outline: 'none',
+  border: '1.5px solid rgba(245,242,235,0.12)', background: '#1B1812',
+  color: '#F5F2EB', fontSize: 14, outline: 'none',
   boxSizing: 'border-box', fontFamily: FONTS.sans,
 };
 
@@ -279,8 +279,8 @@ function LeadFormLight() {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, padding: '40px 0', textAlign: 'center' }}>
         <CheckCircle2 size={36} color={B.ocker} />
-        <div style={{ fontSize: 17, fontWeight: 900, color: B.black }}>Erhalten.</div>
-        <p style={{ fontSize: 14, color: 'rgba(14,12,8,0.52)', lineHeight: 1.65 }}>
+        <div style={{ fontSize: 17, fontWeight: 900, color: B.cream }}>Erhalten.</div>
+        <p style={{ fontSize: 14, color: 'rgba(245,242,235,0.52)', lineHeight: 1.65 }}>
           Ich melde mich innerhalb von 24 Stunden mit einer konkreten Einschätzung.
         </p>
       </div>
@@ -291,29 +291,29 @@ function LeadFormLight() {
   const BackBtn = () => (
     <button type="button" onClick={() => setStep(s => s - 1)}
       style={{ marginTop: 12, background: 'none', border: 'none', display: 'block',
-        fontSize: 12, color: 'rgba(14,12,8,0.35)', cursor: 'pointer', fontFamily: FONTS.sans, padding: 0 }}>
+        fontSize: 12, color: 'rgba(245,242,235,0.35)', cursor: 'pointer', fontFamily: FONTS.sans, padding: 0 }}>
       ← Zurück
     </button>
   );
 
   return (
     <div>
-      <div style={{ height: 3, borderRadius: 99, background: 'rgba(14,12,8,0.07)', marginBottom: 24, overflow: 'hidden' }}>
+      <div style={{ height: 3, borderRadius: 99, background: 'rgba(245,242,235,0.10)', marginBottom: 24, overflow: 'hidden' }}>
         <div style={{ height: '100%', borderRadius: 99, background: B.ocker, width: `${progressPct}%`, transition: 'width .35s cubic-bezier(0.4,0,0.2,1)' }} />
       </div>
 
       {!isEmailStep && currentStep.type === 'select' && (
         <div>
-          <div style={{ fontSize: 15, fontWeight: 800, color: B.black, marginBottom: 14 }}>{currentStep.question}</div>
+          <div style={{ fontSize: 15, fontWeight: 800, color: B.cream, marginBottom: 14 }}>{currentStep.question}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {currentStep.options.map(opt => (
               <button key={opt.value} type="button" onClick={() => pick(currentStep.key, opt.value)}
                 style={{ width: '100%', padding: '12px 16px', borderRadius: 12, textAlign: 'left',
-                  border: '1.5px solid rgba(14,12,8,0.10)', background: '#FAFAF8', color: B.black,
+                  border: '1.5px solid rgba(245,242,235,0.10)', background: '#1B1812', color: B.cream,
                   fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: FONTS.sans,
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = B.ocker; e.currentTarget.style.background = 'rgba(232,168,0,0.04)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(14,12,8,0.10)'; e.currentTarget.style.background = '#FAFAF8'; }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = B.ocker; e.currentTarget.style.background = 'rgba(232,168,0,0.08)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(245,242,235,0.10)'; e.currentTarget.style.background = '#1B1812'; }}
               >
                 {opt.label}
                 <ArrowRight size={14} style={{ opacity: 0.28, flexShrink: 0 }} />
@@ -326,11 +326,11 @@ function LeadFormLight() {
 
       {!isEmailStep && (currentStep.type === 'input' || currentStep.type === 'textarea') && (
         <div>
-          <div style={{ fontSize: 15, fontWeight: 800, color: B.black, marginBottom: 4 }}>
+          <div style={{ fontSize: 15, fontWeight: 800, color: B.cream, marginBottom: 4 }}>
             {currentStep.question}
-            {currentStep.optional && <span style={{ fontSize: 12, fontWeight: 400, color: 'rgba(14,12,8,0.35)', marginLeft: 8 }}>optional</span>}
+            {currentStep.optional && <span style={{ fontSize: 12, fontWeight: 400, color: 'rgba(245,242,235,0.35)', marginLeft: 8 }}>optional</span>}
           </div>
-          {currentStep.hint && <p style={{ fontSize: 13, color: 'rgba(14,12,8,0.42)', marginBottom: 12, lineHeight: 1.55 }}>{currentStep.hint}</p>}
+          {currentStep.hint && <p style={{ fontSize: 13, color: 'rgba(245,242,235,0.42)', marginBottom: 12, lineHeight: 1.55 }}>{currentStep.hint}</p>}
           {currentStep.type === 'input'
             ? <input type={currentStep.inputType || 'text'} placeholder={currentStep.placeholder}
                 value={answers[currentStep.key] || ''} onChange={e => setAnswers(a => ({ ...a, [currentStep.key]: e.target.value }))}
@@ -350,8 +350,8 @@ function LeadFormLight() {
 
       {isEmailStep && (
         <form onSubmit={handleSubmit}>
-          <div style={{ fontSize: 15, fontWeight: 800, color: B.black, marginBottom: 6 }}>Wohin soll die Analyse?</div>
-          <p style={{ fontSize: 13, color: 'rgba(14,12,8,0.45)', marginBottom: 14, lineHeight: 1.6 }}>Ich schicke dir meine Einschätzung direkt per E-Mail.</p>
+          <div style={{ fontSize: 15, fontWeight: 800, color: B.cream, marginBottom: 6 }}>Wohin soll die Analyse?</div>
+          <p style={{ fontSize: 13, color: 'rgba(245,242,235,0.45)', marginBottom: 14, lineHeight: 1.6 }}>Ich schicke dir meine Einschätzung direkt per E-Mail.</p>
           <input type="email" required autoFocus placeholder="deine@email.de" value={email}
             onChange={e => setEmail(e.target.value)} style={{ ...INP_STYLE, marginBottom: 10 }} />
           <button type="submit" disabled={status === 'loading'}
@@ -362,17 +362,17 @@ function LeadFormLight() {
           </button>
           <button type="button" onClick={() => setStep(s => s - 1)}
             style={{ marginTop: 10, background: 'none', border: 'none', display: 'block',
-              fontSize: 12, color: 'rgba(14,12,8,0.35)', cursor: 'pointer', fontFamily: FONTS.sans, padding: 0 }}>
+              fontSize: 12, color: 'rgba(245,242,235,0.35)', cursor: 'pointer', fontFamily: FONTS.sans, padding: 0 }}>
             ← Zurück
           </button>
           {status === 'error' && (
-            <p style={{ marginTop: 8, fontSize: 12, color: 'rgba(14,12,8,0.40)', textAlign: 'center' }}>
+            <p style={{ marginTop: 8, fontSize: 12, color: 'rgba(245,242,235,0.40)', textAlign: 'center' }}>
               Fehler — schreib direkt an <strong>hello@leonseitz.com</strong>
             </p>
           )}
         </form>
       )}
-      <p style={{ marginTop: 16, fontSize: 11, color: 'rgba(14,12,8,0.25)', textAlign: 'center' }}>
+      <p style={{ marginTop: 16, fontSize: 11, color: 'rgba(245,242,235,0.25)', textAlign: 'center' }}>
         Kein Spam. Kein Paket. Nur eine ehrliche Einschätzung.
       </p>
     </div>
@@ -770,7 +770,7 @@ const PROJEKTE = [
 
 function ReferenzCard({ id, img, kategorie, name, desc, url, isEven }) {
   const [h, setH] = useState(false);
-  const bgMap = { kfa:'#F5F2EB', 'star-doener':'#0E0C08', angelo:'#15110a', dashboard:'#F0EDE6' };
+  const bgMap = { kfa:'#0c0c08', 'star-doener':'#0E0C08', angelo:'#15110a', dashboard:'#0c0c08' };
   return (
     <a href={url} target="_blank" rel="noopener noreferrer"
       onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
@@ -804,15 +804,15 @@ function ReferenzCard({ id, img, kategorie, name, desc, url, isEven }) {
 
 function ReferenzenSection() {
   return (
-    <Frame id="referenzen" bg="#ffffff" padding="96px 24px">
+    <Frame id="referenzen" bg="#0c0c08" padding="96px 24px">
       <Reveal>
         <div style={{ maxWidth:720, margin:'0 auto', textAlign:'center' }}>
           <Eyebrow>Referenzen</Eyebrow>
           <h2 style={{ marginTop:20, fontSize:'clamp(1.6rem,5vw,3rem)', fontWeight:900, lineHeight:1.1,
-            letterSpacing:'-0.02em', color:B.black }}>
+            letterSpacing:'-0.02em', color:B.cream }}>
             Projekte, bei denen ich <Serif color={B.ocker}>dabei war.</Serif>
           </h2>
-          <p style={{ marginTop:16, fontSize:15, color:'rgba(14,12,8,0.52)', lineHeight:1.75, maxWidth:480, marginInline:'auto' }}>
+          <p style={{ marginTop:16, fontSize:15, color:'rgba(245,242,235,0.52)', lineHeight:1.75, maxWidth:480, marginInline:'auto' }}>
             Keine reinen Webdesign-Aufträge — Projekte, bei denen ich als Teil des Teams von Konzept bis Umsetzung mitgemacht habe.
           </p>
         </div>
@@ -868,9 +868,9 @@ function NextStepsV2() {
       </Reveal>
 
       <Reveal delay={140}>
-        <div style={{ maxWidth:580, margin:'0 auto', background:'#fff', borderRadius:22, padding:'36px 36px',
-          boxShadow:'0 4px 32px rgba(26,23,18,0.07)', border:'1px solid rgba(26,23,18,0.06)' }}>
-          <div style={{ fontSize:13, fontWeight:800, color:B.ink, marginBottom:20, letterSpacing:'-0.01em' }}>
+        <div style={{ maxWidth:580, margin:'0 auto', background:'#0c0c08', borderRadius:22, padding:'36px 36px',
+          boxShadow:'0 4px 32px rgba(0,0,0,0.4)', border:'1px solid rgba(245,242,235,0.08)' }}>
+          <div style={{ fontSize:13, fontWeight:800, color:B.cream, marginBottom:20, letterSpacing:'-0.01em' }}>
             Analyse anfragen — kostenlos &amp; unverbindlich
           </div>
           <LeadFormLight />
@@ -985,8 +985,8 @@ function TestimonialsV2() {
         gridTemplateColumns:'repeat(auto-fit,minmax(min(300px,100%),1fr))', gap:24 }}>
         {testimonials.map((t, i) => (
           <Reveal key={t.name} delay={i * 100}>
-            <div style={{ padding:'32px 32px', background:'#fff', borderRadius:20,
-              boxShadow:'0 2px 16px rgba(26,23,18,0.06)', border:'1px solid rgba(26,23,18,0.05)',
+            <div style={{ padding:'32px 32px', background:'#0c0c08', borderRadius:20,
+              boxShadow:'0 2px 16px rgba(0,0,0,0.3)', border:'1px solid rgba(245,242,235,0.08)',
               textAlign:'left', minHeight:'100%' }}>
               <div style={{ display:'flex', gap:2, marginBottom:18 }}>
                 {[1,2,3,4,5].map(s => (
