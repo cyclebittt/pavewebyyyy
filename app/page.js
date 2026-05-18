@@ -516,9 +516,9 @@ function LeistungenV2() {
       </svg>
       <div style={{ display:'flex', gap:48, alignItems:'center', position:'relative', zIndex:2 }}>
         {[
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>,
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>,
+          <svg key={0} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>,
+          <svg key={1} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+          <svg key={2} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>,
         ].map((icon, i) => (
           <div key={i} style={{ width: i===1?54:46, height: i===1?54:46, borderRadius:'50%',
             background: i===1?'#E8A800':'#1B1812', border:`1.5px solid ${i===1?'#E8A800':'rgba(232,168,0,.4)'}`,
@@ -999,7 +999,7 @@ function TestimonialsV2() {
                   </svg>
                 ))}
               </div>
-              <p style={{ fontSize:15, lineHeight:1.7, color:'rgba(26,23,18,0.72)', margin:0, marginBottom:24 }}>„{t.quote}"</p>
+              <p style={{ fontSize:15, lineHeight:1.7, color:'rgba(26,23,18,0.72)', margin:0, marginBottom:24 }}>&#8222;{t.quote}&#8220;</p>
               <div style={{ display:'flex', alignItems:'center', gap:12 }}>
                 <div style={{ width:36, height:36, borderRadius:'50%', background:`linear-gradient(135deg, ${B.yellow}, ${B.ocker})`,
                   display:'flex', alignItems:'center', justifyContent:'center', fontSize:14, fontWeight:900, color:B.ink }}>
