@@ -385,8 +385,8 @@ function HeroV2() {
     <Frame
       id="hero"
       bg="radial-gradient(1200px 700px at 50% -20%, rgba(232,168,0,.16), transparent 60%), linear-gradient(180deg, #0a0805 0%, #0E0C08 50%, #15110a 100%)"
-      padding="140px 28px 120px"
-      style={{ color: B.cream, minHeight: '100vh' }}
+      padding="0 28px"
+      style={{ color: B.cream, minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
     >
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.6, mixBlendMode: 'overlay',
         backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .35 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")` }} />
@@ -420,7 +420,7 @@ function HeroV2() {
       </div>
 
       <Reveal>
-        <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center', position: 'relative' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center', position: 'relative', width: '100%' }}>
           <h1 style={{ fontSize: 'clamp(2.4rem,7.2vw,5.2rem)', fontWeight: 900, lineHeight: 1.02,
             letterSpacing: '-0.035em', color: B.cream, marginBottom: 32 }}>
             Dein Betrieb läuft
