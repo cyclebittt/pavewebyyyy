@@ -446,7 +446,7 @@ function LeistungCard({ n, icon, kicker, title, desc, visual, url }) {
     <div onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
       style={{ border: `1px solid ${h ? 'rgba(232,168,0,0.22)' : 'rgba(245,242,235,0.06)'}`,
         background: h ? '#211c14' : B.dark, textAlign: 'left', position: 'relative',
-        overflow: 'hidden', transition: 'border-color .22s, background .22s', display: 'flex', flexDirection: 'column' }}>
+        overflow: 'hidden', transition: 'border-color .22s, background .22s', display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: B.yellow,
         opacity: h ? 1 : 0, transition: 'opacity .22s' }} />
       {visual && visual}
