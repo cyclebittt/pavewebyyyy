@@ -682,10 +682,10 @@ function PhaseZeroV2() {
       </Reveal>
 
       <div style={{ maxWidth: 960, margin: '0 auto', position: 'relative' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px,100%), 1fr))', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px,100%), 1fr))', gap: 20, alignItems: 'stretch' }}>
           {phases.map((p, i) => (
-            <Reveal key={p.n} delay={i * 100}>
-              <div style={{ position: 'relative', borderRadius: 20, overflow: 'hidden',
+            <Reveal key={p.n} delay={i * 100} style={{ height: '100%' }}>
+              <div style={{ position: 'relative', borderRadius: 20, overflow: 'hidden', height: '100%',
                 background: p.highlight ? 'linear-gradient(145deg, rgba(232,168,0,0.10), rgba(232,168,0,0.03))' : 'rgba(245,242,235,0.02)',
                 border: p.highlight ? '1.5px solid rgba(232,168,0,0.35)' : '1px solid rgba(245,242,235,0.07)',
                 display: 'flex', flexDirection: 'column', zIndex: 1 }}>
