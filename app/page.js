@@ -760,7 +760,7 @@ const PROJEKTE = [
   },
   {
     id: 'dashboard',
-    img: '/projekte/dashboard.png',
+    img: '/leistungen/prozesse.png',
     kategorie: 'Eigenes Tool',
     name: 'Finance & Strategy Dashboard',
     desc: 'Ein digitales Betriebssystem für Solo-Unternehmer. Finanzen, Projekte, Zeit — alles an einem Ort, ohne Spreadsheet-Chaos.',
