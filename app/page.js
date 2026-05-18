@@ -840,14 +840,10 @@ function NextStepsV2() {
   ];
 
   return (
-    <Frame id="next" bg="#ffffff" padding="96px 24px">
+    <Frame id="next" bg={B.black} padding="96px 24px">
       <Reveal>
         <div style={{ maxWidth:720, margin:'0 auto', textAlign:'center', marginBottom:56 }}>
-          <span style={{ display:'inline-block', padding:'5px 14px', borderRadius:100, background:B.ink,
-            color:B.cream, fontSize:11, fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:18 }}>
-            Phase 0 — Kostenlos
-          </span>
-          <h2 style={{ fontSize:'clamp(1.8rem,5vw,3.25rem)', fontWeight:900, lineHeight:1.08, letterSpacing:'-0.025em', color:B.ink }}>
+          <h2 style={{ fontSize:'clamp(1.8rem,5vw,3.25rem)', fontWeight:900, lineHeight:1.08, letterSpacing:'-0.025em', color:B.cream }}>
             Lass uns reden.
             <br />
             <Serif color={B.ocker}>Kein Commitment.</Serif>
@@ -864,8 +860,8 @@ function NextStepsV2() {
                 display:'flex', alignItems:'center', justifyContent:'center',
                 fontSize:18, fontWeight:900, color:B.ink, margin:'0 auto 18px',
                 boxShadow:'0 0 0 6px rgba(232,168,0,0.10)' }}>{s.n}</div>
-              <div style={{ fontSize:18, fontWeight:800, color:B.ink, marginBottom:8, letterSpacing:'-0.01em' }}>{s.title}</div>
-              <p style={{ fontSize:13, color:'rgba(26,23,18,0.55)', lineHeight:1.65, margin:0, maxWidth:220, marginInline:'auto' }}>{s.desc}</p>
+              <div style={{ fontSize:18, fontWeight:800, color:B.cream, marginBottom:8, letterSpacing:'-0.01em' }}>{s.title}</div>
+              <p style={{ fontSize:13, color:'rgba(245,242,235,0.48)', lineHeight:1.65, margin:0, maxWidth:220, marginInline:'auto' }}>{s.desc}</p>
             </div>
           ))}
         </div>
@@ -891,7 +887,7 @@ function NextStepsV2() {
           </a>
           <a href="mailto:hello@leonseitz.com?subject=Kostenlose Analyse&body=Problem: %0D%0ABetrieb: %0D%0AKontext: %0D%0A"
             style={{ display:'inline-flex', alignItems:'center', gap:8, padding:'10px 22px', borderRadius:100,
-              border:'1px solid rgba(26,23,18,0.16)', color:'rgba(26,23,18,0.62)', fontSize:13, fontWeight:700, textDecoration:'none' }}>
+              border:'1px solid rgba(245,242,235,0.16)', color:'rgba(245,242,235,0.62)', fontSize:13, fontWeight:700, textDecoration:'none' }}>
             <Mail size={14} /> E-Mail
           </a>
         </div>
