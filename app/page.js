@@ -614,69 +614,91 @@ function LeadFormLight() {
 /* ─── SECTIONS ─── */
 function HeroV2() {
   return (
-   <Frame id="hero" bg="#000" padding="80px 64px 96px" style={{ color: B.cream, minHeight: '100vh' }}>
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          padding: '20px 64px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          zIndex: 5,
-        }}
-      >
-        <a href="/" style={{ fontSize: 15, fontWeight: 900, color: B.cream, letterSpacing: '-0.01em', textDecoration: 'none' }}>
-          Leon Seitz
-        </a>
+    <Frame
+      id="hero"
+      bg="radial-gradient(1200px 700px at 50% -20%, rgba(232,168,0,.16), transparent 60%), linear-gradient(180deg, #0a0805 0%, #0E0C08 50%, #15110a 100%)"
+      padding="140px 28px 120px"
+      style={{ color: B.cream, minHeight: '100vh' }}
+    >
+      {/* Grain overlay */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.6, mixBlendMode: 'overlay',
+        backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .35 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")`,
+      }} />
 
-        <a
-          href="#next"
-          style={{
-            fontSize: 12,
-            fontWeight: 700,
-            color: B.yellow,
-            padding: '8px 18px',
-            borderRadius: 100,
-            border: '1px solid rgba(232,168,0,0.25)',
-            background: 'rgba(14,12,8,0.65)',
-            textDecoration: 'none',
-          }}
-        >
-          Termin buchen
+      {/* Grid ornament */}
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.45 }}>
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(232,168,0,1)" strokeWidth="0.5" opacity="0.06" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
+      </div>
+
+      {/* Nav */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0,
+        padding: '24px 36px',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 5,
+      }}>
+        <a href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, color: B.cream, textDecoration: 'none', fontWeight: 900, letterSpacing: '-0.01em' }}>
+          Leon Seitz
+          <span style={{ width: 10, height: 10, borderRadius: '50%', background: B.yellow, boxShadow: '0 0 0 3px rgba(232,168,0,.2)', display: 'inline-block' }} />
+          <small style={{ fontWeight: 600, color: 'rgba(245,242,235,.5)', fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', marginLeft: 6 }}>Phase 0</small>
         </a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 11, color: 'rgba(245,242,235,.55)', fontWeight: 600, letterSpacing: '0.04em' }}>
+            <span className="live-dot" />
+            Verfügbar — Antwort in 24h
+          </span>
+          <a href="#next" style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '9px 18px', borderRadius: 100,
+            border: '1px solid rgba(232,168,0,.32)', background: 'rgba(14,12,8,.55)',
+            color: B.yellow, fontSize: 12, fontWeight: 700, textDecoration: 'none',
+            backdropFilter: 'blur(6px)',
+          }}>
+            Termin buchen
+          </a>
+        </div>
+      </div>
+
+      {/* Corner label */}
+      <div style={{
+        position: 'absolute', top: 90, left: 36,
+        color: 'rgba(232,168,0,.35)', fontSize: 10, fontWeight: 700,
+        letterSpacing: '0.2em', textTransform: 'uppercase',
+        display: 'flex', alignItems: 'center', gap: 8,
+      }}>
+        <span style={{ width: 24, height: 1, background: 'rgba(232,168,0,.35)', display: 'inline-block' }} />
+        Phase 0 · Analyse
       </div>
 
       <Reveal>
-        <div style={{ maxWidth: 880, margin: '60px auto 0', textAlign: 'center', position: 'relative' }}>
-          <span
-            style={{
-              display: 'inline-block',
-              fontSize: 11,
-              fontWeight: 700,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: B.yellow,
-              padding: '5px 14px',
-              borderRadius: 100,
-              border: '1px solid rgba(232,168,0,0.25)',
-              background: 'rgba(232,168,0,0.06)',
-              marginBottom: 28,
-            }}
-          >
-            Phase 0 — Kostenlos
-          </span>
+        <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center', position: 'relative' }}>
+          {/* Eyebrow badge */}
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 10,
+            fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase',
+            color: B.yellow, padding: '7px 16px 7px 12px', borderRadius: 100,
+            border: '1px solid rgba(232,168,0,.28)', background: 'rgba(232,168,0,.06)',
+            marginBottom: 36,
+          }}>
+            <span style={{ width: 7, height: 7, borderRadius: '50%', background: B.yellow, boxShadow: '0 0 0 3px rgba(232,168,0,.2)', display: 'inline-block' }} />
+            Phase 0 — Kostenlos · Kein Commitment
+          </div>
 
           <h1
             style={{
-              fontSize: 'clamp(2.3rem,7vw,4.7rem)',
+              fontSize: 'clamp(2.4rem,7.2vw,5.2rem)',
               fontWeight: 900,
-              lineHeight: 1.04,
-              letterSpacing: '-0.03em',
+              lineHeight: 1.02,
+              letterSpacing: '-0.035em',
               color: B.cream,
-              marginBottom: 28,
+              marginBottom: 32,
             }}
           >
             Dein Betrieb läuft
@@ -686,7 +708,7 @@ function HeroV2() {
             <span style={{ position: 'relative', display: 'inline-block' }}>
               <Serif color={B.yellow}>Ich ändere das.</Serif>{' '}In 24 Stunden.
               <svg
-                style={{ position: 'absolute', left: 0, bottom: -8, width: '100%', height: 14, overflow: 'visible' }}
+                style={{ position: 'absolute', left: '-2%', bottom: '-0.18em', width: '104%', height: '0.32em', overflow: 'visible' }}
                 viewBox="0 0 600 14"
                 preserveAspectRatio="none"
               >
@@ -698,11 +720,12 @@ function HeroV2() {
 
           <p
             style={{
-              fontSize: 'clamp(1rem,2vw,1.125rem)',
+              fontSize: 17,
               lineHeight: 1.7,
               color: 'rgba(245,242,235,0.62)',
               maxWidth: 620,
-              margin: '0 auto 40px',
+              margin: '0 auto 44px',
+              textAlign: 'center',
             }}
           >
             Prozesse, Abläufe, interne Systeme — die meisten Betriebe lassen täglich Zeit und Geld
@@ -713,18 +736,28 @@ function HeroV2() {
 
           <div
             style={{
-              marginTop: 36,
+              marginTop: 42,
               display: 'flex',
               justifyContent: 'center',
-              gap: 28,
+              gap: 32,
               fontSize: 12,
-              color: 'rgba(245,242,235,0.40)',
+              color: 'rgba(245,242,235,0.45)',
+              fontWeight: 500,
               flexWrap: 'wrap',
             }}
           >
-            <span>✓ Antwort in 24h</span>
-            <span>✓ Keine Vorauskasse</span>
-            <span>✓ Kein Vertrag</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ width: 14, height: 14, borderRadius: '50%', background: 'rgba(232,168,0,.15)', color: B.yellow, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 900 }}>✓</span>
+              Antwort in 24h
+            </span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ width: 14, height: 14, borderRadius: '50%', background: 'rgba(232,168,0,.15)', color: B.yellow, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 900 }}>✓</span>
+              Keine Vorauskasse
+            </span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ width: 14, height: 14, borderRadius: '50%', background: 'rgba(232,168,0,.15)', color: B.yellow, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 900 }}>✓</span>
+              Kein Vertrag
+            </span>
           </div>
         </div>
       </Reveal>
@@ -900,7 +933,7 @@ function ProblemV2() {
   );
 }
 
-function LeistungCard({ n, icon, kicker, title, desc, img, url }) {
+function LeistungCard({ n, icon, kicker, title, desc, visual, url }) {
   const [h, setH] = useState(false);
 
   return (
@@ -909,7 +942,7 @@ function LeistungCard({ n, icon, kicker, title, desc, img, url }) {
       onMouseLeave={() => setH(false)}
       style={{
         border: `1px solid ${h ? 'rgba(232,168,0,0.22)' : 'rgba(245,242,235,0.06)'}`,
-        background: h ? 'rgba(232,168,0,0.04)' : B.dark,
+        background: h ? '#211c14' : B.dark,
         textAlign: 'left',
         position: 'relative',
         overflow: 'hidden',
@@ -931,25 +964,7 @@ function LeistungCard({ n, icon, kicker, title, desc, img, url }) {
         }}
       />
 
-      {img && (
-        <div className="leistung-img" style={{ width: '100%', height: 200, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <img
-            src={img}
-            alt={kicker}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain',
-              transform: h ? 'scale(1.04)' : 'scale(1)',
-              transition: 'transform .45s cubic-bezier(0.4,0,0.2,1)',
-              filter: 'drop-shadow(0 8px 24px rgba(232,168,0,0.08))',
-            }}
-            onError={e => {
-              e.currentTarget.parentElement.style.display = 'none';
-            }}
-          />
-        </div>
-      )}
+      {visual && visual}
 
       <div style={{ padding: '28px 32px', flex: 1, position: 'relative' }}>
         <div
@@ -1043,6 +1058,64 @@ function LeistungCard({ n, icon, kicker, title, desc, img, url }) {
 }
 
 function LeistungenV2() {
+  const visual1 = (
+    <div style={{ position:'relative', height:200, background:'linear-gradient(180deg,#15110a,#0E0C08)', borderBottom:'1px solid rgba(245,242,235,.06)', overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
+      <div style={{ position:'absolute', inset:0, backgroundImage:'radial-gradient(circle at 1px 1px, rgba(232,168,0,.12) 1px, transparent 0)', backgroundSize:'18px 18px', opacity:.4, pointerEvents:'none' }} />
+      <div style={{ width:64, height:80, background:'#F5F2EB', borderRadius:3, position:'relative', transform:'rotate(-6deg)', boxShadow:'0 8px 20px rgba(0,0,0,.4)', padding:'10px 8px', display:'flex', flexDirection:'column', gap:5 }}>
+        {[60,90,75,85,50].map((w,i) => <span key={i} style={{ display:'block', height:3, borderRadius:2, background:'#0E0C08', opacity:.55, width:`${w}%` }} />)}
+        <div style={{ position:'absolute', top:-3, right:-3, width:14, height:14, background:'#E8A800', borderRadius:'50%', boxShadow:'0 0 0 4px rgba(232,168,0,.18)' }} />
+      </div>
+      <svg style={{ margin:'0 14px', color:'rgba(232,168,0,.7)', flexShrink:0 }} width="32" height="14" viewBox="0 0 32 14" fill="none">
+        <path d="M2 7h26M22 2l6 5-6 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="3 3"/>
+      </svg>
+      <div style={{ width:96, height:80, background:'#1B1812', border:'1px solid rgba(232,168,0,.3)', borderRadius:8, padding:8, display:'flex', flexDirection:'column', gap:5, boxShadow:'0 10px 28px rgba(232,168,0,.18)' }}>
+        <div style={{ display:'flex', gap:3, marginBottom:3 }}>{[0,1,2].map(i => <span key={i} style={{ width:4, height:4, borderRadius:'50%', background:'rgba(232,168,0,.5)', display:'block' }} />)}</div>
+        <span style={{ height:3, borderRadius:2, background:'#E8A800', width:'60%', display:'block' }} />
+        <span style={{ height:3, borderRadius:2, background:'rgba(245,242,235,.18)', display:'block' }} />
+        <span style={{ height:3, borderRadius:2, background:'rgba(245,242,235,.18)', width:'45%', display:'block' }} />
+        <span style={{ height:3, borderRadius:2, background:'rgba(245,242,235,.18)', display:'block' }} />
+      </div>
+    </div>
+  );
+
+  const visual2 = (
+    <div style={{ position:'relative', height:200, background:'linear-gradient(180deg,#15110a,#0E0C08)', borderBottom:'1px solid rgba(245,242,235,.06)', overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
+      <div style={{ position:'absolute', inset:0, backgroundImage:'radial-gradient(circle at 1px 1px, rgba(232,168,0,.12) 1px, transparent 0)', backgroundSize:'18px 18px', opacity:.4, pointerEvents:'none' }} />
+      <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', overflow:'visible' }} viewBox="0 0 280 140" preserveAspectRatio="none">
+        <path d="M 56 70 Q 100 30, 140 70 T 224 70" fill="none" stroke="rgba(232,168,0,.45)" strokeWidth="1.4" strokeDasharray="3 4"/>
+        <path d="M 56 70 Q 100 110, 140 70 T 224 70" fill="none" stroke="rgba(232,168,0,.25)" strokeWidth="1.4" strokeDasharray="3 4"/>
+      </svg>
+      <div style={{ display:'flex', gap:48, alignItems:'center', position:'relative', zIndex:2 }}>
+        <div style={{ width:46, height:46, borderRadius:'50%', background:'#1B1812', border:'1.5px solid rgba(232,168,0,.4)', display:'flex', alignItems:'center', justifyContent:'center', color:'#E8A800' }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        </div>
+        <div style={{ width:54, height:54, borderRadius:'50%', background:'#E8A800', border:'1.5px solid #E8A800', display:'flex', alignItems:'center', justifyContent:'center', color:'#0E0C08', boxShadow:'0 0 0 6px rgba(232,168,0,.12), 0 0 0 14px rgba(232,168,0,.05)' }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div style={{ width:46, height:46, borderRadius:'50%', background:'#1B1812', border:'1.5px solid rgba(232,168,0,.4)', display:'flex', alignItems:'center', justifyContent:'center', color:'#E8A800' }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+      </div>
+    </div>
+  );
+
+  const visual3 = (
+    <div style={{ position:'relative', height:200, background:'linear-gradient(180deg,#15110a,#0E0C08)', borderBottom:'1px solid rgba(245,242,235,.06)', overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
+      <div style={{ position:'absolute', inset:0, backgroundImage:'radial-gradient(circle at 1px 1px, rgba(232,168,0,.12) 1px, transparent 0)', backgroundSize:'18px 18px', opacity:.4, pointerEvents:'none' }} />
+      <div style={{ width:'100%', maxWidth:280, background:'#15110a', border:'1px solid rgba(245,242,235,.08)', borderRadius:10, padding:14, display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, boxShadow:'0 14px 36px rgba(0,0,0,.4)' }}>
+        {[{lbl:'Umsatz',val:'12.4k',gold:true},{lbl:'Anfragen',val:'38',gold:false}].map(s => (
+          <div key={s.lbl} style={{ background:'#1B1812', border:'1px solid rgba(245,242,235,.06)', borderRadius:6, padding:'8px 10px' }}>
+            <div style={{ fontSize:7.5, color:'rgba(245,242,235,.4)', letterSpacing:'.08em', textTransform:'uppercase', fontWeight:700, marginBottom:4 }}>{s.lbl}</div>
+            <div style={{ fontSize:15, fontWeight:900, color: s.gold ? '#E8A800' : '#F5F2EB', letterSpacing:'-.01em' }}>{s.val}</div>
+          </div>
+        ))}
+        <div style={{ gridColumn:'1/-1', height:46, background:'#1B1812', border:'1px solid rgba(245,242,235,.06)', borderRadius:6, padding:'6px 8px', display:'flex', alignItems:'flex-end', gap:3 }}>
+          {[30,55,40,70,50,85,65,95].map((h,i) => <div key={i} style={{ flex:1, background:'linear-gradient(180deg,#E8A800,rgba(232,168,0,.4))', borderRadius:'2px 2px 0 0', height:`${h}%` }} />)}
+        </div>
+      </div>
+    </div>
+  );
+
   const services = [
     {
       n: '01',
@@ -1050,7 +1123,7 @@ function LeistungenV2() {
       kicker: 'Prozesse',
       title: 'Abläufe, die Zeit sparen.',
       desc: 'Anfragen, Bestellungen, Kommunikation und interne Abläufe: Wir schauen, was sich digitalisieren, vereinfachen oder automatisieren lässt.',
-      img: '/leistungen/prozesse.png',
+      visual: visual1,
     },
     {
       n: '02',
@@ -1058,6 +1131,7 @@ function LeistungenV2() {
       kicker: 'Automatisierte Workflows',
       title: 'Prozesse, die von selbst laufen.',
       desc: 'CRM-Synchronisierung, automatisierte E-Mail-Sequenzen, Buchungssysteme und Benachrichtigungen — alles ohne manuellen Aufwand.',
+      visual: visual2,
     },
     {
       n: '03',
@@ -1066,6 +1140,7 @@ function LeistungenV2() {
       title: 'Dein Betrieb auf einen Blick.',
       desc: 'Umsatz, Ausgaben, Zeit und Projekte — alles in einem System. Kein Spreadsheet-Chaos, kein Raten, nur Klarheit.',
       url: 'https://ls-plum-alpha.vercel.app',
+      visual: visual3,
     },
   ];
 
@@ -1149,22 +1224,67 @@ function PhaseZeroV2() {
       label: 'Phase 0',
       title: 'Analyse',
       badge: 'Kostenlos',
+      time: 'in 24–72h',
       desc: 'Ich schaue mir alles an. Website, Print, Social, Prozesse. Du bekommst eine ehrliche Einschätzung — schriftlich.',
       highlight: true,
+      visual: (
+        <div style={{ height: 160, background: 'linear-gradient(180deg,#1B1812,#15110a)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position:'absolute', inset:0, backgroundImage:'radial-gradient(circle at 1px 1px, rgba(232,168,0,.10) 1px, transparent 0)', backgroundSize:'16px 16px', opacity:.5, pointerEvents:'none' }} />
+          <div style={{ width:64, height:80, background:'#F5F2EB', borderRadius:3, position:'relative', transform:'rotate(-4deg)', boxShadow:'0 8px 20px rgba(0,0,0,.5)', padding:'10px 8px', display:'flex', flexDirection:'column', gap:5 }}>
+            {[60,90,75,85,50].map((w,i) => <span key={i} style={{ display:'block', height:3, borderRadius:2, background:'#0E0C08', opacity:.55, width:`${w}%` }} />)}
+            <div style={{ position:'absolute', top:-3, right:-3, width:14, height:14, background:'#E8A800', borderRadius:'50%', boxShadow:'0 0 0 4px rgba(232,168,0,.25)' }} />
+          </div>
+        </div>
+      ),
     },
     {
       n: '1',
       label: 'Phase 1',
       title: 'Erste Umsetzung',
       badge: 'Zahlung nur bei Zufriedenheit',
+      time: '1–3 Wochen',
       desc: 'Das erste konkrete Ergebnis. Du siehst es fertig — und entscheidest dann, ob du zahlst.',
+      visual: (
+        <div style={{ height: 160, background: 'linear-gradient(180deg,#1B1812,#15110a)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position:'absolute', inset:0, backgroundImage:'radial-gradient(circle at 1px 1px, rgba(232,168,0,.10) 1px, transparent 0)', backgroundSize:'16px 16px', opacity:.5, pointerEvents:'none' }} />
+          <div style={{ width:120, height:80, background:'#1B1812', border:'1px solid rgba(245,242,235,.10)', borderRadius:8, overflow:'hidden', boxShadow:'0 8px 24px rgba(0,0,0,.4)' }}>
+            <div style={{ height:18, background:'rgba(245,242,235,.04)', display:'flex', alignItems:'center', paddingInline:8, gap:4, borderBottom:'1px solid rgba(245,242,235,.06)' }}>
+              {[0,1,2].map(i => <span key={i} style={{ width:5, height:5, borderRadius:'50%', background:'rgba(245,242,235,.15)', display:'inline-block' }} />)}
+            </div>
+            <div style={{ padding:'8px 10px', display:'flex', flexDirection:'column', gap:5 }}>
+              <span style={{ height:3, borderRadius:2, background:'#E8A800', width:'70%', display:'block' }} />
+              <span style={{ height:3, borderRadius:2, background:'rgba(245,242,235,.15)', display:'block' }} />
+              <span style={{ height:3, borderRadius:2, background:'rgba(245,242,235,.15)', width:'55%', display:'block' }} />
+            </div>
+          </div>
+          <div style={{ position:'absolute', bottom:14, right:14, background:B.yellow, borderRadius:6, padding:'4px 10px', fontFamily:FONTS.hand, fontSize:14, color:B.ink, fontWeight:700, transform:'rotate(-3deg)' }}>
+            Fertig!
+          </div>
+        </div>
+      ),
     },
     {
       n: '2+',
       label: 'Phase 2+',
       title: 'Weitere Schritte',
       badge: 'Immer nach Fertigstellung',
+      time: 'on demand',
       desc: 'Kein Vertrag. Kein Paket. Wir arbeiten so lange, wie es sinnvoll ist.',
+      visual: (
+        <div style={{ height: 160, background: 'linear-gradient(180deg,#1B1812,#15110a)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position:'absolute', inset:0, backgroundImage:'radial-gradient(circle at 1px 1px, rgba(232,168,0,.10) 1px, transparent 0)', backgroundSize:'16px 16px', opacity:.5, pointerEvents:'none' }} />
+          <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+            {[{done:true,label:'Website live'},{done:true,label:'CRM verknüpft'},{done:false,label:'Automation'},{done:false,label:'Dashboard'}].map((item,i) => (
+              <div key={i} style={{ display:'flex', alignItems:'center', gap:8 }}>
+                <div style={{ width:14, height:14, borderRadius:3, border:`1.5px solid ${item.done ? '#E8A800' : 'rgba(245,242,235,.2)'}`, background: item.done ? '#E8A800' : 'transparent', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                  {item.done && <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#0E0C08" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                </div>
+                <span style={{ fontSize:11, fontWeight:600, color: item.done ? 'rgba(245,242,235,.7)' : 'rgba(245,242,235,.3)', letterSpacing:'0.01em' }}>{item.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ),
     },
   ];
 
@@ -1204,123 +1324,84 @@ function PhaseZeroV2() {
         </div>
       </Reveal>
 
-      <div style={{ maxWidth: 760, margin: '0 auto', position: 'relative' }}>
-        <svg
-          style={{ position: 'absolute', left: 24, top: 32, height: 'calc(100% - 80px)', width: 24, pointerEvents: 'none' }}
-          viewBox="0 0 24 600"
-          preserveAspectRatio="none"
-        >
-          <HandLine d="M 12 0 Q 4 150, 14 300 T 12 600" stroke={B.yellow} strokeWidth={2} dash="3 6" opacity={0.5} />
-        </svg>
+      <div style={{ maxWidth: 960, margin: '0 auto', position: 'relative' }}>
+        {/* Dashed connector line behind cards */}
+        <div style={{
+          position: 'absolute', top: 80, left: 'calc(33.33% - 10px)', right: 'calc(33.33% - 10px)',
+          height: 1, borderTop: '2px dashed rgba(232,168,0,.2)', pointerEvents: 'none', zIndex: 0,
+        }} />
 
-        {phases.map((p, i) => (
-          <Reveal key={p.n} delay={i * 100}>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '76px 1fr',
-                gap: 24,
-                alignItems: 'flex-start',
-                marginBottom: i < phases.length - 1 ? 32 : 0,
-              }}
-            >
-              <div
-                style={{
-                  width: 72,
-                  height: 72,
-                  borderRadius: '50%',
-                  background: p.highlight ? B.yellow : 'transparent',
-                  border: p.highlight ? 'none' : '1.5px solid rgba(245,242,235,0.18)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: p.n === '2+' ? 18 : 24,
-                  fontWeight: 900,
-                  color: p.highlight ? B.ink : 'rgba(245,242,235,0.5)',
-                  boxShadow: p.highlight ? '0 0 0 8px rgba(232,168,0,0.10), 0 0 0 18px rgba(232,168,0,0.05)' : 'none',
-                  position: 'relative',
-                  zIndex: 1,
-                }}
-              >
-                {p.n}
-              </div>
-
-              <div
-                style={{
-                  padding: '24px 28px',
-                  borderRadius: 18,
-                  background: p.highlight ? 'linear-gradient(145deg, rgba(232,168,0,0.10), rgba(232,168,0,0.03))' : 'rgba(245,242,235,0.02)',
-                  border: p.highlight ? '1.5px solid rgba(232,168,0,0.28)' : '1px solid rgba(245,242,235,0.06)',
-                  position: 'relative',
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap', marginBottom: 14 }}>
-                  <div>
-                    <div
-                      style={{
-                        fontSize: 11,
-                        fontWeight: 700,
-                        letterSpacing: '0.11em',
-                        textTransform: 'uppercase',
-                        color: p.highlight ? B.yellow : 'rgba(245,242,235,0.30)',
-                        marginBottom: 6,
-                      }}
-                    >
-                      {p.label}
-                    </div>
-
-                    <div
-                      style={{
-                        fontSize: 22,
-                        fontWeight: 800,
-                        letterSpacing: '-0.01em',
-                        color: p.highlight ? B.cream : 'rgba(245,242,235,0.7)',
-                      }}
-                    >
-                      {p.title}
-                    </div>
-                  </div>
-
-                  <span
-                    style={{
-                      padding: '5px 13px',
-                      borderRadius: 100,
-                      fontSize: 11,
-                      fontWeight: 700,
-                      background: p.highlight ? B.yellow : 'rgba(245,242,235,0.04)',
-                      color: p.highlight ? B.ink : 'rgba(245,242,235,0.45)',
-                      border: p.highlight ? 'none' : '1px solid rgba(245,242,235,0.08)',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {p.badge}
-                  </span>
-                </div>
-
-                <p
-                  style={{
-                    fontSize: 14,
-                    lineHeight: 1.7,
-                    margin: 0,
-                    color: p.highlight ? 'rgba(245,242,235,0.62)' : 'rgba(245,242,235,0.42)',
-                  }}
-                >
-                  {p.desc}
-                </p>
-
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px,100%), 1fr))', gap: 20 }}>
+          {phases.map((p, i) => (
+            <Reveal key={p.n} delay={i * 100}>
+              <div style={{
+                position: 'relative',
+                borderRadius: 20,
+                overflow: 'hidden',
+                background: p.highlight ? 'linear-gradient(145deg, rgba(232,168,0,0.10), rgba(232,168,0,0.03))' : 'rgba(245,242,235,0.02)',
+                border: p.highlight ? '1.5px solid rgba(232,168,0,0.35)' : '1px solid rgba(245,242,235,0.07)',
+                display: 'flex', flexDirection: 'column',
+                zIndex: 1,
+              }}>
                 {p.highlight && (
-                  <div style={{ position: 'absolute', top: -28, right: -8, zIndex: 2 }}>
-                    <StickyNote color={B.yellow} rotate={4} style={{ fontSize: 14, padding: '6px 10px' }}>
-                      Hier steigen wir
-                      <br />
-                      ein. Kein Risiko.
+                  <div style={{ position:'absolute', top:14, right:14, zIndex:3 }}>
+                    <StickyNote color={B.yellow} rotate={4} style={{ fontSize:12, padding:'5px 10px' }}>
+                      Hier steigen wir ein
                     </StickyNote>
                   </div>
                 )}
+
+                {/* Visual mockup */}
+                {p.visual}
+
+                {/* Card body */}
+                <div style={{ padding: '22px 24px', flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {/* Header */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{
+                      width: 34, height: 34, borderRadius: '50%',
+                      background: p.highlight ? B.yellow : 'rgba(245,242,235,0.06)',
+                      border: p.highlight ? 'none' : '1.5px solid rgba(245,242,235,.15)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: 14, fontWeight: 900,
+                      color: p.highlight ? B.ink : 'rgba(245,242,235,.45)',
+                      flexShrink: 0,
+                    }}>
+                      {p.n}
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: p.highlight ? B.yellow : 'rgba(245,242,235,.3)', marginBottom: 2 }}>
+                        {p.label}
+                      </div>
+                      <div style={{ fontSize: 17, fontWeight: 800, letterSpacing: '-0.01em', color: p.highlight ? B.cream : 'rgba(245,242,235,.7)', lineHeight: 1.2 }}>
+                        {p.title}
+                      </div>
+                    </div>
+                  </div>
+
+                  <p style={{ fontSize: 13.5, lineHeight: 1.7, color: p.highlight ? 'rgba(245,242,235,.62)' : 'rgba(245,242,235,.42)', margin: 0 }}>
+                    {p.desc}
+                  </p>
+
+                  {/* Footer */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', paddingTop: 12, borderTop: '1px solid rgba(245,242,235,.06)', flexWrap: 'wrap', gap: 8 }}>
+                    <span style={{
+                      padding: '4px 12px', borderRadius: 100, fontSize: 11, fontWeight: 700,
+                      background: p.highlight ? B.yellow : 'rgba(245,242,235,0.04)',
+                      color: p.highlight ? B.ink : 'rgba(245,242,235,.45)',
+                      border: p.highlight ? 'none' : '1px solid rgba(245,242,235,.08)',
+                    }}>
+                      {p.badge}
+                    </span>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(245,242,235,.3)', letterSpacing: '0.04em' }}>
+                      {p.time}
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </Reveal>
-        ))}
+            </Reveal>
+          ))}
+        </div>
       </div>
     </Frame>
   );
@@ -1524,13 +1605,46 @@ const PROJEKTE = [
     id: 'dashboard',
     img: '/projekte/dashboard.png',
     kategorie: 'Eigenes Tool',
-    name: 'Founder OS Dashboard',
+    name: 'Finance & Strategy Dashboard',
     desc: 'Ein digitales Betriebssystem für Solo-Unternehmer. Finanzen, Zeit, Projekte — alles an einem Ort, ohne Spreadsheet-Chaos.',
     url: 'https://ls-plum-alpha.vercel.app',
   },
 ];
 
-function ReferenzCard({ img, kategorie, name, desc, url }) {
+const FRAME_MOCKS = {
+  kfa: { bg: '#F5F2EB', headline: '#0E0C08', sub: 'rgba(14,12,8,.5)' },
+  'star-doener': { bg: '#0E0C08', headline: '#E8A800', sub: 'rgba(245,242,235,.4)' },
+  angelo: { bg: '#15110a', headline: '#E8A800', sub: 'rgba(245,242,235,.35)' },
+  dashboard: { bg: '#F0EDE6', headline: '#0E0C08', sub: 'rgba(14,12,8,.45)', hasGrid: true },
+};
+
+function FrameMock({ id, name }) {
+  const m = FRAME_MOCKS[id] || FRAME_MOCKS.kfa;
+  return (
+    <div style={{ width: '85%', maxWidth: 340, background: m.bg, borderRadius: 10, overflow: 'hidden', boxShadow: '0 12px 40px rgba(0,0,0,.18)', border: '1px solid rgba(0,0,0,.08)' }}>
+      {/* Browser bar */}
+      <div style={{ height: 28, background: id === 'kfa' || id === 'dashboard' ? 'rgba(0,0,0,.06)' : 'rgba(255,255,255,.06)', display: 'flex', alignItems: 'center', paddingInline: 10, gap: 5 }}>
+        {[0,1,2].map(i => <span key={i} style={{ width:7, height:7, borderRadius:'50%', background: id === 'kfa' || id === 'dashboard' ? 'rgba(0,0,0,.18)' : 'rgba(255,255,255,.2)', display:'inline-block' }} />)}
+      </div>
+      {/* Body */}
+      <div style={{ padding: '16px 18px' }}>
+        {m.hasGrid ? (
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:6, marginBottom:10 }}>
+            {['#E8A800','#4285F4','#34A853','#EA4335'].map((c,i) => (
+              <div key={i} style={{ height:28, borderRadius:5, background:c, opacity:.8 }} />
+            ))}
+          </div>
+        ) : null}
+        <div style={{ height:10, borderRadius:4, background:m.headline, width:'65%', marginBottom:8, opacity:.9 }} />
+        <div style={{ height:6, borderRadius:4, background:m.sub, width:'90%', marginBottom:5 }} />
+        <div style={{ height:6, borderRadius:4, background:m.sub, width:'75%', marginBottom:5 }} />
+        <div style={{ height:6, borderRadius:4, background:m.sub, width:'55%' }} />
+      </div>
+    </div>
+  );
+}
+
+function ReferenzCard({ id, img, kategorie, name, desc, url, isEven }) {
   const [h, setH] = useState(false);
 
   return (
@@ -1546,7 +1660,7 @@ function ReferenzCard({ img, kategorie, name, desc, url }) {
         className="ref-card-grid"
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px,100%), 1fr))',
+          gridTemplateColumns: isEven ? '.95fr 1.05fr' : '1.05fr .95fr',
           gap: 0,
           borderRadius: 20,
           overflow: 'hidden',
@@ -1564,9 +1678,26 @@ function ReferenzCard({ img, kategorie, name, desc, url }) {
             position: 'relative',
             minHeight: 280,
             overflow: 'hidden',
-            background: 'transparent',
+            background: FRAME_MOCKS[id]?.bg || '#F5F2EB',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            order: isEven ? 2 : 0,
           }}
         >
+          {/* Category tag */}
+          <span style={{
+            position: 'absolute', top: 18, left: 18, zIndex: 3,
+            fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
+            padding: '4px 12px', borderRadius: 100,
+            background: 'rgba(14,12,8,.12)', color: 'rgba(14,12,8,.65)',
+            backdropFilter: 'blur(4px)',
+          }}>
+            {kategorie.split(' — ')[1] || kategorie}
+          </span>
+
+          <FrameMock id={id} name={name} />
+
           <img
             src={img}
             alt={name}
@@ -1700,7 +1831,7 @@ function ReferenzenSection() {
       >
         {PROJEKTE.map((p, i) => (
           <Reveal key={p.id} delay={i * 80}>
-            <ReferenzCard {...p} />
+            <ReferenzCard {...p} isEven={i % 2 === 1} />
           </Reveal>
         ))}
       </div>
@@ -2296,17 +2427,18 @@ function StarsFilled({ n = 5 }) {
 function ReviewCard({ r }) {
   return (
     <div style={{
-      width: 300,
+      width: 320,
       flexShrink: 0,
-      background: '#fff',
-      border: '1px solid rgba(26,23,18,0.08)',
+      background: 'rgba(245,242,235,.04)',
+      border: '1px solid rgba(245,242,235,.10)',
       borderRadius: 14,
       padding: '20px 22px',
-      boxShadow: '0 1px 8px rgba(26,23,18,0.05)',
+      backdropFilter: 'blur(6px)',
+      boxShadow: '0 1px 0 rgba(245,242,235,.04) inset, 0 14px 30px rgba(0,0,0,.25)',
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
         <div style={{
-          width: 36, height: 36, borderRadius: '50%',
+          width: 38, height: 38, borderRadius: '50%',
           background: r.color,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 13, fontWeight: 700, color: '#fff', flexShrink: 0,
@@ -2314,10 +2446,10 @@ function ReviewCard({ r }) {
           {r.initials}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: B.ink, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          <div style={{ fontSize: 13.5, fontWeight: 700, color: B.cream, lineHeight: 1.2 }}>
             {r.name}
           </div>
-          <div style={{ fontSize: 11, color: 'rgba(26,23,18,0.38)', marginTop: 2 }}>
+          <div style={{ fontSize: 11, color: 'rgba(245,242,235,.45)', marginTop: 1 }}>
             {r.date}
           </div>
         </div>
@@ -2326,7 +2458,7 @@ function ReviewCard({ r }) {
         </div>
       </div>
       <StarsFilled n={r.rating} />
-      <p style={{ marginTop: 10, fontSize: 13, lineHeight: 1.65, color: 'rgba(26,23,18,0.68)', margin: '10px 0 0' }}>
+      <p style={{ marginTop: 8, fontSize: 13, lineHeight: 1.65, color: 'rgba(245,242,235,.7)' }}>
         {r.text}
       </p>
     </div>
@@ -2335,43 +2467,38 @@ function ReviewCard({ r }) {
 
 function GoogleReviewsSection() {
   return (
-    <Frame bg={B.cream} padding="44px 0 48px">
+    <Frame bg="linear-gradient(180deg, #15110a 0%, #0E0C08 100%)" padding="56px 0 72px" style={{ color: B.cream, position: 'relative' }}>
       <Reveal>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 24, paddingInline: 24, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 28, paddingInline: 36, flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <GoogleIcon />
-            <span style={{ fontSize: 13, fontWeight: 700, color: 'rgba(26,23,18,0.4)', letterSpacing: '0.01em' }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(245,242,235,.6)', letterSpacing: '0.04em', display: 'inline-flex', alignItems: 'center', gap: 10 }}>
               Rezensionen
             </span>
           </div>
-          <div style={{ width: 1, height: 20, background: 'rgba(26,23,18,0.1)' }} />
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 28, fontWeight: 900, color: B.ink, lineHeight: 1 }}>5,0</span>
+          <div style={{ width: 1, height: 18, background: 'rgba(245,242,235,.14)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontSize: 26, fontWeight: 900, color: B.cream, lineHeight: 1 }}>5,0</span>
             <StarsFilled />
+            <span style={{ fontSize: 12, color: 'rgba(245,242,235,.42)', fontWeight: 500 }}>Google</span>
           </div>
         </div>
       </Reveal>
 
-      {/* Marquee */}
-      <div style={{ overflow: 'hidden', position: 'relative' }}>
-        {/* fade edges */}
-        <div style={{
-          position: 'absolute', left: 0, top: 0, bottom: 0, width: 80, zIndex: 2,
-          background: `linear-gradient(to right, ${B.cream}, transparent)`,
-          pointerEvents: 'none',
-        }} />
-        <div style={{
-          position: 'absolute', right: 0, top: 0, bottom: 0, width: 80, zIndex: 2,
-          background: `linear-gradient(to left, ${B.cream}, transparent)`,
-          pointerEvents: 'none',
-        }} />
-
+      {/* Marquee with CSS mask */}
+      <div style={{
+        overflow: 'hidden',
+        position: 'relative',
+        zIndex: 1,
+        WebkitMaskImage: 'linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)',
+        maskImage: 'linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)',
+      }}>
         <div className="reviews-track" style={{
           display: 'flex',
           gap: 14,
-          padding: '4px 24px 6px',
+          padding: '6px 36px',
           width: 'max-content',
-          animation: 'reviews-scroll 28s linear infinite',
+          animation: 'reviews-scroll 38s linear infinite',
         }}>
           {[...REVIEWS, ...REVIEWS].map((r, i) => (
             <ReviewCard key={i} r={r} />
@@ -2451,6 +2578,18 @@ export default function Home() {
 
         .reviews-track:hover {
           animation-play-state: paused;
+        }
+
+        @keyframes live-pulse {
+          0%, 100% { box-shadow: 0 0 0 4px rgba(62,196,109,.18); }
+          50%       { box-shadow: 0 0 0 7px rgba(62,196,109,.05); }
+        }
+        .live-dot {
+          width: 7px; height: 7px; border-radius: 50%;
+          background: #3ec46d;
+          box-shadow: 0 0 0 4px rgba(62,196,109,.18);
+          animation: live-pulse 1.8s ease-in-out infinite;
+          display: inline-block;
         }
       `}</style>
 
