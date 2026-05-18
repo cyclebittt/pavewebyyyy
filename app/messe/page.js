@@ -494,7 +494,7 @@ function Testimonials() {
                 ))}
               </div>
               <p style={{ fontSize: 15, lineHeight: 1.7, color: 'rgba(26,23,18,0.72)', margin: '0 0 24px' }}>
-                „{t.quote}"
+                &bdquo;{t.quote}&ldquo;
               </p>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{
