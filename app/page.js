@@ -810,10 +810,10 @@ function ReferenzenSection() {
           <Eyebrow>Referenzen</Eyebrow>
           <h2 style={{ marginTop:20, fontSize:'clamp(1.6rem,5vw,3rem)', fontWeight:900, lineHeight:1.1,
             letterSpacing:'-0.02em', color:B.black }}>
-            Projekte, bei denen ich <Serif color={B.ocker}>dabei war.</Serif>
+            Das sind <Serif color={B.ocker}>meine Projekte.</Serif>
           </h2>
           <p style={{ marginTop:16, fontSize:15, color:'rgba(14,12,8,0.52)', lineHeight:1.75, maxWidth:480, marginInline:'auto' }}>
-            Keine reinen Webdesign-Aufträge — Projekte, bei denen ich als Teil des Teams von Konzept bis Umsetzung mitgemacht habe.
+            Von Konzept bis Umsetzung — eigenverantwortlich gebaut.
           </p>
         </div>
       </Reveal>
