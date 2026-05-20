@@ -1049,6 +1049,10 @@ const REVIEWS = [
   { name:'Dominic Hildebrandt', initials:'DH', color:'#34A853', rating:5, date:'vor 5 Monaten', text:'Ich kann Leon uneingeschränkt weiterempfehlen. Die Zusammenarbeit ist immer kooperativ, effektiv und zielführend.' },
   { name:'Ian', initials:'I', color:'#EA4335', rating:5, date:'vor 2 Monaten', text:'Schnelle Antworten, erstellt individuelle Top-Websites, Posts etc.' },
   { name:'Laura Janke', initials:'LJ', color:'#9C27B0', rating:5, date:'vor 1 Monat', text:'Zuverlässig — hält Fristen wie abgesprochen ein, gute zielführende Ideen, Top-Kommunikation.' },
+  { name:'Pascal', initials:'P', color:'#0F9D58', rating:5, date:'vor 20 Stunden', text:'Klare und flexible Kommunikation. Schneller und sauberer Umsetzung nach einer ausführlichen Bedarfsanalyse. Unterstützung bei Hosting und weiteren Einstellungen. Dazu gratis Beratung zum Layout und Inhalt der Webseite.' },
+  { name:'Michael Gärtner', initials:'MG', color:'#4285F4', rating:5, date:'', text:'Immer zuverlässig, spontan und qualitativ gearbeitet. Sehr zu empfehlen!' },
+  { name:'Robin Disser', initials:'RD', color:'#EA4335', rating:5, date:'', text:'Super gutes Videoediting.' },
+  { name:'Elija Wiessler', initials:'EW', color:'#FBBC05', rating:5, date:'', text:'Sehr hochwertige Websites, super gute Videos.' },
 ];
 
 function GoogleIcon() {
