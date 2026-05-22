@@ -578,11 +578,19 @@ function LeistungenV2() {
           <Eyebrow color={B.yellow}>Was ich anbiete</Eyebrow>
           <h2 style={{ marginTop: 18, fontSize: 'clamp(1.8rem,5vw,3.25rem)', fontWeight: 900,
             lineHeight: 1.08, letterSpacing: '-0.025em', color: B.cream }}>
-            Systeme, die deinen Betrieb <Serif color={B.yellow}>entlasten.</Serif>
+            Eine App statt <Serif color={B.yellow}>50 Tools.</Serif>
           </h2>
-          <p style={{ fontSize: 15, color: 'rgba(245,242,235,0.52)', maxWidth: 520, margin: '16px auto 56px', lineHeight: 1.72 }}>
-            Kein Paket. Erst verstehen, wo Zeit und Geld verloren gehen — dann gezielt umsetzen.
+          <p style={{ fontSize: 15, color: 'rgba(245,242,235,0.52)', maxWidth: 540, margin: '16px auto 0', lineHeight: 1.75 }}>
+            Das durchschnittliche Unternehmen zahlt monatlich für 50+ verschiedene Tools — 49% davon werden kaum genutzt, trotzdem läuft die Rechnung weiter. Ich baue maßgeschneiderte Web-Apps, die alle Tools und Daten in einer einzigen Anwendung zusammenführen — verbunden mit KI-Agenten, die Prognosen und Auswertungen automatisch erstellen.
           </p>
+          <div style={{ display:'flex', justifyContent:'center', gap:32, margin:'36px auto 56px', flexWrap:'wrap' }}>
+            {[['50+','Tools im Ø pro Betrieb'],['49%','werden kaum genutzt'],['1','App statt Chaos']].map(([n,l]) => (
+              <div key={n} style={{ textAlign:'center' }}>
+                <div style={{ fontSize:'clamp(1.6rem,4vw,2.4rem)', fontWeight:900, color:B.yellow, letterSpacing:'-0.03em' }}>{n}</div>
+                <div style={{ fontSize:12, color:'rgba(245,242,235,0.4)', fontWeight:600, letterSpacing:'0.04em', textTransform:'uppercase', marginTop:4 }}>{l}</div>
+              </div>
+            ))}
+          </div>
         </Reveal>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(280px,100%),1fr))', gap: 2, alignItems: 'stretch' }}>
           {services.map((s, i) => (
@@ -675,9 +683,15 @@ function PhaseZeroV2() {
             <br />
             wenn es dir <Serif color={B.yellow}>gefällt.</Serif>
           </h2>
-          <p style={{ marginTop: 18, fontSize: 16, color: 'rgba(245,242,235,0.55)', lineHeight: 1.7, maxWidth: 460, marginInline: 'auto' }}>
-            Phase 0 ist kostenlos. Du siehst, was möglich ist — und entscheidest dann.
+          <p style={{ marginTop: 18, fontSize: 16, color: 'rgba(245,242,235,0.55)', lineHeight: 1.75, maxWidth: 480, marginInline: 'auto' }}>
+            Ich arbeite agil: Analyse, konkrete Schwachstellen, erster Entwurf — alles kostenlos. Erst wenn das Ergebnis überzeugt, wird gezahlt.
           </p>
+          <div style={{ marginTop: 28, display:'inline-block', padding:'12px 28px', borderRadius:100,
+            border:'1px solid rgba(232,168,0,0.3)', background:'rgba(232,168,0,0.06)' }}>
+            <span style={{ fontSize:15, fontWeight:800, color:B.yellow, letterSpacing:'-0.01em' }}>
+              Kein Ergebnis. Keine Zahlung.
+            </span>
+          </div>
         </div>
       </Reveal>
 
