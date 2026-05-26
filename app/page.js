@@ -3,6 +3,8 @@
 import { ArrowRight, CheckCircle2, Mail } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+const CALENDLY = 'https://calendly.com/hello-leonseitz/30min';
+
 const B = {
   yellow: '#E8A800',
   ocker: '#C68F00',
@@ -409,7 +411,7 @@ function HeroV2() {
           Leon Seitz
           <span style={{ width: 10, height: 10, borderRadius: '50%', background: B.yellow, boxShadow: '0 0 0 3px rgba(232,168,0,.2)', display: 'inline-block' }} />
         </a>
-        <a href="#next" style={{
+        <a href={CALENDLY} target="_blank" rel="noopener noreferrer" style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
           padding: '9px 18px', borderRadius: 100,
           border: '1px solid rgba(232,168,0,.32)', background: 'rgba(14,12,8,.55)',
@@ -431,7 +433,7 @@ function HeroV2() {
           </h1>
 
           <div style={{ marginTop: 44 }}>
-            <BtnPrimary label="Kostenlose Analyse anfragen" href="#next" />
+            <BtnPrimary label="Kostenlose Analyse anfragen" href={CALENDLY} target="_blank" />
           </div>
         </div>
       </Reveal>
@@ -838,7 +840,7 @@ function ReferenzenSection() {
       </div>
       <Reveal delay={240}>
         <div style={{ marginTop:44, display:'flex', justifyContent:'center' }}>
-          <BtnPrimary label="Kostenlose Analyse anfragen" href="#next" />
+          <BtnPrimary label="Kostenlose Analyse anfragen" href={CALENDLY} target="_blank" />
         </div>
       </Reveal>
     </Frame>
@@ -966,10 +968,10 @@ function FAQV2() {
         <div style={{ maxWidth:580, margin:'48px auto 0', textAlign:'center', padding:'24px 28px',
           border:'1px solid rgba(232,168,0,0.20)', background:'rgba(232,168,0,0.04)', borderRadius:16 }}>
           <div style={{ fontSize:14, color:'rgba(245,242,235,0.65)', marginBottom:12 }}>Noch was Konkretes?</div>
-          <a href="mailto:hello@leonseitz.com?subject=Kurze Frage"
+          <a href={CALENDLY} target="_blank" rel="noopener noreferrer"
             style={{ display:'inline-flex', alignItems:'center', gap:8, padding:'11px 24px',
               borderRadius:100, background:B.yellow, color:B.ink, fontSize:14, fontWeight:800, textDecoration:'none' }}>
-            Kurz nachfragen →
+            Termin buchen →
           </a>
         </div>
       </Reveal>
@@ -1030,7 +1032,7 @@ function TestimonialsV2() {
             <div style={{ fontSize:18, fontWeight:800, color:B.cream, marginBottom:6 }}>Bereit für Phase 0?</div>
             <div style={{ fontSize:13, color:'rgba(245,242,235,0.55)' }}>Kostenlose Analyse — Antwort innerhalb von 24h.</div>
           </div>
-          <a href="#next" style={{ padding:'14px 28px', borderRadius:100, background:B.yellow, color:B.ink,
+          <a href={CALENDLY} target="_blank" rel="noopener noreferrer" style={{ padding:'14px 28px', borderRadius:100, background:B.yellow, color:B.ink,
             fontSize:14, fontWeight:800, boxShadow:'0 4px 20px rgba(232,168,0,0.28)', textDecoration:'none' }}>
             Jetzt anfragen →
           </a>
@@ -1131,6 +1133,37 @@ function GoogleReviewsSection() {
   );
 }
 
+/* ─── CALENDLY ─── */
+function CalendlySection() {
+  return (
+    <Frame id="termin" bg={B.black} padding="96px 24px 0">
+      <Reveal>
+        <div style={{ maxWidth:720, margin:'0 auto', textAlign:'center', marginBottom:48 }}>
+          <Eyebrow color={B.yellow}>Termin buchen</Eyebrow>
+          <h2 style={{ marginTop:18, fontSize:'clamp(1.8rem,5vw,3rem)', fontWeight:900, lineHeight:1.08,
+            letterSpacing:'-0.025em', color:B.cream }}>
+            Direkt einen Slot <Serif color={B.yellow}>sichern.</Serif>
+          </h2>
+          <p style={{ marginTop:16, fontSize:15, color:'rgba(245,242,235,0.5)', lineHeight:1.75, maxWidth:440, marginInline:'auto' }}>
+            Kostenlos. Kein Commitment. 30 Minuten reichen.
+          </p>
+        </div>
+      </Reveal>
+      <div style={{ maxWidth:1000, margin:'0 auto', borderRadius:'20px 20px 0 0', overflow:'hidden',
+        border:'1px solid rgba(245,242,235,0.08)', borderBottom:'none' }}>
+        <iframe
+          src={CALENDLY}
+          width="100%"
+          height="700"
+          frameBorder="0"
+          title="Termin buchen"
+          style={{ display:'block', background:'#fff' }}
+        />
+      </div>
+    </Frame>
+  );
+}
+
 /* ─── PAGE ─── */
 export default function Home() {
   return (
@@ -1175,6 +1208,7 @@ export default function Home() {
       <ReferenzenSection />
       <NextStepsV2 />
       <FAQV2 />
+      <CalendlySection />
     </div>
   );
 }
