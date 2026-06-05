@@ -39,6 +39,16 @@ export default function ImpressumPage() {
 
         <section className="space-y-2">
           <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
+            Berufsbezeichnung und berufsrechtliche Regelungen
+          </h2>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            Berufsbezeichnung: anderer Beruf<br />
+            Verliehen in: Deutschland
+          </p>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
             Umsatzsteuer
           </h2>
           <p className="text-[#F5F2EB]/70 leading-relaxed">
@@ -79,8 +89,38 @@ export default function ImpressumPage() {
           </p>
         </section>
 
+        <section className="space-y-2">
+          <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
+            Verbraucherstreitbeilegung / Universalschlichtungsstelle
+          </h2>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer
+            Verbraucherschlichtungsstelle teilzunehmen.
+          </p>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-sm font-semibold tracking-widest uppercase text-[#E8A800]">
+            Zentrale Kontaktstelle nach dem Digital Services Act – DSA (Verordnung (EU) 2022/2065)
+          </h2>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            Unsere zentrale Kontaktstelle für Nutzer und Behörden nach Art. 11, 12 DSA erreichen Sie wie folgt:
+          </p>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            E-Mail: hello@leonseitz.com<br />
+            Telefon: +49 160 9575 7167
+          </p>
+          <p className="text-[#F5F2EB]/70 leading-relaxed">
+            Die für den Kontakt zur Verfügung stehenden Sprachen sind: Deutsch, Englisch.
+          </p>
+        </section>
+
         <p className="text-xs text-[#F5F2EB]/30 border-t border-white/10 pt-8">
-          Stand: {new Date().toLocaleDateString('de-DE')}
+          Quelle:{' '}
+          <a href="https://www.e-recht24.de" target="_blank" rel="noopener noreferrer"
+            className="hover:text-[#F5F2EB]/50">
+            e-recht24.de
+          </a>
         </p>
 
       </main>
