@@ -37,7 +37,7 @@ export default function DatenschutzPage() {
               <p className="text-[#F5F2EB]/50 text-sm font-medium">Wer ist verantwortlich für die Datenerfassung auf dieser Website?</p>
               <p className="text-[#F5F2EB]/70 leading-relaxed">
                 Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten
-                können Sie dem Abschnitt „Hinweis zur verantwortlichen Stelle" in dieser Datenschutzerklärung entnehmen.
+                können Sie dem Abschnitt &bdquo;Hinweis zur verantwortlichen Stelle" in dieser Datenschutzerklärung entnehmen.
               </p>
             </div>
             <div className="space-y-2">
@@ -102,7 +102,7 @@ export default function DatenschutzPage() {
           <div className="space-y-3">
             <h3 className="text-[#F5F2EB] font-medium">Strato</h3>
             <p className="text-[#F5F2EB]/70 leading-relaxed">
-              Anbieter ist die Strato AG, Otto-Ostrowski-Straße 7, 10249 Berlin (nachfolgend „Strato"). Wenn Sie
+              Anbieter ist die Strato AG, Otto-Ostrowski-Straße 7, 10249 Berlin (nachfolgend &bdquo;Strato"). Wenn Sie
               unsere Website besuchen, erfasst Strato verschiedene Logfiles inklusive Ihrer IP-Adressen.
             </p>
             <p className="text-[#F5F2EB]/70 leading-relaxed">
@@ -336,7 +336,7 @@ export default function DatenschutzPage() {
               Diese Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte,
               wie zum Beispiel Bestellungen oder Anfragen, die Sie an uns als Seitenbetreiber senden, eine
               SSL- bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie daran, dass die
-              Adresszeile des Browsers von „http://" auf „https://" wechselt und an dem Schloss-Symbol in
+              Adresszeile des Browsers von &bdquo;http://" auf &bdquo;https://" wechselt und an dem Schloss-Symbol in
               Ihrer Browserzeile.
             </p>
             <p className="text-[#F5F2EB]/70 leading-relaxed">
