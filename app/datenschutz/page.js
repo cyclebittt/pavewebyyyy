@@ -107,7 +107,7 @@ export default function DatenschutzPage() {
             </p>
             <p className="text-[#F5F2EB]/70 leading-relaxed">
               Weitere Informationen entnehmen Sie der Datenschutzerklärung von Strato:{' '}
-              <a href="https://www.strato.de/datenschutz/&#8220; target="_blank&#8220; rel="noopener noreferrer&#8220;
+              <a href="https://www.strato.de/datenschutz/" target="_blank" rel="noopener noreferrer"
                 className="text-[#E8A800] hover:underline">
                 https://www.strato.de/datenschutz/
               </a>.
@@ -390,12 +390,12 @@ export default function DatenschutzPage() {
             </p>
             <p className="text-[#F5F2EB]/70 leading-relaxed">
               Weitere Informationen zu Google Fonts finden Sie unter{' '}
-              <a href="https://developers.google.com/fonts/faq&#8220; target="_blank&#8220; rel="noopener noreferrer&#8220;
+              <a href="https://developers.google.com/fonts/faq" target="_blank" rel="noopener noreferrer"
                 className="text-[#E8A800] hover:underline">
                 https://developers.google.com/fonts/faq
               </a>{' '}
               und in der Datenschutzerklärung von Google:{' '}
-              <a href="https://policies.google.com/privacy?hl=de&#8220; target="_blank&#8220; rel="noopener noreferrer&#8220;
+              <a href="https://policies.google.com/privacy?hl=de" target="_blank" rel="noopener noreferrer"
                 className="text-[#E8A800] hover:underline">
                 https://policies.google.com/privacy?hl=de
               </a>.
@@ -405,7 +405,7 @@ export default function DatenschutzPage() {
 
         <p className="text-xs text-[#F5F2EB]/30 border-t border-white/10 pt-8">
           Quelle:{' '}
-          <a href="https://www.e-recht24.de&#8220; target="_blank&#8220; rel="noopener noreferrer&#8220;
+          <a href="https://www.e-recht24.de" target="_blank" rel="noopener noreferrer"
             className="hover:text-[#F5F2EB]/50">
             e-recht24.de
           </a>
