@@ -417,7 +417,7 @@ function HeroV2() {
           border: '1px solid rgba(232,168,0,.32)', background: 'rgba(14,12,8,.55)',
           color: B.yellow, fontSize: 12, fontWeight: 700, textDecoration: 'none', backdropFilter: 'blur(6px)',
         }}>
-          Analyse anfragen
+          Website anfragen
         </a>
       </div>
 
@@ -425,15 +425,15 @@ function HeroV2() {
         <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center', position: 'relative', width: '100%' }}>
           <h1 style={{ fontSize: 'clamp(2.4rem,7.2vw,5.2rem)', fontWeight: 900, lineHeight: 1.02,
             letterSpacing: '-0.035em', color: B.cream, marginBottom: 32 }}>
-            Dein Betrieb läuft
+            Deine Website
             <br />
-            noch auf Papier.
+            sieht aus wie 2015.
             <br />
-            <Serif color={B.yellow}>Ich ändere das.</Serif>{' '}In 24 Stunden.
+            <Serif color={B.yellow}>Ich ändere das.</Serif>{' '}In 7 Tagen.
           </h1>
 
           <div style={{ marginTop: 44 }}>
-            <BtnPrimary label="Kostenlose Analyse anfragen" href={CALENDLY} target="_blank" />
+            <BtnPrimary label="Kostenlose Website anfragen" href={CALENDLY} target="_blank" />
           </div>
         </div>
       </Reveal>
@@ -553,22 +553,21 @@ function LeistungenV2() {
 
   const services = [
     {
-      n: '01', icon: <Icon.Prozesse />, kicker: 'Digitale Prozesse',
-      title: 'Weniger Papier. Weniger Fehler.',
-      desc: 'Anfragen, Bestellungen, Kommunikation — ich analysiere, welche Abläufe in deinem Betrieb digitalisiert werden können, und setze die sinnvollsten zuerst um.',
+      n: '01', icon: <Icon.Prozesse />, kicker: 'Landing Page',
+      title: 'Eine Seite. Ein Ziel. Messbar.',
+      desc: 'Für Kampagnen, Produkte, Dienstleistungen. Klare Struktur, schnelle Ladezeit, auf Conversion optimiert — fertig in 3–5 Tagen.',
       visual: visual1,
     },
     {
-      n: '02', icon: <Icon.Automation />, kicker: 'KI-Workflows',
-      title: 'Abläufe, die von selbst laufen.',
-      desc: 'Automatische Antworten, CRM-Synchronisierung, Buchungssysteme, interne Benachrichtigungen — ohne manuellen Aufwand, gebaut mit modernen KI-Tools.',
+      n: '02', icon: <Icon.Automation />, kicker: 'Unternehmenswebsite',
+      title: 'Dein Betrieb. Online. Professionell.',
+      desc: 'Mehrseiter mit allen Inhalten, die Kunden brauchen — Leistungen, Kontakt, Referenzen. Mobil-first, SEO-ready, ohne Template.',
       visual: visual2,
     },
     {
-      n: '03', icon: <Icon.Dashboard />, kicker: 'Dashboard',
-      title: 'Dein Betrieb auf einen Blick.',
-      desc: 'Umsatz, Ausgaben, offene Projekte — alles in einem System. Kein Spreadsheet-Chaos. Kein Raten. Nur Klarheit über das, was gerade läuft.',
-      url: 'https://ls-plum-alpha.vercel.app',
+      n: '03', icon: <Icon.Dashboard />, kicker: 'Booking & Shop',
+      title: 'Kunden buchen. Direkt.',
+      desc: 'Buchungsstrecken, Online-Shops, Terminvereinbarungen — integriert in deine Website. Keine Extra-Tools, kein monatliches Abo.',
       visual: visual3,
     },
   ];
@@ -577,16 +576,16 @@ function LeistungenV2() {
     <Frame id="leistungen" bg={B.ink} padding="96px 24px" style={{ color: B.cream }}>
       <div style={{ maxWidth: 920, margin: '0 auto', textAlign: 'center' }}>
         <Reveal>
-          <Eyebrow color={B.yellow}>Was ich anbiete</Eyebrow>
+          <Eyebrow color={B.yellow}>Was ich baue</Eyebrow>
           <h2 style={{ marginTop: 18, fontSize: 'clamp(1.8rem,5vw,3.25rem)', fontWeight: 900,
             lineHeight: 1.08, letterSpacing: '-0.025em', color: B.cream }}>
-            Eine App statt <Serif color={B.yellow}>50 Tools.</Serif>
+            Websites, die <Serif color={B.yellow}>Kunden bringen.</Serif>
           </h2>
-          <p style={{ fontSize: 15, color: 'rgba(245,242,235,0.52)', maxWidth: 540, margin: '16px auto 0', lineHeight: 1.75 }}>
-            Das durchschnittliche Unternehmen zahlt monatlich für 50+ verschiedene Tools — 49% davon werden kaum genutzt, trotzdem läuft die Rechnung weiter. Ich baue maßgeschneiderte Web-Apps, die alle Tools und Daten in einer einzigen Anwendung zusammenführen — verbunden mit KI-Agenten, die Prognosen und Auswertungen automatisch erstellen.
+          <p style={{ fontSize: 15, color: 'rgba(245,242,235,0.52)', maxWidth: 520, margin: '16px auto 0', lineHeight: 1.75 }}>
+            Kein Template, kein Baukastensystem. Jede Website wird von Grund auf gebaut — auf dein Ziel, deine Zielgruppe, deinen Betrieb.
           </p>
           <div style={{ display:'flex', justifyContent:'center', gap:32, margin:'36px auto 56px', flexWrap:'wrap' }}>
-            {[['50+','Tools im Ø pro Betrieb'],['49%','werden kaum genutzt'],['1','App statt Chaos']].map(([n,l]) => (
+            {[['24h','Erster Entwurf'],['7','Tage bis Launch'],['0€','Voraus­kasse']].map(([n,l]) => (
               <div key={n} style={{ textAlign:'center' }}>
                 <div style={{ fontSize:'clamp(1.6rem,4vw,2.4rem)', fontWeight:900, color:B.yellow, letterSpacing:'-0.03em' }}>{n}</div>
                 <div style={{ fontSize:12, color:'rgba(245,242,235,0.4)', fontWeight:600, letterSpacing:'0.04em', textTransform:'uppercase', marginTop:4 }}>{l}</div>
@@ -600,15 +599,8 @@ function LeistungenV2() {
           ))}
         </div>
         <Reveal delay={260}>
-          <div style={{ marginTop: 28, padding: '18px 26px', border: '1px solid rgba(245,242,235,0.07)',
-            borderRadius: 14, background: 'rgba(245,242,235,0.02)', display: 'flex',
-            alignItems: 'center', justifyContent: 'center', gap: 8, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 15, color: 'rgba(245,242,235,0.50)' }}>Webdesign? Dafür gibt es Paveo.</span>
-            <a href="https://paveo360.de" target="_blank" rel="noopener noreferrer"
-              style={{ fontSize: 15, fontWeight: 700, color: B.yellow, textDecoration: 'none',
-                display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-              paveo360.de <ArrowRight size={14} />
-            </a>
+          <div style={{ marginTop: 32 }}>
+            <BtnPrimary label="Kostenlose Website anfragen" href={CALENDLY} target="_blank" />
           </div>
         </Reveal>
       </div>
@@ -622,8 +614,8 @@ function PhaseZeroV2() {
 
   const phases = [
     {
-      n: '0', label: 'Phase 0', title: 'Analyse', badge: 'Kostenlos', time: 'in 24–72h', highlight: true,
-      desc: 'Ich schaue mir deinen Betrieb an — welche Abläufe existieren, wo Zeit verloren geht, was sich automatisieren lässt. Du bekommst eine ehrliche Einschätzung, schriftlich.',
+      n: '0', label: 'Phase 0', title: 'Gespräch & Entwurf', badge: 'Kostenlos', time: 'in 24h', highlight: true,
+      desc: 'Wir reden 30 Minuten. Ich verstehe dein Ziel, deine Zielgruppe, deinen Betrieb. Du bekommst danach einen ersten Entwurf — kein Mockup, eine echte Seite im Browser.',
       visual: (
         <div style={{ height:160, background:'linear-gradient(180deg,#1B1812,#15110a)', display:'flex', alignItems:'center', justifyContent:'center', position:'relative', overflow:'hidden' }}>
           <div style={dotBg} />
@@ -635,13 +627,13 @@ function PhaseZeroV2() {
       ),
     },
     {
-      n: '1', label: 'Phase 1', title: 'Erste Umsetzung', badge: 'Zahlung nur bei Zufriedenheit', time: '1–3 Wochen',
-      desc: 'Das erste konkrete Ergebnis — ein Workflow, ein Dashboard, ein automatisierter Ablauf. Du siehst es live und entscheidest dann, ob du zahlst.',
+      n: '1', label: 'Phase 1', title: 'Feinschliff', badge: 'Zahlung nur bei Zufriedenheit', time: '2–5 Tage',
+      desc: 'Deine Texte, Bilder und Inhalte kommen rein. Wir gehen zwei Revisionsrunden durch — schriftlich dokumentiert. Kein Launch ohne dein Okay.',
       visual: (
         <div style={{ height:160, background:'linear-gradient(180deg,#1B1812,#15110a)', display:'flex', alignItems:'center', justifyContent:'center', position:'relative', overflow:'hidden' }}>
           <div style={dotBg} />
           <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-            {[{done:true,label:'Analyse abgeschlossen'},{done:true,label:'Workflow gebaut'},{done:false,label:'Feedback eingeholt'},{done:false,label:'Live geschaltet'}].map((item,i) => (
+            {[{done:true,label:'Gespräch geführt'},{done:true,label:'Entwurf geliefert'},{done:false,label:'Feedback eingeholt'},{done:false,label:'Live geschaltet'}].map((item,i) => (
               <div key={i} style={{ display:'flex', alignItems:'center', gap:8 }}>
                 <div style={{ width:14, height:14, borderRadius:3, border:`1.5px solid ${item.done?'#E8A800':'rgba(245,242,235,.2)'}`, background:item.done?'#E8A800':'transparent', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
                   {item.done && <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#0E0C08" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
@@ -654,13 +646,13 @@ function PhaseZeroV2() {
       ),
     },
     {
-      n: '2+', label: 'Phase 2+', title: 'Weitere Schritte', badge: 'Immer nach Fertigstellung', time: 'on demand',
-      desc: 'Kein Vertrag. Kein Paket. Wir bauen weiter, was sinnvoll ist — Schritt für Schritt, immer nach Fertigstellung.',
+      n: '2+', label: 'Phase 2+', title: 'Launch & Weiter', badge: 'Immer nach Fertigstellung', time: 'ab Tag 7',
+      desc: 'Die Website geht live — Domain, Hosting, SSL, alles eingerichtet. Danach: Updates, neue Seiten, Erweiterungen — wenn und wie du willst.',
       visual: (
         <div style={{ height:160, background:'linear-gradient(180deg,#1B1812,#15110a)', display:'flex', alignItems:'center', justifyContent:'center', position:'relative', overflow:'hidden' }}>
           <div style={dotBg} />
           <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-            {[{done:true,label:'Prozess 1 digitalisiert'},{done:true,label:'Workflow aktiv'},{done:false,label:'Dashboard eingerichtet'},{done:false,label:'Automatisierung'}].map((item,i) => (
+            {[{done:true,label:'Revisionsrunde 1 fertig'},{done:true,label:'Inhalte eingesetzt'},{done:false,label:'Domain & Hosting'},{done:false,label:'Live geschaltet'}].map((item,i) => (
               <div key={i} style={{ display:'flex', alignItems:'center', gap:8 }}>
                 <div style={{ width:14, height:14, borderRadius:3, border:`1.5px solid ${item.done?'#E8A800':'rgba(245,242,235,.2)'}`, background:item.done?'#E8A800':'transparent', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
                   {item.done && <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#0E0C08" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
@@ -686,7 +678,7 @@ function PhaseZeroV2() {
             wenn es dir <Serif color={B.yellow}>gefällt.</Serif>
           </h2>
           <p style={{ marginTop: 18, fontSize: 16, color: 'rgba(245,242,235,0.55)', lineHeight: 1.75, maxWidth: 480, marginInline: 'auto' }}>
-            Ich arbeite agil: Analyse, konkrete Schwachstellen, erster Entwurf — alles kostenlos. Erst wenn das Ergebnis überzeugt, wird gezahlt.
+            Ich arbeite agil: Gespräch, erster Entwurf, Feinschliff — du siehst das Ergebnis bevor du zahlst.
           </p>
           <div style={{ marginTop: 28, display:'inline-block', padding:'12px 28px', borderRadius:100,
             border:'1px solid rgba(232,168,0,0.3)', background:'rgba(232,168,0,0.06)' }}>
@@ -850,9 +842,9 @@ function ReferenzenSection() {
 /* ─── NEXT STEPS ─── */
 function NextStepsV2() {
   const steps = [
-    { n: '01', title: 'Anfrage schicken', desc: 'Beschreib kurz, wo der Schuh drückt. Was läuft manuell, was kostet Zeit. Das dauert 2 Minuten.' },
-    { n: '02', title: 'Kostenlose Analyse', desc: 'Ich schaue mir deinen Betrieb an und zeige konkret, wo der Hebel liegt. Keine versteckte Agenda.' },
-    { n: '03', title: 'Erste Umsetzung', desc: 'Du siehst das Ergebnis — und entscheidest dann, ob du zahlst.' },
+    { n: '01', title: 'Kurz anfragen', desc: 'Sag mir was du brauchst. Branche, Ziel, grober Rahmen. Das dauert 2 Minuten.' },
+    { n: '02', title: 'Kostenloses Gespräch', desc: '30 Minuten. Ich zeige dir konkret, was ich bauen würde — und was es kostet.' },
+    { n: '03', title: 'Erst sehen, dann zahlen', desc: 'Du bekommst den ersten Entwurf. Erst wenn er dir gefällt, geht es weiter.' },
   ];
 
   return (
@@ -860,9 +852,9 @@ function NextStepsV2() {
       <Reveal>
         <div style={{ maxWidth:720, margin:'0 auto', textAlign:'center', marginBottom:56 }}>
           <h2 style={{ fontSize:'clamp(1.8rem,5vw,3.25rem)', fontWeight:900, lineHeight:1.08, letterSpacing:'-0.025em', color:B.cream }}>
-            Lass uns reden.
+            Deine Website.
             <br />
-            <Serif color={B.ocker}>Kein Commitment.</Serif>
+            <Serif color={B.ocker}>In 7 Tagen.</Serif>
           </h2>
         </div>
       </Reveal>
@@ -887,7 +879,7 @@ function NextStepsV2() {
         <div style={{ maxWidth:580, margin:'0 auto', background:'#fff', borderRadius:22, padding:'36px 36px',
           boxShadow:'0 4px 32px rgba(26,23,18,0.07)', border:'1px solid rgba(26,23,18,0.06)' }}>
           <div style={{ fontSize:13, fontWeight:800, color:B.ink, marginBottom:20, letterSpacing:'-0.01em' }}>
-            Analyse anfragen — kostenlos &amp; unverbindlich
+            Website anfragen — kostenlos &amp; unverbindlich
           </div>
           <LeadFormLight />
         </div>
@@ -895,7 +887,7 @@ function NextStepsV2() {
 
       <Reveal delay={200}>
         <div style={{ display:'flex', justifyContent:'center', gap:12, marginTop:28, flexWrap:'wrap' }}>
-          <a href="https://wa.me/4916095757167?text=Hi%20Leon%2C%0A%0AProblem%3A%0AKontext%3A%0A%0AKurzer%20%C3%9Cberblick%3A"
+          <a href="https://wa.me/4916095757167?text=Hi%20Leon%2C%0A%0AIch%20brauche%20eine%20Website%20f%C3%BCr%3A%0AZielgruppe%3A%0AKurzer%20%C3%9Cberblick%3A"
             target="_blank" rel="noopener noreferrer"
             style={{ display:'inline-flex', alignItems:'center', gap:8, padding:'10px 22px', borderRadius:100,
               background:'#25D366', color:'#fff', fontSize:13, fontWeight:700, textDecoration:'none' }}>
@@ -916,18 +908,18 @@ function NextStepsV2() {
 function FAQV2() {
   const [open, setOpen] = useState(0);
   const faqs = [
-    { q: 'Was kostet die kostenlose Analyse wirklich?',
-      a: 'Nichts. Du bekommst eine ehrliche schriftliche Einschätzung, welche Abläufe in deinem Betrieb digitalisiert werden können und wo der größte Hebel liegt. Wenn du danach mit mir arbeiten willst, klären wir den Preis im zweiten Schritt.' },
-    { q: 'Ich bin kein Tech-Betrieb. Ist das trotzdem relevant für mich?',
-      a: 'Ja — gerade dann. Handwerksbetriebe, Gastronomie, Dienstleister: überall entstehen die gleichen Zeitfresser durch manuelle Abläufe. Ich spreche kein Tech-Jargon, sondern schaue auf konkrete Abläufe und was sich sinnvoll verbessern lässt.' },
+    { q: 'Was kostet eine Website?',
+      a: 'Das hängt vom Umfang ab — Landing Page, Mehrseiter, Shop. Ich nenne dir nach dem Gespräch einen konkreten Preis. Keine versteckten Kosten, keine laufenden Gebühren außer Hosting.' },
+    { q: 'Was bekomme ich für meinen Betrieb — kein Tech-Hintergrund?',
+      a: 'Kein Problem. Ich erkläre alles verständlich, und du bekommst eine fertige Website die du selbst bedienen kannst. Auf Wunsch gibt es einen kurzen Videokurs für eigenständige Anpassungen.' },
     { q: 'Muss ich vorher zahlen?',
-      a: 'Nein. Phase 0 ist kostenlos. Phase 1 zahlst du erst, wenn dir das Ergebnis gefällt. Kein Vertrag, keine Vorauskasse.' },
+      a: 'Nein. Du siehst den ersten Entwurf bevor du einen Cent zahlst. Erst wenn du zufrieden bist, geht es weiter. Kein Vertrag, keine Vorauskasse.' },
     { q: 'Wie unterscheidet sich das von einer Agentur?',
-      a: 'Du sprichst direkt mit mir. Kein Account-Manager, kein Overhead. Ich schaue mir deinen Betrieb konkret an — nicht als abstraktes Projekt, sondern als Abfolge von Abläufen, die ich verstehe und dann verbessere.' },
-    { q: 'Was, wenn ich gar nicht weiß, was ich brauche?',
-      a: 'Genau dafür ist Phase 0 da. Ich stelle die richtigen Fragen, schaue mir an was existiert, und sage dir, wo ich anfangen würde. Du musst vorher nichts wissen.' },
-    { q: 'Baust du auch Websites?',
-      a: 'Nein. Für Webdesign gibt es Paveo — paveo360.de. Ich konzentriere mich auf Prozesse, Workflows und Systeme dahinter.' },
+      a: 'Du sprichst direkt mit mir. Kein Account-Manager, kein Overhead, keine langen Wartezeiten. Ich mache alles selbst — von Design bis Launch.' },
+    { q: 'Wie schnell ist die Website fertig?',
+      a: 'Erster Entwurf in 24 Stunden nach unserem Gespräch. Mit zwei Revisionsrunden ist die Website in der Regel innerhalb von 7 Tagen live.' },
+    { q: 'Was passiert nach dem Launch?',
+      a: 'Du bekommst alle Dateien und vollständige Eigentumsrechte. Updates, neue Seiten oder Erweiterungen machen wir bei Bedarf — ohne Abo, ohne Verpflichtung.' },
   ];
 
   return (
@@ -967,11 +959,11 @@ function FAQV2() {
       <Reveal delay={140}>
         <div style={{ maxWidth:580, margin:'48px auto 0', textAlign:'center', padding:'24px 28px',
           border:'1px solid rgba(232,168,0,0.20)', background:'rgba(232,168,0,0.04)', borderRadius:16 }}>
-          <div style={{ fontSize:14, color:'rgba(245,242,235,0.65)', marginBottom:12 }}>Noch was Konkretes?</div>
+          <div style={{ fontSize:14, color:'rgba(245,242,235,0.65)', marginBottom:12 }}>Bereit für deine neue Website?</div>
           <a href={CALENDLY} target="_blank" rel="noopener noreferrer"
             style={{ display:'inline-flex', alignItems:'center', gap:8, padding:'11px 24px',
               borderRadius:100, background:B.yellow, color:B.ink, fontSize:14, fontWeight:800, textDecoration:'none' }}>
-            Termin buchen →
+            Kostenlos anfragen →
           </a>
         </div>
       </Reveal>
@@ -1029,8 +1021,8 @@ function TestimonialsV2() {
           background:B.ink, color:B.cream, display:'flex', justifyContent:'space-between',
           alignItems:'center', flexWrap:'wrap', gap:20 }}>
           <div>
-            <div style={{ fontSize:18, fontWeight:800, color:B.cream, marginBottom:6 }}>Bereit für Phase 0?</div>
-            <div style={{ fontSize:13, color:'rgba(245,242,235,0.55)' }}>Kostenlose Analyse — Antwort innerhalb von 24h.</div>
+            <div style={{ fontSize:18, fontWeight:800, color:B.cream, marginBottom:6 }}>Deine neue Website in 7 Tagen.</div>
+            <div style={{ fontSize:13, color:'rgba(245,242,235,0.55)' }}>Erster Entwurf kostenlos — Antwort innerhalb von 24h.</div>
           </div>
           <a href={CALENDLY} target="_blank" rel="noopener noreferrer" style={{ padding:'14px 28px', borderRadius:100, background:B.yellow, color:B.ink,
             fontSize:14, fontWeight:800, boxShadow:'0 4px 20px rgba(232,168,0,0.28)', textDecoration:'none' }}>

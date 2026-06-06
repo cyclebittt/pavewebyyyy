@@ -2,18 +2,18 @@ import "./globals.css";
 import Script from "next/script";
 
 export const metadata = {
-  title: "Leon Seitz — Digitale Strukturen für wachsende Unternehmen",
+  title: "Leon Seitz — Webdesign. Fertig in 7 Tagen.",
   description:
-    "Ich analysiere, wo digitale Struktur fehlt — Website, interne Abläufe, Kommunikation und Außenauftritt. Kostenlose Analyse, kein Commitment.",
+    "Individuelle Websites, die Kunden bringen. Erster Entwurf in 24h, du zahlst erst wenn es dir gefällt. Kein Template, kein Baukastensystem.",
   keywords:
-    "digitale Strukturen, Digitalisierung, Webdesign, interne Abläufe, Prozessdigitalisierung, Kommunikation, Branding, Website, Social Media, Aschaffenburg, Obernburg, Unternehmen",
+    "Webdesign, Website erstellen, Landing Page, Unternehmenswebsite, Website Aschaffenburg, Webdesigner, individuelle Website, günstige Website, schnelle Website",
   authors: [{ name: "Leon Seitz", url: "https://www.leonseitz.com" }],
   metadataBase: new URL("https://www.leonseitz.com"),
   openGraph: {
     type: "website",
     locale: "de_DE",
     url: "https://www.leonseitz.com/",
-    title: "Leon Seitz — Digitale Strukturen für wachsende Unternehmen",
+    title: "Leon Seitz — Webdesign. Fertig in 7 Tagen.",
     description:
       "Kostenlose Analyse: Ich prüfe Website, interne Abläufe, Kommunikation und Außenauftritt — und zeige konkret, wo digitale Struktur fehlt.",
     siteName: "Leon Seitz",
@@ -22,13 +22,13 @@ export const metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Leon Seitz — Digitale Strukturen für wachsende Unternehmen",
+        alt: "Leon Seitz — Webdesign. Fertig in 7 Tagen.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Leon Seitz — Digitale Strukturen für wachsende Unternehmen",
+    title: "Leon Seitz — Webdesign. Fertig in 7 Tagen.",
     description:
       "Kostenlose Analyse: Website, interne Abläufe, Kommunikation und Außenauftritt — konkret, ehrlich, ohne Commitment.",
     images: ["/og-image.jpg"],
