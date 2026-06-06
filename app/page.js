@@ -713,8 +713,8 @@ export default function Home() {
 
       <ScrollBar />
       <HeroV2 />
-      <WieLäuft />
       <GoogleReviewsSection />
+      <WieLäuft />
       <GEOSection />
       <ReferenzenSection />
       <PaketeSection />
