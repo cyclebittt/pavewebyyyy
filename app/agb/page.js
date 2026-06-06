@@ -22,7 +22,7 @@ export default function AGBPage() {
           <p className="text-[#F5F2EB]/70 leading-relaxed">
             Diese AGB gelten für alle Verträge zwischen{' '}
             <span className="text-[#F5F2EB] font-medium">Leon Seitz</span>,
-            Am Streitberg 28, 63906 Erlenbach am Main (nachfolgend &bdquo;Anbieter") und seinen Auftraggebern
+            Am Streitberg 28, 63906 Erlenbach am Main (nachfolgend &#8222;Anbieter&#8220;) und seinen Auftraggebern
             über Dienstleistungen in den Bereichen Webentwicklung, Prozessdigitalisierung, Branding und
             digitale Infrastruktur. Die AGB gelten ausschließlich im unternehmerischen Geschäftsverkehr
             (B2B). Verbraucher im Sinne des § 13 BGB sind nicht Zielgruppe dieser Leistungen; Verträge

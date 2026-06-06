@@ -37,7 +37,7 @@ export default function DatenschutzPage() {
               <p className="text-[#F5F2EB]/50 text-sm font-medium">Wer ist verantwortlich für die Datenerfassung auf dieser Website?</p>
               <p className="text-[#F5F2EB]/70 leading-relaxed">
                 Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten
-                können Sie dem Abschnitt &bdquo;Hinweis zur verantwortlichen Stelle" in dieser Datenschutzerklärung entnehmen.
+                können Sie dem Abschnitt &#8222;Hinweis zur verantwortlichen Stelle&#8220; in dieser Datenschutzerklärung entnehmen.
               </p>
             </div>
             <div className="space-y-2">
@@ -102,12 +102,12 @@ export default function DatenschutzPage() {
           <div className="space-y-3">
             <h3 className="text-[#F5F2EB] font-medium">Strato</h3>
             <p className="text-[#F5F2EB]/70 leading-relaxed">
-              Anbieter ist die Strato AG, Otto-Ostrowski-Straße 7, 10249 Berlin (nachfolgend &bdquo;Strato"). Wenn Sie
+              Anbieter ist die Strato AG, Otto-Ostrowski-Straße 7, 10249 Berlin (nachfolgend &#8222;Strato&#8220;). Wenn Sie
               unsere Website besuchen, erfasst Strato verschiedene Logfiles inklusive Ihrer IP-Adressen.
             </p>
             <p className="text-[#F5F2EB]/70 leading-relaxed">
               Weitere Informationen entnehmen Sie der Datenschutzerklärung von Strato:{' '}
-              <a href="https://www.strato.de/datenschutz/" target="_blank" rel="noopener noreferrer"
+              <a href="https://www.strato.de/datenschutz/&#8220; target="_blank&#8220; rel="noopener noreferrer&#8220;
                 className="text-[#E8A800] hover:underline">
                 https://www.strato.de/datenschutz/
               </a>.
@@ -336,7 +336,7 @@ export default function DatenschutzPage() {
               Diese Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte,
               wie zum Beispiel Bestellungen oder Anfragen, die Sie an uns als Seitenbetreiber senden, eine
               SSL- bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie daran, dass die
-              Adresszeile des Browsers von &bdquo;http://" auf &bdquo;https://" wechselt und an dem Schloss-Symbol in
+              Adresszeile des Browsers von &#8222;http://&#8220; auf &#8222;https://&#8220; wechselt und an dem Schloss-Symbol in
               Ihrer Browserzeile.
             </p>
             <p className="text-[#F5F2EB]/70 leading-relaxed">
@@ -390,12 +390,12 @@ export default function DatenschutzPage() {
             </p>
             <p className="text-[#F5F2EB]/70 leading-relaxed">
               Weitere Informationen zu Google Fonts finden Sie unter{' '}
-              <a href="https://developers.google.com/fonts/faq" target="_blank" rel="noopener noreferrer"
+              <a href="https://developers.google.com/fonts/faq&#8220; target="_blank&#8220; rel="noopener noreferrer&#8220;
                 className="text-[#E8A800] hover:underline">
                 https://developers.google.com/fonts/faq
               </a>{' '}
               und in der Datenschutzerklärung von Google:{' '}
-              <a href="https://policies.google.com/privacy?hl=de" target="_blank" rel="noopener noreferrer"
+              <a href="https://policies.google.com/privacy?hl=de&#8220; target="_blank&#8220; rel="noopener noreferrer&#8220;
                 className="text-[#E8A800] hover:underline">
                 https://policies.google.com/privacy?hl=de
               </a>.
@@ -405,7 +405,7 @@ export default function DatenschutzPage() {
 
         <p className="text-xs text-[#F5F2EB]/30 border-t border-white/10 pt-8">
           Quelle:{' '}
-          <a href="https://www.e-recht24.de" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.e-recht24.de&#8220; target="_blank&#8220; rel="noopener noreferrer&#8220;
             className="hover:text-[#F5F2EB]/50">
             e-recht24.de
           </a>
