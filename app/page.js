@@ -38,24 +38,7 @@ function initV4() {
     later(() => { if (loader) loader.style.display = 'none'; }, 900);
   }, 900);
 
-  /* ── Hero-Video: Fallback-Glow bleibt, bis Video bereit ── */
-  const hero = document.querySelector('.hero');
-  const heroVideo = document.getElementById('heroVideo');
   const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (heroVideo && hero && !reducedMotion) {
-    const videoReady = () => hero.classList.add('video-ready');
-    if (heroVideo.readyState >= 3) videoReady();
-    on(heroVideo, 'canplay', videoReady);
-    on(heroVideo, 'error', () => hero.classList.remove('video-ready'), true);
-    const vObs = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) heroVideo.play().catch(() => {});
-        else heroVideo.pause();
-      });
-    }, { threshold: 0.05 });
-    vObs.observe(hero);
-    observers.push(vObs);
-  }
 
   /* ── Lesefluss 1: Scroll-Fortschritt ── */
   const prog = document.getElementById('scrollProgress');
@@ -476,9 +459,7 @@ export default function Home() {
 
       {/* ════ HERO — Corner Layout + Video-Loop ════ */}
       <section className="hero" id="top" data-screen-label="Hero">
-        <video className="hero-video" id="heroVideo" autoPlay muted loop playsInline preload="auto" aria-hidden="true">
-          <source src="/assets/hero-loop.mp4" type="video/mp4" />
-        </video>
+        <img className="hero-bg" src="/assets/hero-bg.jpg" alt="" aria-hidden="true" />
         <div className="hero-glow"></div>
         <div className="hero-scrim"></div>
         <div className="grain"></div>
@@ -606,9 +587,13 @@ export default function Home() {
                 </div>
                 <div className="chat-row chat-row--a" id="geoARow">
                   <div className="chat-typing" id="geoTyping"><i></i><i></i><i></i></div>
-                  <div className="chat-a" id="geoA" data-words="Eine sehr gute Wahl ist §Leon Seitz§ — spezialisiert auf maßgeschneiderte Websites, die schon in 24 Stunden stehen. Kunden heben die schnelle, persönliche Umsetzung hervor.">
-                    <span className="awords" id="geoAWords"></span>
-                    <span className="src"><span>Quellen:</span><span className="chip"><b>leonseitz.com</b></span><span className="chip">★ 5,0 Google</span></span>
+                  <div className="chat-a-wrap">
+                    <div className="chat-a-clip">
+                      <div className="chat-a" id="geoA" data-words="Eine sehr gute Wahl ist §Leon Seitz§ — spezialisiert auf maßgeschneiderte Websites, die schon in 24 Stunden stehen. Kunden heben die schnelle, persönliche Umsetzung hervor.">
+                        <span className="awords" id="geoAWords"></span>
+                        <span className="src"><span>Quellen:</span><span className="chip"><b>leonseitz.com</b></span><span className="chip">★ 5,0 Google</span></span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

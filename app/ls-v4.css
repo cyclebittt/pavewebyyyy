@@ -222,9 +222,13 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 @keyframes caretBlink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
 #geoARow{opacity:0;transition:opacity .35s}
 #geoARow.show{opacity:1}
-#geoA{display:none}
+/* Antwort expandiert sanft (grid-rows 0fr→1fr) statt per display-Sprung */
+.chat-a-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .75s cubic-bezier(.45,0,.15,1);flex:1;min-width:0}
+.chat-a-clip{overflow:hidden;min-height:0}
+#geoA{opacity:0;transform:translateY(6px);transition:opacity .5s .25s,transform .5s .25s}
+#geoARow.answered .chat-a-wrap{grid-template-rows:1fr}
 #geoARow.answered #geoTyping{display:none}
-#geoARow.answered #geoA{display:block}
+#geoARow.answered #geoA{opacity:1;transform:none}
 .awords{display:inline}
 .awords .w{display:inline-block;opacity:0;transform:translateY(5px);transition:opacity .26s ease,transform .26s ease}
 .awords .w.lit{opacity:1;transform:none}
@@ -332,18 +336,13 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 }
 
 /* ══════════════════════════════════════
-   V4 — HERO VIDEO LOOP (statt Farbverlauf)
-   Fallback: .hero-glow bleibt aktiv, bis das
-   Video abspielbereit ist (.hero.video-ready)
+   V4 — HERO BACKGROUND (3D-Logo-Render)
    ══════════════════════════════════════ */
-.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0;transition:opacity 1.2s ease;pointer-events:none}
-.hero.video-ready .hero-video{opacity:1}
-.hero.video-ready .hero-glow{opacity:0;transition:opacity 1.2s ease}
+.hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:left center;z-index:0;pointer-events:none}
 .hero-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
   background:linear-gradient(180deg,rgba(14,12,8,.55) 0%,rgba(14,12,8,.25) 38%,rgba(14,12,8,.62) 100%),
              radial-gradient(120% 90% at 70% 40%,transparent 40%,rgba(14,12,8,.55) 100%)}
 .hero .grain,.hero-grid-bg{z-index:2}
-@media(prefers-reduced-motion:reduce){.hero-video{display:none}.hero.video-ready .hero-glow{opacity:1}}
 
 /* ══════════════════════════════════════
    V4 — LESEFLUSS-SYSTEM
