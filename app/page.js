@@ -223,10 +223,18 @@ function initV4() {
       if (best !== -1) openRow(best);
     };
     rows.forEach((r, i) => {
+      r.addEventListener('mouseenter', () => {
+        manual = true;
+        openRow(i);
+      });
       r.querySelector('.hr-bar').addEventListener('click', () => {
         manual = true;
-        openRow(openIdx === i ? -1 : i);
+        openRow(i);
       });
+    });
+    howto.addEventListener('mouseleave', () => {
+      manual = false;
+      autoFromScroll();
     });
     const howObs = new IntersectionObserver((entries) => {
       entries.forEach((e) => { if (!e.isIntersecting) manual = false; });
@@ -285,15 +293,18 @@ function initV4() {
       gChat.style.transition = 'none';
       gChat.style.transform = 'none';
       const r = gChat.getBoundingClientRect();
+      const sec = geoScroll.getBoundingClientRect();
       const vw = window.innerWidth, vh = window.innerHeight;
       const estH = 430;
-      const scaleW = Math.min(760, vw * 0.94) / r.width;
-      const scaleH = (vh * 0.9) / estH;
+      const scaleW = (vw * 0.92) / r.width;
+      const scaleH = (vh * 0.94) / estH;
       let scale = Math.min(scaleW, scaleH);
-      if (scale > 1.9) scale = 1.9;
+      if (scale > 2.6) scale = 2.6;
       if (scale < 1) scale = 1;
-      const dx = vw / 2 - (r.left + r.width / 2);
-      const dy = vh / 2 - (r.top + r.height / 2);
+      /* im Zentrum der Sektion verankern — nicht im Viewport,
+         damit die Karte beim Reinscrollen sauber mittig sitzt */
+      const dx = (sec.left + sec.width / 2) - (r.left + r.width / 2);
+      const dy = (sec.top + sec.height / 2) - (r.top + r.height / 2);
       gChat.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) scale(' + scale.toFixed(3) + ')';
       void gChat.offsetWidth;
       gChat.style.transition = '';
@@ -400,15 +411,9 @@ function HowRow({ idx, title, text, badge }) {
         <span className="hr-plus"></span>
       </button>
       <div className="hr-detail">
-        <div className="hr-detail-in">
-          <div className="hr-visual" data-v={idx}>
-            <span className="hrv-tag">Schritt {num}</span>
-            <span className="hrv-big">{num}</span>
-          </div>
-          <div className="hr-text">
-            <p>{text}</p>
-            <div className="badge">{badge}</div>
-          </div>
+        <div className="hr-text">
+          <p>{text}</p>
+          <div className="badge">{badge}</div>
         </div>
       </div>
     </div>
