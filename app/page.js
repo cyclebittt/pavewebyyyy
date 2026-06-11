@@ -63,15 +63,9 @@ function initV4() {
     if (prog) prog.style.width = p.toFixed(2) + '%';
   }
 
-  /* ── Sticky-Nav: erscheint nach Hero ── */
-  function updateNav() {
-    const nav = document.getElementById('stickyNav');
-    if (nav && hero) nav.classList.toggle('show', window.scrollY > hero.offsetHeight * 0.85);
-  }
-
-  on('scroll', () => { updateProgress(); updateNav(); }, { passive: true });
-  on('resize', () => { updateProgress(); updateNav(); });
-  updateProgress(); updateNav();
+  on('scroll', updateProgress, { passive: true });
+  on('resize', updateProgress);
+  updateProgress();
 
   /* ── Reveal + expand on scroll ── */
   const revObs = new IntersectionObserver((entries) => {
@@ -445,21 +439,6 @@ export default function Home() {
       {/* ════ LESEFLUSS: Scroll-Fortschritt ════ */}
       <div className="scroll-progress" aria-hidden="true"><i id="scrollProgress"></i></div>
 
-      {/* ════ STICKY NAV (erscheint nach dem Hero) ════ */}
-      <div className="sticky-nav" id="stickyNav">
-        <a href="#top" className="sticky-brand">
-          <img className="sticky-logo" src="/assets/logo-white.png" alt="" />
-          <span>Leon Seitz</span>
-        </a>
-        <div className="sticky-right">
-          <div className="sticky-links">
-            <a href="#referenzen" className="sticky-link">Referenzen</a>
-            <a href="#howto" className="sticky-link">Wie es läuft</a>
-            <a href="#pakete" className="sticky-link">Pakete</a>
-          </div>
-          <a href={WA_WEBSITE} className="sticky-cta">Schreib mir auf WhatsApp</a>
-        </div>
-      </div>
 
       {/* ════ HERO — Corner Layout + Video-Loop ════ */}
       <section className="hero" id="top" data-screen-label="Hero">
