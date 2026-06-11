@@ -320,7 +320,7 @@ function Pakete() {
   const packages = [
     {
       id: 'a',
-      label: 'Website',
+      label: 'Solo',
       price: '490 €',
       period: 'einmalig',
       desc: 'Fertige Website mit zwei Revisionsrunden und vollständiger Eigentumsübertragung.',
@@ -339,7 +339,7 @@ function Pakete() {
     },
     {
       id: 'b',
-      label: 'Eigenständig',
+      label: 'Pro',
       price: '890 €',
       period: 'einmalig',
       desc: 'Website plus Werkzeuge zur eigenständigen Verwaltung.',
@@ -358,7 +358,7 @@ function Pakete() {
     },
     {
       id: 'c',
-      label: 'Servicepauschale',
+      label: 'All-in',
       price: '490 €',
       period: 'einmalig + 69 €/Monat',
       sub: 'Gesamtjahr 1: 1.318 € · Mindestlaufzeit 12 Monate',
