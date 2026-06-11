@@ -316,38 +316,41 @@ function initV4() {
       });
     })();
 
-    const gBigTransform = () => {
+    /* Der Großzustand kommt komplett aus dem CSS (absolut zentriert,
+       echte Größe — kein unscharfes Hochskalieren per transform).
+       Der Wechsel zu "mini" läuft als FLIP: Position vorher/nachher
+       messen, Differenz als Transform setzen, dann austransitionieren. */
+    const gToMini = () => {
+      const first = gChat.getBoundingClientRect();
+      gStage.setAttribute('data-stage', 'mini');
       gChat.style.transition = 'none';
       gChat.style.transform = 'none';
-      const r = gChat.getBoundingClientRect();
-      const sec = geoScroll.getBoundingClientRect();
-      const vw = window.innerWidth, vh = window.innerHeight;
-      const estH = 430;
-      const scaleW = (vw * 0.92) / r.width;
-      const scaleH = (vh * 0.94) / estH;
-      let scale = Math.min(scaleW, scaleH);
-      if (scale > 2.6) scale = 2.6;
-      if (scale < 1) scale = 1;
-      /* im Zentrum der Sektion verankern — nicht im Viewport,
-         damit die Karte beim Reinscrollen sauber mittig sitzt */
-      const dx = (sec.left + sec.width / 2) - (r.left + r.width / 2);
-      const dy = (sec.top + sec.height / 2) - (r.top + r.height / 2);
-      gChat.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) scale(' + scale.toFixed(3) + ')';
+      const last = gChat.getBoundingClientRect();
+      const dx = first.left - last.left;
+      const dy = first.top - last.top;
+      const s = first.width / last.width;
+      gChat.style.transformOrigin = '0 0';
+      gChat.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) scale(' + s.toFixed(4) + ')';
       void gChat.offsetWidth;
       gChat.style.transition = '';
+      gChat.style.transform = 'none';
     };
 
     const gReset = () => {
       gClear();
       gPlayed = false;
+      gChat.style.transition = 'none';
+      gChat.style.transform = '';
+      gChat.style.transformOrigin = '';
       gStage.setAttribute('data-stage', 'pre');
+      void gChat.offsetWidth;
+      gChat.style.transition = '';
       gQRow.classList.remove('show');
       gQ.classList.remove('done');
       gQText.textContent = '';
       gARow.classList.remove('show', 'answered');
       wordEls.forEach((w) => w.classList.remove('lit'));
       gPoints.forEach((p) => p.classList.remove('in'));
-      gBigTransform();
     };
 
     const gShowFinal = () => {
@@ -378,8 +381,7 @@ function initV4() {
       });
       const answerEnd = aStart + wordEls.length * 62 + 250;
       gAfter(answerEnd + 1200, () => {
-        gStage.setAttribute('data-stage', 'mini');
-        gChat.style.transform = 'none';
+        gToMini();
         gAfter(420, () => { if (gPoints[0]) gPoints[0].classList.add('in'); });
         gAfter(660, () => { if (gPoints[1]) gPoints[1].classList.add('in'); });
         gAfter(900, () => { if (gPoints[2]) gPoints[2].classList.add('in'); });
@@ -397,7 +399,7 @@ function initV4() {
       }
     };
     on(window, 'scroll', gCheck, { passive: true });
-    on(window, 'resize', () => { if (!gPlayed) gBigTransform(); gCheck(); });
+    on(window, 'resize', gCheck);
     gCheck();
   }
 

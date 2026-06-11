@@ -204,14 +204,16 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 @keyframes geoType{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
 
 /* GEO choreographed sequence */
-.geo-scroll{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;padding:90px 0;scroll-snap-align:start;scroll-snap-stop:always}
-.geo-stage{width:100%}
+.geo-scroll{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;padding:90px 0}
+.geo-stage{width:100%;position:relative}
 .geo-left{opacity:0;transform:translateX(-26px);transition:opacity .8s .35s cubic-bezier(.4,0,.15,1),transform .8s .35s cubic-bezier(.4,0,.15,1)}
 .geo-stage[data-stage="mini"] .geo-left{opacity:1;transform:none}
 .geo-point{opacity:0;transform:translateY(18px);transition:opacity .6s cubic-bezier(.4,0,.15,1),transform .6s cubic-bezier(.4,0,.15,1)}
 .geo-point.in{opacity:1;transform:none}
-#geoChat{transform-origin:center center;transition:transform 1.15s cubic-bezier(.45,0,.15,1),box-shadow .9s;will-change:transform;z-index:5}
-.geo-stage[data-stage="pre"] #geoChat,.geo-stage[data-stage="intro"] #geoChat{box-shadow:0 50px 130px rgba(0,0,0,.6)}
+#geoChat{transition:transform 1.15s cubic-bezier(.45,0,.15,1),box-shadow .9s;will-change:transform;z-index:5}
+/* Großzustand: absolut in der Sektionsmitte, echte Breite — Text bleibt scharf,
+   die Karte wächst symmetrisch um ihr Zentrum, kein Anker-Verrutschen */
+.geo-stage[data-stage="pre"] #geoChat,.geo-stage[data-stage="intro"] #geoChat{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(800px,92vw);box-shadow:0 50px 130px rgba(0,0,0,.6)}
 .chat-body{min-height:96px;transition:min-height .5s}
 #geoQRow{opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s}
 #geoQRow.show{opacity:1;transform:none}
