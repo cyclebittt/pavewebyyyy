@@ -400,3 +400,18 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 /* ── Referenz-Screenshots (statt image-slot) ── */
 img.proj-slot{object-fit:cover;object-position:top center;border-radius:18px;border:1px solid rgba(255,255,255,.08);box-shadow:0 26px 70px rgba(0,0,0,.45)}
+
+/* ── Projekt-Galerie: mehrere Bilder, swipebar ── */
+.proj-gallery{touch-action:pan-y}
+.pg-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:18px;border:1px solid rgba(255,255,255,.08);box-shadow:0 26px 70px rgba(0,0,0,.45);opacity:0;transform:scale(.985);transition:opacity .45s ease,transform .45s ease;pointer-events:none}
+.pg-img.active{opacity:1;transform:none}
+.pg-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(14,12,8,.65);border:1px solid rgba(255,255,255,.14);color:var(--cream);cursor:pointer;opacity:0;transition:opacity .3s,background .2s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.pg-arrow svg{width:13px;height:13px}
+.pg-prev{left:14px}
+.pg-next{right:14px}
+.proj-gallery:hover .pg-arrow{opacity:1}
+.pg-arrow:hover{background:rgba(232,168,0,.9);color:var(--ink);border-color:transparent}
+.pg-dots{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:3;display:flex;gap:7px}
+.pg-dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.35);transition:background .3s,transform .3s}
+.pg-dots i.active{background:var(--gold);transform:scale(1.25)}
+@media(hover:none){.pg-arrow{opacity:1}}

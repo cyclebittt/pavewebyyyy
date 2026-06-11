@@ -16,12 +16,14 @@ const WA_PAKET_SERVICE = 'https://wa.me/4916095757167?text=Hi%20Leon%2C%20ich%20
    Read-Along) · Referenz-Switcher · Prozess · GEO
    ══════════════════════════════════════════════ */
 function initV4() {
-  const winListeners = [];
+  const listeners = [];
   const timers = [];
   const observers = [];
-  const on = (ev, fn, opts) => {
-    window.addEventListener(ev, fn, opts);
-    winListeners.push([ev, fn, opts]);
+  /* alle Listener getrackt registrieren — der Cleanup entfernt sie
+     vollständig, damit React StrictMode (Doppel-Mount) nichts doppelt */
+  const on = (target, ev, fn, opts) => {
+    target.addEventListener(ev, fn, opts);
+    listeners.push([target, ev, fn, opts]);
   };
   const later = (fn, ms) => {
     const id = setTimeout(fn, ms);
@@ -43,8 +45,8 @@ function initV4() {
   if (heroVideo && hero && !reducedMotion) {
     const videoReady = () => hero.classList.add('video-ready');
     if (heroVideo.readyState >= 3) videoReady();
-    heroVideo.addEventListener('canplay', videoReady);
-    heroVideo.addEventListener('error', () => hero.classList.remove('video-ready'), true);
+    on(heroVideo, 'canplay', videoReady);
+    on(heroVideo, 'error', () => hero.classList.remove('video-ready'), true);
     const vObs = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
         if (e.isIntersecting) heroVideo.play().catch(() => {});
@@ -63,8 +65,8 @@ function initV4() {
     if (prog) prog.style.width = p.toFixed(2) + '%';
   }
 
-  on('scroll', updateProgress, { passive: true });
-  on('resize', updateProgress);
+  on(window, 'scroll', updateProgress, { passive: true });
+  on(window, 'resize', updateProgress);
   updateProgress();
 
   /* ── Reveal + expand on scroll ── */
@@ -83,8 +85,8 @@ function initV4() {
       if (r.top < vh * 0.88 && r.bottom > 0) el.classList.add('visible');
     });
   }
-  on('scroll', revealCheck, { passive: true });
-  on('resize', revealCheck);
+  on(window, 'scroll', revealCheck, { passive: true });
+  on(window, 'resize', revealCheck);
   revealCheck();
   later(() => {
     document.querySelectorAll('.hero .reveal').forEach((el) => el.classList.add('visible'));
@@ -113,21 +115,23 @@ function initV4() {
   /* ── Lesefluss 3: Mission Wort-für-Wort ── */
   let litTimer = null;
   const missionText = document.getElementById('missionText');
-  if (missionText && !missionText.querySelector('.w')) {
-    const nodes = Array.prototype.slice.call(missionText.childNodes);
-    missionText.innerHTML = '';
-    nodes.forEach((node) => {
-      const isGold = node.nodeType === 1 && node.classList && node.classList.contains('gold');
-      const raw = node.textContent;
-      raw.split(/(\s+)/).forEach((p) => {
-        if (p === '') return;
-        if (/^\s+$/.test(p)) { missionText.appendChild(document.createTextNode(' ')); return; }
-        const span = document.createElement('span');
-        span.className = 'w' + (isGold ? ' gold-w serif' : '');
-        span.textContent = p;
-        missionText.appendChild(span);
+  if (missionText) {
+    if (!missionText.querySelector('.w')) {
+      const nodes = Array.prototype.slice.call(missionText.childNodes);
+      missionText.innerHTML = '';
+      nodes.forEach((node) => {
+        const isGold = node.nodeType === 1 && node.classList && node.classList.contains('gold');
+        const raw = node.textContent;
+        raw.split(/(\s+)/).forEach((p) => {
+          if (p === '') return;
+          if (/^\s+$/.test(p)) { missionText.appendChild(document.createTextNode(' ')); return; }
+          const span = document.createElement('span');
+          span.className = 'w' + (isGold ? ' gold-w serif' : '');
+          span.textContent = p;
+          missionText.appendChild(span);
+        });
       });
-    });
+    }
     const words = missionText.querySelectorAll('.w');
     const runReadAlong = () => {
       if (litTimer) return;
@@ -148,7 +152,7 @@ function initV4() {
       if (r.top < vh * 0.55 && r.bottom > vh * 0.45) runReadAlong();
       else if (r.bottom < 0 || r.top > vh) resetReadAlong();
     };
-    on('scroll', missionCheck, { passive: true });
+    on(window, 'scroll', missionCheck, { passive: true });
     missionCheck();
   }
 
@@ -193,10 +197,33 @@ function initV4() {
       }, 280);
     };
     navItems.forEach((li) => {
-      li.addEventListener('click', () => switchProj(parseInt(li.getAttribute('data-p'), 10)));
+      on(li, 'click', () => switchProj(parseInt(li.getAttribute('data-p'), 10)));
     });
     renderProj(0);
   }
+
+  /* ── Projekt-Galerie: mehrere Bilder pro Slot, swipe- und klickbar ── */
+  document.querySelectorAll('.proj-gallery').forEach((gal) => {
+    const imgs = Array.prototype.slice.call(gal.querySelectorAll('.pg-img'));
+    const dots = Array.prototype.slice.call(gal.querySelectorAll('.pg-dots i'));
+    if (imgs.length < 2) return;
+    let idx = 0;
+    const show = (i) => {
+      idx = (i + imgs.length) % imgs.length;
+      imgs.forEach((im, j) => im.classList.toggle('active', j === idx));
+      dots.forEach((d, j) => d.classList.toggle('active', j === idx));
+    };
+    on(gal.querySelector('.pg-prev'), 'click', () => show(idx - 1));
+    on(gal.querySelector('.pg-next'), 'click', () => show(idx + 1));
+    let swipeX = null;
+    on(gal, 'touchstart', (e) => { swipeX = e.touches[0].clientX; }, { passive: true });
+    on(gal, 'touchend', (e) => {
+      if (swipeX === null) return;
+      const dx = e.changedTouches[0].clientX - swipeX;
+      if (Math.abs(dx) > 40) show(idx + (dx < 0 ? 1 : -1));
+      swipeX = null;
+    }, { passive: true });
+  });
 
   /* ── Prozess: expandierende Reihen (scrollgesteuert + Klick) ── */
   const howto = document.getElementById('howto');
@@ -223,16 +250,16 @@ function initV4() {
       if (best !== -1) openRow(best);
     };
     rows.forEach((r, i) => {
-      r.addEventListener('mouseenter', () => {
+      on(r, 'mouseenter', () => {
         manual = true;
         openRow(i);
       });
-      r.querySelector('.hr-bar').addEventListener('click', () => {
+      on(r.querySelector('.hr-bar'), 'click', () => {
         manual = true;
         openRow(i);
       });
     });
-    howto.addEventListener('mouseleave', () => {
+    on(howto, 'mouseleave', () => {
       manual = false;
       autoFromScroll();
     });
@@ -241,8 +268,8 @@ function initV4() {
     }, { threshold: 0 });
     howObs.observe(howto);
     observers.push(howObs);
-    on('scroll', autoFromScroll, { passive: true });
-    on('resize', autoFromScroll);
+    on(window, 'scroll', autoFromScroll, { passive: true });
+    on(window, 'resize', autoFromScroll);
     autoFromScroll();
   }
 
@@ -369,13 +396,13 @@ function initV4() {
         if (gPlayed || gStage.getAttribute('data-stage') !== 'pre') gReset();
       }
     };
-    on('scroll', gCheck, { passive: true });
-    on('resize', () => { if (!gPlayed) gBigTransform(); gCheck(); });
+    on(window, 'scroll', gCheck, { passive: true });
+    on(window, 'resize', () => { if (!gPlayed) gBigTransform(); gCheck(); });
     gCheck();
   }
 
   return () => {
-    winListeners.forEach(([ev, fn, opts]) => window.removeEventListener(ev, fn, opts));
+    listeners.forEach(([target, ev, fn, opts]) => target.removeEventListener(ev, fn, opts));
     timers.forEach(clearTimeout);
     gTimers.forEach(clearTimeout);
     if (litTimer) clearInterval(litTimer);
@@ -525,7 +552,17 @@ export default function Home() {
           </div>
         </div>
         <div className="proj-visual">
-          <img id="ref-kfa" className="proj-slot active" src="/projekte/kfa.png" alt="Screenshot KFA Aschaffenburg" />
+          <div id="ref-kfa" className="proj-slot active proj-gallery">
+            <img className="pg-img active" src="/projekte/kfa.png" alt="KFA Aschaffenburg — Landing Page" />
+            <img className="pg-img" src="/projekte/kfa-2.png" alt="KFA Aschaffenburg — Brand System" />
+            <button className="pg-arrow pg-prev" type="button" aria-label="Vorheriges Bild">
+              <svg viewBox="0 0 10 10" fill="none"><path d="M9 5H1M5 1L1 5l4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            </button>
+            <button className="pg-arrow pg-next" type="button" aria-label="Nächstes Bild">
+              <svg viewBox="0 0 10 10" fill="none"><path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            </button>
+            <div className="pg-dots"><i className="active"></i><i></i></div>
+          </div>
           <img id="ref-star" className="proj-slot" src="/projekte/star-doener.png" alt="Screenshot Star Döner" />
           <img id="ref-angelo" className="proj-slot" src="/projekte/angelo.png" alt="Screenshot Angelo DJ" />
         </div>
