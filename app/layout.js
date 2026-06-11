@@ -2,9 +2,9 @@ import "./globals.css";
 import Script from "next/script";
 
 export const metadata = {
-  title: "Leon Seitz — Webdesign. Fertig in 7 Tagen.",
+  title: "Leon Seitz — In 24h besser als deine Konkurrenz.",
   description:
-    "Individuelle Websites, die Kunden bringen. Erster Entwurf in 24h, du zahlst erst wenn es dir gefällt. Kein Template, kein Baukastensystem.",
+    "Innerhalb von 24 Stunden analysiere ich deinen digitalen Auftritt und liefere eine optimierte Website — du zahlst nur, wenn es dir gefällt. Kein Template, kein Baukastensystem.",
   keywords:
     "Webdesign, Website erstellen, Landing Page, Unternehmenswebsite, Website Aschaffenburg, Webdesigner, individuelle Website, günstige Website, schnelle Website",
   authors: [{ name: "Leon Seitz", url: "https://www.leonseitz.com" }],
@@ -13,7 +13,7 @@ export const metadata = {
     type: "website",
     locale: "de_DE",
     url: "https://www.leonseitz.com/",
-    title: "Leon Seitz — Webdesign. Fertig in 7 Tagen.",
+    title: "Leon Seitz — In 24h besser als deine Konkurrenz.",
     description:
       "Kostenlose Analyse: Ich prüfe Website, interne Abläufe, Kommunikation und Außenauftritt — und zeige konkret, wo digitale Struktur fehlt.",
     siteName: "Leon Seitz",
@@ -22,13 +22,13 @@ export const metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Leon Seitz — Webdesign. Fertig in 7 Tagen.",
+        alt: "Leon Seitz — In 24h besser als deine Konkurrenz.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Leon Seitz — Webdesign. Fertig in 7 Tagen.",
+    title: "Leon Seitz — In 24h besser als deine Konkurrenz.",
     description:
       "Kostenlose Analyse: Website, interne Abläufe, Kommunikation und Außenauftritt — konkret, ehrlich, ohne Commitment.",
     images: ["/og-image.jpg"],
