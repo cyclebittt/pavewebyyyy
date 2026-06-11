@@ -63,43 +63,15 @@ function initV4() {
     if (prog) prog.style.width = p.toFixed(2) + '%';
   }
 
-  /* ── Lesefluss 2: Sektions-Rail ── */
-  const rail = document.getElementById('sectionRail');
-  const sections = Array.prototype.slice.call(document.querySelectorAll('[data-screen-label]'));
-  const railItems = [];
-  if (rail) {
-    rail.innerHTML = '';
-    sections.forEach((sec) => {
-      const item = document.createElement('button');
-      item.className = 'rail-item';
-      item.type = 'button';
-      item.setAttribute('aria-label', sec.getAttribute('data-screen-label'));
-      item.innerHTML = '<span class="rl">' + sec.getAttribute('data-screen-label') + '</span><span class="rd"></span>';
-      item.addEventListener('click', () => sec.scrollIntoView({ behavior: 'smooth' }));
-      rail.appendChild(item);
-      railItems.push(item);
-    });
-  }
-  const isLightSection = (sec) => sec.classList.contains('section--cream') || sec.classList.contains('howto');
-  function updateRail() {
-    const mid = window.innerHeight * 0.5;
-    let activeIdx = 0;
-    sections.forEach((sec, i) => {
-      const r = sec.getBoundingClientRect();
-      if (r.top <= mid && r.bottom > mid) activeIdx = i;
-    });
-    railItems.forEach((it, i) => it.classList.toggle('active', i === activeIdx));
-    if (rail && sections[activeIdx]) {
-      rail.classList.toggle('on-light', isLightSection(sections[activeIdx]));
-      rail.classList.toggle('on-dark', !isLightSection(sections[activeIdx]));
-    }
+  /* ── Sticky-Nav: erscheint nach Hero ── */
+  function updateNav() {
     const nav = document.getElementById('stickyNav');
     if (nav && hero) nav.classList.toggle('show', window.scrollY > hero.offsetHeight * 0.85);
   }
 
-  on('scroll', () => { updateProgress(); updateRail(); }, { passive: true });
-  on('resize', () => { updateProgress(); updateRail(); });
-  updateProgress(); updateRail();
+  on('scroll', () => { updateProgress(); updateNav(); }, { passive: true });
+  on('resize', () => { updateProgress(); updateNav(); });
+  updateProgress(); updateNav();
 
   /* ── Reveal + expand on scroll ── */
   const revObs = new IntersectionObserver((entries) => {
@@ -470,9 +442,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ════ LESEFLUSS: Scroll-Fortschritt + Sektions-Rail ════ */}
+      {/* ════ LESEFLUSS: Scroll-Fortschritt ════ */}
       <div className="scroll-progress" aria-hidden="true"><i id="scrollProgress"></i></div>
-      <nav className="section-rail on-dark" id="sectionRail" aria-label="Seitennavigation"></nav>
 
       {/* ════ STICKY NAV (erscheint nach dem Hero) ════ */}
       <div className="sticky-nav" id="stickyNav">
