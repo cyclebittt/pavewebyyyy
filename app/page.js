@@ -78,10 +78,22 @@ function initV4() {
     if (Date.now() - pageLock < 1300) return;
     goToPage(pageIdx + (e.deltaY > 0 ? 1 : -1));
   }, { passive: false });
+  let settleT = null;
   on(window, 'scroll', () => {
-    if (canPage && Date.now() - pageLock > 1300) {
+    if (!canPage) return;
+    if (Date.now() - pageLock > 1300) {
       pageIdx = Math.round(window.scrollY / window.innerHeight);
     }
+    /* Settle-Watchdog: kommt das Scrollen abseits einer Sektions-
+       grenze zur Ruhe (unterbrochene Animation, Scrollbar, Tastatur),
+       wird zur nächstgelegenen Sektion nachgezogen — man kann nie
+       zwischen zwei Sektionen stehen bleiben. */
+    clearTimeout(settleT);
+    settleT = setTimeout(() => {
+      const idx = Math.min(Math.max(Math.round(window.scrollY / window.innerHeight), 0), pages.length - 1);
+      const target = pages[idx] ? pages[idx].offsetTop : 0;
+      if (Math.abs(window.scrollY - target) > 8) goToPage(idx);
+    }, 180);
   }, { passive: true });
   on(window, 'resize', measurePages);
   measurePages();
@@ -431,6 +443,7 @@ function initV4() {
     listeners.forEach(([target, ev, fn, opts]) => target.removeEventListener(ev, fn, opts));
     timers.forEach(clearTimeout);
     gTimers.forEach(clearTimeout);
+    clearTimeout(settleT);
     if (litTimer) clearInterval(litTimer);
     observers.forEach((o) => o.disconnect());
   };
