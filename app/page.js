@@ -70,13 +70,24 @@ function initV4() {
     pageLock = Date.now();
     pages[i].scrollIntoView({ behavior: 'smooth' });
   };
+  /* Deltas akkumulieren: langsames Scrollen (Magic Mouse, sanftes
+     Trackpad) liefert viele kleine Events — erst die Summe löst die
+     Seite aus, nichts wird verschluckt. */
+  let wheelAcc = 0;
+  let wheelAccT = 0;
   on(window, 'wheel', (e) => {
     if (!canPage || e.ctrlKey) return;
     e.preventDefault();
-    if (Math.abs(e.deltaY) < 12) return;
     /* Lockout fängt Trackpad-Inertia ab — eine Geste, eine Seite */
-    if (Date.now() - pageLock < 1300) return;
-    goToPage(pageIdx + (e.deltaY > 0 ? 1 : -1));
+    if (Date.now() - pageLock < 1300) { wheelAcc = 0; return; }
+    const now = Date.now();
+    if (now - wheelAccT > 400) wheelAcc = 0;
+    wheelAccT = now;
+    wheelAcc += e.deltaY;
+    if (Math.abs(wheelAcc) < 24) return;
+    const dir = wheelAcc > 0 ? 1 : -1;
+    wheelAcc = 0;
+    goToPage(pageIdx + dir);
   }, { passive: false });
   let settleT = null;
   on(window, 'scroll', () => {
