@@ -52,6 +52,40 @@ function initV4() {
   on(window, 'resize', updateProgress);
   updateProgress();
 
+  /* ── Fullpage-Paging: ein Wheel-Swipe = genau eine Sektion ──
+     Aktiv nur, wenn jede Sektion komplett in den Viewport passt
+     (sonst greift natives Scrollen + Scroll-Snap, damit auf
+     kleinen Screens nichts abgeschnitten oder unerreichbar ist). */
+  const pages = Array.prototype.slice.call(document.querySelectorAll('[data-screen-label]'));
+  let pageIdx = 0;
+  let pageLock = 0;
+  let canPage = false;
+  const measurePages = () => {
+    const vh = window.innerHeight;
+    canPage = window.innerWidth > 900 && pages.every((p) => p.getBoundingClientRect().height <= vh + 6);
+  };
+  const goToPage = (i) => {
+    if (i < 0 || i >= pages.length) return;
+    pageIdx = i;
+    pageLock = Date.now();
+    pages[i].scrollIntoView({ behavior: 'smooth' });
+  };
+  on(window, 'wheel', (e) => {
+    if (!canPage || e.ctrlKey) return;
+    e.preventDefault();
+    if (Math.abs(e.deltaY) < 12) return;
+    /* Lockout fängt Trackpad-Inertia ab — eine Geste, eine Seite */
+    if (Date.now() - pageLock < 1300) return;
+    goToPage(pageIdx + (e.deltaY > 0 ? 1 : -1));
+  }, { passive: false });
+  on(window, 'scroll', () => {
+    if (canPage && Date.now() - pageLock > 1300) {
+      pageIdx = Math.round(window.scrollY / window.innerHeight);
+    }
+  }, { passive: true });
+  on(window, 'resize', measurePages);
+  measurePages();
+
   /* ── Reveal + expand on scroll ── */
   const revObs = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
