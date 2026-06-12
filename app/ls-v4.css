@@ -338,7 +338,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 /* ══════════════════════════════════════
    V4 — HERO BACKGROUND (3D-Logo-Render)
    ══════════════════════════════════════ */
-.hero-bg{position:absolute;top:-5%;left:-7%;width:107%;height:105%;max-width:none;object-fit:cover;object-position:left center;z-index:0;pointer-events:none}
+.hero-bg{position:absolute;top:-10%;left:-4%;width:107%;height:110%;max-width:none;object-fit:cover;object-position:left center;z-index:0;pointer-events:none}
 .hero-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
   background:linear-gradient(180deg,rgba(14,12,8,.55) 0%,rgba(14,12,8,.25) 38%,rgba(14,12,8,.62) 100%),
              radial-gradient(120% 90% at 70% 40%,transparent 40%,rgba(14,12,8,.55) 100%)}
