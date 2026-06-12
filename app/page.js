@@ -301,22 +301,28 @@ function initV4() {
 
     /* Der Großzustand kommt komplett aus dem CSS (absolut zentriert,
        echte Größe — kein unscharfes Hochskalieren per transform).
-       Der Wechsel zu "mini" läuft als FLIP: Position vorher/nachher
-       messen, Differenz als Transform setzen, dann austransitionieren. */
+       Wechsel zu "mini" als FLIP über Position UND echte Box-Maße:
+       kein scale — die Karte startet exakt in ihrer großen Form und
+       morpht Breite/Höhe ehrlich zur Zielform (Text bricht live um),
+       dadurch kein Form-Sprung beim Start des Zooms. */
     const gToMini = () => {
       const first = gChat.getBoundingClientRect();
       gStage.setAttribute('data-stage', 'mini');
       gChat.style.transition = 'none';
       gChat.style.transform = 'none';
       const last = gChat.getBoundingClientRect();
-      const dx = first.left - last.left;
-      const dy = first.top - last.top;
-      const s = first.width / last.width;
-      gChat.style.transformOrigin = '0 0';
-      gChat.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) scale(' + s.toFixed(4) + ')';
+      gChat.style.width = first.width.toFixed(1) + 'px';
+      gChat.style.height = first.height.toFixed(1) + 'px';
+      const start = gChat.getBoundingClientRect();
+      const dx = first.left - start.left;
+      const dy = first.top - start.top;
+      gChat.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px)';
       void gChat.offsetWidth;
       gChat.style.transition = '';
       gChat.style.transform = 'none';
+      gChat.style.width = last.width.toFixed(1) + 'px';
+      gChat.style.height = last.height.toFixed(1) + 'px';
+      gAfter(1250, () => { gChat.style.width = ''; gChat.style.height = ''; });
     };
 
     const gReset = () => {
@@ -324,7 +330,8 @@ function initV4() {
       gPlayed = false;
       gChat.style.transition = 'none';
       gChat.style.transform = '';
-      gChat.style.transformOrigin = '';
+      gChat.style.width = '';
+      gChat.style.height = '';
       gStage.setAttribute('data-stage', 'pre');
       void gChat.offsetWidth;
       gChat.style.transition = '';
@@ -606,7 +613,6 @@ export default function Home() {
       <section className="howto section--cream" data-screen-label="Wie es läuft" id="howto">
         <div className="howto-inner">
           <div className="howto-head">
-            <span className="eyebrow eyebrow--light">Wie es läuft</span>
             <h2 className="h2">Du siehst das Ergebnis. <span className="serif gold">Dann entscheidest du.</span></h2>
           </div>
           <div className="howlist">
@@ -628,8 +634,7 @@ export default function Home() {
         <div className="grain" style={{ opacity: 0.2 }}></div>
         <div className="section__inner">
           <div className="sec-head">
-            <span className="eyebrow eyebrow--dark reveal"><span className="dot"></span>Pakete</span>
-            <h2 className="h2 reveal reveal-d1" style={{ marginTop: 22 }}>Drei Optionen. <span className="serif gold">Eine Empfehlung.</span></h2>
+            <h2 className="h2 reveal reveal-d1">Drei Optionen. <span className="serif gold">Eine Empfehlung.</span></h2>
             <p className="lede lede--dark reveal reveal-d2" style={{ margin: '16px auto 0' }}>Der Unterschied liegt nicht im Preis — sondern darin, wer den laufenden Betrieb übernimmt.</p>
           </div>
           <div className="pricing-grid">
@@ -689,8 +694,7 @@ export default function Home() {
       {/* ════ CTA + FOOTER ════ */}
       <section className="section section--cream" data-screen-label="Kontakt" style={{ paddingBottom: 0, justifyContent: 'space-between' }}>
         <div className="section__inner cta-box" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <span className="eyebrow eyebrow--light reveal"><span className="dot"></span>Kostenlose Analyse</span>
-          <h2 className="h2 reveal reveal-d1" style={{ marginTop: 22 }}>Kostenlose Analyse in 24h in deinem Postfach.</h2>
+          <h2 className="h2 reveal reveal-d1">Kostenlose Analyse in 24h in deinem Postfach.</h2>
           <p className="lede lede--light reveal reveal-d2" style={{ margin: '16px auto 36px', textAlign: 'center' }}>
             Kein Commitment. Kein Paket. Nur eine ehrliche Einschätzung,
             was bei dir fehlt und was ich ändern würde.

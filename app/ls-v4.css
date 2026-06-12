@@ -210,7 +210,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .geo-stage[data-stage="mini"] .geo-left{opacity:1;transform:none}
 .geo-point{opacity:0;transform:translateY(18px);transition:opacity .6s cubic-bezier(.4,0,.15,1),transform .6s cubic-bezier(.4,0,.15,1)}
 .geo-point.in{opacity:1;transform:none}
-#geoChat{transition:transform 1.15s cubic-bezier(.45,0,.15,1),box-shadow .9s;will-change:transform;z-index:5}
+#geoChat{transition:transform 1.15s cubic-bezier(.45,0,.15,1),width 1.15s cubic-bezier(.45,0,.15,1),height 1.15s cubic-bezier(.45,0,.15,1),box-shadow .9s;z-index:5}
 /* Großzustand: absolut in der Sektionsmitte, echte Breite — Text bleibt scharf,
    die Karte wächst symmetrisch um ihr Zentrum, kein Anker-Verrutschen */
 .geo-stage[data-stage="pre"] #geoChat,.geo-stage[data-stage="intro"] #geoChat{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(800px,92vw);box-shadow:0 50px 130px rgba(0,0,0,.6)}
@@ -318,7 +318,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   .hr-bar{padding:20px 4px;gap:16px}
   .hr-num{width:40px}
   .hr-text{margin-left:60px;max-width:none}
-  .geo-layout{grid-template-columns:1fr;gap:36px}
+  .geo-layout{grid-template-columns:1fr;gap:36px;padding:0 24px}
   .geo-grid{grid-template-columns:1fr 1fr}
   .ref-grid{grid-template-columns:1fr}
   .ref-body{padding:22px 22px 24px}
@@ -338,7 +338,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 /* ══════════════════════════════════════
    V4 — HERO BACKGROUND (3D-Logo-Render)
    ══════════════════════════════════════ */
-.hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:left center;z-index:0;pointer-events:none}
+.hero-bg{position:absolute;top:-5%;left:-7%;width:107%;height:105%;max-width:none;object-fit:cover;object-position:left center;z-index:0;pointer-events:none}
 .hero-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
   background:linear-gradient(180deg,rgba(14,12,8,.55) 0%,rgba(14,12,8,.25) 38%,rgba(14,12,8,.62) 100%),
              radial-gradient(120% 90% at 70% 40%,transparent 40%,rgba(14,12,8,.55) 100%)}
