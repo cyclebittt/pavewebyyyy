@@ -52,17 +52,20 @@ function initV4() {
   on(window, 'resize', updateProgress);
   updateProgress();
 
-  /* ── Fullpage-Paging: ein Wheel-Swipe = genau eine Sektion ──
-     Aktiv nur, wenn jede Sektion komplett in den Viewport passt
-     (sonst greift natives Scrollen + Scroll-Snap, damit auf
-     kleinen Screens nichts abgeschnitten oder unerreichbar ist). */
+  /* ── Fullpage-Paging: eine Geste = genau eine Sektion ──
+     Kein freies Scrollen: jeder Wheel-Swipe, Touch-Swipe oder
+     Pfeiltasten-Druck schaltet fixiert eine Sektion weiter, jede
+     Sektion nimmt den vollen Bildschirm ein. Greift sobald die
+     Sektionen in den Viewport passen — sollte eine Sektion auf sehr
+     kleinen Screens höher als der Viewport sein, fällt sie auf
+     natives Scrollen zurück, damit nichts unerreichbar wird. */
   const pages = Array.prototype.slice.call(document.querySelectorAll('[data-screen-label]'));
   let pageIdx = 0;
   let pageLock = 0;
   let canPage = false;
   const measurePages = () => {
     const vh = window.innerHeight;
-    canPage = window.innerWidth > 900 && pages.every((p) => p.getBoundingClientRect().height <= vh + 6);
+    canPage = pages.length > 1 && pages.every((p) => p.getBoundingClientRect().height <= vh + 6);
   };
   const goToPage = (i) => {
     if (i < 0 || i >= pages.length) return;
@@ -89,6 +92,41 @@ function initV4() {
     wheelAcc = 0;
     goToPage(pageIdx + dir);
   }, { passive: false });
+  /* Touch-Swipe: ein Wisch = genau eine Sektion */
+  let touchY = null;
+  on(window, 'touchstart', (e) => {
+    if (!canPage) return;
+    touchY = e.touches[0].clientY;
+  }, { passive: true });
+  on(window, 'touchmove', (e) => {
+    if (!canPage || touchY === null) return;
+    /* verhindert das native Mitscrollen während der Geste */
+    if (e.cancelable) e.preventDefault();
+  }, { passive: false });
+  on(window, 'touchend', (e) => {
+    if (!canPage || touchY === null) return;
+    const endY = (e.changedTouches[0] || {}).clientY;
+    const dy = touchY - endY;
+    touchY = null;
+    if (Date.now() - pageLock < 1300) return;
+    if (Math.abs(dy) < 40) return;
+    goToPage(pageIdx + (dy > 0 ? 1 : -1));
+  }, { passive: true });
+  /* Tastatur: Pfeile, Bild auf/ab, Leertaste, Pos1/Ende */
+  on(window, 'keydown', (e) => {
+    if (!canPage) return;
+    const tag = (e.target && e.target.tagName) || '';
+    if (/INPUT|TEXTAREA|SELECT/.test(tag) || e.target.isContentEditable) return;
+    let target = null;
+    if (e.key === 'ArrowDown' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)) target = pageIdx + 1;
+    else if (e.key === 'ArrowUp' || e.key === 'PageUp' || (e.key === ' ' && e.shiftKey)) target = pageIdx - 1;
+    else if (e.key === 'Home') target = 0;
+    else if (e.key === 'End') target = pages.length - 1;
+    if (target === null) return;
+    e.preventDefault();
+    if (Date.now() - pageLock < 1300) return;
+    goToPage(Math.min(Math.max(target, 0), pages.length - 1));
+  });
   let settleT = null;
   on(window, 'scroll', () => {
     if (!canPage) return;
@@ -325,7 +363,7 @@ function initV4() {
     const gARow = document.getElementById('geoARow');
     const gAWords = document.getElementById('geoAWords');
     const gPoints = Array.prototype.slice.call(geoScroll.querySelectorAll('.geo-point'));
-    const QUESTION = 'Wer baut moderne Websites für kleine Unternehmen in meiner Nähe?';
+    const QUESTION = 'Ich brauche Hilfe bei einem Rechtsstreit um meine Abfindung. Wer ist dafür in Aschaffenburg geeignet?';
     const rawAnswer = document.getElementById('geoA').getAttribute('data-words');
     let gPlayed = false;
 
@@ -339,7 +377,7 @@ function initV4() {
         if (si % 2 === 1) {
           const pill = document.createElement('span');
           pill.className = 'w pick';
-          pill.innerHTML = '<img src="/assets/logo-white.png" alt="">' + seg;
+          pill.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" style="vertical-align:-1px;margin-right:4px"><path d="M12 2l2.6 6.9L22 9.3l-5.5 4.6 1.8 7L12 17.2 5.7 20.9l1.8-7L2 9.3l7.4-.4z" fill="currentColor"/></svg>' + seg;
           gAWords.appendChild(pill);
           wordEls.push(pill);
         } else {
@@ -416,7 +454,7 @@ function initV4() {
       const t0 = 450;
       gAfter(t0, () => gQRow.classList.add('show'));
       const chars = QUESTION.split('');
-      const step = 26;
+      const step = 20;
       chars.forEach((ch, i) => gAfter(t0 + 200 + i * step, () => { gQText.textContent += ch; }));
       const qDone = t0 + 200 + chars.length * step;
       gAfter(qDone, () => gQ.classList.add('done'));
@@ -586,6 +624,7 @@ export default function Home() {
       <section className="proj section--dark" data-screen-label="Referenzen" id="referenzen">
         <div className="grain" style={{ opacity: 0.22 }}></div>
         <div className="proj-left">
+          <span className="proj-kicker">Meine Referenzen</span>
           <div className="proj-num" id="projNum">01.</div>
           <ul className="proj-nav" id="projNav">
             <li className="active" data-p="0">KFA Aschaffenburg</li>
@@ -623,8 +662,8 @@ export default function Home() {
           <div className="geo-layout">
             <div className="geo-left">
               <span className="eyebrow eyebrow--dark">GEO-Optimierung</span>
-              <h2 className="h2">Im Zeitalter von ChatGPT<br /><span className="serif gold">sichtbar bleiben.</span></h2>
-              <p className="lede lede--dark">Deine Kunden fragen heute KI um Rat — nicht mehr nur Google. Ich sorge dafür, dass dein Business in den Antworten auftaucht.</p>
+              <h2 className="h2">Werde die Antwort,<br /><span className="serif gold">die KI als Erstes nennt.</span></h2>
+              <p className="lede lede--dark">Deine Kunden fragen heute KI um Rat — nicht mehr nur Google. Ich sorge dafür, dass dein Name in den Antworten auftaucht, wenn jemand nach deiner Leistung sucht.</p>
               <div className="geo-points">
                 <div className="geo-point" data-pt="0">
                   <span className="gp-ic"><svg viewBox="0 0 20 20"><circle cx="9" cy="9" r="6" /><path d="M14 14l4 4" strokeLinecap="round" /></svg></span>
@@ -654,9 +693,9 @@ export default function Home() {
                   <div className="chat-typing" id="geoTyping"><i></i><i></i><i></i></div>
                   <div className="chat-a-wrap">
                     <div className="chat-a-clip">
-                      <div className="chat-a" id="geoA" data-words="Eine sehr gute Wahl ist §Leon Seitz§ — spezialisiert auf maßgeschneiderte Websites, die schon in 24 Stunden stehen. Kunden heben die schnelle, persönliche Umsetzung hervor.">
+                      <div className="chat-a" id="geoA" data-words="Für arbeitsrechtliche Auseinandersetzungen in Aschaffenburg wird häufig §Kanzlei Berger§ empfohlen — spezialisiert auf Abfindungen und Kündigungsschutz. Mandanten heben die klare Beratung und schnelle Erreichbarkeit hervor.">
                         <span className="awords" id="geoAWords"></span>
-                        <span className="src"><span>Quellen:</span><span className="chip"><b>leonseitz.com</b></span><span className="chip">★ 5,0 Google</span></span>
+                        <span className="src"><span>Quellen:</span><span className="chip"><b>kanzlei-berger.de</b></span><span className="chip">★ 5,0 Google</span></span>
                       </div>
                     </div>
                   </div>
@@ -671,7 +710,7 @@ export default function Home() {
       <section className="howto section--cream" data-screen-label="Wie es läuft" id="howto">
         <div className="howto-inner">
           <div className="howto-head">
-            <h2 className="h2">Du siehst das Ergebnis. <span className="serif gold">Dann entscheidest du.</span></h2>
+            <h2 className="h2">Dein Fahrplan.</h2>
           </div>
           <div className="howlist">
             <HowRow idx={0} title="Kurze Analyse"
@@ -692,14 +731,14 @@ export default function Home() {
         <div className="grain" style={{ opacity: 0.2 }}></div>
         <div className="section__inner">
           <div className="sec-head">
-            <h2 className="h2 reveal reveal-d1">Drei Optionen. <span className="serif gold">Eine Empfehlung.</span></h2>
-            <p className="lede lede--dark reveal reveal-d2" style={{ margin: '16px auto 0' }}>Der Unterschied liegt nicht im Preis — sondern darin, wer den laufenden Betrieb übernimmt.</p>
+            <h2 className="h2 gold reveal reveal-d1">Such dir ein Paket aus.</h2>
+            <p className="lede lede--dark reveal reveal-d2" style={{ margin: '16px auto 0' }}>Drei Optionen, eine Empfehlung. Der Unterschied liegt nicht im Preis — sondern darin, wer den laufenden Betrieb übernimmt.</p>
           </div>
           <div className="pricing-grid">
             {/* Website */}
             <div className="price-card expand-card">
               <div className="name">Website</div>
-              <div className="price">490 €</div>
+              <div className="price">649 €</div>
               <div className="price-sub">einmalig</div>
               <ul className="features">
                 <PriceFeature>Fertige Website</PriceFeature>
@@ -715,7 +754,7 @@ export default function Home() {
             {/* Eigenständig */}
             <div className="price-card expand-card expand-d1">
               <div className="name">Eigenständig</div>
-              <div className="price">890 €</div>
+              <div className="price">1.449 €</div>
               <div className="price-sub">einmalig</div>
               <ul className="features">
                 <PriceFeature>Fertige Website</PriceFeature>
@@ -732,8 +771,8 @@ export default function Home() {
             <div className="price-card featured expand-card expand-d2">
               <div className="stamp">Empfohlen</div>
               <div className="name">Servicepauschale</div>
-              <div className="price">490 €<span style={{ fontSize: 16, fontWeight: 600, opacity: 0.6 }}> + 69 €/Mo</span></div>
-              <div className="price-sub">Gesamtjahr 1: 1.318 € · Mindestlaufzeit 12 Monate</div>
+              <div className="price">769 €<span style={{ fontSize: 16, fontWeight: 600, opacity: 0.6 }}> + 89 €/Mo</span></div>
+              <div className="price-sub">Gesamtjahr 1: 1.837 € · danach 1.068 €/Jahr · Mindestlaufzeit 12 Monate</div>
               <ul className="features">
                 <PriceFeature>Fertige Website</PriceFeature>
                 <PriceFeature>2 Revisionsrunden</PriceFeature>
@@ -743,6 +782,7 @@ export default function Home() {
                 <PriceFeature>Personalisierter AI Agent</PriceFeature>
                 <PriceFeature>SSL, Updates, Backups</PriceFeature>
               </ul>
+              <p className="price-note">Enthält Hosting, Sicherheit, Updates, Backups und kleinere Inhaltsänderungen. Größere Umbauten (Redesign, neue Sektionen) auf Anfrage.</p>
               <a href={WA_PAKET_SERVICE} className="card-btn primary">Dieses Paket wählen</a>
             </div>
           </div>
@@ -752,7 +792,7 @@ export default function Home() {
       {/* ════ CTA + FOOTER ════ */}
       <section className="section section--cream" data-screen-label="Kontakt" style={{ paddingBottom: 0, justifyContent: 'space-between' }}>
         <div className="section__inner cta-box" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <h2 className="h2 reveal reveal-d1">Kostenlose Analyse in 24h in deinem Postfach.</h2>
+          <h2 className="h2 h2--mega reveal reveal-d1">Meld dich.</h2>
           <p className="lede lede--light reveal reveal-d2" style={{ margin: '16px auto 36px', textAlign: 'center' }}>
             Kein Commitment. Kein Paket. Nur eine ehrliche Einschätzung,
             was bei dir fehlt und was ich ändern würde.
