@@ -327,10 +327,15 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   .ref-body{padding:22px 22px 24px}
 }
 @media(max-width:680px){
+  /* Mobil: kein Hero-Bild — nur der dunkle Verlauf wie zuvor.
+     Headline wird zum Ankerpunkt: zentriert, vertikal mittig, präsenter. */
+  .hero-bg,.hero-scrim{display:none}
   .hero{grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr auto auto}
-  .hero-headline{grid-column:1/-1;grid-row:2;text-align:left;justify-self:start;max-width:none}
+  .hero-headline{grid-column:1/-1;grid-row:2;text-align:center;justify-self:center;align-self:center;max-width:none}
+  .hero-headline h1{font-size:clamp(2.2rem,9vw,3.4rem)}
   .hero-reviews{grid-column:1/-1;grid-row:3;max-width:none}
-  .hero-cta-wrap{grid-column:1/-1;grid-row:4;justify-self:start;margin-top:16px}
+  .hero-reviews-head{justify-content:center}
+  .hero-cta-wrap{grid-column:1/-1;grid-row:4;justify-self:center;margin-top:18px}
   .hero-nav-wrap{padding-top:8px}
   .hero-nav-link{font-size:11px;padding:8px 16px}
   .geo-grid{grid-template-columns:1fr}
